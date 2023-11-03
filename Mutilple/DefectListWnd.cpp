@@ -160,7 +160,7 @@ void DefectListWnd::ShowListData() {
 
         int iCount = 0;
         for (int i = 0; i < HD_CHANNEL_NUM; i++) {
-            iCount += g_MainProcess.m_Techniques.m_pDefect[i].size(); // 10个通道的缺陷
+            iCount += static_cast<int>(g_MainProcess.m_Techniques.m_pDefect[i].size()); // 10个通道的缺陷
         }
 
         if (iCount > 25) {
@@ -170,7 +170,7 @@ void DefectListWnd::ShowListData() {
         }
         int index = iCount;
         for (int ch = HD_CHANNEL_NUM - 1; ch >= 0; ch--) {
-            for (int i = g_MainProcess.m_Techniques.m_pDefect[ch].size() - 1; i >= 0; i--) {
+            for (int i = static_cast<int>(g_MainProcess.m_Techniques.m_pDefect[ch].size()) - 1; i >= 0; i--) {
                 index--;
                 pElement = new CListContainerElementUI();
                 pElement->SetFixedHeight(24);

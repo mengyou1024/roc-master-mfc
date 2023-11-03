@@ -2,8 +2,13 @@
 
 #include "DetectionStd_TBT2995_200.h"
 #include "Mutilple.h"
+
+// TODO: 暂时屏蔽警告
+#pragma warning( disable: 4267 4244 4552 )
+
+
 bool DetectionStd_TBT2995_200::InitTechniques(Techniques* pTechniques) {
-    float res = mDacCount.CoutdBOffsetByAmp(0.8, 0.4);
+    float res = mDacCount.CoutdBOffsetByAmp(0.8f, 0.4f);
     int   a   = 0;
 
     return true;
@@ -514,7 +519,7 @@ bool DetectionStd_TBT2995_200::ReViewDetection(Techniques* pTechniques, RECORD_D
     UCHAR* pBscanData = &pTechniques->m_Scan.m_pBscanData[0];
     UCHAR* pBscanCH   = &pTechniques->m_Scan.m_pBscanCH[0];
     printf("m_iTreadPointIndex%d\n", pTechniques->m_iTreadPointIndex);
-    pBscanCH[pTechniques->m_iTreadPointIndex] == 0;
+    pBscanCH[pTechniques->m_iTreadPointIndex] = 0;
 
     bool bAllAscanSize = false;              // 没有数据
     for (int i = 0; i < HD_CHANNEL_NUM; i++) // 6个

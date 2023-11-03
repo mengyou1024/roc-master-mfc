@@ -23,8 +23,7 @@ m_pScanMax{100, 100},
 m_fBkCoord((BK_TEX_DEF + 0.5F) / COLOR_TEX_HEIGHT),
 m_fBKAxisCoord((BK_TEX_AXIS_BK + 0.5F) / COLOR_TEX_HEIGHT),
 m_fAxisCoord((BK_TEX_AXIS + 0.5F) / COLOR_TEX_HEIGHT),
-m_fAxisZeroCoord((BK_TEX_AXIS_ZERO + 0.5F) / COLOR_TEX_HEIGHT) {
-}
+m_fAxisZeroCoord((BK_TEX_AXIS_ZERO + 0.5F) / COLOR_TEX_HEIGHT) {}
 
 Mesh::~Mesh() {
     DeleteVAO(m_iBkVAO, m_iBkVBO, m_iBkEBO);
@@ -44,11 +43,9 @@ int Mesh::Contain(::CPoint pt) {
     return m_rcItem.Contain(pt.x, pt.y);
 }
 
-void Mesh::SetLimits(float fMin, float fMax) {
-}
+void Mesh::SetLimits(float fMin, float fMax) {}
 
-void Mesh::CreateScan() {
-}
+void Mesh::CreateScan() {}
 
 void Mesh::CreateBK() {
     // 4(bk) + 4(x) + 4(y)
@@ -217,8 +214,7 @@ void Mesh::Setup() {
     }
 }
 
-void Mesh::Release() {
-}
+void Mesh::Release() {}
 
 void Mesh::DrawLineX(float start, float end, float y, glm::vec4 color, float fWidth) {
     m_pQuadVertices[0].x = start;
@@ -477,25 +473,18 @@ void Mesh::RenderBK() {
     DrawAixs();
 }
 
-void Mesh::Render() {
-}
+void Mesh::Render() {}
 
 void Mesh::RenderFore() {
     DrawAixsText();
 }
 
-void Mesh::OnLButtonDown(UINT nFlags, ::CPoint pt) {
-    int test;
-}
+void Mesh::OnLButtonDown(UINT nFlags, ::CPoint pt) {}
 
-void Mesh::OnLButtonUp(UINT nFlags, ::CPoint pt) {
-}
+void Mesh::OnLButtonUp(UINT nFlags, ::CPoint pt) {}
 
-void Mesh::OnLButtonDClick(UINT nFlags, ::CPoint pt) {
-}
+void Mesh::OnLButtonDClick(UINT nFlags, ::CPoint pt) {}
 
-void Mesh::OnMouseMove(UINT nFlags, ::CPoint pt) {
-}
+void Mesh::OnMouseMove(UINT nFlags, ::CPoint pt) {}
 
-void Mesh::OnMouseWheel(UINT nFlags, short zDelta, ::CPoint pt) {
-}
+void Mesh::OnMouseWheel(UINT nFlags, short zDelta, ::CPoint pt) {}

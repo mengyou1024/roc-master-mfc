@@ -41,6 +41,8 @@
 #include <stdexcept>     // std::runtime_error
 #include <system_error>  // std::system_error
 
+#pragma warning(disable :26498)
+
 #ifdef __cpp_lib_bit_cast
 #  include <bit>  // std::bitcast
 #endif
@@ -1158,8 +1160,8 @@ template <> constexpr auto digits10<int128_opt>() noexcept -> int { return 38; }
 template <> constexpr auto digits10<uint128_t>() noexcept -> int { return 38; }
 
 template <typename Char> struct thousands_sep_result {
-  std::string grouping;
-  Char thousands_sep;
+  std::string grouping      = {};
+  Char        thousands_sep = {};
 };
 
 template <typename Char>

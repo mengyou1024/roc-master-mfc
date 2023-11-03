@@ -82,11 +82,10 @@ void WheelUpDownWnd::Notify(TNotifyUI& msg) {
 void WheelUpDownWnd::OnTimer(int iIdEvent) {
     switch (iIdEvent) {
         case TIME_PLCSTATE: {
-            DWORD RunTime = (GetTickCount64() - m_PLCOrderRunTime);
-            bool  ok;
+            auto RunTime = (GetTickCount64() - static_cast<uint64_t>(m_PLCOrderRunTime));
             if (m_nType == 1) {
             }
-            if (RunTime > 5000) {
+            if (RunTime > 5000ull) {
                 KillTimer(TIME_PLCSTATE);
             }
         }

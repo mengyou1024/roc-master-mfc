@@ -153,7 +153,7 @@ void TecListWnd::ShowListData() {
     if (m_pListTechFileList != NULL) {
         m_pListTechFileList->RemoveAll();
 
-        int iCount = m_ITechList.GetCount();
+        int iCount = static_cast<int>(m_ITechList.GetCount());
 
         for (int i = 0; i < iCount; i++) {
             pElement = new CListContainerElementUI();

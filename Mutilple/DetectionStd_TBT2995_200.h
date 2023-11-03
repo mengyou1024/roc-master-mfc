@@ -2,6 +2,9 @@
 
 #include "DetectionStd.h"
 #include "DacCount.h"
+
+#pragma warning( disable: 26495 )
+
 const int MAX_DAC = 2;
 class DetectionStd_TBT2995_200 : public DetectionStd
 {

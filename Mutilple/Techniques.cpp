@@ -4,6 +4,9 @@
 #include "Mutilple.h"
 #include "Techniques.h"
 
+// TODO: ÔÝÊ±ÆÁ±Î¾¯¸æ
+#pragma warning(disable :4267 4244 4552 4305 4101)
+
 Techniques::Techniques() :
 m_iChannel(0),
 m_iSideCirIndex(0),

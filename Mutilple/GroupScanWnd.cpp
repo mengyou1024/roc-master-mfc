@@ -24,11 +24,11 @@ GroupScanWnd::~GroupScanWnd() {
 void GroupScanWnd::InitOpenGL() {
     // 初始化OpenGL窗口
     // A扫窗口
-    m_pWndOpenGL_ASCAN = static_cast<CWindowUI*>(m_PaintManager.FindControl(_T("WndOpenGL_ASCAN")));
+    m_pWndOpenGL_ASCAN = static_cast<CWindowUI *>(m_PaintManager.FindControl(_T("WndOpenGL_ASCAN")));
     m_OpenGL_ASCAN.Create(m_hWnd);
     m_OpenGL_ASCAN.Attach(m_pWndOpenGL_ASCAN);
     // C扫窗口
-    m_pWndOpenGL_CSCAN = static_cast<CWindowUI*>(m_PaintManager.FindControl(_T("WndOpenGL_CSCAN")));
+    m_pWndOpenGL_CSCAN = static_cast<CWindowUI *>(m_PaintManager.FindControl(_T("WndOpenGL_CSCAN")));
     m_OpenGL_CSCAN.Create(m_hWnd);
     m_OpenGL_CSCAN.Attach(m_pWndOpenGL_CSCAN);
 }
@@ -81,23 +81,23 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
     mChannelSel = newChannelSel;
 
     // 设置Edit单位
-    auto edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditConfig")));
+    auto edit = static_cast<CEditUI *>(m_PaintManager.FindControl(_T("EditConfig")));
     if (edit) {
         edit->SetEnabled(true);
         edit->SetTextExt(mConfigTextext.at(mConfigType));
     }
     // 设置Slider的min、max
-    auto slider = static_cast<CSliderUI*>(m_PaintManager.FindControl(_T("SliderConfig")));
+    auto slider = static_cast<CSliderUI *>(m_PaintManager.FindControl(_T("SliderConfig")));
     if (slider) {
         slider->SetEnabled(true);
         slider->SetCanSendMove(true);
         // 重新计算波门起点和波门宽度的最大值
-        int gate = static_cast<int>(mGateType);
+        int  gate    = static_cast<int>(mGateType);
         auto channel = g_MainProcess.GetChannel(static_cast<int>(mChannelSel) + mCurrentGroup * 4);
         switch (mConfigType) {
             case GroupScanWnd::ConfigType::GateStart: {
-                auto &[_, maxLimits]       = mConfigLimits[mConfigType];
-                maxLimits            = (1.0 - channel->m_pGateWidth[gate]) * 100.0;
+                auto &[_, maxLimits] = mConfigLimits[mConfigType];
+                maxLimits            = static_cast<float>((1.0 - channel->m_pGateWidth[gate]) * 100.0);
                 if (maxLimits <= 2) {
                     slider->SetEnabled(false);
                     slider->SetCanSendMove(false);
@@ -109,7 +109,7 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
             }
             case GroupScanWnd::ConfigType::GateWidth: {
                 auto &[_, maxLimits] = mConfigLimits[mConfigType];
-                maxLimits            = (1.0 - channel->m_pGatePos[gate]) * 100.0;
+                maxLimits            = static_cast<float>((1.0 - channel->m_pGatePos[gate]) * 100.0);
                 if (maxLimits <= 2) {
                     slider->SetEnabled(false);
                     slider->SetCanSendMove(false);
@@ -127,7 +127,7 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
         slider->SetMinValue(static_cast<int>(mConfigLimits.at(mConfigType).first));
         slider->SetMaxValue(static_cast<int>(mConfigLimits.at(mConfigType).second));
     }
-    // TODO: 重新读取数值
+    // DONE: 重新读取数值
     double reloadValue = 0.0;
     int    _channelSel = static_cast<int>(mChannelSel) + mCurrentGroup * 4;
     int    gate        = static_cast<int>(mGateType);
@@ -141,11 +141,11 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
             break;
         }
         case GroupScanWnd::ConfigType::GateStart: {
-            reloadValue = channel->m_pGatePos[gate]*100.0;
+            reloadValue = channel->m_pGatePos[gate] * 100.0;
             break;
         }
         case GroupScanWnd::ConfigType::GateWidth: {
-            reloadValue = channel->m_pGateWidth[gate]* 100.0;
+            reloadValue = channel->m_pGateWidth[gate] * 100.0;
             break;
         }
         case GroupScanWnd::ConfigType::GateHeight: {
@@ -172,7 +172,7 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
 
 void GroupScanWnd::SetConfigValue(float val) {
     spdlog::debug("set config value {}", val);
-    int _channelSel = static_cast<int>(mChannelSel) + mCurrentGroup * 4;
+    int  _channelSel = static_cast<int>(mChannelSel) + mCurrentGroup * 4;
     int  gate        = static_cast<int>(mGateType);
     auto channel     = g_MainProcess.GetChannel(_channelSel);
     switch (mConfigType) {
@@ -184,15 +184,15 @@ void GroupScanWnd::SetConfigValue(float val) {
             break;
         }
         case GroupScanWnd::ConfigType::GateStart: {
-            channel->m_pGatePos[gate] = val/100.0;
+            channel->m_pGatePos[gate] = static_cast<float>(val / 100.0);
             break;
         }
         case GroupScanWnd::ConfigType::GateWidth: {
-            channel->m_pGateWidth[gate] = val/100.0;
+            channel->m_pGateWidth[gate] = static_cast<float>(val / 100.0);
             break;
         }
         case GroupScanWnd::ConfigType::GateHeight: {
-            channel->m_pGateHeight[gate] = val/100.0;
+            channel->m_pGateHeight[gate] = static_cast<float>(val / 100.0);
             break;
         }
         default: {
@@ -202,7 +202,7 @@ void GroupScanWnd::SetConfigValue(float val) {
     g_MainProcess.m_HDBridge.OnConfig(&g_MainProcess.m_Techniques);
 }
 
-void GroupScanWnd::Notify(TNotifyUI& msg) {
+void GroupScanWnd::Notify(TNotifyUI &msg) {
     if (msg.sType == DUI_MSGTYPE_CLICK) {
         CDuiString   strName = msg.pSender->GetName();
         std::wregex  matchReg(_T(R"(BtnSelectGroup(\d))"));
@@ -219,21 +219,19 @@ void GroupScanWnd::Notify(TNotifyUI& msg) {
         }
 
         matchReg = _T(R"(OptConfigType)");
-        if (std::regex_match(str, match, matchReg)) {
-            auto       opt  = static_cast<COptionUI*>(msg.pSender);
+        auto opt = static_cast<COptionUI *>(msg.pSender);
+        if (std::regex_match(str, matchReg)) {
             ConfigType type = static_cast<ConfigType>(_wtol(opt->GetUserData().GetData()));
             _configType     = type;
         }
 
         matchReg = _T(R"(OptGateType)");
-        if (std::regex_match(str, match, matchReg)) {
-            auto     opt  = static_cast<COptionUI*>(msg.pSender);
+        if (std::regex_match(str, matchReg)) {
             GateType type = static_cast<GateType>(_wtol(opt->GetUserData().GetData()));
             _gateType     = type;
         }
         matchReg = _T(R"(OptChannel\d)");
-        if (std::regex_match(str, match, matchReg)) {
-            auto       opt  = static_cast<COptionUI*>(msg.pSender);
+        if (std::regex_match(str, matchReg)) {
             ChannelSel type = static_cast<ChannelSel>(_wtol(opt->GetUserData().GetData()));
             _channelSel     = type;
         }
@@ -242,43 +240,39 @@ void GroupScanWnd::Notify(TNotifyUI& msg) {
 
     } else if (msg.sType == DUI_MSGTYPE_VALUECHANGED) {
         if (msg.pSender->GetName() == _T("SliderConfig")) {
-            auto slider = dynamic_cast<CSliderUI*>(msg.pSender);
-            if (slider) {
-                auto edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditConfig")));
-                if (edit) {
-                    int     sliderValue = slider->GetValue();
-                    CString val;
-                    val.Format(_T("%.2f"), static_cast<float>(sliderValue));
-                    edit->SetText(val);
-                    spdlog::debug(_T("setValue: {}"), val);
+            auto slider = static_cast<CSliderUI *>(msg.pSender);
+            auto edit   = static_cast<CEditUI *>(m_PaintManager.FindControl(_T("EditConfig")));
+            if (edit) {
+                int     sliderValue = slider->GetValue();
+                CString val;
+                val.Format(_T("%.2f"), static_cast<float>(sliderValue));
+                edit->SetText(val);
+                spdlog::debug(_T("setValue: {}"), val);
 
-                    // 设置Edit数值
-                    auto edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditConfig")));
-                    if (edit) {
-                        edit->SetText(std::to_wstring(sliderValue).data());
-                    }
-                    // 设置超声板数值
-                    if (msg.pSender->IsEnabled()) {
-                        SetConfigValue(static_cast<float>(sliderValue));
-                    }
+                // 设置Edit数值
+                auto edit = static_cast<CEditUI *>(m_PaintManager.FindControl(_T("EditConfig")));
+                if (edit) {
+                    edit->SetText(std::to_wstring(sliderValue).data());
+                }
+                // 设置超声板数值
+                if (msg.pSender->IsEnabled()) {
+                    SetConfigValue(static_cast<float>(sliderValue));
                 }
             }
         }
     } else if (msg.sType == DUI_MSGTYPE_VALUECHANGED_MOVE) {
         if (msg.pSender->GetName() == _T("SliderConfig")) {
-            auto slider = dynamic_cast<CSliderUI*>(msg.pSender);
-            if (slider) {
-                auto edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditConfig")));
-                if (edit) {
-                    int sliderValue = slider->GetValue();
-                    edit->SetText(std::to_wstring(sliderValue).data());
-                }
+            auto slider = static_cast<CSliderUI *>(msg.pSender);
+            auto edit   = static_cast<CEditUI *>(m_PaintManager.FindControl(_T("EditConfig")));
+            if (edit) {
+                int sliderValue = slider->GetValue();
+                edit->SetText(std::to_wstring(sliderValue).data());
             }
         }
     } else if (msg.sType == DUI_MSGTYPE_TEXTCHANGED) {
         if (msg.pSender->GetName() == _T("EditConfig")) {
             // 限制输入的字符
-            auto         edit = dynamic_cast<CEditUI*>(msg.pSender);
+            auto         edit = static_cast<CEditUI *>(msg.pSender);
             std::wstring text = edit->GetText();
             if (text.length() > 0) {
                 auto [sel, _] = edit->GetSel();
@@ -294,7 +288,7 @@ void GroupScanWnd::Notify(TNotifyUI& msg) {
     } else if (msg.sType == DUI_MSGTYPE_RETURN) {
         if (msg.pSender->GetName() == _T("EditConfig")) {
             // 限制Edit的输入范围
-            auto         edit         = dynamic_cast<CEditUI*>(msg.pSender);
+            auto         edit         = static_cast<CEditUI *>(msg.pSender);
             std::wstring text         = edit->GetText();
             auto         currentValue = _wtof(text.data());
             if (currentValue < mConfigLimits.at(mConfigType).first) {
@@ -322,9 +316,9 @@ void GroupScanWnd::Notify(TNotifyUI& msg) {
             spdlog::debug("EditConfigSetValue: {}", currentValue);
 
             // 设置slider 值
-            auto slider = static_cast<CSliderUI*>(m_PaintManager.FindControl(_T("SliderConfig")));
+            auto slider = static_cast<CSliderUI *>(m_PaintManager.FindControl(_T("SliderConfig")));
             if (slider) {
-                slider->SetValue(static_cast<int>(std::roundf(currentValue)));
+                slider->SetValue(static_cast<int>(std::round(currentValue)));
             }
 
             // 设置超声板数值
@@ -332,38 +326,36 @@ void GroupScanWnd::Notify(TNotifyUI& msg) {
         }
     } else if (msg.sType == DUI_MSGTYPE_MOUSEWHELL) {
         if (msg.pSender->GetName() == _T("EditConfig")) {
-            auto edit = dynamic_cast<CEditUI*>(msg.pSender);
-            if (edit) {
-                auto         currentValue = _wtof(edit->GetText());
-                std::wstring text         = edit->GetText();
-                if (LOWORD(msg.wParam)) {
-                    currentValue -= mConfigStep.at(mConfigType);
-                } else {
-                    currentValue += mConfigStep.at(mConfigType);
-                }
-                if (currentValue < mConfigLimits.at(mConfigType).first) {
-                    currentValue = mConfigLimits.at(mConfigType).first;
-                } else if (currentValue > mConfigLimits.at(mConfigType).second) {
-                    currentValue = mConfigLimits.at(mConfigType).second;
-                }
-                text = std::to_wstring(currentValue);
-                std::wregex  reg(mConfigRegex.at(mConfigType));
-                std::wsmatch match;
-                if (std::regex_search(text, match, reg)) {
-                    edit->SetText(match[0].str().data());
-                }
-
-                // 设置slider 值
-                auto slider = static_cast<CSliderUI*>(m_PaintManager.FindControl(_T("SliderConfig")));
-                if (slider) {
-                    slider->SetValue(static_cast<int>(std::roundf(currentValue)));
-                }
-
-                spdlog::debug("Mouse Wheel config value: {}", currentValue);
-
-                // 设置超声板数值
-                SetConfigValue(static_cast<float>(currentValue));
+            auto         edit         = static_cast<CEditUI *>(msg.pSender);
+            auto         currentValue = _wtof(edit->GetText());
+            std::wstring text         = edit->GetText();
+            if (LOWORD(msg.wParam)) {
+                currentValue -= mConfigStep.at(mConfigType);
+            } else {
+                currentValue += mConfigStep.at(mConfigType);
             }
+            if (currentValue < mConfigLimits.at(mConfigType).first) {
+                currentValue = mConfigLimits.at(mConfigType).first;
+            } else if (currentValue > mConfigLimits.at(mConfigType).second) {
+                currentValue = mConfigLimits.at(mConfigType).second;
+            }
+            text = std::to_wstring(currentValue);
+            std::wregex  reg(mConfigRegex.at(mConfigType));
+            std::wsmatch match;
+            if (std::regex_search(text, match, reg)) {
+                edit->SetText(match[0].str().data());
+            }
+
+            // 设置slider 值
+            auto slider = static_cast<CSliderUI *>(m_PaintManager.FindControl(_T("SliderConfig")));
+            if (slider) {
+                slider->SetValue(static_cast<int>(std::round(currentValue)));
+            }
+
+            spdlog::debug("Mouse Wheel config value: {}", currentValue);
+
+            // 设置超声板数值
+            SetConfigValue(static_cast<float>(currentValue));
         }
     }
 
@@ -372,7 +364,7 @@ void GroupScanWnd::Notify(TNotifyUI& msg) {
 
 void GroupScanWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
     POINT point{pt.x, pt.y};
-    auto  wnd = dynamic_cast<CWindowUI*>(m_PaintManager.FindControl(point));
+    auto  wnd = dynamic_cast<CWindowUI *>(m_PaintManager.FindControl(point));
     if (wnd) {
         if (wnd->GetName() == _T("WndOpenGL_ASCAN")) {
             m_OpenGL_ASCAN.OnLButtonDown(nFlags, pt);
@@ -392,7 +384,7 @@ void GroupScanWnd::OnBtnSelectGroupClicked(long index) {
     for (int i = 0; i < 4; i++) {
         CString name;
         name.Format(_T("OptChannel%d"), i);
-        auto opt = static_cast<COptionUI*>(m_PaintManager.FindControl(name));
+        auto opt = static_cast<COptionUI *>(m_PaintManager.FindControl(name));
         if (opt) {
             CString index;
             index.Format(_T("%d"), mCurrentGroup * 4 + i + 1);
@@ -404,7 +396,7 @@ void GroupScanWnd::OnBtnSelectGroupClicked(long index) {
     for (long i = 0; i < BTN_SELECT_GROUP_MAX; i++) {
         CString str;
         str.Format(_T("BtnSelectGroup%d"), i);
-        auto btn = static_cast<CButtonUI*>(m_PaintManager.FindControl(str));
+        auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(str));
         if (btn) {
             if (i != index) {
                 btn->SetBkColor(0xFFEEEEEE);

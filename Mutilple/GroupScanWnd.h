@@ -50,16 +50,6 @@ private:
         CHANNEL_4,
     };
 
-    ConfigType mConfigType = ConfigType::DetectRange; ///< 当前选中设置类型
-    GateType   mGateType   = GateType::GATE_A;        ///< 当前选中的波门类型
-
-    /**
-     * @brief 当前选中的通道
-     * @warning 并不是表示实际的通道值, 而是表示第几个选项，例如`CHANNEL_1`表示第一个通道选项
-     * 实际的通道号可能是 1,5,9 中的一个
-     */
-    ChannelSel mChannelSel = ChannelSel::CHANNEL_1;
-
     /// Edit控件显示的单位文本
     const static inline std::map<ConfigType, CString> mConfigTextext = {
         {ConfigType::DetectRange, _T("")  },
@@ -100,7 +90,16 @@ private:
     OpenGL     m_OpenGL_ASCAN     = {};      ///< A扫OpenGL窗口
     OpenGL     m_OpenGL_CSCAN     = {};      ///< C扫OpenGL窗口
 
-    long                  mCurrentGroup        = 0; ///< 当前分组
+    long       mCurrentGroup = 0;                       ///< 当前分组
+    ConfigType mConfigType   = ConfigType::DetectRange; ///< 当前选中设置类型
+    GateType   mGateType     = GateType::GATE_A;        ///< 当前选中的波门类型
+
+    /**
+     * @brief 当前选中的通道
+     * @note 并不是表示实际的通道值, 而是表示第几个选项，例如`CHANNEL_1`表示第一个通道选项
+     * 实际的通道号可能是 1,5,9 中的一个
+     */
+    ChannelSel            mChannelSel          = ChannelSel::CHANNEL_1;
     constexpr static auto BTN_SELECT_GROUP_MAX = 3;
 
     /**

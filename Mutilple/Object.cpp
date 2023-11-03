@@ -15,7 +15,7 @@ BOOL Object::Open(LPCTSTR lpFileName) {
     if (pFile.m_hFile == INVALID_HANDLE_VALUE)
         return FALSE;
 
-    int uLength = pFile.GetLength();
+    int uLength = static_cast<int>(pFile.GetLength());
     if (uLength == 0)
         return FALSE;
 

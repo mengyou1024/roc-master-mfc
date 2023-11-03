@@ -552,7 +552,7 @@ void ScanWnd::SetScanReplay(bool bReplay) {
 
 void ScanWnd::UpdateAscanPoint() {
     float fRecordindex = (m_OpenGL.m_fPt_Cir + m_OpenGL.m_fPt_Xscale) * g_MainProcess.m_Techniques.m_iSidePoints;
-    int   nRecordindex = fRecordindex;
+    int   nRecordindex = static_cast<int>(fRecordindex);
     //	nRecordindex=g_MainProcess.m_Techniques.m_Scan.m_pBscanIndex[(int)nRecordindex/10];
     printf("%d\n", nRecordindex);
     for (int iChannel = 0; iChannel < HD_CHANNEL_NUM; iChannel++) {

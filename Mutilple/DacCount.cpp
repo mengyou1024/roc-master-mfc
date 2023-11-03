@@ -99,14 +99,14 @@ void DacCount::CoutDacCurve(DETECTION_PARAM2995_200* DACStruct, float gain, floa
 
             if (iDAC == DACStruct->nUseHole - 1) // 最后一个点到 全部声程最后
             {
-                int size     = DAC_M.size();
-                int startPos = DACStruct->fDAC_HoleDepth[iDAC]; // 最后点开始计算DAC
+                int size     = static_cast<int>(DAC_M.size());
+                int startPos = static_cast<int>(DACStruct->fDAC_HoleDepth[iDAC]); // 最后点开始计算DAC
                 if (fDelay > startPos)
-                    startPos = fDelay;
+                    startPos = static_cast<int>(fDelay);
                 for (int i = startPos; i < startPos + range - size; i++) //
                 {
                     x1 = DACStruct->fDAC_HoleDepth[iDAC];
-                    x2 = i;
+                    x2 = static_cast<float>(i);
                     //	if (i > fDelay) {
                     DAC_M.push_back(CoutDACNewPeek(DACStruct->fDAC_BaseGain, gain, DACStruct->fDAC_HolebAmp[iDAC]) * (x1 / x2));
                     //}

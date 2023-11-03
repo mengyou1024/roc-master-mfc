@@ -27,6 +27,8 @@
 #include <utility>
 #include <vector>
 
+#pragma warning(disable: 26800)
+
 namespace spdlog {
 namespace details {
 

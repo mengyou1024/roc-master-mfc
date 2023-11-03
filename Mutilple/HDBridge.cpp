@@ -69,7 +69,7 @@ BOOL HDBridge::OnConfig(Techniques *pTechniques) {
         }
         int temDowniChannel = iChannel;
 
-        TOFD_PORT_SetPulseWidth(temDowniChannel, pTechniques->m_System.m_iPulseWidth);
+        TOFD_PORT_SetPulseWidth(temDowniChannel, static_cast<float>(pTechniques->m_System.m_iPulseWidth));
         float fDelay = pTechniques->m_pChannel[temiChannel].m_fDelay * 2000.0f / (float)pTechniques->m_pChannel[temiChannel].m_iVelocity;
         fDelay += pTechniques->m_pChannel[temiChannel].m_fOffset;
         TOFD_PORT_SetDelay(temDowniChannel, fDelay);
@@ -186,10 +186,10 @@ BOOL HDBridge::ReadAscan() {
                     int test = 0;
                 }
                 if (pReadData->pGatePos[0] == 0) { // pReadData->pGatePos[0]异常为0时 重新寻找A门内最高位置
-                    int GateApos = g_MainProcess.m_Techniques.m_pChannel[temChannel].m_pGatePos[GATE_A] * pReadData->iAScanSize;
-                    int GateAEnd = (g_MainProcess.m_Techniques.m_pChannel[temChannel].m_pGatePos[GATE_A] +
+                    int GateApos = static_cast<int>(g_MainProcess.m_Techniques.m_pChannel[temChannel].m_pGatePos[GATE_A] * pReadData->iAScanSize);
+                    int GateAEnd = static_cast<int>((g_MainProcess.m_Techniques.m_pChannel[temChannel].m_pGatePos[GATE_A] +
                                     g_MainProcess.m_Techniques.m_pChannel[temChannel].m_pGateWidth[GATE_A]) *
-                                   pReadData->iAScanSize;
+                                   pReadData->iAScanSize);
                     int nMaxAmp   = 0;
                     int nMaxIndex = GateApos;
                     for (int i = GateApos; i < GateAEnd; i++) {
@@ -198,19 +198,19 @@ BOOL HDBridge::ReadAscan() {
                             nMaxIndex = i;
                         }
                     }
-                    pReadData->pGatePos[0] = 100 * fSampleDepth * nMaxIndex / pReadData->iAScanSize;
+                    pReadData->pGatePos[0] = static_cast<int>(100 * fSampleDepth * nMaxIndex / pReadData->iAScanSize);
                     pReadData->pGateAmp[0] = nMaxAmp;
                 }
 
                 // b门跟随重新计算b门最高波
 
-                int GateBPos = (pReadData->pGatePos[0] / 100.0f / fSampleDepth +
+                int GateBPos = static_cast<int>((pReadData->pGatePos[0] / 100.0f / fSampleDepth +
                                 g_MainProcess.m_Techniques.m_pChannel[temChannel].m_pGatePos[GATE_B]) *
-                               pReadData->iAScanSize;
-                int GateBEnd =
-                    (pReadData->pGatePos[0] / 100.0f / fSampleDepth + g_MainProcess.m_Techniques.m_pChannel[temChannel].m_pGatePos[GATE_B] +
-                     g_MainProcess.m_Techniques.m_pChannel[temChannel].m_pGateWidth[GATE_B]) *
-                    pReadData->iAScanSize;
+                               pReadData->iAScanSize);
+                int GateBEnd = static_cast<int>((pReadData->pGatePos[0] / 100.0f / fSampleDepth +
+                                                 g_MainProcess.m_Techniques.m_pChannel[temChannel].m_pGatePos[GATE_B] +
+                                                 g_MainProcess.m_Techniques.m_pChannel[temChannel].m_pGateWidth[GATE_B]) *
+                                                pReadData->iAScanSize);
                 if (GateBPos < pReadData->iAScanSize) {
                     if (GateBEnd > pReadData->iAScanSize)
                         GateBEnd = pReadData->iAScanSize;
@@ -223,7 +223,7 @@ BOOL HDBridge::ReadAscan() {
                             nMaxBIndex = i;
                         }
                     }
-                    pReadData->pGatePos[1] = 100 * fSampleDepth * nMaxBIndex / pReadData->iAScanSize;
+                    pReadData->pGatePos[1] = static_cast<int>(100 * fSampleDepth * nMaxBIndex / pReadData->iAScanSize);
                     pReadData->pGateAmp[1] = m_ReadData.pAscan[temChannel][nMaxBIndex];
                 }
                 m_ReadData.pCoder[temChannel][0]   = pReadData->pCoder[0];

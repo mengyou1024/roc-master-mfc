@@ -9,6 +9,9 @@
 #include "SetWnd.h"
 #include "WheelUpDownWnd.h"
 
+// TODO: ÔÝÊ±ÆÁ±Î¾¯¸æ
+#pragma warning(disable :4267 4244 4552 4305 4101)
+
 ReViewScanWnd::~ReViewScanWnd() {
     KillTimer(TIMER_TIME);
     CString strCfgFile;

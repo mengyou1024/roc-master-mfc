@@ -28,6 +28,8 @@
 
 #include "format.h"
 
+#pragma warning(disable:26450 26498)
+
 FMT_BEGIN_NAMESPACE
 namespace detail {
 

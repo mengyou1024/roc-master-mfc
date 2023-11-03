@@ -1,4 +1,7 @@
 #pragma once
+
+#pragma warning( disable: 26495 )
+
 class Channel : public Object
 {
 public:

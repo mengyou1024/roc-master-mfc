@@ -11,7 +11,10 @@
 #include "Mutilple.h"
 #include "OpenGL.h"
 
-#define TIMER_OPENGL_RENDER 0x00
+// TODO: ÔÝÊ±ÆÁ±Î¾¯¸æ
+#pragma warning(disable :4267 4244 4552 4305 4101)
+
+constexpr auto TIMER_OPENGL_RENDER = 0x00;
 #define OpenGL_PTR          _T("OpenGL")
 
 OpenGL::OpenGL(void) : m_hWnd(nullptr), m_hDC(nullptr), m_hRC(nullptr), m_iWidth(1028), m_iHeight(502), m_iColorTexture(0) {

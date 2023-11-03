@@ -101,10 +101,7 @@ void CMainFrame::OnBtnSet() {
     g_MainProcess.m_Techniques.SaveTec(strCfgFile); // 保存到上一次
     strCfgFile.Format(_T("%sTechINI\\%s.tech"), theApp.m_pExePath, strTechName.GetBuffer(0));
 
-    long lStartTime = GetTickCount64();
     g_MainProcess.m_Techniques.SaveTecBinary(strCfgFile);
-    long lTime = GetTickCount64() - lStartTime;
-    int  test  = 0;
 }
 
 void CMainFrame::OnBtnScan() {

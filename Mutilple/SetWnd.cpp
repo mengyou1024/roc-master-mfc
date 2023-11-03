@@ -14,7 +14,10 @@
 #include "Techniques.h"
 #include <bitset>
 
-#define TIME_STATUS 0
+// TODO: 暂时屏蔽警告
+#pragma warning(disable :4267 4244 4552 4305 4101)
+
+constexpr auto TIME_STATUS = 0;
 
 SetWnd::~SetWnd() {
     // 退出时，关闭采样
