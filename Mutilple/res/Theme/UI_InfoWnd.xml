@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window size="480,288" corner="5,5" caption="0,0,0,70" mininfo="480,288">
+	<Font name="微软雅黑" size="14" default="true"/>
+	<Font name="微软雅黑" size="24" bold="true"/>
+
+	<VerticalLayout name="VLBackground">
+		<HorizontalLayout height="50">
+		</HorizontalLayout>
+		<VerticalLayout bkimage="Theme\Line\v_line.png" height="1"/>
+		<HorizontalLayout bkcolor="0xA0000000">
+			<VerticalLayout>
+				<VerticalLayout height="30"/>
+				<VerticalLayout>
+					<Text name="LabelString" multiline="true" font="2" textcolor="0xFFFFFFFF"/>
+				</VerticalLayout>
+				<VerticalLayout height="10"/>
+			</VerticalLayout>
+			<HorizontalLayout width="2"/>
+		</HorizontalLayout>
+		<VerticalLayout bkimage="Theme\Line\v_line.png" height="1"/>
+		<VerticalLayout height="20"/>
+		<HorizontalLayout height="40">
+			<VerticalLayout />
+				<Button name="IDCANCEL" width="150" hotimage="Theme\Button\bt_hot.png" pushedimage="Theme\Button\bt_hot.png" text="取消" bkcolor="0x7FA01010" hotbkcolor="0x7FE0E0E0" textcolor="0xFFFFFFFF" bordersize="1" bordercolor="0x7F000000" />
+			<VerticalLayout />
+		</HorizontalLayout>
+		<VerticalLayout height="20"/>
+	</VerticalLayout>
+</Window>

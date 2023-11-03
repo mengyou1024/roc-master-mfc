@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window size="1280,900" caption="5,5,5,52" sizebox="10,10,10,10" mininfo="640,480">
+	<Font name="楷体" size="14" default="true"/>
+	<Font name="楷体" size="18" />
+	<Font name="楷体" size="24" />
+	<Font name="楷体" size="32" />
+	<Font name="楷体" size="14" bold="true"/>
+	<Font name="楷体" size="18" bold="true"/>
+	<Font name="楷体" size="24" bold="true"/>
+	<Font name="楷体" size="40" bold="true"/>
+
+	<Default name="VScrollBar" value="button1normalimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'&quot; button1hotimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'&quot; button1pushedimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'&quot; button1disabledimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='54,90,70,106' mask='#FFFF00FF'&quot; button2normalimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'&quot; button2hotimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'&quot; button2pushedimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'&quot; button2disabledimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='54,108,70,124' mask='#FFFF00FF'&quot; thumbnormalimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='0,126,16,142' corner='2,2,2,2' mask='#FFFF00FF'&quot; thumbhotimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='18,126,34,142' corner='2,2,2,2' mask='#FFFF00FF'&quot; thumbpushedimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='36,126,52,142' corner='2,2,2,2' mask='#FFFF00FF'&quot; thumbdisabledimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='54,126,70,142' corner='2,2,2,2' mask='#FFFF00FF'&quot; railnormalimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='0,144,16,160' corner='2,2,2,2' mask='#FFFF00FF'&quot; railhotimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='18,144,34,160' corner='2,2,2,2' mask='#FFFF00FF'&quot; railpushedimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='36,144,52,160' corner='2,2,2,2' mask='#FFFF00FF'&quot; raildisabledimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='54,144,70,160' corner='2,2,2,2' mask='#FFFF00FF'&quot; bknormalimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='0,162,16,178' corner='2,2,2,2' mask='#FFFF00FF'&quot; bkhotimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='18,162,34,178' corner='2,2,2,2' mask='#FFFF00FF'&quot; bkpushedimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='36,162,52,178' corner='2,2,2,2' mask='#FFFF00FF'&quot; bkdisabledimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='54,162,70,178' corner='2,2,2,2' mask='#FFFF00FF'&quot; " />
+	<Default name="HScrollBar" value="button1normalimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='0,0,16,16' mask='#FFFF00FF'&quot; button1hotimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='18,0,34,16' mask='#FFFF00FF'&quot; button1pushedimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='36,0,52,16' mask='#FFFF00FF'&quot; button1disabledimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='54,0,70,16' mask='#FFFF00FF'&quot; button2normalimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='0,18,16,34' mask='#FFFF00FF'&quot; button2hotimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='18,18,34,34' mask='#FFFF00FF'&quot; button2pushedimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='36,18,52,34' mask='#FFFF00FF'&quot; button2disabledimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='54,18,70,34' mask='#FFFF00FF'&quot; thumbnormalimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='0,36,16,52' corner='2,2,2,2' mask='#FFFF00FF'&quot; thumbhotimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='18,36,34,52' corner='2,2,2,2' mask='#FFFF00FF'&quot; thumbpushedimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='36,36,52,52' corner='2,2,2,2' mask='#FFFF00FF'&quot; thumbdisabledimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='54,36,70,52' corner='2,2,2,2' mask='#FFFF00FF'&quot; railnormalimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='0,54,16,70' corner='2,2,2,2' mask='#FFFF00FF'&quot; railhotimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='18,54,34,70' corner='2,2,2,2' mask='#FFFF00FF'&quot; railpushedimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='36,54,52,70' corner='2,2,2,2' mask='#FFFF00FF'&quot; raildisabledimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='54,54,70,70' corner='2,2,2,2' mask='#FFFF00FF'&quot; bknormalimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='0,72,16,88' corner='2,2,2,2' mask='#FFFF00FF'&quot; bkhotimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='18,72,34,88' corner='2,2,2,2' mask='#FFFF00FF'&quot; bkpushedimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='36,72,52,88' corner='2,2,2,2' mask='#FFFF00FF'&quot; bkdisabledimage=&quot;file='Theme\Scrollbar\scrollbar.bmp' source='54,72,70,88' corner='2,2,2,2' mask='#FFFF00FF'&quot; " />
+	<Default name="Button" value="align=&quot;center&quot; valign=&quot;center&quot; bkcolor=&quot;0xFFEEEEEE&quot; hotbkcolor=&quot;0xFF1874CD&quot;" />
+
+	<VerticalLayout bkcolor="0xFFFEFEFE" bordersize="1" bordercolor="0xFFDDDDDD">
+		<HorizontalLayout height="34" >
+			<Label text="车轮扫查" font="0" bkimage="file='Theme\Button\union.png' dest='2,2,34,34'" textpadding="34,0,0,0" align="left" valign="center" />
+			<HorizontalLayout visible ="false" width="95">
+				<Button float="true" pos="0,0,0,0" name="minbtn" tooltip="最小化"  width="28" height="19" bkcolor="" normalimage="Theme\Button\btn_mini_normal.png" hotimage="Theme\Button\btn_mini_highlight.png" pushedimage="Theme\Button\btn_mini_down.png"/>
+				<Button float="true" pos="29,0,0,0" name="maxbtn" tooltip="最大化"  width="28" height="19" bkcolor="" normalimage="Theme\Button\btn_max_normal.png" hotimage="Theme\Button\btn_max_highlight.png" pushedimage="Theme\Button\btn_max_down.png"/>
+				<Button float="true" pos="29,0,0,0" name="restorebtn" tooltip="还原" visible="false" width="28" bkcolor="" height="19" normalimage="Theme\Button\btn_restore_normal.png" hotimage="Theme\Button\btn_restore_highlight.png" pushedimage="Theme\Button\btn_restore_down.png"/>
+				<Button float="true" pos="57,0,0,0" name="closebtn" tooltip="关闭"  width="39" height="19" bkcolor="" normalimage="Theme\Button\btn_close_normal.png" hotimage="Theme\Button\btn_close_highlight.png" pushedimage="Theme\Button\btn_close_down.png"/>
+			</HorizontalLayout>
+		</HorizontalLayout>
+		<VerticalLayout bkimage="Theme\Line\v_line.png" height="1"/>
+		<HorizontalLayout>
+			<HorizontalLayout inset="10,10,10,10">
+				<WindowUI name="WndOpenGL" bkcolor="0xFF000000" />
+			</HorizontalLayout>
+			<VerticalLayout width="400">
+				<HorizontalLayout inset="10,10,10,10">
+					<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10">
+
+						<HorizontalLayout height="32" >
+							<Label text="探头" valign="center" width="79"/>
+							<Label text="探伤灵敏度" valign="center" width="79"/>
+							<Label text="补偿dB" valign="center" width="70"/>
+							<Label text="透声灵敏度" valign="center" width="79"/>
+							<Label text="补偿dB" valign="center" width="79"/>
+
+						</HorizontalLayout>
+
+						<VerticalLayout height="2"/>
+						<HorizontalLayout height="33">
+							<HorizontalLayout height="28">
+								<Label name="CHName1" text="踏面A1" valign="center" width="79"/>
+									<HorizontalLayout width="5"/>
+								<Label name="CHGain1" text="45dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F" inset="2,2,0,0"/>
+								<HorizontalLayout width="10"/>
+								<Edit name="EditGainSur1" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16">
+									<Button name="BtnSpin" userdata="EditGainSur1:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSur1:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+
+								<HorizontalLayout width="30"/>
+								<Label name="CHGainSound1" visible ="false" text="50dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="15"/>
+								<Edit name="EditGainSoundSur1"  visible ="false" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16" visible ="false">
+									<Button name="BtnSpin" userdata="EditGainSoundSur1:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSoundSur1:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+							</HorizontalLayout>
+						</HorizontalLayout>
+
+
+						<VerticalLayout height="2"/>
+						<HorizontalLayout height="33">
+							<HorizontalLayout height="28">
+								<Label name="CHName2" text="踏面A2" valign="center" width="79"/>
+												<HorizontalLayout width="5"/>
+								<Label name="CHGain2" text="45dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F" inset="2,2,0,0"/>
+								<HorizontalLayout width="10"/>
+								<Edit name="EditGainSur2" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16" >
+									<Button name="BtnSpin" userdata="EditGainSur2:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSur2:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+
+								<HorizontalLayout width="30"/>
+								<Label name="CHGainSound2" visible ="false" text="50dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="15"/>
+								<Edit name="EditGainSoundSur2"  visible ="false" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16" visible ="false">
+									<Button name="BtnSpin" userdata="EditGainSoundSur2:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSoundSur2:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+							</HorizontalLayout>
+						</HorizontalLayout>
+
+						<VerticalLayout height="2"/>
+						<HorizontalLayout height="33">
+							<HorizontalLayout height="28">
+								<Label name="CHName3" text="踏面A3" valign="center" width="79"/>
+										<HorizontalLayout width="5"/>
+								<Label name="CHGain3" text="45dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F" inset="2,2,0,0"/>
+								<HorizontalLayout width="10"/>
+								<Edit name="EditGainSur3" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16">
+									<Button name="BtnSpin" userdata="EditGainSur3:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSur3:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+
+								<HorizontalLayout width="30"/>
+								<Label name="CHGainSound3"  visible ="false" text="50dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="15"/>
+								<Edit name="EditGainSoundSur3" visible ="false"  textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16" visible ="false">
+									<Button name="BtnSpin" userdata="EditGainSoundSur3:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSoundSur3:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+							</HorizontalLayout>
+						</HorizontalLayout>
+
+						<VerticalLayout height="2"/>
+						<HorizontalLayout height="33">
+							<HorizontalLayout height="28">
+								<Label name="CHName4" text="踏面A4" valign="center" width="79"/>
+									<HorizontalLayout width="5"/>
+								<Label name="CHGain4" text="45dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F" inset="2,2,0,0"/>
+								<HorizontalLayout width="10"/>
+								<Edit name="EditGainSur4" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16">
+									<Button name="BtnSpin" userdata="EditGainSur4:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSur4:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+
+								<HorizontalLayout width="30"/>
+								<Label name="CHGainSound4" visible ="false" text="50dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="15"/>
+								<Edit name="EditGainSoundSur4"  visible ="false" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16" visible ="false" >
+									<Button name="BtnSpin" userdata="EditGainSoundSur4:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin"  userdata="EditGainSoundSur4:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+							</HorizontalLayout>
+						</HorizontalLayout>
+
+						<VerticalLayout height="2"/>
+						<HorizontalLayout height="33">
+							<HorizontalLayout height="28">
+								<Label name="CHName5" text="侧面A5" valign="center" width="79"/>
+											<HorizontalLayout width="5"/>
+								<Label name="CHGain5" text="45dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F" inset="2,2,0,0"/>
+								<HorizontalLayout width="10"/>
+								<Edit name="EditGainSur5" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16">
+									<Button name="BtnSpin" userdata="EditGainSur5:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSur5:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+
+								<HorizontalLayout width="30"/>
+								<Label name="CHGainSound5" visible ="false" text="50dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="15"/>
+								<Edit name="EditGainSoundSur5" visible ="false" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16" visible ="false">
+									<Button name="BtnSpin" userdata="EditGainSoundSur5:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSoundSur5:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+							</HorizontalLayout>
+						</HorizontalLayout>
+
+						<VerticalLayout height="2"/>
+						<HorizontalLayout height="33">
+							<HorizontalLayout height="28">
+								<Label name="CHName6" text="踏面A6" valign="center" width="79"/>
+										<HorizontalLayout width="5"/>
+								<Label name="CHGain6" text="45dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F" inset="2,2,0,0"/>
+								<HorizontalLayout width="10"/>
+								<Edit name="EditGainSur6" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16">
+									<Button name="BtnSpin" userdata="EditGainSur6:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSur6:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+
+								<HorizontalLayout width="30"/>
+								<Label name="CHGainSound6" visible ="false" text="50dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="15"/>
+								<Edit name="EditGainSoundSur6" visible ="false" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16" visible ="false" >
+									<Button name="BtnSpin" userdata="EditGainSoundSur6:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSoundSur6:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+							</HorizontalLayout>
+						</HorizontalLayout>
+
+						<VerticalLayout height="2"/>
+						<HorizontalLayout height="33">
+							<HorizontalLayout height="28">
+								<Label name="CHName7" text="侧面单晶B7" valign="center" width="79"/>
+										<HorizontalLayout width="5"/>
+								<Label name="CHGain7" text="45dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F" inset="2,2,0,0"/>
+								<HorizontalLayout width="10"/>
+								<Edit name="EditGainSur7" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16">
+									<Button name="BtnSpin" userdata="EditGainSur7:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSur7:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+
+								<HorizontalLayout width="30"/>
+								<Label name="CHGainSound7" text="50dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="15"/>
+								<Edit name="EditGainSoundSur7" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16">
+									<Button name="BtnSpin" userdata="EditGainSoundSur7:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSoundSur7:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+							</HorizontalLayout>
+						</HorizontalLayout>
+
+						<VerticalLayout height="2"/>
+						<HorizontalLayout height="33">
+							<HorizontalLayout height="28">
+								<Label name="CHName8" text="侧面单晶B8" valign="center" width="79"/>
+										<HorizontalLayout width="5"/>
+								<Label name="CHGain8" text="45dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F" inset="2,2,0,0"/>
+								<HorizontalLayout width="10"/>
+								<Edit name="EditGainSur8" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16">
+									<Button name="BtnSpin" userdata="EditGainSur8:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSur8:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+
+								<HorizontalLayout width="30"/>
+								<Label name="CHGainSound8"  visible ="true" text="50dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="15"/>
+								<Edit name="EditGainSoundSur8"  visible ="true" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16" visible ="true">
+									<Button name="BtnSpin" userdata="EditGainSoundSur8:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSoundSur8:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+							</HorizontalLayout>
+						</HorizontalLayout>
+
+						<VerticalLayout height="2"/>
+						<HorizontalLayout height="33">
+							<HorizontalLayout height="28">
+								<Label name="CHName9" text="侧面双晶B9" valign="center" width="79"/>
+													<HorizontalLayout width="5"/>
+								<Label name="CHGain9" text="45dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F" inset="2,2,0,0"/>
+								<HorizontalLayout width="10"/>
+								<Edit name="EditGainSur9" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16">
+									<Button name="BtnSpin" userdata="EditGainSur9:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSur9:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+
+								<HorizontalLayout width="30"/>
+								<Label name="CHGainSound9"   visible ="false"  text="50dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="15"/>
+								<Edit name="EditGainSoundSur9"    visible ="false" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16"  visible ="false">
+									<Button name="BtnSpin" userdata="EditGainSoundSur9:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSoundSur9:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+							</HorizontalLayout>
+						</HorizontalLayout>
+
+						<VerticalLayout height="2"/>
+						<HorizontalLayout height="33">
+							<HorizontalLayout height="28">
+								<Label name="CHName10" text="侧面双晶B10" valign="center" width="79"/>
+																<HorizontalLayout width="5"/>
+								<Label name="CHGain10" text="45dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F" inset="2,2,0,0"/>
+								<HorizontalLayout width="10"/>
+								<Edit name="EditGainSur10" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16">
+									<Button name="BtnSpin" userdata="EditGainSur10:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSur10:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+
+								<HorizontalLayout width="30" />
+								<Label name="CHGainSound10" visible ="false" text="50dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="15"/>
+								<Edit name="EditGainSoundSur10"  visible ="false" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16"  visible ="false">
+									<Button name="BtnSpin" userdata="EditGainSoundSur10:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSoundSur10:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+							</HorizontalLayout>
+						</HorizontalLayout>
+												
+												
+						<VerticalLayout height="2"/>
+						<HorizontalLayout height="33">
+							<HorizontalLayout height="28">
+								<Label name="CHName11" text="侧面双晶B11" valign="center" width="79"/>
+																<HorizontalLayout width="5"/>
+								<Label name="CHGain11" text="45dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F" inset="2,2,0,0"/>
+								<HorizontalLayout width="10"/>
+								<Edit name="EditGainSur11" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16">
+									<Button name="BtnSpin" userdata="EditGainSur11:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSur11:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+
+								<HorizontalLayout width="30" />
+								<Label name="CHGainSound11" visible ="false" text="50dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="15"/>
+								<Edit name="EditGainSoundSur11"  visible ="false" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16"  visible ="false">
+									<Button name="BtnSpin" userdata="EditGainSoundSur11:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSoundSur11:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+							</HorizontalLayout>
+						</HorizontalLayout>
+
+
+						<VerticalLayout height="2"/>
+						<HorizontalLayout height="33">
+							<HorizontalLayout height="28">
+								<Label name="CHName12" text="侧面双晶B12" valign="center" width="79"/>
+																<HorizontalLayout width="5"/>
+								<Label name="CHGain12" text="45dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F" inset="2,2,0,0"/>
+								<HorizontalLayout width="10"/>
+								<Edit name="EditGainSur12" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16">
+									<Button name="BtnSpin" userdata="EditGainSur12:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSur12:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+
+								<HorizontalLayout width="30" />
+								<Label name="CHGainSound12" visible ="false" text="50dB" valign="center" width="50" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="15"/>
+								<Edit name="EditGainSoundSur12"  visible ="false" textext="" width="40" bordersize="1" bordercolor="0x7F7F7F7F"/>
+								<HorizontalLayout width="1"/>
+								<VerticalLayout width="16"  visible ="false">
+									<Button name="BtnSpin" userdata="EditGainSoundSur12:1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'"/>
+									<VerticalLayout height="1" bkcolor="0xFFA0A0A0"/>
+									<Button name="BtnSpin" userdata="EditGainSoundSur12:-1.0" clicktype="1" height="16" bkimage="file='Theme\Scrollbar\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'" hotimage="file='Theme\Scrollbar\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'" pushedimage="file='Theme\Scrollbar\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'"/>
+								</VerticalLayout>
+							</HorizontalLayout>
+						</HorizontalLayout>
+
+
+					</VerticalLayout>
+
+					<Label text="灵敏度" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="60" height="20"/>
+				</HorizontalLayout>
+
+				<HorizontalLayout inset="10,10,10,10">
+					<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10">
+
+
+						<VerticalLayout   inset="10,0,10,0">
+                                 <HorizontalLayout  height= "70" width="350" inset="10,5,10,5">
+								<Button name="BtnWheelUp"  text="上料/下料" font="6" />
+								<VerticalLayout width="20"/>
+									 <Button name="IDCANCEL"  text="退出" font="6" />
+
+
+							</HorizontalLayout>
+							
+							<HorizontalLayout  height= "70" width="350"  inset="10,5,10,5">
+								<Button name="BtnDailyCheck"  text="日常校验" font="6" />
+
+								<VerticalLayout width="20"/>
+								
+								<Button name="BtnScanStop"  text="停止检测" font="6" />
+							</HorizontalLayout>
+
+							<HorizontalLayout  height= "70" width="350" inset="10,5,10,5">
+								<Button name="BtnScanStart"  text="开始检测" font="6" />
+								<VerticalLayout width="20"/>
+								<Button name="BtnDefectPos"  text="缺陷定位" font="6" />
+
+							</HorizontalLayout>
+
+
+							<HorizontalLayout   height= "70" width="350"  inset="10,5,10,5">
+
+								<Button name="BtnWheelDown"  text="一键原点" font="6" />
+								<VerticalLayout  visible ="false" width="20"/>
+								<Button visible ="false" name="BtnDefectScan"  text="缺陷扫查" font="6" />
+
+							</HorizontalLayout>
+
+							<VerticalLayout width="10"/>
+
+							<VerticalLayout height="1" bkcolor="0x66000000"  />
+
+							<VerticalLayout width="10"/>
+
+							<HorizontalLayout   inset="30,1,1,1">
+
+								<Label name="LabelWheelName1" text="车轮型号：" valign="center" font="1"/>
+								<VerticalLayout width="5"/>
+
+								<Label name="LabelWheelValue1" text="RD2A" valign="center"  font="1"/>
+
+							</HorizontalLayout>
+
+							<HorizontalLayout   inset="30,1,1,1">
+
+								<Label name="LabelWheelName2" text="车轮编号：" valign="center" font="1"/>
+								<VerticalLayout width="5"/>
+
+								<Label name="LabelWheelValue2" text="001" valign="center"  font="1"/>
+
+							</HorizontalLayout>
+
+							<HorizontalLayout   inset="30,1,1,1">
+
+								<Label name="LabelWheelName3" text="检测人员：" valign="center" font="1"/>
+								<VerticalLayout width="5"/>
+
+								<Label name="LabelWheelValue3" text="李四" valign="center"  font="1"/>
+
+							</HorizontalLayout>
+							<HorizontalLayout  inset="30,1,1,1" >
+
+								<Label name="LabelWheelName4" text="车轮转速:" valign="center" font="1"/>
+								<VerticalLayout width="5"/>
+
+								<Label name="LabelWheelValue4" text="2圈每分钟" valign="center"  font="1"/>
+
+							</HorizontalLayout>
+
+						</VerticalLayout>
+
+					</VerticalLayout>
+					<Label text="检测操作" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="60" height="20"/>
+				</HorizontalLayout>
+			</VerticalLayout>
+		</HorizontalLayout>
+		<HorizontalLayout height="100" inset="10,10,10,10">
+			<HorizontalLayout    bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,5,5,5">
+				<HorizontalLayout width="200" >
+					<VerticalLayout   width="200"  >
+						<Label name="LabelTime" text="" valign="center" font="3"/>
+						<VerticalLayout width="5"/>
+						<Label name="LabelData" text="" valign="center"  font="3"/>
+
+					</VerticalLayout>		   
+				</HorizontalLayout>
+
+				<HorizontalLayout width="1000" inset="2,2,2,2" >
+					<VerticalLayout    width="120">
+						<Label name="LabelMesName11" text="超声未连接！" valign="left"  font="1"/>
+
+						<Label name="LabelMesName12" text="PLC未连接！" valign="left" font="1"/>
+                 
+						<Label name="LabelMesName13" text="工艺名称！" valign="left" font="1"/>
+					</VerticalLayout>
+					
+					<VerticalLayout    width="60" >
+						<Label name="LabelMesName21" text="" valign="left"  font="1"/>
+			
+						<Label name="LabelMesName22" text="踏面：" valign="left" font="1"/>
+     
+						<Label name="LabelMesName23" text="侧面：" valign="left" font="1"/>
+					</VerticalLayout>
+														<VerticalLayout    width="100" >
+						<Label name="LabelMesName31" text="步进(mm)" valign="left"  font="1"/>
+				
+						<Label name="LabelMesName32" text="9.5 " valign="left" font="1"/>
+                
+						<Label name="LabelMesName33" text="10.5" valign="left" font="1"/>
+					</VerticalLayout>
+					<VerticalLayout     width="250">
+						<Label name="LabelMesName41" text="工艺设定(mm)" valign="left"  font="1"/>
+			
+						<Label name="LabelMesName42" text="X:10.0;Y:(10.0-100.0) " valign="left" font="1"/>
+        
+						<Label name="LabelMesName43" text="Y:10.0;X:(20-100.0)：" valign="left" font="1"/>
+					</VerticalLayout>
+					
+									<VerticalLayout    width="200" >
+						<Label name="LabelMesName51" text="当前状态(mm)" valign="left"  font="1"/>
+						
+						<Label name="LabelMesName52" text="X:10.0;Y:20 " valign="left" font="1"/>
+      
+						<Label name="LabelMesName53" text="Y:10.0;X:30：" valign="left" font="1"/>
+					</VerticalLayout>
+					  
+					
+					<VerticalLayout   width="200">
+						<Label name="LabelMesName61" text="" valign="left" font="1"/>
+		
+						<Label name="LabelMesName62" text="卡盘角度：259.01" valign="left" font="1"/>
+	
+						<Label name="LabelMesName63" text="检测圈数：1/10" valign="left"  font="1"/>
+					</VerticalLayout>		   
+					<VerticalLayout   width="200">
+						<Label name="LabelMesName71" text="" valign="left" font="1"/>
+		
+						<Label name="LabelMesName72" text="" valign="left" font="1"/>
+	
+						<Label name="LabelMesName73" text="" valign="left"  font="1"/>
+					</VerticalLayout>		 
+				</HorizontalLayout>
+
+
+				<HorizontalLayout width="120" inset="10,5,5,5" >
+
+
+					<VerticalLayout    >
+						<Button name="BtnChangeSequencer"  visible ="true" text="数据分析" font="2" />
+						<VerticalLayout width="5"/>
+						<Button name="BtnTest2"  visible ="false" text="测试2" font="4" />
+
+					</VerticalLayout>		   
+
+				</HorizontalLayout>
+			
+			</HorizontalLayout>
+
+
+			<VerticalLayout width="20"/>
+			<HorizontalLayout width="380"  bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,1,10,10">
+
+				<HorizontalLayout  height= "80"   >
+					<Label name="LabelScanRes" text="不合格"  textcolor="0xFFFF0000" align ="center"  valign="center" font="7"/>
+
+
+				</HorizontalLayout>
+
+			</HorizontalLayout>
+
+		</HorizontalLayout>
+	</VerticalLayout>
+</Window>

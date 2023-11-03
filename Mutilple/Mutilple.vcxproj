@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{EB4DB785-9866-4DED-8771-218D7BB501FF}</ProjectGuid>
+    <Keyword>MFCProj</Keyword>
+    <RootNamespace>Mutilple</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Static</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <ExternalIncludePath>$(ProjectDir)Extensions\DuiLib;$(ProjectDir)Extensions\glew-2.1.0\include;$(ProjectDir)Extensions\glm;$(ProjectDir)Extensions\freetype\include;$(ProjectDir)Extensions\NetworkMulti;$(ExternalIncludePath)</ExternalIncludePath>
+    <LibraryPath>$(OutDir);$(ProjectDir)Extensions\glew-2.1.0\lib\Release\x64;$(ProjectDir)Extensions\freetype\lib;$(ProjectDir)Extensions\NetworkMulti\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <ExternalIncludePath>$(ProjectDir)Extensions\DuiLib;$(ProjectDir)Extensions\glew-2.1.0\include;$(ProjectDir)Extensions\glm;$(ProjectDir)Extensions\freetype\include;$(ProjectDir)Extensions\NetworkMulti;$(ExternalIncludePath)</ExternalIncludePath>
+    <LibraryPath>$(OutDir);$(ProjectDir)Extensions\glew-2.1.0\lib\Release\x64;$(ProjectDir)Extensions\freetype\lib;$(ProjectDir)Extensions\NetworkMulti\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;ORMPP_ENABLE_SQLITE3;ORM_DB_NAME="data.db";SPDLOG_WCHAR_TO_UTF8_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>$(ProjectDir)snap7.lib;$(ProjectDir)sqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SetChecksum>true</SetChecksum>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;ORMPP_ENABLE_SQLITE3;ORM_DB_NAME="data.db";SPDLOG_WCHAR_TO_UTF8_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+      <AdditionalDependencies>$(ProjectDir)snap7.lib;$(ProjectDir)sqlite3.lib;Advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SetChecksum>true</SetChecksum>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;ORMPP_ENABLE_SQLITE3;ORM_DB_NAME="data.db";SPDLOG_WCHAR_TO_UTF8_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>$(ProjectDir)snap7.lib;$(ProjectDir)sqlite3.lib;Advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SetChecksum>true</SetChecksum>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;ORMPP_ENABLE_SQLITE3;ORM_DB_NAME="data.db";SPDLOG_WCHAR_TO_UTF8_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+      <AdditionalDependencies>$(ProjectDir)snap7.lib;$(ProjectDir)sqlite3.lib;Advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SetChecksum>true</SetChecksum>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="AboutWnd.h" />
+    <ClInclude Include="AutoDefectPosInfoWnd.h" />
+    <ClInclude Include="AutoScanInfoWnd.h" />
+    <ClInclude Include="Axis.h" />
+    <ClInclude Include="Channel.h" />
+    <ClInclude Include="CheckWnd.h" />
+    <ClInclude Include="ConnectPLC.h" />
+    <ClInclude Include="ControlIP.h" />
+    <ClInclude Include="DacCount.h" />
+    <ClInclude Include="DACSetWnd.h" />
+    <ClInclude Include="DefectListWnd.h" />
+    <ClInclude Include="Define.h" />
+    <ClInclude Include="DetectionStd.h" />
+    <ClInclude Include="DetectionStd_TBT2995_200.h" />
+    <ClInclude Include="DMessageBox.h" />
+    <ClInclude Include="DuiWindowBase.h" />
+    <ClInclude Include="Extensions\sqlite_orm\include\sqlite_orm\sqlite_orm.h" />
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="FreeFont.h" />
+    <ClInclude Include="GroupScanWnd.h" />
+    <ClInclude Include="HDBridge.h" />
+    <ClInclude Include="ICheckCarrier.h" />
+    <ClInclude Include="ICoder.h" />
+    <ClInclude Include="MainFrame.h" />
+    <ClInclude Include="MainProcess.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshAscan.h" />
+    <ClInclude Include="MeshCscan.h" />
+    <ClInclude Include="MeshBscan.h" />
+    <ClInclude Include="MeshGroupCScan.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelGroupAScan.h" />
+    <ClInclude Include="ModelGroupCScan.h" />
+    <ClInclude Include="ModelScan.h" />
+    <ClInclude Include="ModelSet.h" />
+    <ClInclude Include="Model\SystemConfig.h" />
+    <ClInclude Include="Model\UserModel.h" />
+    <ClInclude Include="Mutilple.h" />
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="OpenGL.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="PLCWnd.h" />
+    <ClInclude Include="ProbleWheelWnd.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="ReViewScanWnd.h" />
+    <ClInclude Include="RuitiePLC.h" />
+    <ClInclude Include="Scan.h" />
+    <ClInclude Include="SetQuartWnd.h" />
+    <ClInclude Include="snap7.h" />
+    <ClInclude Include="Techniques.h" />
+    <ClInclude Include="ScanWnd.h" />
+    <ClInclude Include="SetWnd.h" />
+    <ClInclude Include="Specimen.h" />
+    <ClInclude Include="System.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="TecListWnd.h" />
+    <ClInclude Include="Thread.h" />
+    <ClInclude Include="ToolFunc.h" />
+    <ClInclude Include="User.h" />
+    <ClInclude Include="UserWnd.h" />
+    <ClInclude Include="WheelUpDownWnd.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AboutWnd.cpp" />
+    <ClCompile Include="AutoDefectPosInfoWnd.cpp" />
+    <ClCompile Include="AutoScanInfoWnd.cpp" />
+    <ClCompile Include="Axis.cpp" />
+    <ClCompile Include="Channel.cpp" />
+    <ClCompile Include="CheckWnd.cpp" />
+    <ClCompile Include="ConnectPLC.cpp" />
+    <ClCompile Include="ControlIP.cpp" />
+    <ClCompile Include="DacCount.cpp" />
+    <ClCompile Include="DACSetWnd.cpp" />
+    <ClCompile Include="DefectListWnd.cpp" />
+    <ClCompile Include="DetectionStd.cpp" />
+    <ClCompile Include="DetectionStd_TBT2995_200.cpp" />
+    <ClCompile Include="DMessageBox.cpp" />
+    <ClCompile Include="DuiWindowBase.cpp" />
+    <ClCompile Include="FreeFont.cpp" />
+    <ClCompile Include="GroupScanWnd.cpp" />
+    <ClCompile Include="HDBridge.cpp" />
+    <ClCompile Include="MainFrame.cpp" />
+    <ClCompile Include="MainProcess.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshAscan.cpp" />
+    <ClCompile Include="MeshCscan.cpp" />
+    <ClCompile Include="MeshBscan.cpp" />
+    <ClCompile Include="MeshGroupCScan.cpp" />
+    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="ModelGroupAScan.cpp" />
+    <ClCompile Include="ModelGroupCScan.cpp" />
+    <ClCompile Include="ModelScan.cpp" />
+    <ClCompile Include="ModelSet.cpp" />
+    <ClCompile Include="Model\SystemConfig.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Model\UserModel.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Mutilple.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="OpenGL.cpp" />
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="PLCWnd.cpp" />
+    <ClCompile Include="ProbleWheelWnd.cpp" />
+    <ClCompile Include="ReViewScanWnd.cpp" />
+    <ClCompile Include="RuitiePLC.cpp" />
+    <ClCompile Include="Scan.cpp" />
+    <ClCompile Include="SetQuartWnd.cpp" />
+    <ClCompile Include="snap7.cpp" />
+    <ClCompile Include="Techniques.cpp" />
+    <ClCompile Include="ScanWnd.cpp" />
+    <ClCompile Include="SetWnd.cpp" />
+    <ClCompile Include="Specimen.cpp" />
+    <ClCompile Include="System.cpp" />
+    <ClCompile Include="TecListWnd.cpp" />
+    <ClCompile Include="Thread.cpp" />
+    <ClCompile Include="ToolFunc.cpp" />
+    <ClCompile Include="User.cpp" />
+    <ClCompile Include="UserWnd.cpp" />
+    <ClCompile Include="WheelUpDownWnd.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Mutilple.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Mutilple.rc2" />
+    <None Include="res\Theme.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\icon1.ico" />
+    <Image Include="res\Mutilple.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="res\default.ttf" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

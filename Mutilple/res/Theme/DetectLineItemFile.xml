@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window size="580,113">
+	<Font name="楷体" size="14" default="true"/>
+	<Font name="楷体" size="16" />
+	<HorizontalLayout>
+		<VerticalLayout>
+		<HorizontalLayout>
+			<Label name="LabelFileName" font="1" textpadding="21,1,0,0" align="left" height="32" bkimage="file='Theme\Button\file.png' dest='2,8,16,24'" textcolor="0xFF105090"/>
+			<Label name="LabelFileInfo"  font="1" textpadding="21,1,0,0" visible ="false"  height="32" textcolor="0xFF707070"/>
+
+		</HorizontalLayout>
+		<VerticalLayout height="1" bkcolor="0x66000000"  />
+			</VerticalLayout>
+		<Button name="BtnFileDelete" width="28" visible ="false" bkimage="file='Theme\Button\delete.png' dest='6,20,24,44'" hotimage="file='Theme\Button\delete.png' dest='5,19,25,45'"/>
+	
+	</HorizontalLayout>
+</Window>

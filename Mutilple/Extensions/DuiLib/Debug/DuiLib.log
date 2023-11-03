@@ -1,0 +1,56 @@
+﻿cl : 命令行 warning D9035: “Gm”选项已否决，并将在将来的版本中移除
+  StdAfx.cpp
+cl : 命令行 warning D9035: “Gm”选项已否决，并将在将来的版本中移除
+  UIWebBrowser.cpp
+  UITreeView.cpp
+  UIText.cpp
+  UISlider.cpp
+  UIScrollBar.cpp
+  UIRichEdit.cpp
+  UIProgress.cpp
+  UIOption.cpp
+  UIMenu.cpp
+  UIList.cpp
+  UILabel.cpp
+  UIGifAnim.cpp
+  UIFlash.cpp
+  UIEdit.cpp
+  UIDateTime.cpp
+  UICombo.cpp
+  UICheckBox.cpp
+  UIButton.cpp
+  UIActiveX.cpp
+  UIVerticalLayout.cpp
+  正在生成代码...
+  正在编译...
+  UITileLayout.cpp
+  UITabLayout.cpp
+  UIHorizontalLayout.cpp
+  UIChildLayout.cpp
+  UIRender.cpp
+  UIMarkup.cpp
+  UIManager.cpp
+  UIImageAttribute.cpp
+  UIDlgBuilder.cpp
+  UIControl.cpp
+  UIContainer.cpp
+  UIBase.cpp
+  WinImplBase.cpp
+  Utils.cpp
+  UIShadow.cpp
+  UIDelegate.cpp
+  ThirdParty.cpp
+  UIlib.cpp
+  UIWindow.cpp
+  UIColorUI.cpp
+  正在生成代码...
+  正在编译...
+  UIClickNum.cpp
+  UIClickEdit.cpp
+  正在生成代码...
+cl : 命令行 warning D9035: “Gm”选项已否决，并将在将来的版本中移除
+  stb_image.c
+cl : 命令行 warning D9035: “Gm”选项已否决，并将在将来的版本中移除
+  XUnzip.cpp
+    正在创建库 C:\Users\Administrator\Desktop\Mutilple\Debug\DuiLib.lib 和对象 C:\Users\Administrator\Desktop\Mutilple\Debug\DuiLib.exp
+  DuiLib.vcxproj -> C:\Users\Administrator\Desktop\Mutilple\Debug\DuiLib.dll

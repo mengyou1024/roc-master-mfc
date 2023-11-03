@@ -1,0 +1,463 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\App">
+      <UniqueIdentifier>{60dcf4be-51db-4105-bda1-16e827c8b2a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\App">
+      <UniqueIdentifier>{5081cd6b-fa85-4ec5-bf5b-d4d227980a05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI">
+      <UniqueIdentifier>{f84f315d-23e0-4f09-a819-ed8769c5302b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UI">
+      <UniqueIdentifier>{54c75369-b625-4a5a-974d-5231b4c847f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\图像处理">
+      <UniqueIdentifier>{da5a8087-c15b-4b2c-96a9-95dc4f951ea4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\图像处理">
+      <UniqueIdentifier>{63a836e9-2f95-46f0-b9fe-e290d173a752}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\接口">
+      <UniqueIdentifier>{a469bc82-60fd-43b8-b21e-ec91d6d8bee6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\扫查参数">
+      <UniqueIdentifier>{d86107d9-df08-461d-b233-e159facc87f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\扫查参数">
+      <UniqueIdentifier>{65b1b5fd-efe7-4218-86c6-677dcff31dd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\功能函数">
+      <UniqueIdentifier>{aab9556a-c301-470f-b211-243e2bd56e5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\功能函数">
+      <UniqueIdentifier>{9ec5c1ef-3998-4aad-a15b-4a76eaf40166}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\超声板卡">
+      <UniqueIdentifier>{ceed980c-7c6c-42cd-a886-dfe0cc9877a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\超声板卡">
+      <UniqueIdentifier>{d2efdcec-534f-4ab3-9b4f-9d1b0f194e17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\主进程">
+      <UniqueIdentifier>{b70e0f28-5e61-4ab2-9d83-bba72e5661d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\主进程">
+      <UniqueIdentifier>{2fe232ce-91d4-433b-9dd4-9e6395a46568}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\PLC">
+      <UniqueIdentifier>{47f40740-2b96-4d69-b1f8-3d4d413bc2ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PLC">
+      <UniqueIdentifier>{ba314245-cd50-446f-9264-4fc6df439cbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\探伤标准">
+      <UniqueIdentifier>{1dadea00-c331-46b5-b1ac-caf0a5fddc6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\探伤标准">
+      <UniqueIdentifier>{2dd98ab4-749d-48a7-95f2-d7326c6badc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ORM">
+      <UniqueIdentifier>{bf8478aa-2763-4a2c-bfa1-37402241cc1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Model">
+      <UniqueIdentifier>{0b114464-1e66-444a-90b5-996ddb2d57f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Model">
+      <UniqueIdentifier>{470fd218-ecca-4cbc-bc21-1140655f3fc5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Define.h">
+      <Filter>Header Files\App</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>Header Files\App</Filter>
+    </ClInclude>
+    <ClInclude Include="DMessageBox.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="DuiWindowBase.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrame.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files\App</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files\App</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files\App</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeFont.h">
+      <Filter>Header Files\图像处理</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files\图像处理</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL.h">
+      <Filter>Header Files\图像处理</Filter>
+    </ClInclude>
+    <ClInclude Include="Mutilple.h">
+      <Filter>Header Files\App</Filter>
+    </ClInclude>
+    <ClInclude Include="ICheckCarrier.h">
+      <Filter>Header Files\接口</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="SetWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Techniques.h">
+      <Filter>Header Files\扫查参数</Filter>
+    </ClInclude>
+    <ClInclude Include="Channel.h">
+      <Filter>Header Files\扫查参数</Filter>
+    </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>Header Files\扫查参数</Filter>
+    </ClInclude>
+    <ClInclude Include="Thread.h">
+      <Filter>Header Files\功能函数</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolFunc.h">
+      <Filter>Header Files\功能函数</Filter>
+    </ClInclude>
+    <ClInclude Include="HDBridge.h">
+      <Filter>Header Files\超声板卡</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelSet.h">
+      <Filter>Header Files\图像处理</Filter>
+    </ClInclude>
+    <ClInclude Include="MainProcess.h">
+      <Filter>Header Files\主进程</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files\图像处理</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshAscan.h">
+      <Filter>Header Files\图像处理</Filter>
+    </ClInclude>
+    <ClInclude Include="Axis.h">
+      <Filter>Header Files\图像处理</Filter>
+    </ClInclude>
+    <ClInclude Include="ConnectPLC.h">
+      <Filter>Header Files\PLC</Filter>
+    </ClInclude>
+    <ClInclude Include="ScanWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelScan.h">
+      <Filter>Header Files\图像处理</Filter>
+    </ClInclude>
+    <ClInclude Include="Specimen.h">
+      <Filter>Header Files\扫查参数</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshCscan.h">
+      <Filter>Header Files\图像处理</Filter>
+    </ClInclude>
+    <ClInclude Include="DetectionStd.h">
+      <Filter>Header Files\探伤标准</Filter>
+    </ClInclude>
+    <ClInclude Include="DetectionStd_TBT2995_200.h">
+      <Filter>Header Files\探伤标准</Filter>
+    </ClInclude>
+    <ClInclude Include="Scan.h">
+      <Filter>Header Files\扫查参数</Filter>
+    </ClInclude>
+    <ClInclude Include="ICoder.h">
+      <Filter>Header Files\接口</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshBscan.h">
+      <Filter>Header Files\图像处理</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Header Files\扫查参数</Filter>
+    </ClInclude>
+    <ClInclude Include="User.h">
+      <Filter>Header Files\扫查参数</Filter>
+    </ClInclude>
+    <ClInclude Include="SetQuartWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="TecListWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ControlIP.h">
+      <Filter>Header Files\超声板卡</Filter>
+    </ClInclude>
+    <ClInclude Include="PLCWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ProbleWheelWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="WheelUpDownWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="DefectListWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="RuitiePLC.h">
+      <Filter>Header Files\PLC</Filter>
+    </ClInclude>
+    <ClInclude Include="snap7.h">
+      <Filter>Header Files\PLC</Filter>
+    </ClInclude>
+    <ClInclude Include="DacCount.h">
+      <Filter>Header Files\探伤标准</Filter>
+    </ClInclude>
+    <ClInclude Include="DACSetWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoScanInfoWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoDefectPosInfoWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ReViewScanWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="AboutWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UserWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Extensions\sqlite_orm\include\sqlite_orm\sqlite_orm.h">
+      <Filter>Header Files\ORM</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\SystemConfig.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\UserModel.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="GroupScanWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshGroupCScan.h">
+      <Filter>Header Files\图像处理</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelGroupAScan.h">
+      <Filter>Header Files\图像处理</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelGroupCScan.h">
+      <Filter>Header Files\图像处理</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Mutilple.cpp">
+      <Filter>Source Files\App</Filter>
+    </ClCompile>
+    <ClCompile Include="DMessageBox.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="DuiWindowBase.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrame.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files\App</Filter>
+    </ClCompile>
+    <ClCompile Include="FreeFont.cpp">
+      <Filter>Source Files\图像处理</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files\图像处理</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL.cpp">
+      <Filter>Source Files\图像处理</Filter>
+    </ClCompile>
+    <ClCompile Include="CheckWnd.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SetWnd.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Techniques.cpp">
+      <Filter>Source Files\扫查参数</Filter>
+    </ClCompile>
+    <ClCompile Include="System.cpp">
+      <Filter>Source Files\扫查参数</Filter>
+    </ClCompile>
+    <ClCompile Include="Channel.cpp">
+      <Filter>Source Files\扫查参数</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelSet.cpp">
+      <Filter>Source Files\图像处理</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolFunc.cpp">
+      <Filter>Source Files\功能函数</Filter>
+    </ClCompile>
+    <ClCompile Include="Thread.cpp">
+      <Filter>Source Files\功能函数</Filter>
+    </ClCompile>
+    <ClCompile Include="HDBridge.cpp">
+      <Filter>Source Files\超声板卡</Filter>
+    </ClCompile>
+    <ClCompile Include="MainProcess.cpp">
+      <Filter>Source Files\主进程</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files\图像处理</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshAscan.cpp">
+      <Filter>Source Files\图像处理</Filter>
+    </ClCompile>
+    <ClCompile Include="Axis.cpp">
+      <Filter>Source Files\图像处理</Filter>
+    </ClCompile>
+    <ClCompile Include="ConnectPLC.cpp">
+      <Filter>Source Files\PLC</Filter>
+    </ClCompile>
+    <ClCompile Include="ScanWnd.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelScan.cpp">
+      <Filter>Source Files\图像处理</Filter>
+    </ClCompile>
+    <ClCompile Include="Specimen.cpp">
+      <Filter>Source Files\扫查参数</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshCscan.cpp">
+      <Filter>Source Files\图像处理</Filter>
+    </ClCompile>
+    <ClCompile Include="DetectionStd.cpp">
+      <Filter>Source Files\探伤标准</Filter>
+    </ClCompile>
+    <ClCompile Include="DetectionStd_TBT2995_200.cpp">
+      <Filter>Source Files\探伤标准</Filter>
+    </ClCompile>
+    <ClCompile Include="Scan.cpp">
+      <Filter>Source Files\扫查参数</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshBscan.cpp">
+      <Filter>Source Files\图像处理</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Source Files\扫查参数</Filter>
+    </ClCompile>
+    <ClCompile Include="User.cpp">
+      <Filter>Source Files\扫查参数</Filter>
+    </ClCompile>
+    <ClCompile Include="SetQuartWnd.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="TecListWnd.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ControlIP.cpp">
+      <Filter>Source Files\超声板卡</Filter>
+    </ClCompile>
+    <ClCompile Include="PLCWnd.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ProbleWheelWnd.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="WheelUpDownWnd.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="DefectListWnd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RuitiePLC.cpp">
+      <Filter>Source Files\PLC</Filter>
+    </ClCompile>
+    <ClCompile Include="snap7.cpp">
+      <Filter>Source Files\PLC</Filter>
+    </ClCompile>
+    <ClCompile Include="DacCount.cpp">
+      <Filter>Source Files\探伤标准</Filter>
+    </ClCompile>
+    <ClCompile Include="DefectListWnd.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="RuitiePLC.cpp">
+      <Filter>Source Files\PLC</Filter>
+    </ClCompile>
+    <ClCompile Include="snap7.cpp">
+      <Filter>Source Files\PLC</Filter>
+    </ClCompile>
+    <ClCompile Include="DACSetWnd.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoScanInfoWnd.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoDefectPosInfoWnd.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ReViewScanWnd.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="AboutWnd.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UserWnd.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\SystemConfig.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\UserModel.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="GroupScanWnd.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshGroupCScan.cpp">
+      <Filter>Source Files\图像处理</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelGroupAScan.cpp">
+      <Filter>Source Files\图像处理</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelGroupCScan.cpp">
+      <Filter>Source Files\图像处理</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Mutilple.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Mutilple.rc2">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\Theme.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\Mutilple.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icon1.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="res\default.ttf" />
+  </ItemGroup>
+</Project>
