@@ -75,8 +75,7 @@ void ModelGroupAScan::Setup() {
     //SetSize(mSetSizeRect.left, mSetSizeRect.top, mSetSizeRect.right, mSetSizeRect.bottom);
 
     for (auto& [index, ptr] : m_pMesh) {
-        if (ptr  /*&& (index >= m_pTechniques->m_GroupScanOffset &&
-                    index < (static_cast<size_t>(m_pTechniques->m_GroupScanOffset) + VIEW_ASCAN_NUM))*/) {
+        if (ptr) {
             ptr->Setup();
         }
     }

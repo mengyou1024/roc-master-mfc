@@ -43,7 +43,14 @@ public:
     int                     m_iBuffer;
     CAxis                   m_pAxis;
 
+    void SetAxisRange(float min, float max) {
+        mAxisMin = min;
+        mAxisMax = max;
+    }
+
 private:
+    float                   mAxisMin         = {0.0f};
+    float                   mAxisMax         = {100.f};
     RECT                    mCurrentViewPort = {};
     RECT                    mAxisViewPort   = {};
     GLuint                  m_iAxisVAO      = {};

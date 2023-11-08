@@ -85,9 +85,9 @@ public:
     DWORD* m_pColor{};
 
     float m_fPt_Xscale{}; // 踏面 点击的位置在绘图x方向的比例  侧面为园的比例
-    int   m_fPt_Cir{};  // 点击的位置在的圈数 （保存数据的位置）
+    int   m_fPt_Cir{};    // 点击的位置在的圈数 （保存数据的位置）
 
     int m_fPtC_DrawCir{}; // 点击的位置在的圈数 （成像圈数的位置，考虑多组探头）
     int m_nProbleGrope{}; // 点击的第几组探头，踏面0,1,2 侧面 3,4
-    int m_nDefectCh{};  // 缺陷通道  1-12 和绘图颜色一直
+    int m_nDefectCh{};    // 缺陷通道  1-12 和绘图颜色一直
 };

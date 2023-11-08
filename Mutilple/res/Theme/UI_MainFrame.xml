@@ -31,13 +31,11 @@
 				<HorizontalLayout>
 					<Button name="BtnSet"  text="1.参数调校" width="200" font="7" />
 					<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
-					<Button name="BtnScan" text="2.车轮扫查" width="200" font="7" />
 					<Button name="BtnGroupScan" text="2.分组扫查" width="200" font="7" />
+					<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
 					<Button name="BtnUser" text="3.人员管理" width="200" font="7" />
 					<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
-
 					<Button name="BtnQuart" text="4.季度校验" width="200" font="7" />
-					<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
 					<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
 					<Button name="BtnAnalysis" text="5.数据查看" width="200" font="7" />
 					<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>

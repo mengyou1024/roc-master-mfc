@@ -10,6 +10,8 @@
 #include "SetWnd.h"
 #include "WheelUpDownWnd.h"
 #include <Model.h>
+#include <ModelGroupCScan.h>
+#include <MeshGroupCScan.h>
 #include <regex>
 
 #undef GATE_A
@@ -44,7 +46,6 @@ void GroupScanWnd::InitWindow() {
     g_MainProcess.m_ConnectPLC.SetPLCAuto(true);
 
     UpdateSliderAndEditValue(mCurrentGroup, mConfigType, mGateType, mChannelSel, true);
-    // InitBtnSelectGroup();
 }
 
 void GroupScanWnd::InitOnThread() {
@@ -66,6 +67,7 @@ void GroupScanWnd::InitOnThread() {
         g_MainProcess.m_Techniques.GetDetectionStd()->CountDAC(
             &(g_MainProcess.m_Techniques), i, g_MainProcess.m_Techniques.GetDetectionStd()->mDetetionParam2995_200[i].fScanGain, 0);
     }
+    SetTimer(0, 10);
 }
 
 void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig, GateType newGate, ChannelSel newChannelSel, bool bypassCheck) {
@@ -381,6 +383,13 @@ void GroupScanWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
         } else if (wnd->GetName() == _T("WndOpenGL_CSCAN")) {
             m_OpenGL_CSCAN.OnLButtonDown(nFlags, pt);
         }
+    }
+}
+
+void GroupScanWnd::OnTimer(int iIdEvent) {
+    for (auto &it : m_OpenGL_CSCAN.m_pModel) {
+        auto mesh = static_cast<MeshGroupCScan*>(((ModelGroupCScan *)it)->m_pMesh[0]);
+        mesh->AppendLine(static_cast<float>(rand() % 100), 5, {(rand() % 100) / 100.f, (rand() % 100) / 100.f, (rand() % 100) / 100.f, 1.f});
     }
 }
 

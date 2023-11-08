@@ -26,6 +26,8 @@ public:
 
     virtual void OnLButtonDown(UINT nFlags, ::CPoint pt) override;
 
+    virtual void OnTimer(int iIdEvent) override;
+
 private:
     /// ≈‰÷√¿‡–Õ
     enum class ConfigType {

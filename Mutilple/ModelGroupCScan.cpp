@@ -96,7 +96,7 @@ void ModelGroupCScan::Init() {
     Release();
 
     // `VIEW_CSCAN_NUM`个A扫
-    for (size_t view = 0; view < (size_t)(VIEW_CSCAN_NUM); view++) {
+    for (size_t view = 0; view < (size_t)(HD_CHANNEL_NUM); view++) {
         if (m_pMesh.count(view) == 0) {
             m_pMesh.insert(std::pair<size_t, Mesh *>(view, new MeshGroupCScan(m_pOpenGL)));
         }
@@ -135,11 +135,13 @@ void ModelGroupCScan::SetSize(int left, int top, int right, int bottom) {
         }
 
         // OpenGL视图坐标0点在左下角
-        size_t iView = static_cast<size_t>(VIEW_TYPE::VIEW_CSCAN_0) +
-                       (static_cast<size_t>((VIEW_CSCAN_NUM / VIEW_CSCAN_COLUMNS - 1)) - i / VIEW_CSCAN_COLUMNS) * VIEW_CSCAN_COLUMNS +
-                       (i % VIEW_CSCAN_COLUMNS);
-        if (m_pMesh.count(iView) != 0) {
-            m_pMesh[iView]->SetSize(rc.left, rc.top, rc.right, rc.bottom);
+        for (int offset = 0; offset < 3; offset++) {
+            size_t iView = offset * 4 + static_cast<size_t>(VIEW_TYPE::VIEW_CSCAN_0) +
+                           (static_cast<size_t>((VIEW_CSCAN_NUM / VIEW_CSCAN_COLUMNS - 1)) - i / VIEW_CSCAN_COLUMNS) * VIEW_CSCAN_COLUMNS +
+                           (i % VIEW_CSCAN_COLUMNS);
+            if (m_pMesh.count(iView) != 0) {
+                m_pMesh[iView]->SetSize(rc.left, rc.top, rc.right, rc.bottom);
+            }
         }
     }
     m_bSetup = false;
@@ -177,25 +179,28 @@ void ModelGroupCScan::Release() {
 void ModelGroupCScan::UpdateData() {}
 
 void ModelGroupCScan::RenderBK() {
-    for (auto &ptr : m_pMesh) {
-        if (ptr.second) {
-            ptr.second->RenderBK();
+    for (auto &[index, ptr] : m_pMesh) {
+        if (ptr && index >= static_cast<size_t>(m_pTechniques->m_GroupScanOffset) &&
+            index < static_cast<size_t>(m_pTechniques->m_GroupScanOffset) + VIEW_CSCAN_NUM) {
+            ptr->RenderBK();
         }
     }
 }
 
 void ModelGroupCScan::Render() {
-    for (auto &ptr : m_pMesh) {
-        if (ptr.second) {
-            ptr.second->Render();
+    for (auto &[index, ptr] : m_pMesh) {
+        if (ptr && index >= static_cast<size_t>(m_pTechniques->m_GroupScanOffset) &&
+            index < static_cast<size_t>(m_pTechniques->m_GroupScanOffset) + VIEW_CSCAN_NUM) {
+            ptr->Render();
         }
     }
 }
 
 void ModelGroupCScan::RenderFore() {
-    for (auto &ptr : m_pMesh) {
-        if (ptr.second) {
-            ptr.second->RenderFore();
+    for (auto &[index, ptr] : m_pMesh) {
+        if (ptr && index >= static_cast<size_t>(m_pTechniques->m_GroupScanOffset) &&
+            index < static_cast<size_t>(m_pTechniques->m_GroupScanOffset) + VIEW_CSCAN_NUM) {
+            ptr->RenderFore();
         }
     }
     glViewport(mAxisViewPort.left, mAxisViewPort.top, std::abs(mAxisViewPort.right - mAxisViewPort.left),
@@ -207,7 +212,7 @@ void ModelGroupCScan::RenderFore() {
     glClear(GL_COLOR_BUFFER_BIT);
     glDisable(GL_SCISSOR_TEST);
 
-    m_pAxis.Set(std::abs(mAxisViewPort.right - mAxisViewPort.left - 1), 0.f, 100.f);
+    m_pAxis.Set(std::abs(mAxisViewPort.right - mAxisViewPort.left - 1), mAxisMin, mAxisMax);
     DrawAxis();
 
     // 坐标轴数值
@@ -220,14 +225,15 @@ void ModelGroupCScan::RenderFore() {
     glScissor(mCurrentViewPort.left, mCurrentViewPort.top, std::abs(mCurrentViewPort.right - mCurrentViewPort.left),
               std::abs(mCurrentViewPort.top - mCurrentViewPort.bottom));
     glPushMatrix();
-    for (auto &ptr : m_pMesh) {
+    for (auto &[index, ptr] : m_pMesh) {
         glPushMatrix();
-        if (ptr.second) {
-            glTranslatef((float)ptr.second->m_rcItem.left + 3, (float)ptr.second->m_rcItem.top + 10, 0.0F);
+        if (ptr && index >= static_cast<size_t>(m_pTechniques->m_GroupScanOffset) &&
+            index < static_cast<size_t>(m_pTechniques->m_GroupScanOffset) + VIEW_CSCAN_NUM) {
+            glTranslatef((float)ptr->m_rcItem.left + 3, (float)ptr->m_rcItem.top + 10, 0.0F);
             CString strInfo;
-            strInfo.Format(_T("%lld"), ptr.first + 1 + m_pTechniques->m_GroupScanOffset);
-            m_pOpenGL->m_Font.RightText(static_cast<float>(mCurrentViewPort.right - 15),
-                                        static_cast<float>(ptr.second->m_rcItem.Height() - 50), strInfo, color, 2.F);
+            strInfo.Format(_T("%lld"), index + 1);
+            m_pOpenGL->m_Font.RightText(static_cast<float>(mCurrentViewPort.right - 15), static_cast<float>(ptr->m_rcItem.Height() - 50),
+                                        strInfo, color, 2.F);
         }
         glPopMatrix();
     }
