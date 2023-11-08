@@ -124,8 +124,9 @@ private:
      * @param newConfig
      * @param newGate
      * @param newChannelSel
+     * @praram bypassCheck 绕过重复检查
      */
-    void UpdateSliderAndEditValue(long newGroup, ConfigType newConfig, GateType newGate, ChannelSel newChannelSel);
+    void UpdateSliderAndEditValue(long newGroup, ConfigType newConfig, GateType newGate, ChannelSel newChannelSel, bool bypassCheck = false);
 
     /**
      * @brief 设置Config值

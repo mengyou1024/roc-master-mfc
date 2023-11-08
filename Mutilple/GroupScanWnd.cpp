@@ -43,6 +43,7 @@ void GroupScanWnd::InitWindow() {
     g_MainProcess.m_ConnectPLC.GetAllFloatValue();
     g_MainProcess.m_ConnectPLC.SetPLCAuto(true);
 
+    UpdateSliderAndEditValue(mCurrentGroup, mConfigType, mGateType, mChannelSel, true);
     // InitBtnSelectGroup();
 }
 
@@ -67,8 +68,8 @@ void GroupScanWnd::InitOnThread() {
     }
 }
 
-void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig, GateType newGate, ChannelSel newChannelSel) {
-    if (mCurrentGroup == newGroup && mConfigType == newConfig && mGateType == newGate && mChannelSel == newChannelSel) {
+void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig, GateType newGate, ChannelSel newChannelSel, bool bypassCheck) {
+    if (!bypassCheck && (mCurrentGroup == newGroup && mConfigType == newConfig && mGateType == newGate && mChannelSel == newChannelSel)) {
         return;
     }
 
@@ -119,6 +120,12 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
                 }
                 break;
             }
+            case GroupScanWnd::ConfigType::DetectRange: {
+                auto &[minLimits, maxLimits] = mConfigLimits[mConfigType];
+                minLimits                    = 50.0f;
+                maxLimits                    = 1000.f;
+                break;
+            }
             default: {
                 break;
             }
@@ -134,6 +141,7 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
     auto   channel     = g_MainProcess.GetChannel(_channelSel);
     switch (mConfigType) {
         case GroupScanWnd::ConfigType::DetectRange: {
+            reloadValue = channel->m_fRange;
             break;
         }
         case GroupScanWnd::ConfigType::Gain: {
@@ -170,6 +178,7 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
     }
 }
 
+
 void GroupScanWnd::SetConfigValue(float val) {
     spdlog::debug("set config value {}", val);
     int  _channelSel = static_cast<int>(mChannelSel) + mCurrentGroup * 4;
@@ -177,6 +186,7 @@ void GroupScanWnd::SetConfigValue(float val) {
     auto channel     = g_MainProcess.GetChannel(_channelSel);
     switch (mConfigType) {
         case GroupScanWnd::ConfigType::DetectRange: {
+            channel->m_fRange = val;
             break;
         }
         case GroupScanWnd::ConfigType::Gain: {

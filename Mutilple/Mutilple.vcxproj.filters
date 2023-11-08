@@ -302,9 +302,6 @@
     <ClCompile Include="System.cpp">
       <Filter>Source Files\扫查参数</Filter>
     </ClCompile>
-    <ClCompile Include="Channel.cpp">
-      <Filter>Source Files\扫查参数</Filter>
-    </ClCompile>
     <ClCompile Include="ModelSet.cpp">
       <Filter>Source Files\图像处理</Filter>
     </ClCompile>
@@ -436,6 +433,9 @@
     </ClCompile>
     <ClCompile Include="ModelGroupCScan.cpp">
       <Filter>Source Files\图像处理</Filter>
+    </ClCompile>
+    <ClCompile Include="Channel.cpp">
+      <Filter>Source Files\探伤标准</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

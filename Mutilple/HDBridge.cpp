@@ -8,12 +8,7 @@
 using namespace TOFDPort;
 using namespace TOFDPortExtensions;
 
-HDBridge::HDBridge(void) :
-m_fFPS(0),
-m_fPacketLoss(0),
-m_iNetwork(-1),
-m_pTechniques(nullptr),
-m_pICoder(nullptr) {
+HDBridge::HDBridge(void) : m_fFPS(0), m_fPacketLoss(0), m_iNetwork(-1), m_pTechniques(nullptr), m_pICoder(nullptr) {
     InitializeCriticalSection(&m_csData);
 }
 
@@ -43,8 +38,8 @@ BOOL HDBridge::OnConfig(Techniques *pTechniques) {
     m_pTechniques = pTechniques;
     TOFD_PORT_SetFrequency(pTechniques->m_System.m_iFrequency);
     TOFD_PORT_SetVoltage(pTechniques->m_System.m_iVoltage);
-    TOFD_PORT_SetChannelFlag(pTechniques->m_System.m_iChMode); // 9/10  11/12 为双晶配置 0x05ff0aff
-    //	TOFD_PORT_SetChannelFlag(0xfffffffff);//9/10  11/12 为双晶配置
+    // TOFD_PORT_SetChannelFlag(pTechniques->m_System.m_iChMode); // 9/10  11/12 为双晶配置 0x05ff0aff
+    TOFD_PORT_SetChannelFlag(0xFFF0FFF); // 9/10  11/12 为双晶配置
     TOFD_PORT_SetLED(0);
     TOFD_PORT_SetScanIncrement(pTechniques->m_System.m_iScanIncrement);
     TOFD_PORT_SetDamperFlag(0x00000fff);
@@ -186,10 +181,11 @@ BOOL HDBridge::ReadAscan() {
                     int test = 0;
                 }
                 if (pReadData->pGatePos[0] == 0) { // pReadData->pGatePos[0]异常为0时 重新寻找A门内最高位置
-                    int GateApos = static_cast<int>(g_MainProcess.m_Techniques.m_pChannel[temChannel].m_pGatePos[GATE_A] * pReadData->iAScanSize);
-                    int GateAEnd = static_cast<int>((g_MainProcess.m_Techniques.m_pChannel[temChannel].m_pGatePos[GATE_A] +
-                                    g_MainProcess.m_Techniques.m_pChannel[temChannel].m_pGateWidth[GATE_A]) *
-                                   pReadData->iAScanSize);
+                    int GateApos =
+                        static_cast<int>(g_MainProcess.m_Techniques.m_pChannel[temChannel].m_pGatePos[GATE_A] * pReadData->iAScanSize);
+                    int GateAEnd  = static_cast<int>((g_MainProcess.m_Techniques.m_pChannel[temChannel].m_pGatePos[GATE_A] +
+                                                     g_MainProcess.m_Techniques.m_pChannel[temChannel].m_pGateWidth[GATE_A]) *
+                                                    pReadData->iAScanSize);
                     int nMaxAmp   = 0;
                     int nMaxIndex = GateApos;
                     for (int i = GateApos; i < GateAEnd; i++) {
@@ -205,8 +201,8 @@ BOOL HDBridge::ReadAscan() {
                 // b门跟随重新计算b门最高波
 
                 int GateBPos = static_cast<int>((pReadData->pGatePos[0] / 100.0f / fSampleDepth +
-                                g_MainProcess.m_Techniques.m_pChannel[temChannel].m_pGatePos[GATE_B]) *
-                               pReadData->iAScanSize);
+                                                 g_MainProcess.m_Techniques.m_pChannel[temChannel].m_pGatePos[GATE_B]) *
+                                                pReadData->iAScanSize);
                 int GateBEnd = static_cast<int>((pReadData->pGatePos[0] / 100.0f / fSampleDepth +
                                                  g_MainProcess.m_Techniques.m_pChannel[temChannel].m_pGatePos[GATE_B] +
                                                  g_MainProcess.m_Techniques.m_pChannel[temChannel].m_pGateWidth[GATE_B]) *
@@ -235,7 +231,7 @@ BOOL HDBridge::ReadAscan() {
                 m_ReadData.pAlarm[temChannel][0]   = pReadData->pAlarm[0];
                 m_ReadData.pAlarm[temChannel][1]   = pReadData->pAlarm[1];
 
-                 //m_fPacketLoss = UNION_PORT_GetPacketLoss(m_iNetwork, pReadData->iChannel);
+                // m_fPacketLoss = UNION_PORT_GetPacketLoss(m_iNetwork, pReadData->iChannel);
             }
             TOFD_PORT_Free_NM_DATA(pReadData);
             m_fFPS = FPS();

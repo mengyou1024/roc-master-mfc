@@ -497,7 +497,7 @@ public:
 
 SetQuartWnd::~SetQuartWnd() {
     // 退出时，关闭采样
-    g_MainProcess.m_Techniques.m_System.m_iChMode = 0x05ff0aff;
+    g_MainProcess.m_Techniques.m_System.m_iChMode = 0x0fff0fff;
     g_MainProcess.m_HDBridge.StartSequencer(FALSE);
     m_timeoutTime = 0ULL;
     m_thread.Close();

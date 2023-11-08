@@ -52,8 +52,8 @@ using std::invoke;
 #include "Object.h"
 #endif //PCH_H
 
-//using ::CPoint;
-//using ::CSize;
+using ::CPoint;
+using ::CSize;
 
 #include <sqlite_orm.h>
 #include <spdlog/spdlog.h>

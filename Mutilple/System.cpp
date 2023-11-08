@@ -79,8 +79,8 @@ BOOL System::Unserialize(BYTE* pData, DWORD dwLen) {
     iIndex += sizeof(m_iRxFlag);
 
     memcpy(&m_iChMode, pData + iIndex, sizeof(m_iChMode));
-    if (m_iChMode != 0x05ff0aff)
-        m_iChMode = 0x05ff0aff;
+    //if (m_iChMode != 0x05ff0aff)
+    //    m_iChMode = 0x05ff0aff;
     iIndex += sizeof(m_iChMode);
 
     memcpy(&m_iScanIncrement, pData + iIndex, sizeof(m_iScanIncrement));

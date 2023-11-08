@@ -401,7 +401,7 @@ void Techniques::LoadTecName(LPCTSTR lpName) {
             m_System.m_iPulseWidth    = 0xd2;
             m_System.m_iTxFlag        = 0x3ff;
             m_System.m_iRxFlag        = 0x3ff;
-            m_System.m_iChMode        = 0x05ff0aff;
+            m_System.m_iChMode        = 0x0FFF0FFF;
             m_System.m_iScanIncrement = 0;
             m_System.m_iLEDStatus     = 0;
             m_System.m_iWorkType      = 0;
@@ -495,7 +495,7 @@ bool Techniques::LoadTecBinary(LPCTSTR lpName) {
         m_System.m_iPulseWidth    = 0xd2;
         m_System.m_iTxFlag        = 0x3ff;
         m_System.m_iRxFlag        = 0x3ff;
-        m_System.m_iChMode        = 0x05ff0aff;
+        m_System.m_iChMode        = 0x0FFF0FFF;
         m_System.m_iScanIncrement = 0;
         m_System.m_iLEDStatus     = 0;
         m_System.m_iWorkType      = 0;

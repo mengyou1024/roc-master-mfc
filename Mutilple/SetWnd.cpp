@@ -313,9 +313,9 @@ void SetWnd::Notify(TNotifyUI& msg) {
         {
             INT iIndex = m_pComboChFlag->GetCurSel();
             int iChMode[HD_CHANNEL_NUM];
-            for (int i = 0; i < HD_CHANNEL_NUM; i++) {
-                iChMode[i] = int((g_MainProcess.m_Techniques.m_System.m_iChMode >> i) & 0x01);
-            }
+            //for (int i = 0; i < HD_CHANNEL_NUM; i++) {
+            //    iChMode[i] = int((g_MainProcess.m_Techniques.m_System.m_iChMode >> i) & 0x01);
+            //}
             iChMode[g_MainProcess.m_Techniques.m_iChannel] = iIndex;
             bitset<32> ch                                  = g_MainProcess.m_Techniques.m_System.m_iChMode;
             ch.set(g_MainProcess.m_Techniques.m_iChannel, iChMode[g_MainProcess.m_Techniques.m_iChannel]);
@@ -888,9 +888,9 @@ void SetWnd::UpdateChannelUI(Channel* pChannel) {
     m_pComboFilter->SelectItem(pChannel->m_iFilter);
     m_pComboDemodu->SelectItem(pChannel->m_iDemodu);
     int iChMode[HD_CHANNEL_NUM]; // 通道设置单晶双晶
-    for (int i = 0; i < HD_CHANNEL_NUM; i++) {
-        iChMode[i] = int((g_MainProcess.m_Techniques.m_System.m_iChMode >> i) & 0x01);
-    }
+    //for (int i = 0; i < HD_CHANNEL_NUM; i++) {
+    //    iChMode[i] = int((g_MainProcess.m_Techniques.m_System.m_iChMode >> i) & 0x01);
+    //}
     m_pComboChFlag->SelectItem(iChMode[g_MainProcess.m_Techniques.m_iChannel]);
 
     // 波门
@@ -1388,12 +1388,14 @@ void SetWnd::OnBtnCopy() {
     strInfo.Format(_T("点击'是',将通道%d参数复制给通道"), g_MainProcess.m_Techniques.m_iChannel + 1);
     bool bCopy = false;
     for (int i = 0; i < HD_CHANNEL_NUM; i++) {
-        bCopyTo[i] = m_pOptCh[i]->IsSelected();
-        if (bCopyTo[i]) {
-            bCopy = true;
-            CString strCH;
-            strCH.Format(_T("%d,"), i + 1);
-            strInfo.Append(strCH);
+        if (m_pOptCh[i]) {
+            bCopyTo[i] = m_pOptCh[i]->IsSelected();
+            if (bCopyTo[i]) {
+                bCopy = true;
+                CString strCH;
+                strCH.Format(_T("%d,"), i + 1);
+                strInfo.Append(strCH);
+            }
         }
     }
 
