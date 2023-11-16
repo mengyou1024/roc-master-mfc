@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window size="1280,900" caption="5,5,5,52" sizebox="10,10,10,10" mininfo="1530,900">
+<Window size="1280,900" caption="5,5,5,52" sizebox="10,10,10,10">
 	<Font name="楷体" size="14" default="true" />
 	<Font name="楷体" size="18" />
 	<Font name="楷体" size="24" />
@@ -23,64 +23,72 @@
 				<Button float="true" pos="29,0,0,0" name="restorebtn" tooltip="还原" visible="false" width="28" bkcolor="" height="19" normalimage="Theme\Button\btn_restore_normal.png" hotimage="Theme\Button\btn_restore_highlight.png" pushedimage="Theme\Button\btn_restore_down.png" />
 				<Button float="true" pos="57,0,0,0" name="closebtn" tooltip="关闭" width="39" height="19" bkcolor="" normalimage="Theme\Button\btn_close_normal.png" hotimage="Theme\Button\btn_close_highlight.png" pushedimage="Theme\Button\btn_close_down.png" />
 			</HorizontalLayout>
+			<HorizontalLayout height="34" float="true" pos="120,1,800,34" align="center">
+				<HorizontalLayout>
+					<Button name="BtnSelectGroup0" width="120" height="33" text="第1组" bkcolor="0xFF666666" />
+					<Button name="BtnSelectGroup1" width="120" height="33" text="第2组" />
+					<Button name="BtnSelectGroup2" width="120" height="33" text="第3组" />
+					<HorizontalLayout width="50"/>
+					<Button name="BtnScanMode" width="120" height="33" text="扫查模式" bkcolor="0xFF666666" />
+					<Button name="BtnReviewMode" width="120" height="33" text="回放模式" />
+				</HorizontalLayout>
+			</HorizontalLayout>
 		</HorizontalLayout>
 		<VerticalLayout bkimage="Theme\Line\v_line.png" height="1" />
-		<VerticalLayout inset="10,15,10,10">
-			<HorizontalLayout height="32">
+		<VerticalLayout name="LayoutUserArea" inset="10,15,10,10">
+			<HorizontalLayout name="LayoutFunctionButton" height="32">
 				<Label />
-				<Button name="BtnSet"  text="设置" width="100" font="5" />
+				<Button name="BtnUISetting"  text="设置" width="100" font="5" />
 				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
-				<Button name="BtnAutoScan" text="自动检测" width="100" font="5" />
+				<Button name="BtnUIAutoScan" text="自动检测" width="100" font="5" />
 				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
-				<Button name="BtnParamManagement" text="参数设置" width="100" font="5" />
+				<Button name="BtnUIParamSetting" text="参数设置" width="100" font="5" />
 				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
-				<Button name="BtnHardPort" text="硬件接口" width="100" font="5" />
+				<Button name="BtnUIParamManagement" text="参数管理" width="100" font="5" />
 				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
-				<Button name="BtnReport" text="检测报告" width="100" font="5" />
+				<Button name="BtnUIHardPort" text="硬件接口" width="100" font="5" />
 				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
-				<Button name="BtnHandover" text="交接班" width="100" font="5" />
+				<Button name="BtnUIReport" text="检测报告" width="100" font="5" />
 				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
-				<Button name="BtnFunction" text="功能" width="100" font="5" />
+				<Button name="BtnUIHandover" text="交接班" width="100" font="5" />
 				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
-				<Button name="BtnAmpMemory" text="峰值记忆" width="100" font="5" />
+				<Button name="BtnUIFunction" text="功能" width="100" font="5" />
 				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
-				<Button name="BtnFreeze" text="波形冻结" width="100" font="5" />
+				<Button name="BtnUIAmpMemory" text="峰值记忆" width="100" font="5" />
 				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
-				<Button name="BtnTrack" text="追踪使能" width="100" font="5" />
+				<Button name="BtnUIFreeze" text="波形冻结" width="100" font="5" />
+				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
+				<Button name="BtnUITrack" text="追踪使能" width="100" font="5" />
 				<Label />
 			</HorizontalLayout>
 			<HorizontalLayout inset="10,10,10,10">
 				<WindowUI name="WndOpenGL_ASCAN" bkcolor="0xFF000000" />
 			</HorizontalLayout>
-			<HorizontalLayout height="72" inset="20,3,20,3">
+			<HorizontalLayout name="LayoutParamSetting" height="72" inset="20,3,20,3">
 				<HorizontalLayout height="60" bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10">
 					<HorizontalLayout>
 						<Label />
-						<HorizontalLayout height="34" width="360">
-							<Button name="BtnSelectGroup0" width="120" height="33" text="1 - 4" bkcolor="0xFF666666" />
-							<Button name="BtnSelectGroup1" width="120" height="33" text="5 - 8" />
-							<Button name="BtnSelectGroup2" width="120" height="33" text="9 - 12" />
-						</HorizontalLayout>
-						<HorizontalLayout width="20" />
 						<HorizontalLayout width="450" height="30" bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'">
 							<HorizontalLayout width="20" />
-							<Option name="OptConfigType" group="config" userdata="0" text="检测范围" width="72" selected="true" />
+							<Option name="OptConfigType" group="config" userdata="0" text="声程范围" width="72" selected="true" />
 							<HorizontalLayout width="20" />
 							<Option name="OptConfigType" group="config" userdata="1" text="增益" width="45" />
 							<HorizontalLayout width="20" />
-							<Option name="OptConfigType" group="config" userdata="2" width="72" text="闸门起点" />
+							<Option name="OptConfigType" group="config" userdata="2" width="72" text="波门起点" />
 							<HorizontalLayout width="20" />
-							<Option name="OptConfigType" group="config" userdata="3" width="72" text="闸门宽度" />
+							<Option name="OptConfigType" group="config" userdata="3" width="72" text="波门宽度" />
 							<HorizontalLayout width="20" />
-							<Option name="OptConfigType" group="config" userdata="4" width="72" text="闸门高度" />
+							<Option name="OptConfigType" group="config" userdata="4" width="72" text="波门高度" />
 							<HorizontalLayout width="20" />
 						</HorizontalLayout>
 						<HorizontalLayout width="20" />
-						<HorizontalLayout width="180" bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" height="30">
+						<HorizontalLayout width="280" bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" height="30">
 							<HorizontalLayout width="20" />
-							<Option name="OptGateType" group="gate" text="闸门A" width="60" userdata="0" selected="true" />
+							<Option name="OptGateType" group="gate" text="波门A" width="60" userdata="0" selected="true" />
 							<HorizontalLayout width="20" />
-							<Option name="OptGateType" group="gate" text="闸门B" width="60" userdata="1" />
+							<Option name="OptGateType" group="gate" text="波门B" width="60" userdata="1" />
+							<HorizontalLayout width="20" />
+							<Option name="OptGateType" width="90" group="gate" text="扫查波门" userdata="2" />
 							<HorizontalLayout width="20" />
 						</HorizontalLayout>
 						<HorizontalLayout width="20" />

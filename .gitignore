@@ -25,3 +25,9 @@
 
 /x64/Debug/Data/*
 User.db
+data.db
+/x64/Debug/log/*
+/x64/Release/log/*
+/build
+/pack-installer.iss
+/output

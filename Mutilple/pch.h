@@ -6,55 +6,53 @@
 
 #ifndef PCH_H
 #define PCH_H
-#define _CRT_SECURE_NO_DEPRECATE 
+#define _CRT_SECURE_NO_DEPRECATE
 // add headers that you want to pre-compile here
 #include "framework.h"
 
-#include <vector>
-#include <memory>
-#include <cmath>
-#include <stack>
 #include <bitset>
+#include <cmath>
 #include <functional>
+#include <memory>
+#include <stack>
+#include <vector>
 
-using std::vector;
-using std::string;
-using std::shared_ptr;
+using std::bitset;
+using std::invoke;
 using std::make_shared;
-using std::unique_ptr;
 using std::make_unique;
 using std::max;
 using std::min;
 using std::pair;
+using std::shared_ptr;
 using std::stack;
-using std::bitset;
-using std::invoke;
+using std::string;
+using std::unique_ptr;
+using std::vector;
 
-//OpenEW
+// OpenEW
 #define GLEW_STATIC
 #include <GL/glew.h>
 #pragma comment(lib, "glew32s.lib")
 
 // GL
-#pragma comment (lib, "opengl32.lib")
+#pragma comment(lib, "opengl32.lib")
 
-//GLM
+// GLM
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 
 #include "Thread.h"
 
-//Duilib
-#include "Define.h" 
-#include "ToolFunc.h"
+// Duilib
+#include "Define.h"
 #include "DuiWindowBase.h"
-#include "Object.h"
-#endif //PCH_H
-
+#include "ToolFunc.h"
 using ::CPoint;
 using ::CSize;
 
-#include <sqlite_orm.h>
 #include <spdlog/spdlog.h>
+#include <sqlite_orm.h>
 
+#endif // PCH_H

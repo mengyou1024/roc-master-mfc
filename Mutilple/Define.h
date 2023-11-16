@@ -1,6 +1,7 @@
 #pragma once
 
 #pragma region 参数
+#include <pch.h>
 
 #pragma warning(disable :26495)
 
@@ -19,7 +20,7 @@
 
 const INT   HD_CHANNEL_NUM_12 = 12;                // 硬件通道数
 const INT   HD_CHANNEL_NUM    = HD_CHANNEL_NUM_12; // 上层通道数
-const int   MAX_GATE_NUM      = 2;                 // 最大波门数
+const int   MAX_GATE_NUM      = 3;                 // 最大波门数
 const int   MAX_ML_NUM        = 2;                 // 测量线
 const int   COLOR_LIST_NUM    = 6;                 // 色彩表
 const float MAX_AMP           = 255.0F;

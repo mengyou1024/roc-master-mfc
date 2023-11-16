@@ -1,0 +1,64 @@
+name: build and release
+
+on:
+  push:
+    tags: 
+    - 'release/*'
+    - 'release/v*'
+    - 'v*'
+
+jobs:
+  New_Version_Build_And_Release:
+    runs-on: windows-latest
+    steps:
+    # 拉取仓库
+    - name: Git Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        submodules: recursive
+    # 创建changelog
+    - name: Create changelog text
+      id: changelog
+      uses: mengyou1024/action-changelog@v0.1.0
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        exclude_types: other,doc,chore
+    # 安装 Ninja
+    - uses: "ashutoShvarma/setup-ninja@master"
+    # 安装ISCC
+    - uses: Minionguyjpro/Inno-Setup-Action@v1.0.0
+    # 安装msvc
+    - name: add msbuild to path
+      uses: microsoft/setup-msbuild@v1.1
+    # 配置、编译程序
+    - name: MSBuild
+      run: |
+        msbuild Mutilple.sln -t:Mutilple -p:Configuration=Release
+    # 打包输出文件
+    - name: Package 
+      run: |
+        cmake -B build -G "Ninja"
+        iscc .\pack-installer.iss
+    # 创建Release
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1.1.4
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: ${{ steps.changelog.outputs.changes }}
+        draft: false
+        prerelease: false
+    # 上传exe安装程序
+    - name: Upload Release Installer
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./output/Roc-MasterInstaller.exe
+        asset_name: Roc-MasterInstaller.exe
+        asset_content_type: application/octet-stream

@@ -50,6 +50,7 @@ BOOL CMutilpleApp::InitInstance() {
     _tsplitpath_s(cPath, drive, _MAX_DRIVE, dir, _MAX_DIR, NULL, 0, NULL, 0);
     _stprintf_s(m_pExePath, _T("%s%s"), drive, dir);
     SetCurrentDirectory(m_pExePath);
+    g_MainProcess.InitStroage();
 
     // InitCommonControlsEx() is required on Windows XP if an application
     // manifest specifies use of ComCtl32.dll version 6 or later to enable
@@ -91,15 +92,13 @@ BOOL CMutilpleApp::InitInstance() {
     CPaintManagerUI::SetInstance(AfxGetInstanceHandle()); // 设置渲染实例
 
     // 主窗口
-    m_pMainFrame = new CMainFrame;
-    m_pMainFrame->Create(NULL, _T("Mutilple"), UI_WNDSTYLE_FRAME, UI_WNDSTYLE_EX_FRAME);
+    m_pMainFrame = new GroupScanWnd;
+    m_pMainFrame->Create(NULL, m_pMainFrame->GetWindowClassName(), UI_WNDSTYLE_FRAME, UI_WNDSTYLE_EX_FRAME);
     m_pMainFrame->CenterWindow();
     m_pMainFrame->ShowModal();
     delete m_pMainFrame;
 
     m_pMainFrame = NULL;
-
-    g_MainProcess.Close();
 
     WindowImplBase::Term();  // 释放Duilib中的静态资源
     CPaintManagerUI::Term(); // 释放Duilib中的静态资源

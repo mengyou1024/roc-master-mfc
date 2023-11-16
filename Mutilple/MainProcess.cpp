@@ -4,127 +4,52 @@
 #include "Mutilple.h"
 #include "RuitiePLC.h"
 
-#include <iostream>
-#include <Model/UserModel.h>
+#include <HDBridge/TOFDPort.h>
+#include <HDBridge/Utils.h>
+#include <Model/ScanRecord.h>
 #include <Model/SystemConfig.h>
+#include <Model/UserModel.h>
+#include <iostream>
+#include <spdlog/sinks/rotating_file_sink.h>
 
 using namespace std;
 
 MainProcess::MainProcess() {
-    //_CrtSetBreakAlloc(303);
-    ORM_Model::User::storage().sync_schema();
-    ORM_Model::SystemConfig::storage().sync_schema();
-
+    TCHAR cPath[_MAX_FNAME];
+    TCHAR drive[_MAX_DRIVE];
+    TCHAR dir[_MAX_DIR];
+    TCHAR ExePath[_MAX_FNAME];
+    GetModuleFileName(NULL, cPath, _MAX_FNAME);
+    _tsplitpath_s(cPath, drive, _MAX_DRIVE, dir, _MAX_DIR, NULL, 0, NULL, 0);
+    _stprintf_s(ExePath, _T("%s%s"), drive, dir);
+    SetCurrentDirectory(ExePath);
+#if _DEBUG
+    // _CrtSetBreakAlloc(1739);
     AllocConsole(); // 控制台
-    #if _DEBUG
     spdlog::set_level(spdlog::level::debug);
-    #endif 
-    auto f = freopen("CONOUT$", "w", stdout);
+    mFile = freopen("CONOUT$", "w", stdout);
+#else 
+    spdlog::set_default_logger(spdlog::rotating_logger_st("Mutilple", "log/log.txt", static_cast<size_t>(1024 * 1024 * 5), 5));
+    spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%l] %v");
+    spdlog::flush_on(spdlog::level::warn);
+    spdlog::set_level(spdlog::level::info);
+#endif
     RuitiePLC::connectTo();
-    //_CrtDumpMemoryLeaks();
 }
 
 MainProcess::~MainProcess() {
     RuitiePLC::disconnect();
+#if _DEBUG
     FreeConsole();
+    fclose(mFile);
+#endif
+    spdlog::drop_all();
 }
 
-void MainProcess::Close() {
-    CString strCfgFile;
-    // strCfgFile.Format(_T("%sLastParam.ini"), theApp.m_pExePath);
-    //   m_Techniques.SaveTec(strCfgFile);
-
-    m_ConnectPLC.Close();
-}
-
-void MainProcess::Check(ICheckCarrier *pInitCheck) {
-    // 自检，pInitCheck==nullptr时，后台进行检测
-    if (pInitCheck) {
-        pInitCheck->Begin();
-        pInitCheck->SetResult(CHECK::DIR, CheckDir());
-        pInitCheck->SetResult(CHECK::CALIB, CheckCalib());
-        pInitCheck->SetResult(CHECK::SCAN, CheckScan());
-        pInitCheck->SetResult(CHECK::ANALYSIS, CheckAnalysis());
-        pInitCheck->SetResult(CHECK::PLC, CheckPLC());
-        pInitCheck->End();
-    } else {
-        CheckDir();
-        CheckCalib();
-        CheckScan();
-        CheckAnalysis();
-    }
-}
-
-bool MainProcess::CheckDir() {
-    CString strCfgFile;
-    strCfgFile.Format(_T("%sLastParam.ini"), theApp.m_pExePath);
-    m_Techniques.LoadTec(strCfgFile);
-
-    // 显示效果
-    Sleep(200);
-
-    return true;
-}
-
-bool MainProcess::CheckCalib() {
-    char p0[32] = {0}, p1[32] = {0};
-    // if (m_HDBridge.IsOpened())
-    //{
-    //     m_HDBridge.Close();
-    // }
-
-    if (!m_HDBridge.Open(p0, {}, p1, {})) {
-        return false;
-    }
-    //   Sleep(100);
-    ////   UCHAR* pVersion = UNION_PORT_GetVersion(g_MainProcess.m_HDBridge.m_iNetwork);
-    //   if (pVersion[0] == 0) {
-    //       return false;
-    //   }
-    // 显示效果
-    Sleep(200);
-
-    return m_HDBridge.IsOpened();
-}
-
-bool MainProcess::CheckScan() {
-    // 显示效果
-    Sleep(200);
-
-    return true;
-}
-bool MainProcess::CheckPLC() {
-    bool res = m_ConnectPLC.isConnected();
-    // 显示效果
-    Sleep(200);
-
-    return res;
-}
-bool MainProcess::CheckAnalysis() {
-    // 显示效果
-    Sleep(200);
-
-    return true;
-}
-
-void MainProcess::StartScan() {
-    m_ConnectPLC.Start();
-    m_Techniques.Start();
-}
-
-void MainProcess::StopScan() {
-    m_Techniques.Stop();
-    m_ConnectPLC.Stop();
-}
-
-int MainProcess::GetChannelIndex() {
-    return m_Techniques.m_iChannel;
-}
-
-Channel *MainProcess::GetCurChannel() {
-    return &m_Techniques.m_pChannel[m_Techniques.m_iChannel];
-}
-
-Channel *MainProcess::GetChannel(int index) {
-    return &m_Techniques.m_pChannel[index];
+void MainProcess::InitStroage() {
+    HD_Utils::storage().sync_schema();
+    TOFDUSBPort::storage().sync_schema();
+    ORM_Model::User::storage().sync_schema();
+    ORM_Model::SystemConfig::storage().sync_schema();
+    ORM_Model::ScanRecord::storage().sync_schema();
 }

@@ -279,6 +279,13 @@ bool CreateMultipleDirectory(LPCTSTR szPath) {
     return bSuccess;
 }
 
+bool pointInRect(RECT rc, ::CPoint pt) {
+    if (pt.x > rc.left && pt.x < rc.right && pt.y > rc.top && pt.y < rc.bottom) {
+        return true;
+    }
+    return false;
+}
+
 bool IncChinese(CString str) {
     int     nLen = str.GetLength();
     wchar_t ch;
