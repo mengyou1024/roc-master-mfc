@@ -41,7 +41,7 @@ constexpr int swapAScanIndex(int x) {
     return result * 4 + remain;
 }
 
-constexpr std::wstring_view SCAN_CONFIG_NAME = _T("扫查配置");
+constexpr std::wstring_view SCAN_CONFIG_NAME = _T("上一次配置");
 using sqlite_orm::c;
 using sqlite_orm::column;
 using sqlite_orm::columns;
@@ -52,14 +52,24 @@ GroupScanWnd::GroupScanWnd() {
         auto config = TOFDUSBPort::storage().get_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == std::wstring(SCAN_CONFIG_NAME)));
         if (config.size() == 1) {
             mUtils = std::make_unique<HD_Utils>(std::make_unique<TOFDUSBPort>(config[0]));
+            mUtils->getBridge()->syncCache2Board();
         } else {
             mUtils = std::make_unique<HD_Utils>(std::make_unique<TOFDUSBPort>());
+            mUtils->getBridge()->defaultInit();
         }
-        mUtils->getBridge()->defaultInit();
     } catch (std::exception &e) { spdlog::error(e.what()); }
 }
 
-GroupScanWnd::~GroupScanWnd() {}
+GroupScanWnd::~GroupScanWnd() {
+    try {
+        TOFDUSBPort::storage().remove_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == std::wstring(SCAN_CONFIG_NAME)));
+        mUtils->getBridge<TOFDUSBPort *>()->name = SCAN_CONFIG_NAME;
+        TOFDUSBPort::storage().insert(*mUtils->getBridge<TOFDUSBPort *>());
+        if (mUtils->getBridge()->isOpen()) {
+            mUtils->getBridge()->close();
+        }
+    } catch (std::exception &e) { spdlog::error(e.what()); }
+}
 
 void GroupScanWnd::OnBtnModelClicked(std::wstring name) {
     auto btnScanMode   = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnScanMode")));
@@ -152,7 +162,7 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
     }
 
     spdlog::debug("Click Button, group:{}, config: {}, gate: {}, channelsel: {}", newGroup, (int)newConfig, (int)newGate,
-                 (int)newChannelSel);
+                  (int)newChannelSel);
 
     OnBtnSelectGroupClicked(newGroup);
     mConfigType = newConfig;
