@@ -150,8 +150,8 @@ bool TOFDUSBPort::setDelay(int channel, float delay_us) {
 }
 
 bool TOFDUSBPort::setSampleFactor(int channel, int sampleFactor) {
-    if (sampleFactor < 1) {
-        sampleFactor = 1;
+    if (sampleFactor < 2) {
+        sampleFactor = 2;
     }
     if (channel >= CHANNEL_NUMBER) {
         return false;
