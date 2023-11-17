@@ -183,10 +183,16 @@
     <ClInclude Include="Model\ScanRecord.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
-    <ClInclude Include="UI\TBusyWnd.hpp">
+    <ClInclude Include="UI\RecordSelectWnd.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
-    <ClInclude Include="UI\RecordSelectWnd.h">
+    <ClInclude Include="UI\ParamManagementWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\BusyWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\InputDialogWnd.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
   </ItemGroup>
@@ -284,6 +290,15 @@
     <ClCompile Include="UI\RecordSelectWnd.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
+    <ClCompile Include="UI\ParamManagementWnd.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\BusyWnd.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\InputDialogWnd.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Mutilple.rc">
@@ -294,7 +309,6 @@
     <None Include="res\Mutilple.rc2">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="res\Theme.zip" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\Mutilple.ico">

@@ -68,3 +68,9 @@ configure_file(
     @ONLY
 )
 
+configure_file(
+    Version.h.in
+    ${CMAKE_SOURCE_DIR}/Mutilple/Version.h
+    @ONLY
+)
+

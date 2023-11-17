@@ -11,13 +11,15 @@
 #include <ModelGroupAScan.h>
 #include <ModelGroupCScan.h>
 #include <RecordSelectWnd.h>
-#include <TBusyWnd.hpp>
+#include <BusyWnd.h>
 #include <algorithm>
 #include <array>
 #include <chrono>
 #include <iomanip>
 #include <regex>
 #include <sstream>
+#include "ParamManagementWnd.h"
+#include "Version.h"
 
 #undef GATE_A
 #undef GATE_B
@@ -62,9 +64,11 @@ GroupScanWnd::GroupScanWnd() {
 
 GroupScanWnd::~GroupScanWnd() {
     try {
-        TOFDUSBPort::storage().remove_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == std::wstring(SCAN_CONFIG_NAME)));
-        mUtils->getBridge<TOFDUSBPort *>()->name = SCAN_CONFIG_NAME;
-        TOFDUSBPort::storage().insert(*mUtils->getBridge<TOFDUSBPort *>());
+        auto bridges = TOFDUSBPort::storage().get_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == std::wstring(SCAN_CONFIG_NAME)));
+        if (bridges.size() == 1) {
+            bridges[0].mCache = mUtils->getBridge<TOFDUSBPort *>()->mCache;
+            TOFDUSBPort::storage().update(bridges[0]);
+        }
         if (mUtils->getBridge()->isOpen()) {
             mUtils->getBridge()->close();
         }
@@ -96,7 +100,7 @@ void GroupScanWnd::OnBtnModelClicked(std::wstring name) {
         btnReviewMode->SetBkColor(0xFF666666);
         // 打开选择窗口
         auto    &selName = name;
-        TBusyWnd wnd([this, &selName]() {
+        BusyWnd wnd([this, &selName]() {
             // 进入前先暂停扫查
             StopScan(false);
             EnterReviewMode(selName);
@@ -447,6 +451,14 @@ void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
             auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnUIAutoScan")));
             btn->SetBkColor(0xFF339933);
         }
+    } else if (name == _T("ParamManagement")) {
+        ParamManagementWnd wnd(mUtils->getBridge());
+        wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
+        wnd.CenterWindow();
+        wnd.ShowModal();
+        UpdateSliderAndEditValue(mCurrentGroup, mConfigType, mGateType, mChannelSel, true);
+    } else if (name == _T("About")) {
+        DMessageBox(APP_VERSIONW, L"软件版本");
     }
 }
 

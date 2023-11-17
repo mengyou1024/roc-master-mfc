@@ -31,3 +31,7 @@ data.db
 /build
 /pack-installer.iss
 /output
+
+Mutilple/Version.h
+/Mutilple/res/Theme.zip
+

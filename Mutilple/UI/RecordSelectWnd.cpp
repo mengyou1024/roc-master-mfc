@@ -1,7 +1,7 @@
 #include "RecordSelectWnd.h"
 #include "ModelAScan.h"
 #include <Model/ScanRecord.h>
-#include <TBusyWnd.hpp>
+#include <BusyWnd.h>
 #include <regex>
 #include <HDBridge/Utils.h>
 
@@ -62,7 +62,7 @@ void RecordSelectWnd::Notify(TNotifyUI& msg) {
             std::string time = converter.to_bytes(std::wstring(elm->GetText(0)) + L"__" + std::wstring(elm->GetText(1)));
             std::replace(time.begin(), time.end(), ':', '-');
             try {
-                TBusyWnd wnd([&pList, &time]() {
+                BusyWnd wnd([&pList, &time]() {
                     ORM_Model::ScanRecord::storage().remove_all<ORM_Model::ScanRecord>(where(c(&ORM_Model::ScanRecord::time) == time));
                     HD_Utils::storage().remove_all<HD_Utils>(where(c(&HD_Utils::time) == time));
                     pList->RemoveAt(pList->GetCurSel());    
@@ -83,7 +83,7 @@ RecordSelectWnd::TYPE_RES RecordSelectWnd::GetResult() {
 }
 
 void RecordSelectWnd::LoadRecord() const {
-    TBusyWnd wnd([this]() {
+    BusyWnd wnd([this]() {
         auto list  = ORM_Model::ScanRecord::storage().get_all<ORM_Model::ScanRecord>();
         auto pList = static_cast<DuiLib::CListUI*>(m_PaintManager.FindControl(_T("ListRecordName")));
         pList->RemoveAll();

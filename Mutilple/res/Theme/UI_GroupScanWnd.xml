@@ -42,8 +42,6 @@
 				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
 				<Button name="BtnUIAutoScan" text="自动检测" width="100" font="5" />
 				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
-				<Button name="BtnUIParamSetting" text="参数设置" width="100" font="5" />
-				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
 				<Button name="BtnUIParamManagement" text="参数管理" width="100" font="5" />
 				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
 				<Button name="BtnUIHardPort" text="硬件接口" width="100" font="5" />
@@ -59,6 +57,8 @@
 				<Button name="BtnUIFreeze" text="波形冻结" width="100" font="5" />
 				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
 				<Button name="BtnUITrack" text="追踪使能" width="100" font="5" />
+				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
+				<Button name="BtnUIAbout" text="关于软件" width="100" font="5" />
 				<Label />
 			</HorizontalLayout>
 			<HorizontalLayout inset="10,10,10,10">

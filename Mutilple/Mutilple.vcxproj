@@ -77,22 +77,30 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(IncludePath)</IncludePath>
+    <CustomBuildBeforeTargets>
+    </CustomBuildBeforeTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <ExternalIncludePath>$(ProjectDir)Extensions\DuiLib;$(ProjectDir)Extensions\glew-2.1.0\include;$(ProjectDir)Extensions\glm;$(ProjectDir)Extensions\freetype\include;$(ProjectDir)Extensions\NetworkMulti;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>$(OutDir);$(ProjectDir)Extensions\glew-2.1.0\lib\Release\x64;$(ProjectDir)Extensions\freetype\lib;$(ProjectDir)Extensions\NetworkMulti\x64;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(IncludePath)</IncludePath>
+    <CustomBuildBeforeTargets>
+    </CustomBuildBeforeTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(IncludePath)</IncludePath>
+    <CustomBuildBeforeTargets>
+    </CustomBuildBeforeTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <ExternalIncludePath>$(ProjectDir)Extensions\DuiLib;$(ProjectDir)Extensions\glew-2.1.0\include;$(ProjectDir)Extensions\glm;$(ProjectDir)Extensions\freetype\include;$(ProjectDir)Extensions\NetworkMulti;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>$(OutDir);$(ProjectDir)Extensions\glew-2.1.0\lib\Release\x64;$(ProjectDir)Extensions\freetype\lib;$(ProjectDir)Extensions\NetworkMulti\x64;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(IncludePath)</IncludePath>
+    <CustomBuildBeforeTargets>
+    </CustomBuildBeforeTargets>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -121,6 +129,32 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)
+cmake -B build -G "Ninja"
+del $(SolutionDir)Mutilple\res\Theme.zip
+7z a -tZip $(SolutionDir)Mutilple\res\Theme.zip $(SolutionDir)Mutilple\res\Theme\</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>生成配置文件和资源文件</Message>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>echo "重新打包Theme"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(SolutionDir)Mutilple\res\Theme.zip;%(Outputs)</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <RootFolder>$(SolutionDir)Mutilple\res\Theme</RootFolder>
+      <TreatOutputAsContent>true</TreatOutputAsContent>
+      <Message>
+      </Message>
+      <Inputs>$(SolutionDir)Mutilple\res\Theme;%(Inputs)</Inputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -150,6 +184,32 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)
+cmake -B build -G "Ninja"
+del $(SolutionDir)Mutilple\res\Theme.zip
+7z a -tZip $(SolutionDir)Mutilple\res\Theme.zip $(SolutionDir)Mutilple\res\Theme\</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>生成配置文件和资源文件</Message>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>echo "重新打包Theme"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(SolutionDir)Mutilple\res\Theme.zip;%(Outputs)</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <RootFolder>$(SolutionDir)Mutilple\res\Theme</RootFolder>
+      <TreatOutputAsContent>true</TreatOutputAsContent>
+      <Message>
+      </Message>
+      <Inputs>$(SolutionDir)Mutilple\res\Theme;%(Inputs)</Inputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -183,6 +243,30 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)
+cmake -B build -G "Ninja"
+del $(SolutionDir)Mutilple\res\Theme.zip
+7z a -tZip $(SolutionDir)Mutilple\res\Theme.zip $(SolutionDir)Mutilple\res\Theme\</Command>
+      <Message>生成配置文件和资源文件</Message>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>echo "重新打包Theme"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(SolutionDir)Mutilple\res\Theme.zip;%(Outputs)</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <RootFolder>$(SolutionDir)Mutilple\res\Theme</RootFolder>
+      <TreatOutputAsContent>true</TreatOutputAsContent>
+      <Message>
+      </Message>
+      <Inputs>$(SolutionDir)Mutilple\res\Theme;%(Inputs)</Inputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -217,6 +301,30 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)
+cmake -B build -G "Ninja"
+del $(SolutionDir)Mutilple\res\Theme.zip
+7z a -tZip $(SolutionDir)Mutilple\res\Theme.zip $(SolutionDir)Mutilple\res\Theme\</Command>
+      <Message>生成配置文件和资源文件</Message>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>echo "重新打包Theme"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(SolutionDir)Mutilple\res\Theme.zip;%(Outputs)</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <RootFolder>$(SolutionDir)Mutilple\res\Theme</RootFolder>
+      <TreatOutputAsContent>true</TreatOutputAsContent>
+      <Message>
+      </Message>
+      <Inputs>$(SolutionDir)Mutilple\res\Theme;%(Inputs)</Inputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Define.h" />
@@ -241,13 +349,15 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Thread.h" />
     <ClInclude Include="ToolFunc.h" />
+    <ClInclude Include="UI\BusyWnd.h" />
     <ClInclude Include="UI\ChannelSettingWnd.h" />
     <ClInclude Include="UI\DMessageBox.h" />
     <ClInclude Include="UI\DuiWindowBase.h" />
     <ClInclude Include="UI\GroupScanWnd.h" />
+    <ClInclude Include="UI\InputDialogWnd.h" />
+    <ClInclude Include="UI\ParamManagementWnd.h" />
     <ClInclude Include="UI\RecordSelectWnd.h" />
     <ClInclude Include="UI\SettingWnd.h" />
-    <ClInclude Include="UI\TBusyWnd.hpp" />
     <ClInclude Include="Widgets\Axis.h" />
     <ClInclude Include="Widgets\FreeFont.h" />
     <ClInclude Include="Widgets\Mesh.h" />
@@ -308,6 +418,12 @@
     <ClCompile Include="snap7.cpp" />
     <ClCompile Include="Thread.cpp" />
     <ClCompile Include="ToolFunc.cpp" />
+    <ClCompile Include="UI\BusyWnd.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="UI\ChannelSettingWnd.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -317,6 +433,18 @@
     <ClCompile Include="UI\DMessageBox.cpp" />
     <ClCompile Include="UI\DuiWindowBase.cpp" />
     <ClCompile Include="UI\GroupScanWnd.cpp" />
+    <ClCompile Include="UI\InputDialogWnd.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="UI\ParamManagementWnd.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="UI\RecordSelectWnd.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -345,7 +473,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Mutilple.rc2" />
-    <None Include="res\Theme.zip" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\icon1.ico" />
