@@ -59,7 +59,7 @@ void HD_Utils::readThread() {
                 callback(*data.get(), *this);
             }
             std::lock_guard<std::mutex> dataLock(mScanDataMutex);
-            if (data->iChannel < HDBridge::CHANNEL_NUMBER) {
+            if (data->iChannel >= 0 && data->iChannel < HDBridge::CHANNEL_NUMBER) {
                 mScanOrm.mScanData[data->iChannel] = std::move(data);
             }
         } else {

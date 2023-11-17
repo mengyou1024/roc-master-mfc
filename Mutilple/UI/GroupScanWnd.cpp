@@ -901,7 +901,7 @@ void GroupScanWnd::StartScan(bool changeFlag) {
 
     if (!changeFlag) {
         if (mScanningFlag == true) {
-            SetTimer(CSCAN_UPDATE, 10);
+            SetTimer(CSCAN_UPDATE, 1000 / mSamplesPerSecond);
             SetTimer(BUTTON, 5);
         }
         return;
@@ -920,7 +920,7 @@ void GroupScanWnd::StartScan(bool changeFlag) {
         } catch (std::exception &e) { spdlog::error(e.what()); }
 
         mScanningFlag = true;
-        SetTimer(CSCAN_UPDATE, 10);
+        SetTimer(CSCAN_UPDATE, 1000 / mSamplesPerSecond);
         SetTimer(BUTTON, 5);
         mScanButtonValue.fill(0);
     }

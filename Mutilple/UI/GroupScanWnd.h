@@ -125,6 +125,7 @@ private:
     std::array<Button, HDBridge::CHANNEL_NUMBER> mScanButtons       = {};                      ///< 扫查模拟按钮
     WidgetMode                                   mWidgetMode        = {WidgetMode::MODE_SCAN}; ///< 当前窗口的模式
     std::vector<HD_Utils>                        mReviewData        = {};                      ///< 扫查缺陷数据
+    int                                          mSamplesPerSecond  = 33;                      ///< C扫图每秒钟采点个数
 
     /**
      * @brief 选组按钮单击回调函数
@@ -135,7 +136,7 @@ private:
     /**
      * @brief 模式按钮单击回调函数
      * @param name 按钮ID
-    */
+     */
     void OnBtnModelClicked(std::wstring name);
 
     /**
@@ -225,14 +226,14 @@ private:
     /**
      * @brief 开始扫查
      * @param changeFlag 是否改变标志位
-    */
-    void StartScan(bool changeFlag=true);
+     */
+    void StartScan(bool changeFlag = true);
 
     /**
      * @brief 停止扫查
      * @param changeFlag 是否改变标志位
-    */
-    void StopScan(bool changeFlag=true);
+     */
+    void StopScan(bool changeFlag = true);
 };
 
 #pragma pop_macro("GATE_A")
