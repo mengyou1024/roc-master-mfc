@@ -328,6 +328,8 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
             break;
         }
     }
+    reloadValue = std::round(reloadValue * 100.f) / 100.f;
+
     if (slider) {
         slider->SetValue(static_cast<int>(std::round(reloadValue)));
     }
