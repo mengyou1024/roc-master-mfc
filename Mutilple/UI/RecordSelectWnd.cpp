@@ -1,15 +1,21 @@
 #include "RecordSelectWnd.h"
 #include "ModelAScan.h"
-#include <Model/ScanRecord.h>
 #include <BusyWnd.h>
-#include <regex>
 #include <HDBridge/Utils.h>
+#include <Model/ScanRecord.h>
+#include <filesystem>
+#include <iostream>
+#include <regex>
+
+using std::filesystem::directory_iterator;
+using std::filesystem::file_type;
+using std::filesystem::path;
+namespace fs = std::filesystem;
 
 using sqlite_orm::c;
 using sqlite_orm::column;
 using sqlite_orm::columns;
 using sqlite_orm::where;
-
 
 RecordSelectWnd::~RecordSelectWnd() {}
 
@@ -24,18 +30,25 @@ CDuiString RecordSelectWnd::GetSkinFile() {
 void RecordSelectWnd::InitWindow() {
     CDuiWindowBase::InitWindow();
     CenterWindow();
-    LoadRecord();
+    LoadRecordUnique();
 }
 
 void RecordSelectWnd::Notify(TNotifyUI& msg) {
-    if (msg.sType == DUI_MSGTYPE_ITEMCLICK) {
-        auto list = dynamic_cast<CListTextElementUI*>(msg.pSender);
-        if (list) {
-            auto& [_, str] = mResult;
-            std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-            std::wstring                                     time = list->GetText(1);
-            std::replace(time.begin(), time.end(), L':', L'-');
-            str = converter.to_bytes(std::wstring(list->GetText(0)) + L"__" + time);
+    OnNotifyUnique(msg);
+    CDuiWindowBase::Notify(msg);
+}
+
+void RecordSelectWnd::OnNotifyUnique(TNotifyUI& msg) {
+    if (msg.sType == DUI_MSGTYPE_ITEMSELECT) {
+        if (msg.pSender->GetName() == L"ComboYearMonth") {
+            auto pListDay = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboDay"));
+            pListDay->RemoveAll();
+            ListDay();
+        } else if (msg.pSender->GetName() == L"ComboDay") {
+            auto pListTime = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboTime"));
+            pListTime->RemoveAll();
+            ListTime();
+        } else if (msg.pSender->GetName() == L"ComboTime") {
         }
     } else if (msg.sType == DUI_MSGTYPE_CLICK) {
         if (msg.pSender->GetName() == _T("closebtn")) {
@@ -43,67 +56,119 @@ void RecordSelectWnd::Notify(TNotifyUI& msg) {
             ret              = false;
             str              = "";
         } else if (msg.pSender->GetName() == _T("BtnOK")) {
-            auto pList       = static_cast<DuiLib::CListUI*>(m_PaintManager.FindControl(_T("ListRecordName")));
-            if (pList->GetCurSel() < 0) {
-                auto& [ret, str] = mResult;
-                ret              = false;
-            } else {
-                auto& [ret, str] = mResult;
-                ret              = true;
+            auto pListYearMonth = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboYearMonth"));
+            auto pListDay       = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboDay"));
+            auto pListTime      = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboTime"));
+            if (pListTime->GetText().IsEmpty() || pListDay->GetText().IsEmpty() || pListYearMonth->GetText().IsEmpty()) {
+                return;
             }
+            auto& [ret, str] = mResult;
+            ret              = true;
+            str              = StringFromWString(L"DB/" + std::wstring(pListYearMonth->GetText().GetData()) + L"/" +
+                                                 std::wstring(pListDay->GetText().GetData()) + L"/" + std::wstring(pListTime->GetText().GetData()));
             Close();
         } else if (msg.pSender->GetName() == _T("BtnDEL")) {
-            auto pList = static_cast<DuiLib::CListUI*>(m_PaintManager.FindControl(_T("ListRecordName")));
-            if (pList->GetCurSel() < 0) {
-                goto __exit;
+            auto pListYearMonth = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboYearMonth"));
+            auto pListDay       = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboDay"));
+            auto pListTime      = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboTime"));
+            if (pListTime->GetText().IsEmpty() || pListDay->GetText().IsEmpty() || pListYearMonth->GetText().IsEmpty()) {
+                return;
             }
-            auto elm = static_cast<CListTextElementUI*>(pList->GetItemAt(pList->GetCurSel()));
-            std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-            std::string time = converter.to_bytes(std::wstring(elm->GetText(0)) + L"__" + std::wstring(elm->GetText(1)));
-            std::replace(time.begin(), time.end(), ':', '-');
-            try {
-                BusyWnd wnd([&pList, &time]() {
-                    ORM_Model::ScanRecord::storage().remove_all<ORM_Model::ScanRecord>(where(c(&ORM_Model::ScanRecord::time) == time));
-                    HD_Utils::storage().remove_all<HD_Utils>(where(c(&HD_Utils::time) == time));
-                    pList->RemoveAt(pList->GetCurSel());    
-                }); 
-                wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
-                wnd.ShowModal();
-
-            } catch (std::exception& e) { spdlog::error(e.what()); }
+            auto path =
+                StringFromWString(L"DB/" + std::wstring(pListYearMonth->GetText().GetData()) + L"/" +
+                                  std::wstring(pListDay->GetText().GetData()) + L"/" + std::wstring(pListTime->GetText().GetData()));
+            pListTime->RemoveAt(pListTime->GetCurSel());
+            fs::remove(path);
+            auto YearMonth = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboYearMonth"));
+            ListYearMonth();
         }
-
     }
-__exit:
-    CDuiWindowBase::Notify(msg);
 }
 
 RecordSelectWnd::TYPE_RES RecordSelectWnd::GetResult() {
     return mResult;
 }
 
-void RecordSelectWnd::LoadRecord() const {
-    BusyWnd wnd([this]() {
-        auto list  = ORM_Model::ScanRecord::storage().get_all<ORM_Model::ScanRecord>();
-        auto pList = static_cast<DuiLib::CListUI*>(m_PaintManager.FindControl(_T("ListRecordName")));
-        pList->RemoveAll();
-        for (auto& it : list) {
-            std::wregex                                      matchReg(_T(R"((.+)__(.+))"));
-            std::wsmatch                                     match;
-            std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-            std::wstring                                     str(converter.from_bytes(it.time));
-            if (std::regex_match(str, match, matchReg)) {
-                auto pLine = new CListTextElementUI;
-                pLine->SetTag(it.id);
-                pList->Add(pLine);
-                std::wstring time = match[2].str().data();
-                std::replace(time.begin(), time.end(), L'-', L':');
-                pLine->SetText(0, match[1].str().data());
-                pLine->SetText(1, match[2].str().data());
+void RecordSelectWnd::LoadRecordUnique() const {
+    ListYearMonth();
+}
+
+void RecordSelectWnd::ListYearMonth() const {
+    try {
+        for (auto& v : directory_iterator("./DB")) {
+            auto fileName = v.path().filename().string();
+            if (v.status().type() == file_type::directory) {
+                auto fileName = v.path().filename().string();
+                auto pList    = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboYearMonth"));
+                auto list     = new CListLabelElementUI;
+                list->SetText(WStringFromString(fileName).data());
+                pList->Add(list);
             }
         }
-    });
-    wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
-    wnd.CenterWindow();
-    wnd.ShowModal();
+        auto pListYearMonth = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboYearMonth"));
+        if (pListYearMonth->GetCount() > 0) {
+            auto it = static_cast<CListLabelElementUI*>(pListYearMonth->GetItemAt(0));
+            it->Select();
+        }
+    } catch (std::exception& e) {
+        spdlog::error("file:{} line:{}", __FILE__, __LINE__);
+        spdlog::error(e.what());
+    }
+}
+
+void RecordSelectWnd::ListDay() const {
+    try {
+        auto         pList  = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboYearMonth"));
+        std::wstring parent = pList->GetText();
+        if (parent == L"") {
+            return;
+        }
+        for (auto& v : directory_iterator(string("./DB/") + StringFromWString(parent))) {
+            auto fileName = v.path().filename().string();
+            if (v.status().type() == file_type::directory) {
+                auto fileName = v.path().filename().string();
+                auto pList    = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboDay"));
+                auto list     = new CListLabelElementUI;
+                list->SetText(WStringFromString(fileName).data());
+                pList->Add(list);
+            }
+        }
+        auto pListDay = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboDay"));
+        if (pListDay->GetCount() > 0) {
+            auto it = static_cast<CListLabelElementUI*>(pListDay->GetItemAt(0));
+            it->Select();
+        }
+    } catch (std::exception& e) {
+        spdlog::error("file:{} line:{}", __FILE__, __LINE__);
+        spdlog::error(e.what());
+    }
+}
+
+void RecordSelectWnd::ListTime() const {
+    try {
+        auto pListYearMonth = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboYearMonth"));
+        auto pListDay       = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboDay"));
+        if (pListYearMonth->GetText() == L"" || pListDay->GetText() == L"") {
+            return;
+        }
+        std::wstring parent = pListYearMonth->GetText() + L"/" + pListDay->GetText();
+        for (auto& v : directory_iterator(string("./DB/") + StringFromWString(parent))) {
+            auto fileName = v.path().filename().string();
+            if (v.status().type() == file_type::regular) {
+                auto fileName = v.path().filename().string();
+                auto pList    = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboTime"));
+                auto list     = new CListLabelElementUI;
+                list->SetText(WStringFromString(fileName).data());
+                pList->Add(list);
+            }
+        }
+        auto pListTime = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboTime"));
+        if (pListTime->GetCount() > 0) {
+            auto it = static_cast<CListLabelElementUI*>(pListTime->GetItemAt(0));
+            it->Select();
+        }
+    } catch (std::exception& e) {
+        spdlog::error("file:{} line:{}", __FILE__, __LINE__);
+        spdlog::error(e.what());
+    }
 }

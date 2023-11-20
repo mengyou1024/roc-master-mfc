@@ -76,7 +76,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(IncludePath)</IncludePath>
     <CustomBuildBeforeTargets>
     </CustomBuildBeforeTargets>
   </PropertyGroup>
@@ -84,13 +84,13 @@
     <LinkIncremental>true</LinkIncremental>
     <ExternalIncludePath>$(ProjectDir)Extensions\DuiLib;$(ProjectDir)Extensions\glew-2.1.0\include;$(ProjectDir)Extensions\glm;$(ProjectDir)Extensions\freetype\include;$(ProjectDir)Extensions\NetworkMulti;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>$(OutDir);$(ProjectDir)Extensions\glew-2.1.0\lib\Release\x64;$(ProjectDir)Extensions\freetype\lib;$(ProjectDir)Extensions\NetworkMulti\x64;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(IncludePath)</IncludePath>
     <CustomBuildBeforeTargets>
     </CustomBuildBeforeTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(IncludePath)</IncludePath>
     <CustomBuildBeforeTargets>
     </CustomBuildBeforeTargets>
   </PropertyGroup>
@@ -98,7 +98,7 @@
     <LinkIncremental>false</LinkIncremental>
     <ExternalIncludePath>$(ProjectDir)Extensions\DuiLib;$(ProjectDir)Extensions\glew-2.1.0\include;$(ProjectDir)Extensions\glm;$(ProjectDir)Extensions\freetype\include;$(ProjectDir)Extensions\NetworkMulti;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>$(OutDir);$(ProjectDir)Extensions\glew-2.1.0\lib\Release\x64;$(ProjectDir)Extensions\freetype\lib;$(ProjectDir)Extensions\NetworkMulti\x64;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(ProjectDir)Extensions\jsoncpp\include;$(IncludePath)</IncludePath>
     <CustomBuildBeforeTargets>
     </CustomBuildBeforeTargets>
   </PropertyGroup>
@@ -115,7 +115,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>$(ProjectDir)snap7.lib;$(ProjectDir)sqlite3.lib;$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\lib\TOFDPort.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)snap7.lib;$(ProjectDir)sqlite3.lib;$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\lib\TOFDPort.lib;$(ProjectDir)Extensions\libcurl\lib\libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SetChecksum>true</SetChecksum>
       <IgnoreSpecificDefaultLibraries>msvcrt.lib;libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
@@ -161,7 +161,7 @@ del $(SolutionDir)Mutilple\res\Theme.zip
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;ORMPP_ENABLE_SQLITE3;ORM_DB_NAME="data.db";SPDLOG_WCHAR_TO_UTF8_SUPPORT;USE_SQLITE_ORM;USE_SPDLOG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING;ORMPP_ENABLE_SQLITE3;ORM_DB_NAME="data.db";SPDLOG_WCHAR_TO_UTF8_SUPPORT;USE_SQLITE_ORM;USE_SPDLOG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -170,7 +170,7 @@ del $(SolutionDir)Mutilple\res\Theme.zip
     <Link>
       <SubSystem>Windows</SubSystem>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
-      <AdditionalDependencies>$(ProjectDir)snap7.lib;$(ProjectDir)sqlite3.lib;$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\lib\TOFDPort.lib;Advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)snap7.lib;$(ProjectDir)sqlite3.lib;$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\lib\TOFDPort.lib;$(ProjectDir)Extensions\libcurl\lib\libcurl.lib;Advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SetChecksum>true</SetChecksum>
       <IgnoreSpecificDefaultLibraries>msvcrt.lib;libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
@@ -229,7 +229,7 @@ del $(SolutionDir)Mutilple\res\Theme.zip
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>$(ProjectDir)snap7.lib;$(ProjectDir)sqlite3.lib;$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\lib\TOFDPort.lib;Advapi32.lib;uafxcw.lib;Libcmt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)snap7.lib;$(ProjectDir)sqlite3.lib;$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\lib\TOFDPort.lib;$(ProjectDir)Extensions\libcurl\lib\libcurl.lib;Advapi32.lib;uafxcw.lib;Libcmt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SetChecksum>true</SetChecksum>
       <IgnoreSpecificDefaultLibraries>msvcrt.lib;uafxcw.lib;Libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
@@ -287,7 +287,7 @@ del $(SolutionDir)Mutilple\res\Theme.zip
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
-      <AdditionalDependencies>$(ProjectDir)snap7.lib;$(ProjectDir)sqlite3.lib;$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\lib\TOFDPort.lib;Advapi32.lib;uafxcw.lib;Libcmt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)snap7.lib;$(ProjectDir)sqlite3.lib;$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\lib\TOFDPort.lib;$(ProjectDir)Extensions\libcurl\lib\libcurl.lib;$(ProjectDir)Extensions\jsoncpp\lib\jsoncpp_static.lib;Advapi32.lib;uafxcw.lib;Libcmt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SetChecksum>true</SetChecksum>
       <IgnoreSpecificDefaultLibraries>msvcrt.lib;uafxcw.lib;Libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
@@ -377,6 +377,24 @@ del $(SolutionDir)Mutilple\res\Theme.zip
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Extensions\HDBridge\src\Utils.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Extensions\jsoncpp\src\json_reader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Extensions\jsoncpp\src\json_value.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Extensions\jsoncpp\src\json_writer.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

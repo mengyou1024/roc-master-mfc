@@ -126,7 +126,7 @@ private:
     WidgetMode                                   mWidgetMode        = {WidgetMode::MODE_SCAN}; ///< 当前窗口的模式
     std::vector<HD_Utils>                        mReviewData        = {};                      ///< 扫查缺陷数据
     int                                          mSamplesPerSecond  = 33;                      ///< C扫图每秒钟采点个数
-
+    bool                                         mEnableAmpMemory   = false;                   ///< 峰值记忆
     /**
      * @brief 选组按钮单击回调函数
      * @param index 索引
@@ -163,8 +163,9 @@ private:
     /**
      * @brief 设置Config值
      * @param val value
+     * @param sync 控制是否立即同步
      */
-    void SetConfigValue(float val);
+    void SetConfigValue(float val, bool sync = true);
 
     /**
      * @brief 更新A扫回调函数

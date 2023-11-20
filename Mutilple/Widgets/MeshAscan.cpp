@@ -146,6 +146,25 @@ void MeshAscan::Setup() {
         glColorPointer(4, GL_FLOAT, sizeof(PT_V2F_C4F), (GLvoid*)(2 * sizeof(GLfloat)));
         glBindVertexArray(0);
     }
+
+    // ∑Â÷µº«“‰
+    for (int i = 0; i < MAX_GATE_NUM; i++) {
+        if (m_iAmpMemoryLineVAO[i] == 0) {
+            GenVAO(m_iAmpMemoryLineVAO[i], m_iAmpMemoryLineVBO[i]);
+            glBindVertexArray(m_iAmpMemoryLineVAO[i]);
+            // VBO
+            glBindBuffer(GL_ARRAY_BUFFER, m_iAmpMemoryLineVBO[i]);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(PT_V2F_C4F) * m_pAmpMemoryLineVertices[i].size(), m_pAmpMemoryLineVertices[i].data(),
+                         GL_DYNAMIC_DRAW);
+            // Position
+            glEnableClientState(GL_VERTEX_ARRAY);
+            glVertexPointer(2, GL_FLOAT, sizeof(PT_V2F_C4F), (GLvoid*)0);
+            // Color
+            glEnableClientState(GL_COLOR_ARRAY);
+            glColorPointer(4, GL_FLOAT, sizeof(PT_V2F_C4F), (GLvoid*)(2 * sizeof(GLfloat)));
+            glBindVertexArray(0);
+        }
+    }
 }
 
 void MeshAscan::UpdateAScanData() {
@@ -177,9 +196,58 @@ void MeshAscan::UpdateAScanData() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
+void MeshAscan::UpdateAmpMemoryData() {
+    for (int i = 0; i < MAX_GATE_NUM; i++) {
+        if (mAmpMemoryData[i] == nullptr) {
+            continue;
+        }
+        std::lock_guard lock(mGMutex);
+
+        if (m_pAmpMemoryLineVertices[i].size() < mAmpMemoryData[i]->size()) {
+            m_pAmpMemoryLineVertices[i].resize(mAmpMemoryData[i]->size());
+            glBindBuffer(GL_ARRAY_BUFFER, m_iAmpMemoryLineVBO[i]);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(PT_V2F_C4F) * mAmpMemoryData[i]->size(), NULL, GL_DYNAMIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+        }
+
+        for (size_t j = 0; j < mAmpMemoryData[i]->size(); j++) {
+            m_pAmpMemoryLineVertices[i][j].x = m_Gate[i].fPos + float(j) / float(mAmpMemoryData[i]->size() - 1) * m_Gate[i].fWidth;
+            m_pAmpMemoryLineVertices[i][j].y = (*mAmpMemoryData[i])[j] / 255.0f;
+            m_pAmpMemoryLineVertices[i][j].a = 1.0f;
+            m_pAmpMemoryLineVertices[i][j].r = .8f;
+            m_pAmpMemoryLineVertices[i][j].g = 1.0f;
+            m_pAmpMemoryLineVertices[i][j].b = 1.0f;
+        }
+
+        m_iAmpMemoryLineSize[i] = (GLsizei)mAmpMemoryData[i]->size();
+
+        glBindBuffer(GL_ARRAY_BUFFER, m_iAmpMemoryLineVBO[i]);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(PT_V2F_C4F) * m_pAmpMemoryLineVertices[i].size(), m_pAmpMemoryLineVertices[i].data());
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+
+    
+}
+
+void MeshAscan::hootAmpMemoryData(int index, const std::shared_ptr<std::vector<uint8_t>> data) {
+    std::lock_guard lock(mGMutex);
+    mAmpMemoryData[index] = data;
+}
+
 void MeshAscan::hookAScanData(const std::shared_ptr<std::vector<uint8_t>> data) {
     std::lock_guard lock(mGMutex);
     mRawAScanData = data;
+}
+
+const std::vector<uint8_t> MeshAscan::getAmpMemoryData(int index) const{
+    if (mAmpMemoryData[index] == nullptr) {
+        return {};
+    }
+    return *mAmpMemoryData[index];
+}
+
+void MeshAscan::ClearAmpMemoryData(int index) {
+    m_iAmpMemoryLineSize[index] = 0;
 }
 
 void MeshAscan::UpdateGate(int iGate, bool bEnable, float fPos, float fWidth, float fHeight) {
@@ -303,6 +371,12 @@ void MeshAscan::Render() {
     for (int i = 0; i < MAX_DAC_LINES_NUM; i++) {
         glBindVertexArray(m_iDACLineVAO[i]);
         glDrawArrays(GL_LINE_STRIP, 0, m_iDACLineSize[i]);
+        glBindVertexArray(0);
+    }
+
+    for (int i = 0; i < MAX_GATE_NUM; i++) {
+        glBindVertexArray(m_iAmpMemoryLineVAO[i]);
+        glDrawArrays(GL_LINE_STRIP, 0, m_iAmpMemoryLineSize[i]);
         glBindVertexArray(0);
     }
 

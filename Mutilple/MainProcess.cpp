@@ -11,6 +11,9 @@
 #include <Model/UserModel.h>
 #include <iostream>
 #include <spdlog/sinks/rotating_file_sink.h>
+#include <curl/curl.h>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 using namespace std;
 
@@ -25,7 +28,8 @@ MainProcess::MainProcess() {
     SetCurrentDirectory(ExePath);
 #if _DEBUG
     // _CrtSetBreakAlloc(1739);
-    AllocConsole(); // ¿ØÖÆÌ¨
+    AllocConsole(); // ï¿½ï¿½ï¿½ï¿½Ì¨
+    system("chcp 65001");
     spdlog::set_level(spdlog::level::debug);
     mFile = freopen("CONOUT$", "w", stdout);
 #else 

@@ -16,6 +16,7 @@
 #include <memory>
 #include <stack>
 #include <vector>
+#include <tuple>
 
 using std::bitset;
 using std::invoke;
@@ -29,6 +30,7 @@ using std::stack;
 using std::string;
 using std::unique_ptr;
 using std::vector;
+using std::tuple;
 
 // OpenEW
 #define GLEW_STATIC
@@ -54,5 +56,8 @@ using ::CSize;
 
 #include <spdlog/spdlog.h>
 #include <sqlite_orm.h>
+#include <json/json.h>
+#include <curl/curl.h>
+#include <Version.h>
 
 #endif // PCH_H

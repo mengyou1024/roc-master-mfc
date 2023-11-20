@@ -70,6 +70,9 @@
     <Filter Include="Source Files\HDBridge">
       <UniqueIdentifier>{5a8e9006-0c27-4b84-bb45-ed5ba138a05f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\功能函数\jsoncpp">
+      <UniqueIdentifier>{8e5ef684-0bb6-4db9-879e-cc3a232c6602}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Define.h">
@@ -298,6 +301,15 @@
     </ClCompile>
     <ClCompile Include="UI\InputDialogWnd.cpp">
       <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Extensions\jsoncpp\src\json_reader.cpp">
+      <Filter>Source Files\功能函数\jsoncpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Extensions\jsoncpp\src\json_value.cpp">
+      <Filter>Source Files\功能函数\jsoncpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Extensions\jsoncpp\src\json_writer.cpp">
+      <Filter>Source Files\功能函数\jsoncpp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -42,8 +42,9 @@ using std::string;
 
 class TOFDUSBPort : public HDBridge {
 public:
-    int          id   = {};
-    std::wstring name = {};
+    int          id      = {};
+    std::wstring name    = {};
+    bool         isValid = false;
 
     TOFDUSBPort() = default;
 
@@ -105,6 +106,7 @@ public:
                             make_table("TOFDUSBPort",
                                        make_column("ID", &TOFDUSBPort::id, primary_key()),
                                        make_column("NAME", &TOFDUSBPort::name, unique()),
+                                       make_column("VALID", &TOFDUSBPort::isValid),
                                        make_column("CACHE", &TOFDUSBPort::mCache)));
     }
 

@@ -1,6 +1,8 @@
 #include "pch.h"
 
 #include "ToolFunc.h"
+#include <regex>
+#include <iostream>
 
 float PointToSegDist(float x, float y, float x1, float y1, float x2, float y2) {
     float cross = (x2 - x1) * (x - x1) + (y2 - y1) * (y - y1);
@@ -223,6 +225,16 @@ std::string StringFromLPCTSTR(LPCTSTR str) {
 #endif
 }
 
+std::string StringFromWString(std::wstring str) {
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+    return converter.to_bytes(str);
+}
+
+std::wstring WStringFromString(std::string str) {
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+    return converter.from_bytes(str);
+}
+
 // GB2312到UTF-8的转换
 int GB2312ToUtf8(const char* gb2312, char* utf8) {
     int      len  = MultiByteToWideChar(CP_ACP, 0, gb2312, -1, NULL, 0);
@@ -284,6 +296,75 @@ bool pointInRect(RECT rc, ::CPoint pt) {
         return true;
     }
     return false;
+}
+
+int GetVersionCode(std::string version) {
+    std::regex  reg(R"([vV]?(\d+)\.(\d+)\.?(\d+)?)");
+    std::smatch match;
+    if (!std::regex_search(version, match, reg)) {
+        return -1;
+    }
+    int curVer = 0;
+    for (size_t i = 1; i < std::min(match.size(), 4ull); i++) {
+        curVer |= (atol(match[i].str().data()) & 0xFF) << ((3ull - i) * 8);
+    }
+    return curVer;
+}
+
+bool Check4Update(std::string currentVersion, std::string newVersion) {
+    int curVer = GetVersionCode(currentVersion);
+    int newVer = GetVersionCode(newVersion);
+    if (curVer < 0 || newVer < 0) {
+        return false;
+    }
+    return newVer > curVer;
+}
+
+size_t write_data(void* ptr, size_t size, size_t nmemb, void* stream) {
+    string data((const char*)ptr, (size_t)size * nmemb);
+    *((std::stringstream*)stream) << data << std::endl;
+    return size * nmemb;
+}
+
+std::tuple<string, string, string> GetLatestReleaseNote(std::string github_api_url) {
+    std::stringstream out;
+    void*             curl = curl_easy_init();
+    // 设置URL
+    curl_easy_setopt(curl, CURLOPT_URL, github_api_url.c_str());
+    curl_easy_setopt(curl, CURLOPT_USERAGENT, "Dark Secret Ninja/1.0");
+    // 设置接收数据的处理函数和存放变量
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &out);
+
+    CURLcode res = curl_easy_perform(curl);
+    if (res != CURLE_OK) {
+        fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+    }
+
+    string str_json = out.str();
+    curl_easy_cleanup(curl);
+    try {
+        JSONCPP_STRING                          err;
+        Json::Value                             root;
+        Json::CharReaderBuilder                 builder;
+        const std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
+        if (!reader->parse(str_json.c_str(), str_json.c_str() + str_json.length(), &root, &err)) {
+            spdlog::error("parser json string erroor");
+            return std::tuple<string, string, string>();
+        }
+        string url = {};
+        for (size_t i = 0; i < root["assets"].size(); i++) {
+            std::regex  reg(R"((.+\.exe))");
+            std::smatch match;
+            std::string str = root["assets"][static_cast<int>(i)]["browser_download_url"].asString();
+            if (std::regex_match(str, match, reg)) {
+                url = match[1].str();
+            }
+        }
+        return std::tuple<string, string, string>(root["tag_name"].asString(), root["body"].asString(), url);
+    } catch (std::exception& e) { spdlog::error(e.what()); }
+
+    return std::tuple<string, string, string>();
 }
 
 bool IncChinese(CString str) {

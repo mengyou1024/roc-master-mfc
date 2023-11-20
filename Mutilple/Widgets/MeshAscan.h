@@ -4,11 +4,10 @@
 #include <memory>
 #include <thread>
 
-const int MAX_DAC_LINES_NUM = 2; //      瑞铁 使用2根      更加调整RL SL EL
-
 class Channel;
 class MeshAscan : public Mesh {
 public:
+    constexpr static int MAX_DAC_LINES_NUM = 2;
     MeshAscan(OpenGL* pOpenGL);
     virtual ~MeshAscan();
 
@@ -26,8 +25,11 @@ public:
 
     void UpdateGate(int iGate, bool bEnable, float fPos, float fWidth, float fHeight);
     void UpdateAScanData();
-
+    void UpdateAmpMemoryData();
+    void hootAmpMemoryData(int index, const std::shared_ptr<std::vector<uint8_t>> data);
     void hookAScanData(const std::shared_ptr<std::vector<uint8_t>> data);
+    const std::vector<uint8_t> getAmpMemoryData(int index) const; 
+    void                       ClearAmpMemoryData(int index);
 
 private:
     void    DrawGate();
@@ -37,6 +39,7 @@ private:
     GLsizei m_iAScanSize;
     GLsizei m_iDACSize;                        // 母线DAC
     GLsizei m_iDACLineSize[MAX_DAC_LINES_NUM]; // RL SL
+    GLsizei m_iAmpMemoryLineSize[MAX_GATE_NUM]; ///< 峰值记忆的大小
     struct _gate_info {
         bool  bEnable;
         float fPos;
@@ -53,6 +56,11 @@ private:
     GLuint                  m_iDACLineVAO[MAX_DAC_LINES_NUM], m_iDACLineVBO[MAX_DAC_LINES_NUM];
     std::vector<PT_V2F_C4F> m_pDACLineVertices[MAX_DAC_LINES_NUM];
 
+    GLuint                  m_iAmpMemoryLineVAO[MAX_GATE_NUM]      = {};
+    GLuint                  m_iAmpMemoryLineVBO[MAX_GATE_NUM]      = {};
+    std::vector<PT_V2F_C4F> m_pAmpMemoryLineVertices[MAX_GATE_NUM] = {};
+
     std::mutex                            mGMutex       = {};
     std::shared_ptr<std::vector<uint8_t>> mRawAScanData = nullptr;
+    std::shared_ptr<std::vector<uint8_t>> mAmpMemoryData[MAX_GATE_NUM] = {};
 };

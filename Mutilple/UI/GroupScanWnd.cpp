@@ -43,7 +43,7 @@ constexpr int swapAScanIndex(int x) {
     return result * 4 + remain;
 }
 
-constexpr std::wstring_view SCAN_CONFIG_NAME = _T("上一次配置");
+constexpr std::wstring_view SCAN_CONFIG_LAST = _T("上一次配置");
 using sqlite_orm::c;
 using sqlite_orm::column;
 using sqlite_orm::columns;
@@ -51,10 +51,17 @@ using sqlite_orm::where;
 
 GroupScanWnd::GroupScanWnd() {
     try {
-        auto config = TOFDUSBPort::storage().get_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == std::wstring(SCAN_CONFIG_NAME)));
+        auto config = TOFDUSBPort::storage().get_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == std::wstring(SCAN_CONFIG_LAST)));
         if (config.size() == 1) {
-            mUtils = std::make_unique<HD_Utils>(std::make_unique<TOFDUSBPort>(config[0]));
-            mUtils->getBridge()->syncCache2Board();
+            if (config[0].isValid) {
+                mUtils = std::make_unique<HD_Utils>(std::make_unique<TOFDUSBPort>(config[0]));
+                mUtils->getBridge()->syncCache2Board();
+                config[0].isValid = false;
+                TOFDUSBPort::storage().update(config[0]);
+            } else {
+                mUtils = std::make_unique<HD_Utils>(std::make_unique<TOFDUSBPort>());
+                mUtils->getBridge()->defaultInit();
+            }
         } else {
             mUtils = std::make_unique<HD_Utils>(std::make_unique<TOFDUSBPort>());
             mUtils->getBridge()->defaultInit();
@@ -64,13 +71,15 @@ GroupScanWnd::GroupScanWnd() {
 
 GroupScanWnd::~GroupScanWnd() {
     try {
-        auto bridges = TOFDUSBPort::storage().get_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == std::wstring(SCAN_CONFIG_NAME)));
+        auto bridges = TOFDUSBPort::storage().get_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == std::wstring(SCAN_CONFIG_LAST)));
         if (bridges.size() == 1) {
+            bridges[0].isValid = true;
             bridges[0].mCache = mUtils->getBridge<TOFDUSBPort *>()->mCache;
             TOFDUSBPort::storage().update(bridges[0]);
-        }
-        if (mUtils->getBridge()->isOpen()) {
-            mUtils->getBridge()->close();
+        } else {
+            mUtils->getBridge<TOFDUSBPort *>()->name    = std::wstring(SCAN_CONFIG_LAST);
+            mUtils->getBridge<TOFDUSBPort *>()->isValid = true;
+            TOFDUSBPort::storage().insert(*(mUtils->getBridge<TOFDUSBPort *>()));
         }
     } catch (std::exception &e) { spdlog::error(e.what()); }
 }
@@ -82,7 +91,9 @@ void GroupScanWnd::OnBtnModelClicked(std::wstring name) {
         if (btnScanMode->GetBkColor() != 0xFF666666) {
             btnScanMode->SetBkColor(0xFF666666);
             btnReviewMode->SetBkColor(0xFFEEEEEE);
-            ExitReviewMode();
+            BusyWnd wnd([this]() { ExitReviewMode(); });
+            wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
+            wnd.ShowModal();
             // 退出后重新开始扫查
             StartScan(false);
         }
@@ -106,7 +117,6 @@ void GroupScanWnd::OnBtnModelClicked(std::wstring name) {
             EnterReviewMode(selName);
         });
         wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
-        wnd.CenterWindow();
         wnd.ShowModal();
     }
 }
@@ -157,6 +167,27 @@ void GroupScanWnd::InitOnThread() {
     auto model = static_cast<ModelGroupAScan *>(m_OpenGL_ASCAN.m_pModel[0]);
     mUtils->addReadCallback(std::bind(&GroupScanWnd::UpdateAScanCallback, this, std::placeholders::_1, std::placeholders::_2));
     ScanButtonInit();
+//#ifndef _DEBUG
+//    auto [tag, body, url] = GetLatestReleaseNote("https://api.github.com/repos/mengyou1024/roc-master-mfc/releases/latest");
+//    if (Check4Update("v0.0", tag)) {
+//        std::wstring wBody  = WStringFromString(body);
+//        std::wstring wTitle = std::wstring(L"更新可用:") + WStringFromString(tag);
+//        auto         ret    = DMessageBox(wBody.data(), wTitle.data(), MB_YESNO);
+//        spdlog::debug("ret = {}", ret);
+//        spdlog::info("tag: {}\n body: {} \n url: {}", tag, body, url);
+//        FILE *fp   = fopen("./upgrade.exe", "wb");
+//        CURL *curl = curl_easy_init();
+//        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+//        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+//        curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+//        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, fwrite);
+//        CURLcode result = curl_easy_perform(curl);
+//        fclose(fp);
+//        curl_easy_cleanup(curl);
+//        auto aret = system(".\\upgrade.exe /verysilent /suppressmsgboxes");
+//        spdlog::info("ret={}", aret);
+//    }
+//#endif // !_DEBUG
 }
 
 void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig, GateType newGate, ChannelSel newChannelSel,
@@ -308,7 +339,7 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
     }
 }
 
-void GroupScanWnd::SetConfigValue(float val) {
+void GroupScanWnd::SetConfigValue(float val, bool sync) {
     auto tick = GetTickCount64();
     spdlog::debug("set config value {}", val);
     int  _channelSel = static_cast<int>(mChannelSel) + mCurrentGroup * 4;
@@ -317,6 +348,11 @@ void GroupScanWnd::SetConfigValue(float val) {
     switch (mConfigType) {
         case GroupScanWnd::ConfigType::DetectRange: {
             bridge->setSampleDepth(_channelSel, (float)(bridge->distance2time((double)val)));
+            // 重新计算采样因子
+            auto depth = bridge->getSampleDepth()[_channelSel];
+            auto delay = bridge->getDelay()[_channelSel] + bridge->getZeroBias()[_channelSel];
+            auto sampleFactor = static_cast<int>(std::round((depth - delay) * 100.0 / 1024.0));
+            bridge->setSampleFactor(_channelSel, sampleFactor);
             break;
         }
         case GroupScanWnd::ConfigType::Gain: {
@@ -369,9 +405,10 @@ void GroupScanWnd::SetConfigValue(float val) {
             break;
         }
     }
-
-    std::thread t([bridge]() { bridge->flushSetting(); });
-    t.detach();
+    if (sync) {
+        std::thread t([bridge]() { bridge->flushSetting(); });
+        t.detach();
+    }
     spdlog::debug("config takes times:{}", GetTickCount64() - tick);
 }
 
@@ -394,10 +431,50 @@ void GroupScanWnd::UpdateAScanCallback(const HDBridge::NM_DATA &data, const HD_U
         HDBridge::HB_GateInfo g = bridge->getGateInfo(i)[data.iChannel];
         mesh->UpdateGate(g.gate, g.active, g.pos, g.width, g.height);
     }
+
+    if (!mEnableAmpMemory) {
+        for (int i = 0; i < 3; i++) {
+            mesh->hootAmpMemoryData(i, nullptr);
+            mesh->ClearAmpMemoryData(i);
+        }
+        return;
+    }
+    for (int i = 0; i < 2; i++) {
+        const auto ampData = mesh->getAmpMemoryData(i);
+        auto g       = bridge->getGateInfo(i, data.iChannel);
+        // 获取波门内的数据
+        auto l = data.pAscan.begin() + static_cast<int64_t>(std::round(static_cast<float>(data.pAscan.size()) * g.pos));
+        auto r = data.pAscan.begin() + static_cast<int64_t>(std::round(static_cast<float>(data.pAscan.size()) * (g.pos + g.width)));
+        std::vector<uint8_t> newAmpData(l, r);
+        if (ampData.size() == newAmpData.size()) {
+            for (auto i = 0; i < ampData.size(); i++) {
+                if (newAmpData[i] < ampData[i]) {
+                    newAmpData[i] = ampData[i];
+                }
+            }
+        }
+        mesh->hootAmpMemoryData(i, std::make_shared<std::vector<uint8_t>>(newAmpData));
+    }
+    {
+        const auto ampData = mesh->getAmpMemoryData(2);
+        auto l =
+            data.pAscan.begin() + static_cast<int64_t>(std::round(static_cast<float>(data.pAscan.size()) * mGateScan[data.iChannel].pos));
+        auto                 r = data.pAscan.begin() + static_cast<int64_t>(std::round(static_cast<float>(data.pAscan.size()) *
+                                                                                       (mGateScan[data.iChannel].pos + mGateScan[data.iChannel].width)));
+        std::vector<uint8_t> newAmpData(l, r);
+        if (ampData.size() == newAmpData.size()) {
+            for (auto i = 0; i < ampData.size(); i++) {
+                if (newAmpData[i] < ampData[i]) {
+                    newAmpData[i] = ampData[i];
+                }
+            }
+        }
+        mesh->hootAmpMemoryData(2, std::make_shared<std::vector<uint8_t>>(newAmpData));
+    }
 }
 
 void GroupScanWnd::UpdateCScanOnTimer() {
-    auto scanData = mUtils->mScanOrm.mScanData;
+    std::array<std::shared_ptr<HDBridge::NM_DATA>, HDBridge::CHANNEL_NUMBER> scanData = mUtils->mScanOrm.mScanData;
 
     for (auto &it : scanData) {
         if (it != nullptr) {
@@ -407,12 +484,8 @@ void GroupScanWnd::UpdateCScanOnTimer() {
                 auto r = static_cast<size_t>(std::round((mGateScan[it->iChannel].pos + mGateScan[it->iChannel].width) * it->pAscan.size()));
                 auto max        = std::max_element(std::begin(it->pAscan) + l, std::begin(it->pAscan) + r);
                 glm::vec4 color = {};
-                if (*max > 255 / 4 * 3) {
-                    color = {1.0f, 0.0f, 0.0f, 1.0f};
-                } else if (*max > 255 / 2) {
-                    color = {0.0f, 0.0f, 1.0f, 1.0f};
-                } else if (*max > 255 / 4) {
-                    color = {0.0f, 1.0f, 0.0f, 1.0f};
+                if (*max > it->pGateAmp[1]) {
+                    color = {1.0f, 0.f, 0.f, 1.0f};
                 } else {
                     color = {1.0f, 1.0f, 1.0f, 1.0f};
                 }
@@ -459,6 +532,26 @@ void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
         UpdateSliderAndEditValue(mCurrentGroup, mConfigType, mGateType, mChannelSel, true);
     } else if (name == _T("About")) {
         DMessageBox(APP_VERSIONW, L"软件版本");
+    } else if (name == _T("Freeze")) {
+        auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnUIFreeze")));
+        if (btn->GetBkColor() == 0xFFEEEEEE) {
+            mUtils->pushCallback();
+            StopScan(false);
+            btn->SetBkColor(0xFF339933);
+        } else {
+            mUtils->popCallback();
+            StartScan(false);
+            btn->SetBkColor(0xFFEEEEEE);
+        }
+    } else if (name == _T("AmpMemory")) {
+        auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnUIAmpMemory")));
+        if (btn->GetBkColor() == 0xFFEEEEEE) {
+            mEnableAmpMemory = true;
+            btn->SetBkColor(0xFF339933);
+        } else {
+            mEnableAmpMemory = false;
+            btn->SetBkColor(0xFFEEEEEE);
+        }
     }
 }
 
@@ -547,6 +640,7 @@ void GroupScanWnd::Notify(TNotifyUI &msg) {
             if (edit) {
                 int sliderValue = slider->GetValue();
                 edit->SetText(std::to_wstring(sliderValue).data());
+                SetConfigValue(static_cast<float>(sliderValue), false);
             }
         }
     } else if (msg.sType == DUI_MSGTYPE_TEXTCHANGED) {
@@ -786,7 +880,20 @@ void GroupScanWnd::SaveScanDefect() {
     mUtils->mScanOrm.mCScanLimits[0] = minLimit;
     mUtils->mScanOrm.mCScanLimits[1] = maxLimit;
     // 保存扫查数据
-    HD_Utils::storage().insert(*mUtils);
+    std::regex reg(R"((\d+)-(\d+)-(\d+)__(.+))");
+    std::smatch match;
+    if (std::regex_match(mUtils->time, match, reg)) {
+        auto year = match[1].str();
+        auto month = match[2].str();
+        auto day   = match[3].str();
+        auto tm    = match[4].str();
+        auto path  = string("DB/") + year + month + "/" + day;
+        std::replace(path.begin(), path.end(), '/', '\\');
+        CreateMultipleDirectory(WStringFromString(path).data());
+        path += "\\" + tm + ".db";
+        HD_Utils::storage(path).sync_schema();
+        HD_Utils::storage(path).insert(*mUtils);
+    }
 }
 
 void GroupScanWnd::ScanButtonInit() {
@@ -825,7 +932,7 @@ void GroupScanWnd::EnterReviewMode(std::string name) {
     // 存放回调函数
     mUtils->pushCallback();
     // 读取并加载数据
-    mReviewData = HD_Utils::storage().get_all<HD_Utils>(where(c(&HD_Utils::time) == name));
+    mReviewData = HD_Utils::storage(name).get_all<HD_Utils>();
     spdlog::info("load:{}, frame:{}", name, mReviewData.size());
     // 删除所有通道的C扫数据
     for (int index = 0; index < HDBridge::CHANNEL_NUMBER; index++) {
@@ -845,12 +952,8 @@ void GroupScanWnd::EnterReviewMode(std::string name) {
                 auto      max   = std::max_element(std::begin(data.mScanOrm.mScanData[index]->pAscan) + l,
                                                    std::begin(data.mScanOrm.mScanData[index]->pAscan) + r);
                 glm::vec4 color = {};
-                if (*max > 255 / 4 * 3) {
-                    color = {1.0f, 0.0f, 0.0f, 1.0f};
-                } else if (*max > 255 / 2) {
-                    color = {0.0f, 0.0f, 1.0f, 1.0f};
-                } else if (*max > 255 / 4) {
-                    color = {0.0f, 1.0f, 0.0f, 1.0f};
+                if (*max > data.mScanOrm.mScanData[index]->pGateAmp[1]) {
+                    color = {1.0f, 0.f, 0.f, 1.0f};
                 } else {
                     color = {1.0f, 1.0f, 1.0f, 1.0f};
                 }

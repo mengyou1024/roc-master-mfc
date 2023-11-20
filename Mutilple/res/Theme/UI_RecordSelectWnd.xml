@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window size="322,520" caption="5,5,5,52" sizebox="10,10,10,10">
+<Window size="320,240" caption="5,5,5,52" sizebox="10,10,10,10">
 	<Font name="楷体" size="14" default="true" />
 	<Font name="楷体" size="18" />
 	<Font name="楷体" size="24" />
@@ -27,12 +27,25 @@
 		<VerticalLayout bkimage="Theme\Line\v_line.png" height="1" />
 		<VerticalLayout inset="10,15,10,10">
 			<VerticalLayout>
-				<List name="ListRecordName" itemalign="center" inset="1,1,1,1" bordersize="1" bordercolor="0x7F7F7F7F" bkcolor="#FFFFFFFF" itemtextpadding="5,0,0,0" itemtextcolor="#FF000000" itembkcolor="#FFFFFFFF" itemselectedtextcolor="#FF000000" itemselectedbkcolor="#FFC1E3FF" itemhottextcolor="#FF000000" itemhotbkcolor="#FFE9F5FF" itemdisabledtextcolor="#FFCCCCCC" itemdisabledbkcolor="#FFFFFFFF" vscrollbar="true" hscrollbar="true">
-					<ListHeader bkimage="Theme\List\list_header_bg.png">
-						<ListHeaderItem text="日期" width="150" height="40" minwidth="16" sepwidth="1" align="center" hotimage="Theme\List\list_header_hot.png" pushedimage="Theme\List\list_header_pushed.png" sepimage="Theme\List\list_header_sep.png" />
-						<ListHeaderItem text="时间" width="150" height="40" minwidth="16" sepwidth="1" align="center" hotimage="Theme\List\list_header_hot.png" pushedimage="Theme\List\list_header_pushed.png" sepimage="Theme\List\list_header_sep.png" />
-					</ListHeader>
-				</List>
+				<VerticalLayout height="20" />
+				<HorizontalLayout height="32">
+					<Label />
+					<Label text="年/月" width="45" />
+					<Combo width="120" height="32" name="ComboYearMonth" textpadding="4,1,1,1" normalimage="file='Theme\Combo\combo.png' source='0,0,100,22' corner='2,2,20,18'" hotimage="file='Theme\Combo\combo.png' source='0,22,100,44' corner='2,2,22,18'" pushedimage="file='Theme\Combo\combo.png' source='0,44,100,66' corner='2,2,22,18'" dropboxsize="0, 400" />
+					<Label />
+				</HorizontalLayout>
+				<HorizontalLayout height="32">
+					<Label />
+					<Label text="日期" width="45" />
+					<Combo width="120" height="32" name="ComboDay" textpadding="4,1,1,1" normalimage="file='Theme\Combo\combo.png' source='0,0,100,22' corner='2,2,20,18'" hotimage="file='Theme\Combo\combo.png' source='0,22,100,44' corner='2,2,22,18'" pushedimage="file='Theme\Combo\combo.png' source='0,44,100,66' corner='2,2,22,18'" dropboxsize="0, 400" />
+					<Label />
+				</HorizontalLayout>
+				<HorizontalLayout height="32">
+					<Label />
+					<Label text="时间" width="45" />
+					<Combo width="120" height="32" name="ComboTime" textpadding="4,1,1,1" normalimage="file='Theme\Combo\combo.png' source='0,0,100,22' corner='2,2,20,18'" hotimage="file='Theme\Combo\combo.png' source='0,22,100,44' corner='2,2,22,18'" pushedimage="file='Theme\Combo\combo.png' source='0,44,100,66' corner='2,2,22,18'" dropboxsize="0, 400" />
+					<Label />
+				</HorizontalLayout>
 				<VerticalLayout height="20" />
 				<HorizontalLayout height="32">
 					<Label />

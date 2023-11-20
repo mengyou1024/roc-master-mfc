@@ -73,6 +73,7 @@ void ModelAScan::Render() {
         if (ptr) {
             // 更新A扫数据
             ((MeshAscan*)ptr)->UpdateAScanData();
+            ((MeshAscan*)ptr)->UpdateAmpMemoryData();
             ptr->Render();
         }
     }

@@ -95,6 +95,7 @@ void ModelGroupAScan::Render() {
         if (ptr && (index >= mGroupIndex * 4 && index < (static_cast<size_t>(mGroupIndex * 4) + VIEW_ASCAN_NUM))) {
             // 更新A扫数据
             ((MeshAscan*)ptr)->UpdateAScanData();
+            ((MeshAscan*)ptr)->UpdateAmpMemoryData();
             ptr->Render();
         }
     }

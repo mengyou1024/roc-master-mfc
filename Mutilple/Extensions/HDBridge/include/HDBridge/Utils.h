@@ -15,7 +15,7 @@
     #include <sqlite_orm/sqlite_orm.h>
 struct HD_ScanORM {
     std::array<float, 2>                                                mCScanLimits = {};
-    std::array<shared_ptr<HDBridge::NM_DATA>, HDBridge::CHANNEL_NUMBER> mScanData = {};
+    std::array<shared_ptr<HDBridge::NM_DATA>, HDBridge::CHANNEL_NUMBER> mScanData    = {};
 };
 namespace sqlite_orm {
     template <>
@@ -53,7 +53,7 @@ namespace sqlite_orm {
     template <>
     struct row_extractor<HD_ScanORM> {
         HD_ScanORM extract(sqlite3_stmt* stmt, int index) {
-            char* blobPointer = (char*)sqlite3_column_blob(stmt, index);
+            char*      blobPointer = (char*)sqlite3_column_blob(stmt, index);
             HD_ScanORM value;
             memcpy(value.mCScanLimits.data(), blobPointer, sizeof(HD_ScanORM::mCScanLimits));
             size_t pointerOffset = sizeof(HD_ScanORM::mCScanLimits);
@@ -112,7 +112,8 @@ public:
 
     explicit HD_Utils(const HD_Utils& other)
         : HD_Utils() {
-        *this = other;
+        id       = other.id;
+        mScanOrm = other.mScanOrm;
     }
 
     HD_Utils& operator=(const HD_Utils& other) {
@@ -169,13 +170,17 @@ public:
     static constexpr std::string_view ORM_DB_NAME = "HD_Utils.db";
     #endif // !ORM_DB_NAME
 
-    static auto storage() {
+    static auto storage(std::string dbName) {
         using namespace sqlite_orm;
-        return make_storage(std::string(ORM_DB_NAME),
+        return make_storage(dbName,
                             make_table("HD_Utils",
                                        make_column("ID", &HD_Utils::id, primary_key()),
                                        make_column("TIME", &HD_Utils::time),
                                        make_column("DATA", &HD_Utils::mScanOrm)));
+    }
+
+    static auto storage() {
+        return storage(std::string(ORM_DB_NAME));
     }
 
 #endif

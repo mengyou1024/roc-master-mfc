@@ -14,8 +14,13 @@ public:
     void               InitWindow() override;
     void               Notify(TNotifyUI& msg) override;
 
+    void OnNotifyUnique(TNotifyUI& msg);
+
     TYPE_RES GetResult();
-    void     LoadRecord() const;
+    void     LoadRecordUnique() const;
+    void     ListYearMonth() const;
+    void     ListDay() const;
+    void     ListTime() const;
 
 private:
     TYPE_RES mResult = {};

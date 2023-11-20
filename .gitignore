@@ -26,12 +26,12 @@
 /x64/Debug/Data/*
 User.db
 data.db
-/x64/Debug/log/*
-/x64/Release/log/*
+/x64/*/log/*
 /build
 /pack-installer.iss
 /output
 
 Mutilple/Version.h
 /Mutilple/res/Theme.zip
-
+/x64/*/DB/*
+/.vscode/settings.json

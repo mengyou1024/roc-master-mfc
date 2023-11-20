@@ -49,13 +49,14 @@ void HD_Utils::readThread() {
             mReadThreadExit = true;
             break;
         }
+        if (mReadCallback.size() == 0) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            continue;
+        }
         auto data = mBridge->readDatas();
         if (data) {
             std::lock_guard<std::mutex> readLock(mReadCallbackMutex);
-            if (mReadCallback.size() == 0) {
-                std::this_thread::sleep_for(std::chrono::milliseconds(10));
-            }
-            for (auto& callback : mReadCallback) {
+            for (const auto& callback : mReadCallback) {
                 callback(*data.get(), *this);
             }
             std::lock_guard<std::mutex> dataLock(mScanDataMutex);
