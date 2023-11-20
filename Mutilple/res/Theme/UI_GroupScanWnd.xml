@@ -25,11 +25,11 @@
 			</HorizontalLayout>
 			<HorizontalLayout height="34" float="true" pos="120,1,800,34" align="center">
 				<HorizontalLayout>
-					<Button name="BtnSelectGroup0" width="120" height="33" text="第1组" bkcolor="0xFF666666" />
+					<Button name="BtnSelectGroup0" width="120" height="33" text="第1组" bkcolor="0xFF339933" />
 					<Button name="BtnSelectGroup1" width="120" height="33" text="第2组" />
 					<Button name="BtnSelectGroup2" width="120" height="33" text="第3组" />
 					<HorizontalLayout width="50"/>
-					<Button name="BtnScanMode" width="120" height="33" text="扫查模式" bkcolor="0xFF666666" />
+					<Button name="BtnScanMode" width="120" height="33" text="扫查模式" bkcolor="0xFF339933" />
 					<Button name="BtnReviewMode" width="120" height="33" text="回放模式" />
 				</HorizontalLayout>
 			</HorizontalLayout>

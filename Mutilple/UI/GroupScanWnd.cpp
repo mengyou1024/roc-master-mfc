@@ -71,6 +71,7 @@ GroupScanWnd::GroupScanWnd() {
 
 GroupScanWnd::~GroupScanWnd() {
     try {
+        auto tick    = GetTickCount64();
         auto bridges = TOFDUSBPort::storage().get_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == std::wstring(SCAN_CONFIG_LAST)));
         if (bridges.size() == 1) {
             bridges[0].isValid = true;
@@ -81,6 +82,7 @@ GroupScanWnd::~GroupScanWnd() {
             mUtils->getBridge<TOFDUSBPort *>()->isValid = true;
             TOFDUSBPort::storage().insert(*(mUtils->getBridge<TOFDUSBPort *>()));
         }
+        spdlog::debug("take time: {}", GetTickCount64() - tick);
     } catch (std::exception &e) { spdlog::error(e.what()); }
 }
 
@@ -88,8 +90,8 @@ void GroupScanWnd::OnBtnModelClicked(std::wstring name) {
     auto btnScanMode   = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnScanMode")));
     auto btnReviewMode = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnReviewMode")));
     if (name == _T("BtnScanMode")) {
-        if (btnScanMode->GetBkColor() != 0xFF666666) {
-            btnScanMode->SetBkColor(0xFF666666);
+        if (btnScanMode->GetBkColor() != 0xFF339933) {
+            btnScanMode->SetBkColor(0xFF339933);
             btnReviewMode->SetBkColor(0xFFEEEEEE);
             BusyWnd wnd([this]() { ExitReviewMode(); });
             wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
@@ -108,7 +110,7 @@ void GroupScanWnd::OnBtnModelClicked(std::wstring name) {
             return;
         }
         btnScanMode->SetBkColor(0xFFEEEEEE);
-        btnReviewMode->SetBkColor(0xFF666666);
+        btnReviewMode->SetBkColor(0xFF339933);
         // 打开选择窗口
         auto    &selName = name;
         BusyWnd wnd([this, &selName]() {
@@ -499,9 +501,7 @@ void GroupScanWnd::UpdateCScanOnTimer() {
         }
     }
 
-    // if (saveScanDataFlag != 0) {
-    SaveScanDefect();
-    //}
+    ScanScanData();
 }
 
 void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
@@ -845,7 +845,7 @@ void GroupScanWnd::OnBtnSelectGroupClicked(long index) {
             if (i != index) {
                 btn->SetBkColor(0xFFEEEEEE);
             } else {
-                btn->SetBkColor(0xFF666666);
+                btn->SetBkColor(0xFF339933);
             }
         }
     }
@@ -853,22 +853,48 @@ void GroupScanWnd::OnBtnSelectGroupClicked(long index) {
     m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->SetViewGroup(mCurrentGroup);
 }
 
-void GroupScanWnd::StartSaveScanDefect() {
-    if (saveScanDataFlag == 0) {
-        std::stringstream                     buffer = {};
-        std::chrono::system_clock::time_point t      = std::chrono::system_clock::now();
-        time_t                                tm     = std::chrono::system_clock::to_time_t(t);
-        buffer << std::put_time(localtime(&tm), "%Y-%m-%d__%H-%M-%S");
-        mUtils->time                     = buffer.str();
-        ORM_Model::ScanRecord scanRecord = {};
-        scanRecord.time                  = buffer.str();
-        try {
-            ORM_Model::ScanRecord::storage().insert(scanRecord);
-        } catch (std::exception &e) { spdlog::error(e.what()); }
-    }
+void GroupScanWnd::StartSaveScanDefect(int channel) {
+    try {
+        std::regex  reg(R"((\d+)-(\d+)-(\d+)__(.+))");
+        std::smatch match;
+        if (std::regex_match(mUtils->time, match, reg)) {
+            auto year  = match[1].str();
+            auto month = match[2].str();
+            auto day   = match[3].str();
+            auto tm    = match[4].str();
+            auto path  = string("DB/") + year + month + "/" + day;
+            std::replace(path.begin(), path.end(), '/', '\\');
+            CreateMultipleDirectory(WStringFromString(path).data());
+            path += "\\" + tm + ".db";
+            ORM_Model::ScanRecord scanRecord = {};
+            scanRecord.startID               = mUtils->id;
+            scanRecord.channel               = channel;
+            ORM_Model::ScanRecord::storage(path).sync_schema();
+            mIDDefectRecord[channel] = ORM_Model::ScanRecord::storage(path).insert(scanRecord);
+        }
+    } catch (std::exception &e) { spdlog::error(e.what()); }
 }
 
-void GroupScanWnd::SaveScanDefect() {
+void GroupScanWnd::EndSaveScanDefect(int channel) {
+    try {
+        std::regex  reg(R"((\d+)-(\d+)-(\d+)__(.+))");
+        std::smatch match;
+        if (std::regex_match(mUtils->time, match, reg)) {
+            auto year  = match[1].str();
+            auto month = match[2].str();
+            auto day   = match[3].str();
+            auto tm    = match[4].str();
+            auto path  = string("DB/") + year + month + "/" + day;
+            std::replace(path.begin(), path.end(), '/', '\\');
+            path += "\\" + tm + ".db";
+            auto scanRecord  = ORM_Model::ScanRecord::storage(path).get<ORM_Model::ScanRecord>(mIDDefectRecord[channel]);
+            scanRecord.endID = mUtils->id;
+            ORM_Model::ScanRecord::storage(path).update<ORM_Model::ScanRecord>(scanRecord);
+        }
+    } catch (std::exception &e) { spdlog::error(e.what()); }
+}
+
+void GroupScanWnd::ScanScanData() {
     // 保存当前扫查波门的位置信息
     for (int i = 0; i < HDBridge::CHANNEL_NUMBER; i++) {
         mUtils->mScanOrm.mScanData[i]->scanGateInfo.pos    = mGateScan[i].pos;
@@ -892,7 +918,7 @@ void GroupScanWnd::SaveScanDefect() {
         CreateMultipleDirectory(WStringFromString(path).data());
         path += "\\" + tm + ".db";
         HD_Utils::storage(path).sync_schema();
-        HD_Utils::storage(path).insert(*mUtils);
+        mUtils->id = HD_Utils::storage(path).insert(*mUtils);
     }
 }
 
@@ -914,13 +940,12 @@ void GroupScanWnd::ScanButtonEventCallback(void *_btn) {
         case PRESS_DOWN: {
             spdlog::debug("btn down: {}", btn->button_id);
             // 开始保存缺陷数据
-            // wnd->StartSaveScanDefect();
-            // wnd->saveScanDataFlag |= 1 << btn->button_id;
+            wnd->StartSaveScanDefect(btn->button_id);
             break;
         }
         case PRESS_UP: {
             spdlog::debug("btn up: {}", btn->button_id);
-            // wnd->saveScanDataFlag &= ~(1 << btn->button_id);
+            wnd->EndSaveScanDefect(btn->button_id);
             break;
         }
         default: break;
@@ -1016,11 +1041,6 @@ void GroupScanWnd::StartScan(bool changeFlag) {
         time_t                                tm     = std::chrono::system_clock::to_time_t(t);
         buffer << std::put_time(localtime(&tm), "%Y-%m-%d__%H-%M-%S");
         mUtils->time                     = buffer.str();
-        ORM_Model::ScanRecord scanRecord = {};
-        scanRecord.time                  = buffer.str();
-        try {
-            ORM_Model::ScanRecord::storage().insert(scanRecord);
-        } catch (std::exception &e) { spdlog::error(e.what()); }
 
         mScanningFlag = true;
         SetTimer(CSCAN_UPDATE, 1000 / mSamplesPerSecond);

@@ -17,7 +17,6 @@
 
 class GroupScanWnd : public CDuiWindowBase {
 public:
-    uint32_t saveScanDataFlag = {};
     GroupScanWnd();
     virtual ~GroupScanWnd();
     virtual LPCTSTR    GetWindowClassName() const override;
@@ -30,8 +29,15 @@ public:
 
     /**
      * @brief 开始保存扫查缺陷(创建当前日期、时间的索引)
+     * @param channel 通道号
      */
-    void StartSaveScanDefect();
+    void StartSaveScanDefect(int channel);
+
+    /**
+     * @brief 终止保存扫查缺陷
+     * @param channel 通道号
+     */
+    void EndSaveScanDefect(int channel);
 
 private:
     struct {
@@ -127,6 +133,8 @@ private:
     std::vector<HD_Utils>                        mReviewData        = {};                      ///< 扫查缺陷数据
     int                                          mSamplesPerSecond  = 33;                      ///< C扫图每秒钟采点个数
     bool                                         mEnableAmpMemory   = false;                   ///< 峰值记忆
+    std::array<int, HDBridge::CHANNEL_NUMBER>    mIDDefectRecord    = {};                      ///< 缺陷记录的索引ID
+
     /**
      * @brief 选组按钮单击回调函数
      * @param index 索引
@@ -200,7 +208,7 @@ private:
     /**
      * @brief 保存缺陷数据
      */
-    void SaveScanDefect();
+    void ScanScanData();
 
     /**
      * @brief 初始化扫查按钮逻辑
