@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window size="432,400" caption="5,5,5,52" sizebox="10,10,10,10">
+<Window size="640,480" caption="5,5,5,52" sizebox="10,10,10,10">
 	<Font name="楷体" size="14" default="true" />
 	<Font name="楷体" size="18" />
 	<Font name="楷体" size="24" />
@@ -16,7 +16,7 @@
 
 	<VerticalLayout bkcolor="0xFFFEFEFE" bordersize="1" bordercolor="0xFFDDDDDD">
 		<HorizontalLayout height="34">
-			<Label text="扫查参数管理" font="0" bkimage="file='Theme\Button\union.png' dest='2,2,34,34'" textpadding="34,0,0,0" align="left" valign="center" />
+			<Label text="缺陷列表" font="0" bkimage="file='Theme\Button\union.png' dest='2,2,34,34'" textpadding="34,0,0,0" align="left" valign="center" />
 			<HorizontalLayout visible="true" width="95">
 				<Button float="true" pos="0,0,0,0" name="minbtn" tooltip="最小化" width="28" height="19" bkcolor="" normalimage="Theme\Button\btn_mini_normal.png" hotimage="Theme\Button\btn_mini_highlight.png" pushedimage="Theme\Button\btn_mini_down.png" />
 				<Button float="true" pos="29,0,0,0" name="maxbtn" tooltip="最大化" width="28" height="19" bkcolor="" normalimage="Theme\Button\btn_max_normal.png" hotimage="Theme\Button\btn_max_highlight.png" pushedimage="Theme\Button\btn_max_down.png" />
@@ -25,28 +25,24 @@
 			</HorizontalLayout>
 		</HorizontalLayout>
 		<VerticalLayout bkimage="Theme\Line\v_line.png" height="1" />
-		<HorizontalLayout inset="10,15,10,10">
-			<VerticalLayout width="302">
-				<List name="ListParamName" itemalign="center" inset="1,1,1,1" bordersize="1" bordercolor="0x7F7F7F7F" bkcolor="#FFFFFFFF" itemtextpadding="5,0,0,0" itemtextcolor="#FF000000" itembkcolor="#FFFFFFFF" itemselectedtextcolor="#FF000000" itemselectedbkcolor="#FFC1E3FF" itemhottextcolor="#FF000000" itemhotbkcolor="#FFE9F5FF" itemdisabledtextcolor="#FFCCCCCC" itemdisabledbkcolor="#FFFFFFFF" vscrollbar="true" hscrollbar="true">
+		<VerticalLayout inset="10,15,10,10">
+			<VerticalLayout width="640">
+				<List name="ListDefects" itemalign="center" inset="1,1,1,1" bordersize="1" bordercolor="0x7F7F7F7F" bkcolor="#FFFFFFFF" itemtextpadding="5,0,0,0" itemtextcolor="#FF000000" itembkcolor="#FFFFFFFF" itemselectedtextcolor="#FF000000" itemselectedbkcolor="#FFC1E3FF" itemhottextcolor="#FF000000" itemhotbkcolor="#FFE9F5FF" itemdisabledtextcolor="#FFCCCCCC" itemdisabledbkcolor="#FFFFFFFF" vscrollbar="true" hscrollbar="true">
 					<ListHeader bkimage="Theme\List\list_header_bg.png">
 						<ListHeaderItem text="ID" width="150" height="40" minwidth="16" sepwidth="1" align="center" hotimage="Theme\List\list_header_hot.png" pushedimage="Theme\List\list_header_pushed.png" sepimage="Theme\List\list_header_sep.png" />
-						<ListHeaderItem text="名称" width="150" height="40" minwidth="16" sepwidth="1" align="center" hotimage="Theme\List\list_header_hot.png" pushedimage="Theme\List\list_header_pushed.png" sepimage="Theme\List\list_header_sep.png" />
+						<ListHeaderItem text="通道号" width="150" height="40" minwidth="16" sepwidth="1" align="center" hotimage="Theme\List\list_header_hot.png" pushedimage="Theme\List\list_header_pushed.png" sepimage="Theme\List\list_header_sep.png" />
+						<ListHeaderItem text="起始ID" width="150" height="40" minwidth="16" sepwidth="1" align="center" hotimage="Theme\List\list_header_hot.png" pushedimage="Theme\List\list_header_pushed.png" sepimage="Theme\List\list_header_sep.png" />
+						<ListHeaderItem text="结束ID" width="150" height="40" minwidth="16" sepwidth="1" align="center" hotimage="Theme\List\list_header_hot.png" pushedimage="Theme\List\list_header_pushed.png" sepimage="Theme\List\list_header_sep.png" />
 					</ListHeader>
 				</List>
 			</VerticalLayout>
-			<VerticalLayout width="20"/>
-			<VerticalLayout>
-				<VerticalLayout>
-					<Label height="40" />
-					<Button name="BtnNew" text="新建" width="80" height="32" />
-					<HorizontalLayout height="25" />
-					<Button name="BtnDelete" text="删除" width="80" height="32" />
-					<HorizontalLayout height="25" />
-					<Button name="BtnRead" text="读取" width="80" height="32" />
-					<HorizontalLayout height="25" />
-					<Button name="BtnWrite" text="写入" width="80" height="32" />
-				</VerticalLayout>
-			</VerticalLayout>
-		</HorizontalLayout>
+			<VerticalLayout height="20" />
+				<HorizontalLayout height="32">
+					<Label />
+					<Button name="BtnOK" text="确认" width="80" height="32" />
+					<Label />
+				</HorizontalLayout>
+			<VerticalLayout height="40" />
+		</VerticalLayout>
 	</VerticalLayout>
 </Window>

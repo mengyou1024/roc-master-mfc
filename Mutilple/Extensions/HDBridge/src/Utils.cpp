@@ -44,6 +44,9 @@ void HD_Utils::popCallback() {
 }
 
 void HD_Utils::autoGain(int channel, int gateIndex, float goal, float gainStep) {
+    if (!getBridge()->isOpen()) {
+        return;
+    }
     std::thread t([this, channel, gateIndex, goal, gainStep]() {
         volatile bool getGoal = false;
         float                                                                     lastGain = getBridge()->getGain(channel);

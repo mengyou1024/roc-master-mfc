@@ -198,6 +198,9 @@
     <ClInclude Include="UI\InputDialogWnd.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
+    <ClInclude Include="UI\DefectsListWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Mutilple.cpp">
@@ -310,6 +313,9 @@
     </ClCompile>
     <ClCompile Include="Extensions\jsoncpp\src\json_writer.cpp">
       <Filter>Source Files\功能函数\jsoncpp</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\DefectsListWnd.cpp">
+      <Filter>Source Files\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

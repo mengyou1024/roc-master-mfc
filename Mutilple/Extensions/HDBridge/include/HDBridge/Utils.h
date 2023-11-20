@@ -113,11 +113,13 @@ public:
     explicit HD_Utils(const HD_Utils& other)
         : HD_Utils() {
         id       = other.id;
+        time     = other.time;
         mScanOrm = other.mScanOrm;
     }
 
     HD_Utils& operator=(const HD_Utils& other) {
         id       = other.id;
+        time     = other.time;
         mScanOrm = other.mScanOrm;
         return *this;
     }

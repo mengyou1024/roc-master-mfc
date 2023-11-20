@@ -134,6 +134,7 @@ private:
     int                                          mSamplesPerSecond  = 33;                      ///< C扫图每秒钟采点个数
     bool                                         mEnableAmpMemory   = false;                   ///< 峰值记忆
     std::array<int, HDBridge::CHANNEL_NUMBER>    mIDDefectRecord    = {};                      ///< 缺陷记录的索引ID
+    std::mutex                                   mRecordMutex       = {};
 
     /**
      * @brief 选组按钮单击回调函数

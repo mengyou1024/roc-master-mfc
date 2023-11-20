@@ -20,6 +20,7 @@
 #include <sstream>
 #include "ParamManagementWnd.h"
 #include "Version.h"
+#include "DefectsListWnd.h"
 
 #undef GATE_A
 #undef GATE_B
@@ -779,34 +780,53 @@ void GroupScanWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
 }
 
 void GroupScanWnd::OnLButtonDClick(UINT nFlags, ::CPoint pt) {
-    if (mWidgetMode == WidgetMode::MODE_SCAN && pointInRect(m_pWndOpenGL_ASCAN->GetPos(), pt)) {
+    if (  pointInRect(m_pWndOpenGL_ASCAN->GetPos(), pt)) {
         auto temp = pt;
         temp.x -= m_pWndOpenGL_ASCAN->GetX();
         temp.y -= m_pWndOpenGL_ASCAN->GetY();
-        for (const auto &[index, ptr] : m_OpenGL_ASCAN.getModel<ModelGroupAScan *>()->m_pMesh) {
-            if (index >= static_cast<size_t>(mCurrentGroup * 4) && index < static_cast<size_t>((mCurrentGroup + 1) * 4) &&
-                ptr->IsInArea(temp)) {
-                KillUITimer();
-                // 如果正在扫查则停止扫查
-                if (mScanningFlag == true) {
-                    StopScan(false);
+        if (mWidgetMode == WidgetMode::MODE_SCAN) {
+            for (const auto &[index, ptr] : m_OpenGL_ASCAN.getModel<ModelGroupAScan *>()->m_pMesh) {
+                if (index >= static_cast<size_t>(mCurrentGroup * 4) && index < static_cast<size_t>((mCurrentGroup + 1) * 4) &&
+                    ptr->IsInArea(temp)) {
+                    KillUITimer();
+                    // 如果正在扫查则停止扫查
+                    if (mScanningFlag == true) {
+                        StopScan(false);
+                    }
+                    spdlog::debug("double click: {}", swapAScanIndex(static_cast<int>(index)));
+                    mUtils->pushCallback();
+                    // 移交所有权
+                    ChannelSettingWnd *wnd = new ChannelSettingWnd(std::move(mUtils), swapAScanIndex(static_cast<int>(index)));
+                    wnd->Create(m_hWnd, wnd->GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
+                    wnd->CenterWindow();
+                    wnd->ShowModal();
+                    // 移回所有权
+                    mUtils = std::move(wnd->returnHDUtils());
+                    delete wnd;
+                    mUtils->popCallback();
+                    ResumeUITimer();
+                    // 如果正在扫查则重新开始扫查
+                    if (mScanningFlag == true) {
+                        StartScan(false);
+                    }
                 }
-                spdlog::debug("double click: {}", swapAScanIndex(static_cast<int>(index)));
-                mUtils->pushCallback();
-                // 移交所有权
-                ChannelSettingWnd *wnd = new ChannelSettingWnd(std::move(mUtils), swapAScanIndex(static_cast<int>(index)));
-                wnd->Create(m_hWnd, wnd->GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
-                wnd->CenterWindow();
-                wnd->ShowModal();
-                // 移回所有权
-                mUtils = std::move(wnd->returnHDUtils());
-                delete wnd;
-                mUtils->popCallback();
-                ResumeUITimer();
-                // 如果正在扫查则重新开始扫查
-                if (mScanningFlag == true) {
-                    StartScan(false);
-                }
+            }
+        } else {
+            // 列出缺陷列表
+            DefectsListWnd wnd;
+            wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
+            wnd.LoadDefectsList(mReviewData[0].time);
+            wnd.ShowModal();
+            auto &[res, index, channel] = wnd.getResult();
+            if (res) {
+                OnBtnSelectGroupClicked(channel / 4);
+                auto width = m_pWndOpenGL_CSCAN->GetWidth();
+                auto height = m_pWndOpenGL_CSCAN->GetHeight();
+                ::CPoint pt;
+                pt.x = (long)(m_pWndOpenGL_CSCAN->GetX() + (float)width * ((float)index / (float)mReviewData.size()));
+                pt.y = (long)(m_pWndOpenGL_CSCAN->GetY() + height / 2);
+
+                OnLButtonDown(1, pt);
             }
         }
     }
@@ -876,7 +896,9 @@ void GroupScanWnd::StartSaveScanDefect(int channel) {
             CreateMultipleDirectory(WStringFromString(path).data());
             path += "\\" + tm + ".db";
             ORM_Model::ScanRecord scanRecord = {};
+            mRecordMutex.lock();
             scanRecord.startID               = mUtils->id;
+            mRecordMutex.unlock();
             scanRecord.channel               = channel;
             ORM_Model::ScanRecord::storage(path).sync_schema();
             mIDDefectRecord[channel] = ORM_Model::ScanRecord::storage(path).insert(scanRecord);
@@ -897,7 +919,9 @@ void GroupScanWnd::EndSaveScanDefect(int channel) {
             std::replace(path.begin(), path.end(), '/', '\\');
             path += "\\" + tm + ".db";
             auto scanRecord  = ORM_Model::ScanRecord::storage(path).get<ORM_Model::ScanRecord>(mIDDefectRecord[channel]);
+            mRecordMutex.lock();
             scanRecord.endID = mUtils->id;
+            mRecordMutex.unlock();
             ORM_Model::ScanRecord::storage(path).update<ORM_Model::ScanRecord>(scanRecord);
         }
     } catch (std::exception &e) { spdlog::error(e.what()); }
@@ -927,7 +951,9 @@ void GroupScanWnd::ScanScanData() {
         CreateMultipleDirectory(WStringFromString(path).data());
         path += "\\" + tm + ".db";
         HD_Utils::storage(path).sync_schema();
+        mRecordMutex.lock();
         mUtils->id = HD_Utils::storage(path).insert(*mUtils);
+        mRecordMutex.unlock();
     }
 }
 
