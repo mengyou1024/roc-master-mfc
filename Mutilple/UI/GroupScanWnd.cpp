@@ -552,6 +552,15 @@ void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
             mEnableAmpMemory = false;
             btn->SetBkColor(0xFFEEEEEE);
         }
+    } else if (name == _T("AutoGain")) {
+        if (mGateType == GateType::GATE_SCAN) {
+            return;
+        }
+        BusyWnd wnd([this]() {
+            mUtils->autoGain(static_cast<int>(mChannelSel) + 4 * static_cast<int>(mCurrentGroup), static_cast<int>(mGateType));
+        });
+        wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
+        wnd.ShowModal();
     }
 }
 
