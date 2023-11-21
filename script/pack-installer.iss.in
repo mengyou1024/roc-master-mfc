@@ -45,19 +45,21 @@ Name: "English"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/ftd2xx.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/msvcp140.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/Mutilple.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/snap7.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/sqlite3.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/TOFDPort.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/vcruntime140.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/vcruntime140_1.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "@CMAKE_SOURCE_DIR@/x64/Release/ftd2xx.dll"; DestDir: "{app}"
+Source: "@CMAKE_SOURCE_DIR@/x64/Release/msvcp140.dll"; DestDir: "{app}"
+Source: "@CMAKE_SOURCE_DIR@/x64/Release/Mutilple.exe"; DestDir: "{app}"
+Source: "@CMAKE_SOURCE_DIR@/x64/Release/snap7.dll"; DestDir: "{app}"
+Source: "@CMAKE_SOURCE_DIR@/x64/Release/sqlite3.dll"; DestDir: "{app}"
+Source: "@CMAKE_SOURCE_DIR@/x64/Release/TOFDPort.dll"; DestDir: "{app}"
+Source: "@CMAKE_SOURCE_DIR@/x64/Release/libcurl.dll"; DestDir: "{app}"
+Source: "@CMAKE_SOURCE_DIR@/x64/Release/vcruntime140.dll"; DestDir: "{app}"
+Source: "@CMAKE_SOURCE_DIR@/x64/Release/vcruntime140_1.dll"; DestDir: "{app}"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [UninstallDelete]
 Type: files; Name: "{app}/data.db"
 Type: filesandordirs; Name: "{app}/log"
+Type: filesandordirs; Name: "{app}/DB"
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
