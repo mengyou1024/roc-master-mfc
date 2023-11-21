@@ -13,6 +13,7 @@
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <curl/curl.h>
 #include <filesystem>
+#include <duckx.hpp>
 namespace fs = std::filesystem;
 
 using namespace std;

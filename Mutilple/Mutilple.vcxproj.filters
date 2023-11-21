@@ -73,6 +73,12 @@
     <Filter Include="Source Files\功能函数\jsoncpp">
       <UniqueIdentifier>{8e5ef684-0bb6-4db9-879e-cc3a232c6602}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Duckx">
+      <UniqueIdentifier>{f6882a17-3dbf-4531-8b43-686d98b075f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Duckx">
+      <UniqueIdentifier>{6c1ca592-30c1-4293-9413-6979238cf956}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Define.h">
@@ -201,6 +207,27 @@
     <ClInclude Include="UI\DefectsListWnd.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Extensions\Duckx\include\constants.hpp">
+      <Filter>Header Files\Duckx</Filter>
+    </ClInclude>
+    <ClInclude Include="Extensions\Duckx\include\duckx.hpp">
+      <Filter>Header Files\Duckx</Filter>
+    </ClInclude>
+    <ClInclude Include="Extensions\Duckx\include\duckxiterator.hpp">
+      <Filter>Header Files\Duckx</Filter>
+    </ClInclude>
+    <ClInclude Include="Extensions\Duckx\include\miniz.h">
+      <Filter>Header Files\Duckx</Filter>
+    </ClInclude>
+    <ClInclude Include="Extensions\Duckx\include\pugiconfig.hpp">
+      <Filter>Header Files\Duckx</Filter>
+    </ClInclude>
+    <ClInclude Include="Extensions\Duckx\include\pugixml.hpp">
+      <Filter>Header Files\Duckx</Filter>
+    </ClInclude>
+    <ClInclude Include="Extensions\Duckx\include\zip.h">
+      <Filter>Header Files\Duckx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Mutilple.cpp">
@@ -316,6 +343,15 @@
     </ClCompile>
     <ClCompile Include="UI\DefectsListWnd.cpp">
       <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Extensions\Duckx\src\duckx.cpp">
+      <Filter>Source Files\Duckx</Filter>
+    </ClCompile>
+    <ClCompile Include="Extensions\Duckx\src\zip.c">
+      <Filter>Source Files\Duckx</Filter>
+    </ClCompile>
+    <ClCompile Include="Extensions\Duckx\src\pugixml.cpp">
+      <Filter>Source Files\Duckx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

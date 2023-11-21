@@ -76,7 +76,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(ProjectDir)Extensions\Duckx\include;$(ProjectDir)Extensions\Duckx\src;$(IncludePath)</IncludePath>
     <CustomBuildBeforeTargets>
     </CustomBuildBeforeTargets>
   </PropertyGroup>
@@ -84,13 +84,13 @@
     <LinkIncremental>true</LinkIncremental>
     <ExternalIncludePath>$(ProjectDir)Extensions\DuiLib;$(ProjectDir)Extensions\glew-2.1.0\include;$(ProjectDir)Extensions\glm;$(ProjectDir)Extensions\freetype\include;$(ProjectDir)Extensions\NetworkMulti;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>$(OutDir);$(ProjectDir)Extensions\glew-2.1.0\lib\Release\x64;$(ProjectDir)Extensions\freetype\lib;$(ProjectDir)Extensions\NetworkMulti\x64;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(ProjectDir)Extensions\Duckx\include;$(ProjectDir)Extensions\Duckx\src;$(IncludePath)</IncludePath>
     <CustomBuildBeforeTargets>
     </CustomBuildBeforeTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(ProjectDir)Extensions\Duckx\include;$(ProjectDir)Extensions\Duckx\src;$(IncludePath)</IncludePath>
     <CustomBuildBeforeTargets>
     </CustomBuildBeforeTargets>
   </PropertyGroup>
@@ -98,7 +98,7 @@
     <LinkIncremental>false</LinkIncremental>
     <ExternalIncludePath>$(ProjectDir)Extensions\DuiLib;$(ProjectDir)Extensions\glew-2.1.0\include;$(ProjectDir)Extensions\glm;$(ProjectDir)Extensions\freetype\include;$(ProjectDir)Extensions\NetworkMulti;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>$(OutDir);$(ProjectDir)Extensions\glew-2.1.0\lib\Release\x64;$(ProjectDir)Extensions\freetype\lib;$(ProjectDir)Extensions\NetworkMulti\x64;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(ProjectDir)Extensions\jsoncpp\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(ProjectDir)Extensions\Duckx\include;$(ProjectDir)Extensions\Duckx\src;$(ProjectDir)Extensions\jsoncpp\include;$(IncludePath)</IncludePath>
     <CustomBuildBeforeTargets>
     </CustomBuildBeforeTargets>
   </PropertyGroup>
@@ -328,6 +328,13 @@ del $(SolutionDir)Mutilple\res\Theme.zip
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Define.h" />
+    <ClInclude Include="Extensions\Duckx\include\constants.hpp" />
+    <ClInclude Include="Extensions\Duckx\include\duckx.hpp" />
+    <ClInclude Include="Extensions\Duckx\include\duckxiterator.hpp" />
+    <ClInclude Include="Extensions\Duckx\include\miniz.h" />
+    <ClInclude Include="Extensions\Duckx\include\pugiconfig.hpp" />
+    <ClInclude Include="Extensions\Duckx\include\pugixml.hpp" />
+    <ClInclude Include="Extensions\Duckx\include\zip.h" />
     <ClInclude Include="Extensions\HDBridge\boards\TOFDPort\include\HDBridge\TOFDPort.h" />
     <ClInclude Include="Extensions\HDBridge\boards\TOFDPort\include\TOFDPort.h" />
     <ClInclude Include="Extensions\HDBridge\include\HDBridge.h" />
@@ -371,6 +378,24 @@ del $(SolutionDir)Mutilple\res\Theme.zip
     <ClInclude Include="Widgets\OpenGL.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Extensions\Duckx\src\duckx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Extensions\Duckx\src\pugixml.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Extensions\Duckx\src\zip.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Extensions\HDBridge\boards\TOFDPort\TOFDPort.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>

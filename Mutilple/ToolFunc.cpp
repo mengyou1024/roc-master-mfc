@@ -3,6 +3,7 @@
 #include "ToolFunc.h"
 #include <regex>
 #include <iostream>
+#include <fstream>
 
 float PointToSegDist(float x, float y, float x1, float y1, float x2, float y2) {
     float cross = (x2 - x1) * (x - x1) + (y2 - y1) * (y - y1);
@@ -365,6 +366,50 @@ std::tuple<string, string, string> GetLatestReleaseNote(std::string github_api_u
     } catch (std::exception& e) { spdlog::error(e.what()); }
 
     return std::tuple<string, string, string>();
+}
+
+void WordTemplateRender(std::wstring templateName, std::wstring fileName, std::map<string, string> var) {
+    // ¿½±´Ä£°å
+    std::wregex reg(LR"(^(.+)[/\\])");
+    std::wsmatch match;
+    if (std::regex_search(fileName, match, reg)) {
+        std::wstring  str = match[1].str();
+        std::replace(str.begin(), str.end(), L'/', L'\\');
+        CreateMultipleDirectory(str.data());
+    }
+    CopyFile(templateName.data(), fileName.data(), false);
+    duckx::Document doc(StringFromWString(fileName));
+    doc.open();
+    auto replaceFunc = [&var](duckx::Run& run) { 
+        std::regex  reg(R"(\$\{(.+?)\})");
+        std::smatch match;
+        string     str = run.get_text();
+        if (std::regex_search(str, match, reg)) {
+            string newStr = std::regex_replace(str, reg, var.at(match[1].str()));
+            spdlog::debug("replace {} ---> {}", match[1].str(), var.at(match[1].str()));
+            run.set_text(newStr);
+        }
+
+    };
+
+    for (duckx::Paragraph p : doc.paragraphs()) {
+        for (duckx::Run r : p.runs()) {
+            replaceFunc(r);
+        }
+    }
+
+    for (duckx::Table table : doc.tables()) {
+        for (duckx::TableRow row : table.rows()) {
+            for (duckx::TableCell cell : row.cells()) {
+                for (duckx::Paragraph paragh : cell.paragraphs()) {
+                    for (duckx::Run run: paragh.runs()) {
+                        replaceFunc(run);
+                    }
+                }
+            }
+        }
+    }
+    doc.save();
 }
 
 bool IncChinese(CString str) {

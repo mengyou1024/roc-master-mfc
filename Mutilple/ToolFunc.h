@@ -1,5 +1,7 @@
 #pragma once
 
+#include "duckx.hpp"
+
 // 点到线段距离
 float PointToSegDist(float x, float y, float x1, float y1, float x2, float y2);
 
@@ -43,3 +45,11 @@ bool Check4Update(std::string currentVersion, std::string newVersion);
  * @return [tag, body, download_url}
  */
 std::tuple<string, string, string> GetLatestReleaseNote(std::string github_api_url);
+
+/**
+ * @brief word模板变量替换
+ * @param templateName Word模板名称
+ * @param fileName 保存后的文件名
+ * @param var 变量映射表
+*/
+void WordTemplateRender(std::wstring templateName, std::wstring fileName, std::map<string, string> var);
