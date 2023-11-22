@@ -64,7 +64,7 @@ void RecordSelectWnd::OnNotifyUnique(TNotifyUI& msg) {
             }
             auto& [ret, str] = mResult;
             ret              = true;
-            str              = StringFromWString(L"DB/" + std::wstring(pListYearMonth->GetText().GetData()) + L"/" +
+            str              = StringFromWString(GetSystemConfig().groupName +  L"/" + std::wstring(pListYearMonth->GetText().GetData()) + L"/" +
                                                  std::wstring(pListDay->GetText().GetData()) + L"/" + std::wstring(pListTime->GetText().GetData()));
             Close();
         } else if (msg.pSender->GetName() == _T("BtnDEL")) {
@@ -75,7 +75,7 @@ void RecordSelectWnd::OnNotifyUnique(TNotifyUI& msg) {
                 return;
             }
             auto path =
-                StringFromWString(L"DB/" + std::wstring(pListYearMonth->GetText().GetData()) + L"/" +
+                StringFromWString(GetSystemConfig().groupName + L"/" + std::wstring(pListYearMonth->GetText().GetData()) + L"/" +
                                   std::wstring(pListDay->GetText().GetData()) + L"/" + std::wstring(pListTime->GetText().GetData()));
             pListTime->RemoveAt(pListTime->GetCurSel());
             fs::remove(path);
@@ -95,7 +95,7 @@ void RecordSelectWnd::LoadRecordUnique() const {
 
 void RecordSelectWnd::ListYearMonth() const {
     try {
-        for (auto& v : directory_iterator("./DB")) {
+        for (auto& v : directory_iterator("./" + GetJobGroup())) {
             auto fileName = v.path().filename().string();
             if (v.status().type() == file_type::directory) {
                 auto fileName = v.path().filename().string();
@@ -123,7 +123,7 @@ void RecordSelectWnd::ListDay() const {
         if (parent == L"") {
             return;
         }
-        for (auto& v : directory_iterator(string("./DB/") + StringFromWString(parent))) {
+        for (auto& v : directory_iterator(string("./" + GetJobGroup() + "/") + StringFromWString(parent))) {
             auto fileName = v.path().filename().string();
             if (v.status().type() == file_type::directory) {
                 auto fileName = v.path().filename().string();
@@ -152,7 +152,7 @@ void RecordSelectWnd::ListTime() const {
             return;
         }
         std::wstring parent = pListYearMonth->GetText() + L"/" + pListDay->GetText();
-        for (auto& v : directory_iterator(string("./DB/") + StringFromWString(parent))) {
+        for (auto& v : directory_iterator(string("./" + GetJobGroup() + "/") + StringFromWString(parent))) {
             auto fileName = v.path().filename().string();
             if (v.status().type() == file_type::regular) {
                 auto fileName = v.path().filename().string();

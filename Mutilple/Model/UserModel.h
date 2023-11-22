@@ -1,3 +1,4 @@
+#pragma once
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -28,10 +29,20 @@ namespace ORM_Model {
         bool isLogin = false; ///< ÊÇ·ñµÇÂ¼
 
         static auto storage(void) {
-            return make_storage("data.db",
+            return make_storage(ORM_DB_NAME,
                                 make_table("User", make_column("ID", &User::id, primary_key().autoincrement()),
                                            make_column("NAME", &User::name), make_column("JOB_NUMBER", &User::jobNumber, unique()),
                                            make_column("PASSWORD", &User::pswd), make_column("RMAKER", &User::rmaker, default_value(""))));
+        }
+    };
+
+    class JobGroup {
+    public:
+        int          id        = {};
+        std::wstring groupName = {}; ///< °à×éÃû
+        static auto  storage(void) {
+            return make_storage(ORM_DB_NAME, make_table("JobGroup", make_column("ID", &JobGroup::id, primary_key().autoincrement()),
+                                                         make_column("GROUP_NAME", &JobGroup::groupName)));
         }
     };
 } // namespace ORM_Model

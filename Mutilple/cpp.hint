@@ -1,0 +1,5 @@
+// 提示文件帮助 Visual Studio IDE 解释 Visual C++ 标识符,
+// 如函数和宏的名称。
+// 有关详细信息，请参见 https://go.microsoft.com/fwlink/?linkid=865984
+#define RTTR_REGISTRATION
+#define RTTR_REGISTRATION static void rttr_auto_register_reflection_function_(); namespace { struct rttr__auto__register__ { rttr__auto__register__() { rttr_auto_register_reflection_function_(); } }; } static const rttr__auto__register__ RTTR_CAT(auto_register__, __LINE__); static void rttr_auto_register_reflection_function_()

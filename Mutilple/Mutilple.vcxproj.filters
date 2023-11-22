@@ -228,6 +228,12 @@
     <ClInclude Include="Extensions\Duckx\include\zip.h">
       <Filter>Header Files\Duckx</Filter>
     </ClInclude>
+    <ClInclude Include="Model\DetectInfo.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\DetectionInformationEntryWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Mutilple.cpp">
@@ -352,6 +358,12 @@
     </ClCompile>
     <ClCompile Include="Extensions\Duckx\src\pugixml.cpp">
       <Filter>Source Files\Duckx</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\DetectInfo.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\DetectionInformationEntryWnd.cpp">
+      <Filter>Source Files\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

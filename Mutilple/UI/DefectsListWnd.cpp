@@ -50,7 +50,7 @@ void DefectsListWnd::LoadDefectsList(std::string time) {
         auto month = match[2].str();
         auto day   = match[3].str();
         auto tm    = match[4].str();
-        auto path  = string("DB/") + year + month + "/" + day;
+        auto path  = string(GetJobGroup()+"/") + year + month + "/" + day;
         std::replace(path.begin(), path.end(), '/', '\\');
         path += "\\" + tm + ".db";
         auto list = ORM_Model::ScanRecord::storage(path).get_all<ORM_Model::ScanRecord>();

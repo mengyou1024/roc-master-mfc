@@ -21,6 +21,7 @@
 #include "ParamManagementWnd.h"
 #include "Version.h"
 #include "DefectsListWnd.h"
+#include <UI/DetectionInformationEntryWnd.h>
 
 #undef GATE_A
 #undef GATE_B
@@ -504,7 +505,7 @@ void GroupScanWnd::UpdateCScanOnTimer() {
         }
     }
 
-    ScanScanData();
+    SaveScanData();
 }
 
 void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
@@ -563,6 +564,11 @@ void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
             mUtils->autoGain(static_cast<int>(mChannelSel) + 4 * static_cast<int>(mCurrentGroup), static_cast<int>(mGateType));
         });
         wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
+        wnd.ShowModal();
+    } else if (name == _T("InformationEntry")) {
+        DetectionInformationEntryWnd wnd;
+        wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
+        wnd.CenterWindow();
         wnd.ShowModal();
     }
 }
@@ -759,7 +765,7 @@ void GroupScanWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
         }
     }
 
-    if (mWidgetMode == WidgetMode::MODE_REVIEW && mReviewData.size() > 0 && pointInRect(m_pWndOpenGL_CSCAN->GetPos(), pt)) {
+    if (mWidgetMode == WidgetMode::MODE_REVIEW && mReviewData.size() > 0 && PointInRect(m_pWndOpenGL_CSCAN->GetPos(), pt)) {
         auto temp = pt;
         temp.x -= m_pWndOpenGL_CSCAN->GetX();
         temp.y -= m_pWndOpenGL_CSCAN->GetY();
@@ -782,7 +788,7 @@ void GroupScanWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
 }
 
 void GroupScanWnd::OnLButtonDClick(UINT nFlags, ::CPoint pt) {
-    if (  pointInRect(m_pWndOpenGL_ASCAN->GetPos(), pt)) {
+    if (  PointInRect(m_pWndOpenGL_ASCAN->GetPos(), pt)) {
         auto temp = pt;
         temp.x -= m_pWndOpenGL_ASCAN->GetX();
         temp.y -= m_pWndOpenGL_ASCAN->GetY();
@@ -893,7 +899,7 @@ void GroupScanWnd::StartSaveScanDefect(int channel) {
             auto month = match[2].str();
             auto day   = match[3].str();
             auto tm    = match[4].str();
-            auto path  = string("DB/") + year + month + "/" + day;
+            auto path  = string(GetJobGroup() + "/") + year + month + "/" + day;
             std::replace(path.begin(), path.end(), '/', '\\');
             CreateMultipleDirectory(WStringFromString(path).data());
             path += "\\" + tm + ".db";
@@ -917,7 +923,7 @@ void GroupScanWnd::EndSaveScanDefect(int channel) {
             auto month = match[2].str();
             auto day   = match[3].str();
             auto tm    = match[4].str();
-            auto path  = string("DB/") + year + month + "/" + day;
+            auto path  = string(GetJobGroup() + "/") + year + month + "/" + day;
             std::replace(path.begin(), path.end(), '/', '\\');
             path += "\\" + tm + ".db";
             auto scanRecord  = ORM_Model::ScanRecord::storage(path).get<ORM_Model::ScanRecord>(mIDDefectRecord[channel]);
@@ -929,7 +935,7 @@ void GroupScanWnd::EndSaveScanDefect(int channel) {
     } catch (std::exception &e) { spdlog::error(e.what()); }
 }
 
-void GroupScanWnd::ScanScanData() {
+void GroupScanWnd::SaveScanData() {
     // 保存当前扫查波门的位置信息
     for (int i = 0; i < HDBridge::CHANNEL_NUMBER; i++) {
         mUtils->mScanOrm.mScanData[i]->scanGateInfo.pos    = mGateScan[i].pos;
@@ -948,7 +954,7 @@ void GroupScanWnd::ScanScanData() {
         auto month = match[2].str();
         auto day   = match[3].str();
         auto tm    = match[4].str();
-        auto path  = string("DB/") + year + month + "/" + day;
+        auto path  = string(GetJobGroup() + "/") + year + month + "/" + day;
         std::replace(path.begin(), path.end(), '/', '\\');
         CreateMultipleDirectory(WStringFromString(path).data());
         path += "\\" + tm + ".db";

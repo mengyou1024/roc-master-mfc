@@ -1,9 +1,9 @@
 #include "pch.h"
 
 #include "ToolFunc.h"
-#include <regex>
-#include <iostream>
 #include <fstream>
+#include <iostream>
+#include <regex>
 
 float PointToSegDist(float x, float y, float x1, float y1, float x2, float y2) {
     float cross = (x2 - x1) * (x - x1) + (y2 - y1) * (y - y1);
@@ -212,20 +212,6 @@ glm::vec3 NormalLine(float* p0, float* p1, float* p2) {
     return glm::normalize(glm::cross(a, b));
 }
 
-std::string StringFromLPCTSTR(LPCTSTR str) {
-#ifdef _UNICODE
-    int   size_str        = WideCharToMultiByte(CP_UTF8, 0, str, -1, 0, 0, NULL, NULL);
-    char* point_new_array = new char[size_str];
-    WideCharToMultiByte(CP_UTF8, 0, str, -1, point_new_array, size_str, NULL, NULL);
-    std::string return_string(point_new_array);
-    delete[] point_new_array;
-    point_new_array = NULL;
-    return return_string;
-#else
-    return std::string(str);
-#endif
-}
-
 std::string StringFromWString(std::wstring str) {
     std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
     return converter.to_bytes(str);
@@ -234,6 +220,18 @@ std::string StringFromWString(std::wstring str) {
 std::wstring WStringFromString(std::string str) {
     std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
     return converter.from_bytes(str);
+}
+
+std::string GB2312ToUtf8(std::string gb2312) {
+    char buf[1024] = {};
+    int  len       = GB2312ToUtf8(gb2312.c_str(), buf);
+    return std::string(buf, len);
+}
+
+std::string Utf8ToGB2312(std::string utf8) {
+    char buf[1024] = {};
+    int  len       = Utf8ToGB2312(utf8.c_str(), buf);
+    return std::string(buf, len);
 }
 
 // GB2312到UTF-8的转换
@@ -292,7 +290,7 @@ bool CreateMultipleDirectory(LPCTSTR szPath) {
     return bSuccess;
 }
 
-bool pointInRect(RECT rc, ::CPoint pt) {
+bool PointInRect(RECT rc, ::CPoint pt) {
     if (pt.x > rc.left && pt.x < rc.right && pt.y > rc.top && pt.y < rc.bottom) {
         return true;
     }
@@ -370,26 +368,25 @@ std::tuple<string, string, string> GetLatestReleaseNote(std::string github_api_u
 
 void WordTemplateRender(std::wstring templateName, std::wstring fileName, std::map<string, string> var) {
     // 拷贝模板
-    std::wregex reg(LR"(^(.+)[/\\])");
+    std::wregex  reg(LR"(^(.+)[/\\])");
     std::wsmatch match;
     if (std::regex_search(fileName, match, reg)) {
-        std::wstring  str = match[1].str();
+        std::wstring str = match[1].str();
         std::replace(str.begin(), str.end(), L'/', L'\\');
         CreateMultipleDirectory(str.data());
     }
     CopyFile(templateName.data(), fileName.data(), false);
     duckx::Document doc(StringFromWString(fileName));
     doc.open();
-    auto replaceFunc = [&var](duckx::Run& run) { 
+    auto replaceFunc = [&var](duckx::Run& run) {
         std::regex  reg(R"(\$\{(.+?)\})");
         std::smatch match;
-        string     str = run.get_text();
+        string      str = run.get_text();
         if (std::regex_search(str, match, reg)) {
             string newStr = std::regex_replace(str, reg, var.at(match[1].str()));
             spdlog::debug("replace {} ---> {}", match[1].str(), var.at(match[1].str()));
             run.set_text(newStr);
         }
-
     };
 
     for (duckx::Paragraph p : doc.paragraphs()) {
@@ -402,7 +399,7 @@ void WordTemplateRender(std::wstring templateName, std::wstring fileName, std::m
         for (duckx::TableRow row : table.rows()) {
             for (duckx::TableCell cell : row.cells()) {
                 for (duckx::Paragraph paragh : cell.paragraphs()) {
-                    for (duckx::Run run: paragh.runs()) {
+                    for (duckx::Run run : paragh.runs()) {
                         replaceFunc(run);
                     }
                 }
@@ -412,10 +409,38 @@ void WordTemplateRender(std::wstring templateName, std::wstring fileName, std::m
     doc.save();
 }
 
-bool IncChinese(CString str) {
-    int     nLen = str.GetLength();
+ORM_Model::SystemConfig GetSystemConfig() {
+    try {
+        return ORM_Model::SystemConfig::storage().get<ORM_Model::SystemConfig>(1);
+        spdlog::info("成功加载默认配置.");
+    } catch (std::exception& e) {
+        spdlog::warn("不能加载默认的系统配置, 将初始化为默认值。");
+        ORM_Model::SystemConfig config = {};
+        config.id                      = 1;
+        config.groupName               = _T(DB_DIRECTORIES_PREFIX);
+        ORM_Model::SystemConfig::storage().insert(config);
+    }
+    return ORM_Model::SystemConfig();
+}
+
+void UpdateSystemConfig(ORM_Model::SystemConfig& config) {
+    config.id = 1;
+    try {
+        ORM_Model::SystemConfig::storage().update(config);
+    } catch (std::exception& e) {
+        spdlog::error("不能写入系统配置");
+        spdlog::error(e.what());
+    }
+}
+
+std::string GetJobGroup() {
+    return StringFromWString(GetSystemConfig().groupName);
+}
+
+bool IncChinese(std::wstring str) {
+    size_t     nLen = str.length();
     wchar_t ch;
-    for (int i = 0; i != nLen; ++i) {
+    for (size_t i = 0; i != nLen; ++i) {
         ch = str[i];
         if (ch >= 0xA0) {
             return true;

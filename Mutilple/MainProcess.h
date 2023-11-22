@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Model/SystemConfig.h>
+
 class MainProcess {
 public:
     MainProcess();

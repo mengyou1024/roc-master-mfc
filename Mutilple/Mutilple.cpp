@@ -50,7 +50,6 @@ BOOL CMutilpleApp::InitInstance() {
     _tsplitpath_s(cPath, drive, _MAX_DRIVE, dir, _MAX_DIR, NULL, 0, NULL, 0);
     _stprintf_s(m_pExePath, _T("%s%s"), drive, dir);
     SetCurrentDirectory(m_pExePath);
-    g_MainProcess.InitStroage();
 
     // InitCommonControlsEx() is required on Windows XP if an application
     // manifest specifies use of ComCtl32.dll version 6 or later to enable

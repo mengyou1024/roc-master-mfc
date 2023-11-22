@@ -60,4 +60,8 @@ using ::CSize;
 #include <curl/curl.h>
 #include <Version.h>
 
+#ifndef DB_DIRECTORIES_PREFIX
+    #define DB_DIRECTORIES_PREFIX "DB"
+#endif
+
 #endif // PCH_H

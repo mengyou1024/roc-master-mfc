@@ -134,8 +134,8 @@ private:
     int                                          mSamplesPerSecond  = 33;                      ///< C扫图每秒钟采点个数
     bool                                         mEnableAmpMemory   = false;                   ///< 峰值记忆
     std::array<int, HDBridge::CHANNEL_NUMBER>    mIDDefectRecord    = {};                      ///< 缺陷记录的索引ID
-    std::mutex                                   mRecordMutex       = {};
-
+    std::mutex                                   mRecordMutex       = {};                      ///< 记录数据的互斥量
+    std::string                                  mGroupName         = {};                      ///< 班组
     /**
      * @brief 选组按钮单击回调函数
      * @param index 索引
@@ -209,7 +209,7 @@ private:
     /**
      * @brief 保存缺陷数据
      */
-    void ScanScanData();
+    void SaveScanData();
 
     /**
      * @brief 初始化扫查按钮逻辑
