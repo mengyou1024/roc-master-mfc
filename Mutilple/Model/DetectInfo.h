@@ -5,13 +5,12 @@
 
 #include <sqlite_orm.h>
 
-using namespace sqlite_orm;
-
 #ifndef ORM_DB_NAME
     #define ORM_DB_NAME "DetectInfo.db"
 #endif // !ORM_DB_NAME
 
 namespace ORM_Model {
+    using namespace sqlite_orm;
     class DetectInfo {
     public:
         uint32_t id = {}; ///< id
@@ -38,9 +37,9 @@ namespace ORM_Model {
         std::wstring detectRatio         = {}; ///< ¼ì²â±ÈÀý
         std::wstring detectProcessNumber = {}; ///< ¼ì²â¹¤ÒÕ±àºÅ
 
-        static auto storage(void) {
+        static auto storage(std::string name) {
             return make_storage(
-                "data.db",
+                name,
                 make_table(
                     "DetectInfo", make_column("ID", &DetectInfo::id, primary_key().autoincrement()),
                     make_column("CUSTOMER", &DetectInfo::customer),
@@ -56,6 +55,10 @@ namespace ORM_Model {
                     make_column("ACCEPTANCE_STANDARD", &DetectInfo::acceptanceStandard),
                     make_column("DETECT_RATIO", &DetectInfo::detectRatio),
                     make_column("DETECT_PROCESS_NUMBER", &DetectInfo::detectProcessNumber)));
+        }
+
+        static auto storage(void) {
+            return storage(ORM_DB_NAME);
         }
     };
 } // namespace ORM_Model

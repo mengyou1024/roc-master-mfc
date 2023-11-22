@@ -34,7 +34,7 @@
 					</ListHeader>
 				</List>
 			</VerticalLayout>
-			<VerticalLayout width="20"/>
+			<VerticalLayout width="20" />
 			<VerticalLayout>
 				<VerticalLayout>
 					<Label height="40" />

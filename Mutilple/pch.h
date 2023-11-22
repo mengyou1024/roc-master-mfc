@@ -61,7 +61,7 @@ using ::CSize;
 #include <Version.h>
 
 #ifndef DB_DIRECTORIES_PREFIX
-    #define DB_DIRECTORIES_PREFIX "DB"
+    #define DB_DIRECTORIES_PREFIX "Î´ÃüÃû"
 #endif
 
 #endif // PCH_H

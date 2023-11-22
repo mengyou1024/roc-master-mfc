@@ -61,4 +61,5 @@ void MainProcess::InitStroage() {
     ORM_Model::SystemConfig::storage().sync_schema();
     ORM_Model::ScanRecord::storage().sync_schema();
     ORM_Model::DetectInfo::storage().sync_schema();
+    ORM_Model::JobGroup::storage().sync_schema();
 }

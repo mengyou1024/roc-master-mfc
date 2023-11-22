@@ -6,6 +6,10 @@
 #include <HDBridge.h>
 #include <HDBridge/TOFDPort.h>
 #include <HDBridge/Utils.h>
+#include <Model/DetectInfo.h>
+#include <Model/ScanRecord.h>
+#include <Model/SystemConfig.h>
+#include <Model/UserModel.h>
 #include <map>
 #include <memory>
 
@@ -28,16 +32,16 @@ public:
     virtual void       OnTimer(int iIdEvent) override;
 
     /**
-     * @brief 开始保存扫查缺陷(创建当前日期、时间的索引)
+     * @brief 保存缺陷的起始ID
      * @param channel 通道号
      */
-    void StartSaveScanDefect(int channel);
+    void SaveDefectStartID(int channel);
 
     /**
-     * @brief 终止保存扫查缺陷
+     * @brief 保存缺陷的终止ID
      * @param channel 通道号
      */
-    void EndSaveScanDefect(int channel);
+    void SaveDefectEndID(int channel);
 
 private:
     struct {
@@ -135,7 +139,9 @@ private:
     bool                                         mEnableAmpMemory   = false;                   ///< 峰值记忆
     std::array<int, HDBridge::CHANNEL_NUMBER>    mIDDefectRecord    = {};                      ///< 缺陷记录的索引ID
     std::mutex                                   mRecordMutex       = {};                      ///< 记录数据的互斥量
-    std::string                                  mGroupName         = {};                      ///< 班组
+    ORM_Model::User                              mUser              = {};                      ///< 用户
+    ORM_Model::DetectInfo                        mDetectInfo        = {};                      ///< 探伤信息
+
     /**
      * @brief 选组按钮单击回调函数
      * @param index 索引

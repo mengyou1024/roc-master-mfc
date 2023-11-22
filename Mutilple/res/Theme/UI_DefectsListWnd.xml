@@ -37,11 +37,11 @@
 				</List>
 			</VerticalLayout>
 			<VerticalLayout height="20" />
-				<HorizontalLayout height="32">
-					<Label />
-					<Button name="BtnOK" text="确认" width="80" height="32" />
-					<Label />
-				</HorizontalLayout>
+			<HorizontalLayout height="32">
+				<Label />
+				<Button name="BtnOK" text="确认" width="80" height="32" />
+				<Label />
+			</HorizontalLayout>
 			<VerticalLayout height="40" />
 		</VerticalLayout>
 	</VerticalLayout>

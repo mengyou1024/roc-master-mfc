@@ -14,6 +14,7 @@ using namespace sqlite_orm;
 namespace ORM_Model {
     class User {
     public:
+        User() = default;
         User(std::wstring _name, uint32_t _jobNumber, std::vector<char> _pswd = {}, std::wstring _rmaker = {}) :
         name(_name),
         jobNumber(_jobNumber),
@@ -28,11 +29,13 @@ namespace ORM_Model {
 
         bool isLogin = false; ///< ÊÇ·ñµÇÂ¼
 
+        static auto storage(string name) {
+            return make_storage(
+                name, make_table("User", make_column("ID", &User::id, primary_key().autoincrement()), make_column("NAME", &User::name)));
+        }
+
         static auto storage(void) {
-            return make_storage(ORM_DB_NAME,
-                                make_table("User", make_column("ID", &User::id, primary_key().autoincrement()),
-                                           make_column("NAME", &User::name), make_column("JOB_NUMBER", &User::jobNumber, unique()),
-                                           make_column("PASSWORD", &User::pswd), make_column("RMAKER", &User::rmaker, default_value(""))));
+            return storage(ORM_DB_NAME);
         }
     };
 
@@ -40,9 +43,13 @@ namespace ORM_Model {
     public:
         int          id        = {};
         std::wstring groupName = {}; ///< °à×éÃû
-        static auto  storage(void) {
-            return make_storage(ORM_DB_NAME, make_table("JobGroup", make_column("ID", &JobGroup::id, primary_key().autoincrement()),
-                                                         make_column("GROUP_NAME", &JobGroup::groupName)));
+        static auto  storage(string name) {
+            return make_storage(name, make_table("JobGroup", make_column("ID", &JobGroup::id, primary_key().autoincrement()),
+                                                  make_column("GROUP_NAME", &JobGroup::groupName, unique())));
+        }
+
+        static auto storage(void) {
+            return storage(ORM_DB_NAME);
         }
     };
 } // namespace ORM_Model

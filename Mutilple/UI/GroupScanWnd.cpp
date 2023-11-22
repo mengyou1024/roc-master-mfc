@@ -1,27 +1,26 @@
 #include "pch.h"
 
 #include "ChannelSettingWnd.h"
+#include "DefectsListWnd.h"
 #include "GroupScanWnd.h"
 #include "Mutilple.h"
+#include "ParamManagementWnd.h"
 #include "SettingWnd.h"
+#include "Version.h"
+#include <BusyWnd.h>
 #include <MeshAscan.h>
 #include <MeshGroupCScan.h>
 #include <Model.h>
-#include <Model/ScanRecord.h>
 #include <ModelGroupAScan.h>
 #include <ModelGroupCScan.h>
 #include <RecordSelectWnd.h>
-#include <BusyWnd.h>
+#include <UI/DetectionInformationEntryWnd.h>
 #include <algorithm>
 #include <array>
 #include <chrono>
 #include <iomanip>
 #include <regex>
 #include <sstream>
-#include "ParamManagementWnd.h"
-#include "Version.h"
-#include "DefectsListWnd.h"
-#include <UI/DetectionInformationEntryWnd.h>
 
 #undef GATE_A
 #undef GATE_B
@@ -77,7 +76,7 @@ GroupScanWnd::~GroupScanWnd() {
         auto bridges = TOFDUSBPort::storage().get_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == std::wstring(SCAN_CONFIG_LAST)));
         if (bridges.size() == 1) {
             bridges[0].isValid = true;
-            bridges[0].mCache = mUtils->getBridge<TOFDUSBPort *>()->mCache;
+            bridges[0].mCache  = mUtils->getBridge<TOFDUSBPort *>()->mCache;
             TOFDUSBPort::storage().update(bridges[0]);
         } else {
             mUtils->getBridge<TOFDUSBPort *>()->name    = std::wstring(SCAN_CONFIG_LAST);
@@ -114,7 +113,7 @@ void GroupScanWnd::OnBtnModelClicked(std::wstring name) {
         btnScanMode->SetBkColor(0xFFEEEEEE);
         btnReviewMode->SetBkColor(0xFF339933);
         // 打开选择窗口
-        auto    &selName = name;
+        auto   &selName = name;
         BusyWnd wnd([this, &selName]() {
             // 进入前先暂停扫查
             StopScan(false);
@@ -171,27 +170,27 @@ void GroupScanWnd::InitOnThread() {
     auto model = static_cast<ModelGroupAScan *>(m_OpenGL_ASCAN.m_pModel[0]);
     mUtils->addReadCallback(std::bind(&GroupScanWnd::UpdateAScanCallback, this, std::placeholders::_1, std::placeholders::_2));
     ScanButtonInit();
-//#ifndef _DEBUG
-//    auto [tag, body, url] = GetLatestReleaseNote("https://api.github.com/repos/mengyou1024/roc-master-mfc/releases/latest");
-//    if (Check4Update("v0.0", tag)) {
-//        std::wstring wBody  = WStringFromString(body);
-//        std::wstring wTitle = std::wstring(L"更新可用:") + WStringFromString(tag);
-//        auto         ret    = DMessageBox(wBody.data(), wTitle.data(), MB_YESNO);
-//        spdlog::debug("ret = {}", ret);
-//        spdlog::info("tag: {}\n body: {} \n url: {}", tag, body, url);
-//        FILE *fp   = fopen("./upgrade.exe", "wb");
-//        CURL *curl = curl_easy_init();
-//        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
-//        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-//        curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
-//        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, fwrite);
-//        CURLcode result = curl_easy_perform(curl);
-//        fclose(fp);
-//        curl_easy_cleanup(curl);
-//        auto aret = system(".\\upgrade.exe /verysilent /suppressmsgboxes");
-//        spdlog::info("ret={}", aret);
-//    }
-//#endif // !_DEBUG
+    // #ifndef _DEBUG
+    //     auto [tag, body, url] = GetLatestReleaseNote("https://api.github.com/repos/mengyou1024/roc-master-mfc/releases/latest");
+    //     if (Check4Update("v0.0", tag)) {
+    //         std::wstring wBody  = WStringFromString(body);
+    //         std::wstring wTitle = std::wstring(L"更新可用:") + WStringFromString(tag);
+    //         auto         ret    = DMessageBox(wBody.data(), wTitle.data(), MB_YESNO);
+    //         spdlog::debug("ret = {}", ret);
+    //         spdlog::info("tag: {}\n body: {} \n url: {}", tag, body, url);
+    //         FILE *fp   = fopen("./upgrade.exe", "wb");
+    //         CURL *curl = curl_easy_init();
+    //         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+    //         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    //         curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+    //         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, fwrite);
+    //         CURLcode result = curl_easy_perform(curl);
+    //         fclose(fp);
+    //         curl_easy_cleanup(curl);
+    //         auto aret = system(".\\upgrade.exe /verysilent /suppressmsgboxes");
+    //         spdlog::info("ret={}", aret);
+    //     }
+    // #endif // !_DEBUG
 }
 
 void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig, GateType newGate, ChannelSel newChannelSel,
@@ -347,7 +346,6 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
 
 void GroupScanWnd::SetConfigValue(float val, bool sync) {
     auto tick = GetTickCount64();
-    spdlog::debug("set config value {}", val);
     int  _channelSel = static_cast<int>(mChannelSel) + mCurrentGroup * 4;
     int  gate        = static_cast<int>(mGateType);
     auto bridge      = mUtils->getBridge();
@@ -355,8 +353,8 @@ void GroupScanWnd::SetConfigValue(float val, bool sync) {
         case GroupScanWnd::ConfigType::DetectRange: {
             bridge->setSampleDepth(_channelSel, (float)(bridge->distance2time((double)val)));
             // 重新计算采样因子
-            auto depth = bridge->getSampleDepth()[_channelSel];
-            auto delay = bridge->getDelay()[_channelSel] + bridge->getZeroBias()[_channelSel];
+            auto depth        = bridge->getSampleDepth()[_channelSel];
+            auto delay        = bridge->getDelay()[_channelSel] + bridge->getZeroBias()[_channelSel];
             auto sampleFactor = static_cast<int>(std::round((depth - delay) * 100.0 / 1024.0));
             bridge->setSampleFactor(_channelSel, sampleFactor);
             break;
@@ -415,7 +413,6 @@ void GroupScanWnd::SetConfigValue(float val, bool sync) {
         std::thread t([bridge]() { bridge->flushSetting(); });
         t.detach();
     }
-    spdlog::debug("config takes times:{}", GetTickCount64() - tick);
 }
 
 void GroupScanWnd::UpdateAScanCallback(const HDBridge::NM_DATA &data, const HD_Utils &caller) {
@@ -447,7 +444,7 @@ void GroupScanWnd::UpdateAScanCallback(const HDBridge::NM_DATA &data, const HD_U
     }
     for (int i = 0; i < 2; i++) {
         const auto ampData = mesh->getAmpMemoryData(i);
-        auto g       = bridge->getGateInfo(i, data.iChannel);
+        auto       g       = bridge->getGateInfo(i, data.iChannel);
         // 获取波门内的数据
         auto l = data.pAscan.begin() + static_cast<int64_t>(std::round(static_cast<float>(data.pAscan.size()) * g.pos));
         auto r = data.pAscan.begin() + static_cast<int64_t>(std::round(static_cast<float>(data.pAscan.size()) * (g.pos + g.width)));
@@ -463,7 +460,7 @@ void GroupScanWnd::UpdateAScanCallback(const HDBridge::NM_DATA &data, const HD_U
     }
     {
         const auto ampData = mesh->getAmpMemoryData(2);
-        auto l =
+        auto       l =
             data.pAscan.begin() + static_cast<int64_t>(std::round(static_cast<float>(data.pAscan.size()) * mGateScan[data.iChannel].pos));
         auto                 r = data.pAscan.begin() + static_cast<int64_t>(std::round(static_cast<float>(data.pAscan.size()) *
                                                                                        (mGateScan[data.iChannel].pos + mGateScan[data.iChannel].width)));
@@ -482,6 +479,8 @@ void GroupScanWnd::UpdateAScanCallback(const HDBridge::NM_DATA &data, const HD_U
 void GroupScanWnd::UpdateCScanOnTimer() {
     std::array<std::shared_ptr<HDBridge::NM_DATA>, HDBridge::CHANNEL_NUMBER> scanData = mUtils->mScanOrm.mScanData;
 
+    SaveScanData();
+    
     for (auto &it : scanData) {
         if (it != nullptr) {
             auto mesh = static_cast<MeshGroupCScan *>(((ModelGroupCScan *)m_OpenGL_CSCAN.m_pModel[0])->m_pMesh[it->iChannel]);
@@ -504,8 +503,6 @@ void GroupScanWnd::UpdateCScanOnTimer() {
             }
         }
     }
-
-    SaveScanData();
 }
 
 void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
@@ -570,6 +567,13 @@ void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
         wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
         wnd.CenterWindow();
         wnd.ShowModal();
+        if (wnd.GetResult()) {
+            mUser            = wnd.GetUser();
+            mDetectInfo      = wnd.GetDetectInfo();
+            auto config      = GetSystemConfig();
+            config.groupName = wnd.GetJobGroup().groupName;
+            UpdateSystemConfig(config);
+        }
     }
 }
 
@@ -788,7 +792,7 @@ void GroupScanWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
 }
 
 void GroupScanWnd::OnLButtonDClick(UINT nFlags, ::CPoint pt) {
-    if (  PointInRect(m_pWndOpenGL_ASCAN->GetPos(), pt)) {
+    if (PointInRect(m_pWndOpenGL_ASCAN->GetPos(), pt)) {
         auto temp = pt;
         temp.x -= m_pWndOpenGL_ASCAN->GetX();
         temp.y -= m_pWndOpenGL_ASCAN->GetY();
@@ -828,12 +832,11 @@ void GroupScanWnd::OnLButtonDClick(UINT nFlags, ::CPoint pt) {
             auto &[res, index, channel] = wnd.getResult();
             if (res) {
                 OnBtnSelectGroupClicked(channel / 4);
-                auto width = m_pWndOpenGL_CSCAN->GetWidth();
-                auto height = m_pWndOpenGL_CSCAN->GetHeight();
+                auto     width  = m_pWndOpenGL_CSCAN->GetWidth();
+                auto     height = m_pWndOpenGL_CSCAN->GetHeight();
                 ::CPoint pt;
                 pt.x = (long)(m_pWndOpenGL_CSCAN->GetX() + (float)width * ((float)index / (float)mReviewData.size()));
                 pt.y = (long)(m_pWndOpenGL_CSCAN->GetY() + height / 2);
-
                 OnLButtonDown(1, pt);
             }
         }
@@ -890,7 +893,7 @@ void GroupScanWnd::OnBtnSelectGroupClicked(long index) {
     m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->SetViewGroup(mCurrentGroup);
 }
 
-void GroupScanWnd::StartSaveScanDefect(int channel) {
+void GroupScanWnd::SaveDefectStartID(int channel) {
     try {
         std::regex  reg(R"((\d+)-(\d+)-(\d+)__(.+))");
         std::smatch match;
@@ -905,16 +908,16 @@ void GroupScanWnd::StartSaveScanDefect(int channel) {
             path += "\\" + tm + ".db";
             ORM_Model::ScanRecord scanRecord = {};
             mRecordMutex.lock();
-            scanRecord.startID               = mUtils->id;
+            scanRecord.startID = mUtils->id;
             mRecordMutex.unlock();
-            scanRecord.channel               = channel;
+            scanRecord.channel = channel;
             ORM_Model::ScanRecord::storage(path).sync_schema();
             mIDDefectRecord[channel] = ORM_Model::ScanRecord::storage(path).insert(scanRecord);
         }
     } catch (std::exception &e) { spdlog::error(e.what()); }
 }
 
-void GroupScanWnd::EndSaveScanDefect(int channel) {
+void GroupScanWnd::SaveDefectEndID(int channel) {
     try {
         std::regex  reg(R"((\d+)-(\d+)-(\d+)__(.+))");
         std::smatch match;
@@ -926,7 +929,7 @@ void GroupScanWnd::EndSaveScanDefect(int channel) {
             auto path  = string(GetJobGroup() + "/") + year + month + "/" + day;
             std::replace(path.begin(), path.end(), '/', '\\');
             path += "\\" + tm + ".db";
-            auto scanRecord  = ORM_Model::ScanRecord::storage(path).get<ORM_Model::ScanRecord>(mIDDefectRecord[channel]);
+            auto scanRecord = ORM_Model::ScanRecord::storage(path).get<ORM_Model::ScanRecord>(mIDDefectRecord[channel]);
             mRecordMutex.lock();
             scanRecord.endID = mUtils->id;
             mRecordMutex.unlock();
@@ -947,16 +950,15 @@ void GroupScanWnd::SaveScanData() {
     mUtils->mScanOrm.mCScanLimits[0] = minLimit;
     mUtils->mScanOrm.mCScanLimits[1] = maxLimit;
     // 保存扫查数据
-    std::regex reg(R"((\d+)-(\d+)-(\d+)__(.+))");
+    std::regex  reg(R"((\d+)-(\d+)-(\d+)__(.+))");
     std::smatch match;
     if (std::regex_match(mUtils->time, match, reg)) {
-        auto year = match[1].str();
+        auto year  = match[1].str();
         auto month = match[2].str();
         auto day   = match[3].str();
         auto tm    = match[4].str();
         auto path  = string(GetJobGroup() + "/") + year + month + "/" + day;
         std::replace(path.begin(), path.end(), '/', '\\');
-        CreateMultipleDirectory(WStringFromString(path).data());
         path += "\\" + tm + ".db";
         HD_Utils::storage(path).sync_schema();
         mRecordMutex.lock();
@@ -983,12 +985,12 @@ void GroupScanWnd::ScanButtonEventCallback(void *_btn) {
         case PRESS_DOWN: {
             spdlog::debug("btn down: {}", btn->button_id);
             // 开始保存缺陷数据
-            wnd->StartSaveScanDefect(btn->button_id);
+            wnd->SaveDefectStartID(btn->button_id);
             break;
         }
         case PRESS_UP: {
             spdlog::debug("btn up: {}", btn->button_id);
-            wnd->EndSaveScanDefect(btn->button_id);
+            wnd->SaveDefectEndID(btn->button_id);
             break;
         }
         default: break;
@@ -1083,12 +1085,28 @@ void GroupScanWnd::StartScan(bool changeFlag) {
         std::chrono::system_clock::time_point t      = std::chrono::system_clock::now();
         time_t                                tm     = std::chrono::system_clock::to_time_t(t);
         buffer << std::put_time(localtime(&tm), "%Y-%m-%d__%H-%M-%S");
-        mUtils->time                     = buffer.str();
+        mUtils->time = buffer.str();
 
+        mScanButtonValue.fill(0);
+        std::regex  reg(R"((\d+)-(\d+)-(\d+)__(.+))");
+        std::smatch match;
+        if (std::regex_match(mUtils->time, match, reg)) {
+            auto year  = match[1].str();
+            auto month = match[2].str();
+            auto day   = match[3].str();
+            auto tm    = match[4].str();
+            auto path  = string(GetJobGroup() + "/") + year + month + "/" + day;
+            std::replace(path.begin(), path.end(), '/', '\\');
+            CreateMultipleDirectory(WStringFromString(path).data());
+            path += "\\" + tm + ".db";
+            ORM_Model::DetectInfo::storage(path).sync_schema();
+            ORM_Model::DetectInfo::storage(path).insert(mDetectInfo);
+            ORM_Model::User::storage(path).sync_schema();
+            ORM_Model::User::storage(path).insert(mUser);
+        }
         mScanningFlag = true;
         SetTimer(CSCAN_UPDATE, 1000 / mSamplesPerSecond);
         SetTimer(BUTTON, 5);
-        mScanButtonValue.fill(0);
     }
 }
 

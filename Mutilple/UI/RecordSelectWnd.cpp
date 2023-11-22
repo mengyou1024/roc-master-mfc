@@ -95,7 +95,8 @@ void RecordSelectWnd::LoadRecordUnique() const {
 
 void RecordSelectWnd::ListYearMonth() const {
     try {
-        for (auto& v : directory_iterator("./" + GetJobGroup())) {
+        std::wstring dirName = WStringFromString(string("./") + GetJobGroup());
+        for (auto& v : directory_iterator(dirName)) {
             auto fileName = v.path().filename().string();
             if (v.status().type() == file_type::directory) {
                 auto fileName = v.path().filename().string();
@@ -123,7 +124,8 @@ void RecordSelectWnd::ListDay() const {
         if (parent == L"") {
             return;
         }
-        for (auto& v : directory_iterator(string("./" + GetJobGroup() + "/") + StringFromWString(parent))) {
+        std::wstring dirName = WStringFromString(string("./") + GetJobGroup());
+        for (auto& v : directory_iterator(dirName + L"/" + std::wstring(parent))) {
             auto fileName = v.path().filename().string();
             if (v.status().type() == file_type::directory) {
                 auto fileName = v.path().filename().string();
@@ -152,7 +154,8 @@ void RecordSelectWnd::ListTime() const {
             return;
         }
         std::wstring parent = pListYearMonth->GetText() + L"/" + pListDay->GetText();
-        for (auto& v : directory_iterator(string("./" + GetJobGroup() + "/") + StringFromWString(parent))) {
+        std::wstring dirName = WStringFromString(string("./") + GetJobGroup());
+        for (auto& v : directory_iterator(dirName + L"/" + std::wstring(parent))) {
             auto fileName = v.path().filename().string();
             if (v.status().type() == file_type::regular) {
                 auto fileName = v.path().filename().string();

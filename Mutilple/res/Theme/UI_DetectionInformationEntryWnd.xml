@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window size="1280,900" caption="5,5,5,52" sizebox="10,10,10,10">
+<Window size="960,820" caption="5,5,5,52" sizebox="10,10,10,10">
 	<Font name="楷体" size="14" default="true" />
 	<Font name="楷体" size="18" />
 	<Font name="楷体" size="24" />
@@ -27,29 +27,132 @@
 		<VerticalLayout bkimage="Theme\Line\v_line.png" height="1" />
 		<VerticalLayout inset="10,15,10,10">
 			<HorizontalLayout>
-				<HorizontalLayout inset="10,10,10,10">
+				<HorizontalLayout width="560" inset="10,10,10,10">
 					<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
 						<HorizontalLayout inset="10,10,10,10">
 							<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
-								
+								<VerticalLayout>
+									<HorizontalLayout>
+										<HorizontalLayout height="32">
+											<Label text="客户" width="90" />
+											<Edit name="Editcustomer" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+										</HorizontalLayout>
+										<HorizontalLayout width="20" />
+										<HorizontalLayout height="32">
+											<Label text="客户合同号" width="90" />
+											<Edit name="EditcustomerContractNumber" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+										</HorizontalLayout>
+									</HorizontalLayout>
+									<HorizontalLayout>
+										<HorizontalLayout height="32">
+											<Label text="工作令" width="90" />
+											<Edit name="EditworkOrder" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+										</HorizontalLayout>
+										<HorizontalLayout width="20" />
+										<HorizontalLayout height="32">
+											<Label text="报告编号" width="90" />
+											<Edit name="EditreportNumber" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+										</HorizontalLayout>
+									</HorizontalLayout>
+								</VerticalLayout>
 							</VerticalLayout>
 							<Label text="基本信息" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="60" height="20" />
 						</HorizontalLayout>
 						<HorizontalLayout inset="10,10,10,10">
 							<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
-								
+								<VerticalLayout>
+									<HorizontalLayout>
+										<HorizontalLayout height="32">
+											<Label text="描述" width="90" />
+											<Edit name="Editdescription" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+										</HorizontalLayout>
+										<HorizontalLayout width="20" />
+										<HorizontalLayout height="32">
+											<Label text="材质标准" width="90" />
+											<Edit name="EditmaterialStandards" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+										</HorizontalLayout>
+									</HorizontalLayout>
+									<HorizontalLayout>
+										<HorizontalLayout height="32">
+											<Label text="表面状态" width="90" />
+											<Edit name="EditsurfaceStates" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+										</HorizontalLayout>
+										<HorizontalLayout width="20" />
+										<HorizontalLayout height="32">
+											<Label text="检测区域" width="90" />
+											<Edit name="EditsurveyedArea" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+										</HorizontalLayout>
+									</HorizontalLayout>
+								</VerticalLayout>
 							</VerticalLayout>
 							<Label text="工件" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="30" height="20" />
 						</HorizontalLayout>
 						<HorizontalLayout inset="10,10,10,10">
 							<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
-								
+								<VerticalLayout>
+									<HorizontalLayout>
+										<HorizontalLayout height="32">
+											<Label text="设备型号" width="90" />
+											<Edit name="EditunitType" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+										</HorizontalLayout>
+										<HorizontalLayout width="20" />
+										<HorizontalLayout height="32">
+											<Label text="探头型号" width="90" />
+											<Edit name="EditprobeType" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+										</HorizontalLayout>
+									</HorizontalLayout>
+									<HorizontalLayout>
+										<HorizontalLayout height="32">
+											<Label text="参考试块" width="90" />
+											<Edit name="EditreferenceBlock" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+										</HorizontalLayout>
+										<HorizontalLayout width="20" />
+										<HorizontalLayout height="32">
+											<Label text="波形" width="90" />
+											<Edit name="Editwaveform" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+										</HorizontalLayout>
+									</HorizontalLayout>
+									<HorizontalLayout>
+										<HorizontalLayout height="32">
+											<Label text="扫描灵敏度" width="90" />
+											<Edit name="EditscanningSensitivity" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+										</HorizontalLayout>
+										<HorizontalLayout width="20" />
+										<HorizontalLayout height="32">
+											<Label text="耦合剂" width="90" />
+											<Edit name="EditcouplingAgent" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+										</HorizontalLayout>
+									</HorizontalLayout>
+								</VerticalLayout>
 							</VerticalLayout>
 							<Label text="器材及参数" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="75" height="20" />
 						</HorizontalLayout>
 						<HorizontalLayout inset="10,10,10,10">
 							<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
-								
+								<VerticalLayout>
+									<HorizontalLayout>
+										<HorizontalLayout height="32">
+											<Label text="执行标准" width="90" />
+											<Edit name="EditexecutiveStandard" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+										</HorizontalLayout>
+										<HorizontalLayout width="20" />
+										<HorizontalLayout height="32">
+											<Label text="验收标准" width="90" />
+											<Edit name="EditacceptanceStandard" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+										</HorizontalLayout>
+									</HorizontalLayout>
+									<HorizontalLayout>
+										<HorizontalLayout height="32">
+											<Label text="检测比例" width="90" />
+											<Edit name="EditdetectRatio" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+										</HorizontalLayout>
+										<HorizontalLayout width="20" />
+										<HorizontalLayout height="32">
+											<Label text="检测工艺编号" width="90" />
+											<Edit name="EditdetectProcessNumber" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+										</HorizontalLayout>
+									</HorizontalLayout>
+								</VerticalLayout>
 							</VerticalLayout>
 							<Label text="探头型号" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="60" height="20" />
 						</HorizontalLayout>
@@ -59,34 +162,65 @@
 				<VerticalLayout>
 					<HorizontalLayout inset="10,10,10,10">
 						<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
-							<VerticalLayout>
-								<HorizontalLayout>
-									<Label text="客户"/>
-									<Edit name="Customer" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
-								</HorizontalLayout>
-								<HorizontalLayout >
-									<Label text="客户合同号"/>
-									<Edit name="Customer" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
-								</HorizontalLayout>
-							</VerticalLayout>
+							<HorizontalLayout>
+								<HorizontalLayout width="20" />
+								<List name="ListUserList" bordercolor="0xFF7F7F7F" bordersize="1" >
+									<ListHeader bkimage="Theme\List\list_header_bg.png" visible="false" >
+										<ListHeaderItem text="NAME" width="150" height="40" minwidth="16" sepwidth="1" align="center" hotimage="Theme\List\list_header_hot.png" pushedimage="Theme\List\list_header_pushed.png" sepimage="Theme\List\list_header_sep.png" />
+									</ListHeader>
+								</List>
+								<HorizontalLayout width="20" />
+								<VerticalLayout width="120">
+									<VerticalLayout />
+									<VerticalLayout  height="160" >
+										<Edit name="EditUserAdd" height="32" bordersize="1" bordercolor="0x7F7F7F7F"/>
+										<HorizontalLayout height="20" />
+										<Button name="BtnUserAdd" text="添加" width="80" height="32" />
+										<HorizontalLayout height="20" />
+										<Button name="BtnUserDel" text="删除" width="80" height="32" />
+									</VerticalLayout>
+									<VerticalLayout />
+								</VerticalLayout>
+								<HorizontalLayout width="20" />
+							</HorizontalLayout>
 						</VerticalLayout>
 						<Label text="检测人员管理" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="90" height="20" />
 					</HorizontalLayout>
 					<HorizontalLayout inset="10,10,10,10">
 						<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
-							
+							<HorizontalLayout>
+								<HorizontalLayout width="20" />
+								<List name="ListJobGroupList" bordercolor="0xFF7F7F7F" bordersize="1" >
+									<ListHeader bkimage="Theme\List\list_header_bg.png" visible="false" >
+										<ListHeaderItem text="NAME" width="150" height="40" minwidth="16" sepwidth="1" align="center" hotimage="Theme\List\list_header_hot.png" pushedimage="Theme\List\list_header_pushed.png" sepimage="Theme\List\list_header_sep.png" />
+									</ListHeader>
+								</List>
+								<HorizontalLayout width="20" />
+								<VerticalLayout width="120">
+									<VerticalLayout />
+									<VerticalLayout height="160" >
+										<Edit name="EditJobGroupAdd" height="32" bordersize="1" bordercolor="0x7F7F7F7F"/>
+										<HorizontalLayout height="20" />
+										<Button name="BtnJobGroupAdd" text="添加" width="80" height="32" />
+										<HorizontalLayout height="20" />
+										<Button name="BtnJobGroupDel" text="删除" width="80" height="32" />
+									</VerticalLayout>
+									<VerticalLayout />
+								</VerticalLayout>
+								<HorizontalLayout width="20" />
+							</HorizontalLayout>
 						</VerticalLayout>
 						<Label text="班组管理" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="60" height="20" />
 					</HorizontalLayout>
 				</VerticalLayout>
 			</HorizontalLayout>
-			<HorizontalLayout height="20"/>
+			<HorizontalLayout height="20" />
 			<HorizontalLayout height="32">
 				<Label />
 				<Button name="BtnOK" text="确认" width="80" height="32" />
 				<Label />
 			</HorizontalLayout>
-			<HorizontalLayout height="40"/>
+			<HorizontalLayout height="40" />
 		</VerticalLayout>
 	</VerticalLayout>
 </Window>

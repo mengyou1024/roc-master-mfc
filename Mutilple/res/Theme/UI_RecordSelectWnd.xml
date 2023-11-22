@@ -50,7 +50,7 @@
 				<HorizontalLayout height="32">
 					<Label />
 					<Button name="BtnOK" text="确认" width="80" height="32" />
-					<HorizontalLayout width="50"/>
+					<HorizontalLayout width="50" />
 					<Button name="BtnDEL" text="删除" width="80" height="32" />
 					<Label />
 				</HorizontalLayout>

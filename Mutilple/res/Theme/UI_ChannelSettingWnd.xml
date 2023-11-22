@@ -27,14 +27,14 @@
 		<VerticalLayout bkimage="Theme\Line\v_line.png" height="1" />
 		<HorizontalLayout inset="10,15,10,10">
 			<WindowUI name="WndOpenGL" bkcolor="0xFF000000" />
-			<VerticalLayout width="10"/>
+			<VerticalLayout width="10" />
 			<VerticalLayout width="320">
 				<VerticalLayout />
 				<VerticalLayout width="320" height="640" bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10">
 					<HorizontalLayout height="5" />
-					<HorizontalLayout height="32" >
+					<HorizontalLayout height="32">
 						<Label />
-						<Label text="声速" width="60"  />
+						<Label text="声速" width="60" />
 						<HorizontalLayout width="20" />
 						<Edit name="EditSoundVelocity" width="120" textext="m/s" bordersize="1" bordercolor="0x7F7F7F7F" height="28" />
 						<Label />
@@ -105,7 +105,7 @@
 						<Label />
 						<Label text="采样深度" width="60" />
 						<HorizontalLayout width="20" />
-						<Edit name="EditSampleDepth" width="120" bordersize="1"  textext="mm" bordercolor="0x7F7F7F7F" height="28" />
+						<Edit name="EditSampleDepth" width="120" bordersize="1" textext="mm" bordercolor="0x7F7F7F7F" height="28" />
 						<Label />
 					</HorizontalLayout>
 					<HorizontalLayout height="5" />
@@ -162,23 +162,23 @@
 					<HorizontalLayout height="5" />
 					<HorizontalLayout>
 						<Label />
-						<Option name="OptCH1" text="1" width="50" valign="center"  textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage=""/>
-						<Option name="OptCH2" text="2" width="50" valign="center"  textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage=""/>
-						<Option name="OptCH3" text="3" width="50" valign="center"  textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage=""/>
-						<Option name="OptCH4" text="4" width="50" valign="center"  textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage=""/>
-						<Option name="OptCH5" text="5" width="50" valign="center"  textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage=""/>
-						<Option name="OptCH6" text="6" width="50" valign="center"  textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage=""/>
+						<Option name="OptCH1" text="1" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+						<Option name="OptCH2" text="2" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+						<Option name="OptCH3" text="3" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+						<Option name="OptCH4" text="4" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+						<Option name="OptCH5" text="5" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+						<Option name="OptCH6" text="6" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
 						<Label />
 					</HorizontalLayout>
 					<HorizontalLayout height="2" />
 					<HorizontalLayout>
 						<Label />
-						<Option name="OptCH7" text="7" width="50" valign="center"  textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage=""/>
-						<Option name="OptCH8" text="8" width="50" valign="center"  textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage=""/>
-						<Option name="OptCH9" text="9" width="50" valign="center"  textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage=""/>
-						<Option name="OptCH10" text="10" width="50" valign="center"  textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage=""/>
-						<Option name="OptCH11" text="11" width="50" valign="center"  textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage=""/>
-						<Option name="OptCH12" text="12" width="50" valign="center"  textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage=""/>
+						<Option name="OptCH7" text="7" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+						<Option name="OptCH8" text="8" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+						<Option name="OptCH9" text="9" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+						<Option name="OptCH10" text="10" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+						<Option name="OptCH11" text="11" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+						<Option name="OptCH12" text="12" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
 						<Label />
 					</HorizontalLayout>
 					<HorizontalLayout height="5" />

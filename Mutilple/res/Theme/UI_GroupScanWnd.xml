@@ -28,7 +28,7 @@
 					<Button name="BtnSelectGroup0" width="120" height="33" text="第1组" bkcolor="0xFF339933" />
 					<Button name="BtnSelectGroup1" width="120" height="33" text="第2组" />
 					<Button name="BtnSelectGroup2" width="120" height="33" text="第3组" />
-					<HorizontalLayout width="50"/>
+					<HorizontalLayout width="50" />
 					<Button name="BtnScanMode" width="120" height="33" text="扫查模式" bkcolor="0xFF339933" />
 					<Button name="BtnReviewMode" width="120" height="33" text="回放模式" />
 				</HorizontalLayout>
@@ -38,28 +38,28 @@
 		<VerticalLayout name="LayoutUserArea" inset="10,15,10,10">
 			<HorizontalLayout name="LayoutFunctionButton" height="32">
 				<Label />
-				<Button name="BtnUISetting"  text="设置" width="100" font="5" />
-				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
+				<Button name="BtnUISetting" text="设置" width="100" font="5" />
+				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png" />
 				<Button name="BtnUIAutoScan" text="自动检测" width="100" font="5" />
-				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
+				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png" />
 				<Button name="BtnUIParamManagement" text="参数管理" width="100" font="5" />
-				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
+				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png" />
 				<Button name="BtnUIHardPort" text="硬件接口" width="100" font="5" />
-				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
+				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png" />
 				<Button name="BtnUIInformationEntry" text="信息录入" width="100" font="5" />
-				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
+				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png" />
 				<Button name="BtnUIHandover" text="交接班" width="100" font="5" />
-				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
+				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png" />
 				<Button name="BtnUIFunction" text="功能" width="100" font="5" />
-				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
+				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png" />
 				<Button name="BtnUIAmpMemory" text="峰值记忆" width="100" font="5" />
-				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
+				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png" />
 				<Button name="BtnUIFreeze" text="波形冻结" width="100" font="5" />
-				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
+				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png" />
 				<Button name="BtnUITrack" text="追踪使能" width="100" font="5" />
-				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
+				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png" />
 				<Button name="BtnUIAutoGain" text="自动增益" width="100" font="5" />
-				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png"/>
+				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png" />
 				<Button name="BtnUIAbout" text="关于软件" width="100" font="5" />
 				<Label />
 			</HorizontalLayout>
