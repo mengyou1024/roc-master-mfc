@@ -76,7 +76,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\Duckx\include;$(ProjectDir)Extensions\Duckx\src;$(ProjectDir)Extensions\rttr\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\rttr\include;$(ProjectDir)Extensions\Duckx\include;$(ProjectDir)Extensions\Duckx\src;$(ProjectDir)Extensions\rttr\include;$(IncludePath)</IncludePath>
     <CustomBuildBeforeTargets>
     </CustomBuildBeforeTargets>
   </PropertyGroup>
@@ -84,13 +84,13 @@
     <LinkIncremental>true</LinkIncremental>
     <ExternalIncludePath>$(ProjectDir)Extensions\DuiLib;$(ProjectDir)Extensions\glew-2.1.0\include;$(ProjectDir)Extensions\glm;$(ProjectDir)Extensions\freetype\include;$(ProjectDir)Extensions\NetworkMulti;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>$(OutDir);$(ProjectDir)Extensions\glew-2.1.0\lib\Release\x64;$(ProjectDir)Extensions\freetype\lib;$(ProjectDir)Extensions\NetworkMulti\x64;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\Duckx\include;$(ProjectDir)Extensions\Duckx\src;$(ProjectDir)Extensions\rttr\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\rttr\include;$(ProjectDir)Extensions\Duckx\include;$(ProjectDir)Extensions\Duckx\src;$(ProjectDir)Extensions\rttr\include;$(IncludePath)</IncludePath>
     <CustomBuildBeforeTargets>
     </CustomBuildBeforeTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(ProjectDir)Extensions\Duckx\include;$(ProjectDir)Extensions\Duckx\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\rttr\include;$(ProjectDir)Extensions\MultiButton;$(ProjectDir)Extensions\Duckx\include;$(ProjectDir)Extensions\Duckx\src;$(IncludePath)</IncludePath>
     <CustomBuildBeforeTargets>
     </CustomBuildBeforeTargets>
   </PropertyGroup>
@@ -98,7 +98,7 @@
     <LinkIncremental>false</LinkIncremental>
     <ExternalIncludePath>$(ProjectDir)Extensions\DuiLib;$(ProjectDir)Extensions\glew-2.1.0\include;$(ProjectDir)Extensions\glm;$(ProjectDir)Extensions\freetype\include;$(ProjectDir)Extensions\NetworkMulti;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>$(OutDir);$(ProjectDir)Extensions\glew-2.1.0\lib\Release\x64;$(ProjectDir)Extensions\freetype\lib;$(ProjectDir)Extensions\NetworkMulti\x64;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(ProjectDir)Extensions\Duckx\include;$(ProjectDir)Extensions\Duckx\src;$(ProjectDir)Extensions\jsoncpp\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\rttr\include;$(ProjectDir)Extensions\MultiButton;$(ProjectDir)Extensions\Duckx\include;$(ProjectDir)Extensions\Duckx\src;$(ProjectDir)Extensions\jsoncpp\include;$(IncludePath)</IncludePath>
     <CustomBuildBeforeTargets>
     </CustomBuildBeforeTargets>
   </PropertyGroup>
