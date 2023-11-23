@@ -64,21 +64,35 @@ void RecordSelectWnd::OnNotifyUnique(TNotifyUI& msg) {
             }
             auto& [ret, str] = mResult;
             ret              = true;
-            str              = StringFromWString(GetSystemConfig().groupName +  L"/" + std::wstring(pListYearMonth->GetText().GetData()) + L"/" +
-                                                 std::wstring(pListDay->GetText().GetData()) + L"/" + std::wstring(pListTime->GetText().GetData()));
+            str = StringFromWString(GetSystemConfig().groupName + L"/" + std::wstring(pListYearMonth->GetText().GetData()) + L"/" +
+                                    std::wstring(pListDay->GetText().GetData()) + L"/" + std::wstring(pListTime->GetText().GetData()));
             Close();
         } else if (msg.pSender->GetName() == _T("BtnDEL")) {
             auto pListYearMonth = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboYearMonth"));
             auto pListDay       = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboDay"));
             auto pListTime      = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboTime"));
-            if (pListTime->GetText().IsEmpty() || pListDay->GetText().IsEmpty() || pListYearMonth->GetText().IsEmpty()) {
+            if (pListDay->GetText().IsEmpty() || pListYearMonth->GetText().IsEmpty()) {
                 return;
             }
-            auto path =
-                StringFromWString(GetSystemConfig().groupName + L"/" + std::wstring(pListYearMonth->GetText().GetData()) + L"/" +
-                                  std::wstring(pListDay->GetText().GetData()) + L"/" + std::wstring(pListTime->GetText().GetData()));
-            pListTime->RemoveAt(pListTime->GetCurSel());
-            fs::remove(path);
+            std::wstring yearMonthPath = L"./" + GetSystemConfig().groupName + L"/" + std::wstring(pListYearMonth->GetText().GetData());
+            std::wstring dayPath       = yearMonthPath + L"/" + std::wstring(pListDay->GetText().GetData());
+            std::wstring timePath      = dayPath + L"/" + std::wstring(pListTime->GetText().GetData());
+            try {
+                fs::remove(timePath);
+                pListTime->RemoveAt(pListTime->GetCurSel());
+                if (pListTime->GetCount() == 0) {
+                    fs::remove(dayPath);
+                    pListDay->RemoveAt(pListDay->GetCurSel());
+                    if (pListDay->GetCount() == 0) {
+                        fs::remove(yearMonthPath);
+                        pListYearMonth->RemoveAt(pListYearMonth->GetCurSel());
+                    }
+                }
+            } catch (std::exception& e) {
+                spdlog::warn(e.what());
+                DMessageBox(WStringFromString(string(e.what())).data());
+            }
+
             auto YearMonth = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboYearMonth"));
             ListYearMonth();
         }
@@ -153,7 +167,7 @@ void RecordSelectWnd::ListTime() const {
         if (pListYearMonth->GetText() == L"" || pListDay->GetText() == L"") {
             return;
         }
-        std::wstring parent = pListYearMonth->GetText() + L"/" + pListDay->GetText();
+        std::wstring parent  = pListYearMonth->GetText() + L"/" + pListDay->GetText();
         std::wstring dirName = WStringFromString(string("./") + GetJobGroup());
         for (auto& v : directory_iterator(dirName + L"/" + std::wstring(parent))) {
             auto fileName = v.path().filename().string();

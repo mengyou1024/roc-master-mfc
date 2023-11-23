@@ -43,6 +43,7 @@ namespace ORM_Model {
                 name,
                 make_table(
                     "DetectInfo", make_column("ID", &DetectInfo::id, primary_key().autoincrement()),
+                    make_column("TIME", &DetectInfo::time),
                     make_column("CUSTOMER", &DetectInfo::customer),
                     make_column("CUSTOMER_CONTRACT_NUMBER", &DetectInfo::customerContractNumber),
                     make_column("WORK_ORDER", &DetectInfo::workOrder), make_column("REPORT_NUMBER", &DetectInfo::reportNumber),

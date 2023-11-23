@@ -383,8 +383,8 @@ void WordTemplateRender(std::wstring templateName, std::wstring fileName, std::m
         std::smatch match;
         string      str = run.get_text();
         if (std::regex_search(str, match, reg)) {
-            string newStr = std::regex_replace(str, reg, var.at(match[1].str()));
-            spdlog::debug("replace {} ---> {}", match[1].str(), var.at(match[1].str()));
+            string newStr = std::regex_replace(str, reg, var[(match[1].str())]);
+            spdlog::debug("replace {} ---> {}", match[1].str(), var[match[1].str()]);
             run.set_text(newStr);
         }
     };
@@ -412,7 +412,6 @@ void WordTemplateRender(std::wstring templateName, std::wstring fileName, std::m
 ORM_Model::SystemConfig GetSystemConfig() {
     try {
         return ORM_Model::SystemConfig::storage().get<ORM_Model::SystemConfig>(1);
-        spdlog::info("成功加载默认配置.");
     } catch (std::exception& e) {
         spdlog::warn("不能加载默认的系统配置, 将初始化为默认值。");
         ORM_Model::SystemConfig config = {};
@@ -438,7 +437,7 @@ std::string GetJobGroup() {
 }
 
 bool IncChinese(std::wstring str) {
-    size_t     nLen = str.length();
+    size_t  nLen = str.length();
     wchar_t ch;
     for (size_t i = 0; i != nLen; ++i) {
         ch = str[i];

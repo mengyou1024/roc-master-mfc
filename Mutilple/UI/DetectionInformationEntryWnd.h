@@ -8,6 +8,7 @@
 
 class DetectionInformationEntryWnd : public CDuiWindowBase {
 public:
+    DetectionInformationEntryWnd(bool reviewView=false);
     ~DetectionInformationEntryWnd();
 
     virtual LPCTSTR              GetWindowClassName() const override;
@@ -18,10 +19,11 @@ public:
     const ORM_Model::User       &GetUser() const noexcept;
     const ORM_Model::DetectInfo &GetDetectInfo() const noexcept;
     bool                         GetResult() const noexcept;
+    void                         LoadDetectInfo(const ORM_Model::DetectInfo &info, std::wstring userName, std::wstring groupName);
 
 private:
     void LoadUserGroupInfo();
-
+    bool                  mReviewView = false;
     bool                  mResult     = false;
     ORM_Model::JobGroup   mJobGroup   = {};
     ORM_Model::User       mUser       = {};

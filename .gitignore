@@ -35,3 +35,4 @@ Mutilple/Version.h
 /Mutilple/res/Theme.zip
 /x64/*/DB/*
 /.vscode/settings.json
+/x64/**/*.db

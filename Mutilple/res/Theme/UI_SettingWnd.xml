@@ -54,7 +54,7 @@
 			<HorizontalLayout inset="10,10,10,10">
 				<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
 				</VerticalLayout>
-				<Label text="袋装图显示模式" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="105" height="20" />
+				<Label text="带状图显示模式" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="105" height="20" />
 			</HorizontalLayout>
 		</VerticalLayout>
 	</VerticalLayout>

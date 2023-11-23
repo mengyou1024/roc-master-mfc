@@ -20,7 +20,11 @@
 #include <chrono>
 #include <iomanip>
 #include <regex>
+#include <rttr/type.h>
 #include <sstream>
+using rttr::array_range;
+using rttr::property;
+using rttr::type;
 
 #undef GATE_A
 #undef GATE_B
@@ -343,7 +347,7 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
 }
 
 void GroupScanWnd::SetConfigValue(float val, bool sync) {
-    auto tick = GetTickCount64();
+    auto tick        = GetTickCount64();
     int  _channelSel = static_cast<int>(mChannelSel) + mCurrentGroup * 4;
     int  gate        = static_cast<int>(mGateType);
     auto bridge      = mUtils->getBridge();
@@ -478,7 +482,7 @@ void GroupScanWnd::UpdateCScanOnTimer() {
     mUtils->lockScanData();
 
     std::array<std::shared_ptr<HDBridge::NM_DATA>, HDBridge::CHANNEL_NUMBER> scanData = mUtils->mScanOrm.mScanData;
-    
+
     for (auto &it : scanData) {
         if (it != nullptr) {
             auto mesh = static_cast<MeshGroupCScan *>(((ModelGroupCScan *)m_OpenGL_CSCAN.m_pModel[0])->m_pMesh[it->iChannel]);
@@ -629,6 +633,24 @@ void GroupScanWnd::Notify(TNotifyUI &msg) {
         matchReg = _T(R"((BtnScanMode)|(BtnReviewMode))");
         if (std::regex_match(str, match, matchReg)) {
             OnBtnModelClicked(match[1].str());
+        }
+
+        if (msg.pSender->GetName() == _T("BtnExportReport")) {
+            std::map<string, string> valueMap = {};
+            for (const auto &prot : type::get<ORM_Model::DetectInfo>().get_properties()) {
+                valueMap[string(prot.get_name())] = StringFromWString(prot.get_value(mDetectInfo).convert<std::wstring>());
+            }
+            CFileDialog dlg(false, L"docx", L"Report.docx", OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, L"Word Document (*.docx)| *.docx||");
+            if (dlg.DoModal() == IDOK) {
+                WordTemplateRender(L"./template.docx", dlg.GetPathName().GetString(), valueMap);
+            }
+
+        } else if (msg.pSender->GetName() == _T("BtnDetectInformation")) {
+            DetectionInformationEntryWnd wnd(true);
+            wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
+            wnd.LoadDetectInfo(mDetectInfo, mUser.name, GetSystemConfig().groupName);
+            wnd.CenterWindow();
+            wnd.ShowModal();
         }
 
         UpdateSliderAndEditValue(_currentGroup, _configType, _gateType, _channelSel);
@@ -890,10 +912,10 @@ void GroupScanWnd::OnBtnSelectGroupClicked(long index) {
 
 void GroupScanWnd::SaveDefectStartID(int channel) {
     ORM_Model::ScanRecord scanRecord = {};
-    scanRecord.startID = mRecordCount+(int)mReviewData.size();
-    scanRecord.channel = channel;
+    scanRecord.startID               = mRecordCount + (int)mReviewData.size();
+    scanRecord.channel               = channel;
     mScanRecordCache.push_back(scanRecord);
-    mIDDefectRecord[channel] = (int)mScanRecordCache.size()-1;
+    mIDDefectRecord[channel] = (int)mScanRecordCache.size() - 1;
 }
 
 void GroupScanWnd::SaveDefectEndID(int channel) {
@@ -920,11 +942,9 @@ void GroupScanWnd::SaveScanData() {
     mUtils->mScanOrm.mCScanLimits[1] = maxLimit;
     // 保存扫查数据
     if (mReviewData.size() >= SCAN_RECORD_CACHE_MAX_ITEMS) {
-        std::vector<HD_Utils>  copyData = mReviewData;
+        std::vector<HD_Utils> copyData = mReviewData;
         // 线程中将扫查数据保存
-        std::thread           t([this, copyData]() { 
-            HD_Utils::storage(mSavePath).insert_range(copyData.begin(), copyData.end());
-        });
+        std::thread t([this, copyData]() { HD_Utils::storage(mSavePath).insert_range(copyData.begin(), copyData.end()); });
         t.detach();
         mRecordCount += (int)mReviewData.size();
         mReviewData.clear();
@@ -946,7 +966,11 @@ void GroupScanWnd::EnterReviewMode(std::string name) {
     // 存放回调函数
     mUtils->pushCallback();
     // 读取并加载数据
-    mReviewData = HD_Utils::storage(name).get_all<HD_Utils>();
+    mUser                  = ORM_Model::User::storage(name).get<ORM_Model::User>(1);
+    mDetectInfo            = ORM_Model::DetectInfo::storage(name).get<ORM_Model::DetectInfo>(1);
+    auto systemConfig      = GetSystemConfig();
+    systemConfig.groupName = ORM_Model::JobGroup::storage(name).get<ORM_Model::JobGroup>(1).groupName;
+    mReviewData            = HD_Utils::storage(name).get_all<HD_Utils>();
     spdlog::info("load:{}, frame:{}", name, mReviewData.size());
     // 删除所有通道的C扫数据
     for (int index = 0; index < HDBridge::CHANNEL_NUMBER; index++) {
@@ -990,7 +1014,8 @@ void GroupScanWnd::EnterReviewMode(std::string name) {
     layout->SetVisible(false);
     layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutFunctionButton")));
     layout->SetVisible(false);
-
+    layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutReviewExt")));
+    layout->SetVisible(true);
     mWidgetMode = WidgetMode::MODE_REVIEW;
     spdlog::info("takes time: {} ms", GetTickCount64() - tick);
 }
@@ -1002,6 +1027,8 @@ void GroupScanWnd::ExitReviewMode() {
     layout->SetVisible(true);
     layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutFunctionButton")));
     layout->SetVisible(true);
+    layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutReviewExt")));
+    layout->SetVisible(false);
     for (int i = 0; i < HDBridge::CHANNEL_NUMBER; i++) {
         auto model = static_cast<ModelGroupAScan *>(m_OpenGL_ASCAN.m_pModel[0]);
         auto mesh  = static_cast<MeshAscan *>(model->m_pMesh[i]);
@@ -1036,10 +1063,10 @@ void GroupScanWnd::StartScan(bool changeFlag) {
         std::regex  reg(R"((\d+)-(\d+)-(\d+)__(.+))");
         std::smatch match;
         if (std::regex_match(mDetectInfo.time, match, reg)) {
-            auto year  = match[1].str();
-            auto month = match[2].str();
-            auto day   = match[3].str();
-            auto tm    = match[4].str();
+            auto year           = match[1].str();
+            auto month          = match[2].str();
+            auto day            = match[3].str();
+            auto tm             = match[4].str();
             mScanTime.yearMonth = year + month;
             mScanTime.day       = day;
             mScanTime.time      = tm;
@@ -1049,18 +1076,27 @@ void GroupScanWnd::StartScan(bool changeFlag) {
             path += "\\" + tm + ".db";
             mSavePath = path;
             // 创建表
-            ORM_Model::DetectInfo::storage(path).sync_schema();
-            ORM_Model::DetectInfo::storage(path).insert(mDetectInfo);
-            ORM_Model::User::storage(path).sync_schema();
-            ORM_Model::User::storage(path).insert(mUser);
-            ORM_Model::ScanRecord::storage(path).sync_schema();
-            HD_Utils::storage(path).sync_schema();
+            try {
+                HD_Utils::storage(path).sync_schema();
+                ORM_Model::DetectInfo::storage(path).sync_schema();
+                ORM_Model::DetectInfo::storage(path).insert(mDetectInfo);
+                ORM_Model::User::storage(path).sync_schema();
+                ORM_Model::User::storage(path).insert(mUser);
+                ORM_Model::ScanRecord::storage(path).sync_schema();
+                ORM_Model::JobGroup::storage(path).sync_schema();
+                ORM_Model::JobGroup jobgroup = {};
+                jobgroup.groupName           = GetSystemConfig().groupName;
+                ORM_Model::JobGroup::storage(path).insert(jobgroup);
+                mReviewData.clear();
+                mRecordCount = 0;
+                mScanRecordCache.clear();
+                mScanningFlag = true;
+                SetTimer(CSCAN_UPDATE, 1000 / mSamplesPerSecond);
+            } catch (std::exception &e) {
+                spdlog::warn(e.what());
+                DMessageBox(L"请勿快速点击扫查按钮");
+            }
         }
-        mReviewData.clear();
-        mRecordCount  = 0;
-        mScanRecordCache.clear();
-        mScanningFlag = true;
-        SetTimer(CSCAN_UPDATE, 1000 / mSamplesPerSecond);
     }
 }
 

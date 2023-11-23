@@ -16,14 +16,14 @@
 
 	<VerticalLayout bkcolor="0xFFFEFEFE" bordersize="1" bordercolor="0xFFDDDDDD">
 		<HorizontalLayout height="34">
-			<Label text="LabelTitle" font="0" bkimage="file='Theme\Button\union.png' dest='2,2,34,34'" textpadding="34,0,0,0" align="left" valign="center" />
+			<Label text="" font="0" bkimage="file='Theme\Button\union.png' dest='2,2,34,34'" textpadding="34,0,0,0" align="left" valign="center" />
 			<HorizontalLayout visible="true" width="95">
 				<Button float="true" pos="0,0,0,0" name="minbtn" tooltip="最小化" width="28" height="19" bkcolor="" normalimage="Theme\Button\btn_mini_normal.png" hotimage="Theme\Button\btn_mini_highlight.png" pushedimage="Theme\Button\btn_mini_down.png" />
 				<Button float="true" pos="29,0,0,0" name="maxbtn" tooltip="最大化" width="28" height="19" bkcolor="" normalimage="Theme\Button\btn_max_normal.png" hotimage="Theme\Button\btn_max_highlight.png" pushedimage="Theme\Button\btn_max_down.png" />
 				<Button float="true" pos="29,0,0,0" name="restorebtn" tooltip="还原" visible="false" width="28" bkcolor="" height="19" normalimage="Theme\Button\btn_restore_normal.png" hotimage="Theme\Button\btn_restore_highlight.png" pushedimage="Theme\Button\btn_restore_down.png" />
 				<Button float="true" pos="57,0,0,0" name="closebtn" tooltip="关闭" width="39" height="19" bkcolor="" normalimage="Theme\Button\btn_close_normal.png" hotimage="Theme\Button\btn_close_highlight.png" pushedimage="Theme\Button\btn_close_down.png" />
 			</HorizontalLayout>
-			<HorizontalLayout height="34" float="true" pos="120,1,800,34" align="center">
+			<HorizontalLayout height="34" float="true" pos="120,1,1600,34" align="center">
 				<HorizontalLayout>
 					<Button name="BtnSelectGroup0" width="120" height="33" text="第1组" bkcolor="0xFF339933" />
 					<Button name="BtnSelectGroup1" width="120" height="33" text="第2组" />
@@ -31,6 +31,11 @@
 					<HorizontalLayout width="50" />
 					<Button name="BtnScanMode" width="120" height="33" text="扫查模式" bkcolor="0xFF339933" />
 					<Button name="BtnReviewMode" width="120" height="33" text="回放模式" />
+					<HorizontalLayout width="50" />
+					<HorizontalLayout width="240" name="LayoutReviewExt" visible="false" >
+						<Button name="BtnDetectInformation" width="120" height="33" text="探伤信息" bkcolor="0xFFEEEEEE" />
+						<Button name="BtnExportReport" width="120" height="33" text="报表导出" />
+					</HorizontalLayout>
 				</HorizontalLayout>
 			</HorizontalLayout>
 		</HorizontalLayout>

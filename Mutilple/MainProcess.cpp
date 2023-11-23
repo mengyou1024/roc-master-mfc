@@ -68,7 +68,7 @@ void MainProcess::InitStroage() {
         spdlog::warn(e.what());
         spdlog::warn("数据库文件格式出错，将重新初始化所有数据");
         try {
-            fs::remove("./" ORM_DB_NAME);
+            fs::remove(".\\" ORM_DB_NAME);
         }
         catch (std::exception& e) {
 
