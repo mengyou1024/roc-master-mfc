@@ -1028,6 +1028,8 @@ void GroupScanWnd::EnterReviewMode(std::string name) {
                     color = {1.0f, 1.0f, 1.0f, 1.0f};
                 }
                 mesh->AppendDot(*max, color, MAXSIZE_T);
+            } else {
+                mesh->AppendDot(0, {0.0f, 1.0f, 0.0f, 1.0f}, MAXSIZE_T);
             }
         }
     }
