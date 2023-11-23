@@ -48,7 +48,7 @@ void HD_Utils::autoGain(int channel, int gateIndex, float goal, float gainStep) 
         return;
     }
     std::thread t([this, channel, gateIndex, goal, gainStep]() {
-        volatile bool getGoal = false;
+        volatile bool                                                             getGoal  = false;
         float                                                                     lastGain = getBridge()->getGain(channel);
         std::function<void(const HDBridge::NM_DATA& data, const HD_Utils& utils)> f        = [&getGoal, lastGain, channel, gateIndex, goal, gainStep](const HDBridge::NM_DATA& data, const HD_Utils& utils) -> void {
             if (data.iChannel != channel) {
@@ -58,7 +58,7 @@ void HD_Utils::autoGain(int channel, int gateIndex, float goal, float gainStep) 
                 getGoal = true;
                 return;
             }
-            float step = 0.f;
+            float step       = 0.f;
             float currentAmp = data.pGateAmp[gateIndex] / 255.f;
 
             if (currentAmp > goal) {
@@ -100,6 +100,14 @@ void HD_Utils::autoGain(int channel, int gateIndex, float goal, float gainStep) 
         mReadCallbackMutex.unlock();
     });
     t.join();
+}
+
+void HD_Utils::lockScanData() {
+    mScanDataMutex.lock();
+}
+
+void HD_Utils::unlockScanData() {
+    mScanDataMutex.unlock();
 }
 
 void HD_Utils::readThread() {

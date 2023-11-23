@@ -186,9 +186,6 @@
     <ClInclude Include="UI\SettingWnd.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Extensions\MultiButton\multi_button.h">
-      <Filter>Header Files\功能函数</Filter>
-    </ClInclude>
     <ClInclude Include="Model\ScanRecord.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
@@ -319,9 +316,6 @@
     </ClCompile>
     <ClCompile Include="UI\ChannelSettingWnd.cpp">
       <Filter>Source Files\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Extensions\MultiButton\multi_button.c">
-      <Filter>Source Files\功能函数</Filter>
     </ClCompile>
     <ClCompile Include="Model\ScanRecord.cpp">
       <Filter>Source Files\Model</Filter>

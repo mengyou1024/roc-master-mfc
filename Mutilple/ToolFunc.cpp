@@ -450,3 +450,39 @@ bool IncChinese(std::wstring str) {
     }
     return false;
 }
+
+DetectionStateMachine::DET_RES_TYPE DetectionStateMachine::UpdateData(DetectionStateMachine::DET_IN_TYPE& ampMax) {
+    for (int i = 0; i < ampMax.size(); i++) {
+        switch (mRes[i]) {
+            case DetectionStatus::LowLevel: {
+                if (ampMax[i] == 1) {
+                    mRes[i] = DetectionStatus::Rasing;
+                }
+                break;
+            }
+            case DetectionStatus::HighLevel: {
+                if (ampMax[i] == 0) {
+                    mRes[i] = DetectionStatus::Falling;
+                }
+                break;
+            }
+            case DetectionStatus::Rasing: {
+                if (ampMax[i] == 1) {
+                    mRes[i] = DetectionStatus::HighLevel;
+                } else {
+                    mRes[i] = DetectionStatus::Falling;
+                }
+                break;
+            }
+            case DetectionStatus::Falling: {
+                if (ampMax[i] == 0) {
+                    mRes[i] = DetectionStatus::LowLevel;
+                } else {
+                    mRes[i] = DetectionStatus::Rasing;
+                }
+                break;
+            }
+        }
+    }
+    return mRes;
+}

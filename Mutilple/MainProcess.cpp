@@ -16,6 +16,7 @@
 #include <filesystem>
 #include <duckx.hpp>
 #include <rttr/type.h>
+#include <DMessageBox.h>
 
 namespace fs = std::filesystem;
 
@@ -55,11 +56,23 @@ MainProcess::~MainProcess() {
 }
 
 void MainProcess::InitStroage() {
-    HD_Utils::storage().sync_schema();
-    TOFDUSBPort::storage().sync_schema();
-    ORM_Model::User::storage().sync_schema();
-    ORM_Model::SystemConfig::storage().sync_schema();
-    ORM_Model::ScanRecord::storage().sync_schema();
-    ORM_Model::DetectInfo::storage().sync_schema();
-    ORM_Model::JobGroup::storage().sync_schema();
+    try {
+        HD_Utils::storage().sync_schema();
+        TOFDUSBPort::storage().sync_schema();
+        ORM_Model::User::storage().sync_schema();
+        ORM_Model::SystemConfig::storage().sync_schema();
+        ORM_Model::ScanRecord::storage().sync_schema();
+        ORM_Model::DetectInfo::storage().sync_schema();
+        ORM_Model::JobGroup::storage().sync_schema();
+    } catch (std::exception& e) { 
+        spdlog::warn(e.what());
+        spdlog::warn("数据库文件格式出错，将重新初始化所有数据");
+        try {
+            fs::remove("./" ORM_DB_NAME);
+        }
+        catch (std::exception& e) {
+
+        }
+
+    }
 }

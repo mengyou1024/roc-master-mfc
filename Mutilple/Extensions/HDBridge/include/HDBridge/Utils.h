@@ -76,8 +76,7 @@ namespace sqlite_orm {
 
 class HD_Utils {
 public:
-    int         id   = 0;
-    std::string time = {};
+    int id = 0;
 
 #ifdef USE_SQLITE_ORM
     using HD_ScanORM = ::HD_ScanORM;
@@ -113,13 +112,11 @@ public:
     explicit HD_Utils(const HD_Utils& other)
         : HD_Utils() {
         id       = other.id;
-        time     = other.time;
         mScanOrm = other.mScanOrm;
     }
 
     HD_Utils& operator=(const HD_Utils& other) {
         id       = other.id;
-        time     = other.time;
         mScanOrm = other.mScanOrm;
         return *this;
     }
@@ -172,8 +169,18 @@ public:
      * @param gateIndex 波门索引
      * @param goal 目标值
      * @param gainStep 增益步进
-    */
-    void autoGain(int channel, int gateIndex, float goal= 0.8f, float gainStep=0.1f);
+     */
+    void autoGain(int channel, int gateIndex, float goal = 0.8f, float gainStep = 0.1f);
+
+    /**
+     * @brief 扫查数据加锁
+     */
+    void lockScanData();
+
+    /**
+     * @brief 扫查数据解锁
+     */
+    void unlockScanData();
 
 #ifdef USE_SQLITE_ORM
 
@@ -186,7 +193,6 @@ public:
         return make_storage(dbName,
                             make_table("HD_Utils",
                                        make_column("ID", &HD_Utils::id, primary_key()),
-                                       make_column("TIME", &HD_Utils::time),
                                        make_column("DATA", &HD_Utils::mScanOrm)));
     }
 

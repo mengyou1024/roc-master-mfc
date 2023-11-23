@@ -2,7 +2,6 @@
 
 #include "DuiWindowBase.h"
 #include "OpenGL.h"
-#include "multi_button.h"
 #include <HDBridge.h>
 #include <HDBridge/TOFDPort.h>
 #include <HDBridge/Utils.h>
@@ -31,24 +30,22 @@ public:
     virtual void       OnLButtonDClick(UINT nFlags, ::CPoint pt) override;
     virtual void       OnTimer(int iIdEvent) override;
 
-    /**
-     * @brief 保存缺陷的起始ID
-     * @param channel 通道号
-     */
-    void SaveDefectStartID(int channel);
-
-    /**
-     * @brief 保存缺陷的终止ID
-     * @param channel 通道号
-     */
-    void SaveDefectEndID(int channel);
-
 private:
+    constexpr static int SCAN_RECORD_CACHE_MAX_ITEMS = 1000; ///< 扫查数据最大缓存数量
+
     struct {
         float pos    = {};
         float width  = {};
         float height = {};
     } mGateScan[HD_CHANNEL_NUM]; ///< 扫查波门
+
+    struct {
+        string yearMonth = {};
+        string day       = {};
+        string time      = {};
+    } mScanTime; ///< 扫查时间
+
+    string mSavePath = {}; ///< 保存路径
 
     /// 扫查按钮值
     inline static std::array<uint8_t, HDBridge::CHANNEL_NUMBER> mScanButtonValue = {};
@@ -132,16 +129,16 @@ private:
     ConfigType                                   mConfigType        = ConfigType::DetectRange; ///< 当前选中设置类型
     GateType                                     mGateType          = GateType::GATE_A;        ///< 当前选中的波门类型
     std::unique_ptr<HD_Utils>                    mUtils             = nullptr;                 ///< 硬件接口
-    std::array<Button, HDBridge::CHANNEL_NUMBER> mScanButtons       = {};                      ///< 扫查模拟按钮
     WidgetMode                                   mWidgetMode        = {WidgetMode::MODE_SCAN}; ///< 当前窗口的模式
     std::vector<HD_Utils>                        mReviewData        = {};                      ///< 扫查缺陷数据
     int                                          mSamplesPerSecond  = 33;                      ///< C扫图每秒钟采点个数
     bool                                         mEnableAmpMemory   = false;                   ///< 峰值记忆
     std::array<int, HDBridge::CHANNEL_NUMBER>    mIDDefectRecord    = {};                      ///< 缺陷记录的索引ID
-    std::mutex                                   mRecordMutex       = {};                      ///< 记录数据的互斥量
     ORM_Model::User                              mUser              = {};                      ///< 用户
     ORM_Model::DetectInfo                        mDetectInfo        = {};                      ///< 探伤信息
-
+    int                                          mRecordCount       = {};                      ///< 扫查数据计数
+    std::vector<ORM_Model::ScanRecord>           mScanRecordCache   = {};                      ///< 扫查记录缓存(缺陷)
+    DetectionStateMachine                        mDetectionSM       = {};                      ///< 探伤的状态机
     /**
      * @brief 选组按钮单击回调函数
      * @param index 索引
@@ -218,17 +215,6 @@ private:
     void SaveScanData();
 
     /**
-     * @brief 初始化扫查按钮逻辑
-     */
-    void ScanButtonInit();
-
-    /**
-     * @brief 扫查按钮事件回调
-     * @param _btn
-     */
-    static void ScanButtonEventCallback(void* _btn);
-
-    /**
      * @brief 进入回放模式
      * @param name 缺陷记录的名称
      */
@@ -250,6 +236,18 @@ private:
      * @param changeFlag 是否改变标志位
      */
     void StopScan(bool changeFlag = true);
+
+    /**
+     * @brief 保存缺陷的起始ID
+     * @param channel 通道号
+     */
+    void SaveDefectStartID(int channel);
+
+    /**
+     * @brief 保存缺陷的终止ID
+     * @param channel 通道号
+     */
+    void SaveDefectEndID(int channel);
 };
 
 #pragma pop_macro("GATE_A")

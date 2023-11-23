@@ -13,7 +13,8 @@ namespace ORM_Model {
     using namespace sqlite_orm;
     class DetectInfo {
     public:
-        uint32_t id = {}; ///< id
+        uint32_t    id   = {}; ///< id
+        std::string time = {}; ///< 扫查的时间
         // 基本信息
         std::wstring customer               = {}; ///< 客户
         std::wstring customerContractNumber = {}; ///< 客户合同编号

@@ -27,7 +27,6 @@
 
 enum TIMER_ENUM {
     CSCAN_UPDATE = 0,
-    BUTTON,
     TIMER_SIZE,
 };
 
@@ -169,7 +168,6 @@ void GroupScanWnd::InitOnThread() {
     mUtils->start();
     auto model = static_cast<ModelGroupAScan *>(m_OpenGL_ASCAN.m_pModel[0]);
     mUtils->addReadCallback(std::bind(&GroupScanWnd::UpdateAScanCallback, this, std::placeholders::_1, std::placeholders::_2));
-    ScanButtonInit();
     // #ifndef _DEBUG
     //     auto [tag, body, url] = GetLatestReleaseNote("https://api.github.com/repos/mengyou1024/roc-master-mfc/releases/latest");
     //     if (Check4Update("v0.0", tag)) {
@@ -477,9 +475,9 @@ void GroupScanWnd::UpdateAScanCallback(const HDBridge::NM_DATA &data, const HD_U
 }
 
 void GroupScanWnd::UpdateCScanOnTimer() {
-    std::array<std::shared_ptr<HDBridge::NM_DATA>, HDBridge::CHANNEL_NUMBER> scanData = mUtils->mScanOrm.mScanData;
+    mUtils->lockScanData();
 
-    SaveScanData();
+    std::array<std::shared_ptr<HDBridge::NM_DATA>, HDBridge::CHANNEL_NUMBER> scanData = mUtils->mScanOrm.mScanData;
     
     for (auto &it : scanData) {
         if (it != nullptr) {
@@ -503,6 +501,8 @@ void GroupScanWnd::UpdateCScanOnTimer() {
             }
         }
     }
+    SaveScanData();
+    mUtils->unlockScanData();
 }
 
 void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
@@ -827,7 +827,7 @@ void GroupScanWnd::OnLButtonDClick(UINT nFlags, ::CPoint pt) {
             // 列出缺陷列表
             DefectsListWnd wnd;
             wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
-            wnd.LoadDefectsList(mReviewData[0].time);
+            wnd.LoadDefectsList(mDetectInfo.time);
             wnd.ShowModal();
             auto &[res, index, channel] = wnd.getResult();
             if (res) {
@@ -849,11 +849,6 @@ void GroupScanWnd::OnTimer(int iIdEvent) {
             UpdateCScanOnTimer();
             break;
         }
-        case BUTTON: {
-            button_ticks();
-            break;
-        }
-
         default: break;
     }
 }
@@ -894,48 +889,22 @@ void GroupScanWnd::OnBtnSelectGroupClicked(long index) {
 }
 
 void GroupScanWnd::SaveDefectStartID(int channel) {
-    try {
-        std::regex  reg(R"((\d+)-(\d+)-(\d+)__(.+))");
-        std::smatch match;
-        if (std::regex_match(mUtils->time, match, reg)) {
-            auto year  = match[1].str();
-            auto month = match[2].str();
-            auto day   = match[3].str();
-            auto tm    = match[4].str();
-            auto path  = string(GetJobGroup() + "/") + year + month + "/" + day;
-            std::replace(path.begin(), path.end(), '/', '\\');
-            CreateMultipleDirectory(WStringFromString(path).data());
-            path += "\\" + tm + ".db";
-            ORM_Model::ScanRecord scanRecord = {};
-            mRecordMutex.lock();
-            scanRecord.startID = mUtils->id;
-            mRecordMutex.unlock();
-            scanRecord.channel = channel;
-            ORM_Model::ScanRecord::storage(path).sync_schema();
-            mIDDefectRecord[channel] = ORM_Model::ScanRecord::storage(path).insert(scanRecord);
-        }
-    } catch (std::exception &e) { spdlog::error(e.what()); }
+    ORM_Model::ScanRecord scanRecord = {};
+    scanRecord.startID = mRecordCount+(int)mReviewData.size();
+    scanRecord.channel = channel;
+    mScanRecordCache.push_back(scanRecord);
+    mIDDefectRecord[channel] = (int)mScanRecordCache.size()-1;
 }
 
 void GroupScanWnd::SaveDefectEndID(int channel) {
-    try {
-        std::regex  reg(R"((\d+)-(\d+)-(\d+)__(.+))");
-        std::smatch match;
-        if (std::regex_match(mUtils->time, match, reg)) {
-            auto year  = match[1].str();
-            auto month = match[2].str();
-            auto day   = match[3].str();
-            auto tm    = match[4].str();
-            auto path  = string(GetJobGroup() + "/") + year + month + "/" + day;
-            std::replace(path.begin(), path.end(), '/', '\\');
-            path += "\\" + tm + ".db";
-            auto scanRecord = ORM_Model::ScanRecord::storage(path).get<ORM_Model::ScanRecord>(mIDDefectRecord[channel]);
-            mRecordMutex.lock();
-            scanRecord.endID = mUtils->id;
-            mRecordMutex.unlock();
-            ORM_Model::ScanRecord::storage(path).update<ORM_Model::ScanRecord>(scanRecord);
-        }
-    } catch (std::exception &e) { spdlog::error(e.what()); }
+    if (mScanRecordCache.size() == 0) {
+        return;
+    }
+    auto &scanRecord = mScanRecordCache.at(mIDDefectRecord[channel]);
+    if (mRecordCount + (int)mReviewData.size() < scanRecord.startID) {
+        return;
+    }
+    scanRecord.endID = mRecordCount + (int)mReviewData.size();
 }
 
 void GroupScanWnd::SaveScanData() {
@@ -950,50 +919,25 @@ void GroupScanWnd::SaveScanData() {
     mUtils->mScanOrm.mCScanLimits[0] = minLimit;
     mUtils->mScanOrm.mCScanLimits[1] = maxLimit;
     // 保存扫查数据
-    std::regex  reg(R"((\d+)-(\d+)-(\d+)__(.+))");
-    std::smatch match;
-    if (std::regex_match(mUtils->time, match, reg)) {
-        auto year  = match[1].str();
-        auto month = match[2].str();
-        auto day   = match[3].str();
-        auto tm    = match[4].str();
-        auto path  = string(GetJobGroup() + "/") + year + month + "/" + day;
-        std::replace(path.begin(), path.end(), '/', '\\');
-        path += "\\" + tm + ".db";
-        HD_Utils::storage(path).sync_schema();
-        mRecordMutex.lock();
-        mUtils->id = HD_Utils::storage(path).insert(*mUtils);
-        mRecordMutex.unlock();
+    if (mReviewData.size() >= SCAN_RECORD_CACHE_MAX_ITEMS) {
+        std::vector<HD_Utils>  copyData = mReviewData;
+        // 线程中将扫查数据保存
+        std::thread           t([this, copyData]() { 
+            HD_Utils::storage(mSavePath).insert_range(copyData.begin(), copyData.end());
+        });
+        t.detach();
+        mRecordCount += (int)mReviewData.size();
+        mReviewData.clear();
+    } else {
+        mReviewData.push_back(*mUtils);
     }
-}
-
-void GroupScanWnd::ScanButtonInit() {
-    uint8_t index = 0;
-    for (auto &btn : mScanButtons) {
-        button_init(
-            &btn, [](uint8_t id) -> uint8_t { return GroupScanWnd::mScanButtonValue[id]; }, 1, index++, this);
-        button_attach(&btn, PRESS_DOWN, ScanButtonEventCallback);
-        button_attach(&btn, PRESS_UP, ScanButtonEventCallback);
-        button_start(&btn);
-    }
-}
-
-void GroupScanWnd::ScanButtonEventCallback(void *_btn) {
-    auto btn = static_cast<Button *>(_btn);
-    auto wnd = static_cast<GroupScanWnd *>(btn->userData);
-    switch (btn->event) {
-        case PRESS_DOWN: {
-            spdlog::debug("btn down: {}", btn->button_id);
-            // 开始保存缺陷数据
-            wnd->SaveDefectStartID(btn->button_id);
-            break;
+    auto &res = mDetectionSM.UpdateData(mScanButtonValue);
+    for (int i = 0; i < res.size(); i++) {
+        if (res[i] == DetectionStateMachine::DetectionStatus::Rasing) {
+            SaveDefectStartID(i);
+        } else if (res[i] == DetectionStateMachine::DetectionStatus::Falling) {
+            SaveDefectEndID(i);
         }
-        case PRESS_UP: {
-            spdlog::debug("btn up: {}", btn->button_id);
-            wnd->SaveDefectEndID(btn->button_id);
-            break;
-        }
-        default: break;
     }
 }
 
@@ -1077,7 +1021,6 @@ void GroupScanWnd::StartScan(bool changeFlag) {
     if (!changeFlag) {
         if (mScanningFlag == true) {
             SetTimer(CSCAN_UPDATE, 1000 / mSamplesPerSecond);
-            SetTimer(BUTTON, 5);
         }
         return;
     }
@@ -1087,28 +1030,37 @@ void GroupScanWnd::StartScan(bool changeFlag) {
         std::chrono::system_clock::time_point t      = std::chrono::system_clock::now();
         time_t                                tm     = std::chrono::system_clock::to_time_t(t);
         buffer << std::put_time(localtime(&tm), "%Y-%m-%d__%H-%M-%S");
-        mUtils->time = buffer.str();
+        mDetectInfo.time = buffer.str();
 
         mScanButtonValue.fill(0);
         std::regex  reg(R"((\d+)-(\d+)-(\d+)__(.+))");
         std::smatch match;
-        if (std::regex_match(mUtils->time, match, reg)) {
+        if (std::regex_match(mDetectInfo.time, match, reg)) {
             auto year  = match[1].str();
             auto month = match[2].str();
             auto day   = match[3].str();
             auto tm    = match[4].str();
-            auto path  = string(GetJobGroup() + "/") + year + month + "/" + day;
+            mScanTime.yearMonth = year + month;
+            mScanTime.day       = day;
+            mScanTime.time      = tm;
+            auto path           = string(GetJobGroup() + "/") + mScanTime.yearMonth + "/" + day;
             std::replace(path.begin(), path.end(), '/', '\\');
             CreateMultipleDirectory(WStringFromString(path).data());
             path += "\\" + tm + ".db";
+            mSavePath = path;
+            // 创建表
             ORM_Model::DetectInfo::storage(path).sync_schema();
             ORM_Model::DetectInfo::storage(path).insert(mDetectInfo);
             ORM_Model::User::storage(path).sync_schema();
             ORM_Model::User::storage(path).insert(mUser);
+            ORM_Model::ScanRecord::storage(path).sync_schema();
+            HD_Utils::storage(path).sync_schema();
         }
+        mReviewData.clear();
+        mRecordCount  = 0;
+        mScanRecordCache.clear();
         mScanningFlag = true;
         SetTimer(CSCAN_UPDATE, 1000 / mSamplesPerSecond);
-        SetTimer(BUTTON, 5);
     }
 }
 
@@ -1119,7 +1071,6 @@ void GroupScanWnd::StopScan(bool changeFlag) {
     if (!changeFlag) {
         if (mScanningFlag == true) {
             KillTimer(CSCAN_UPDATE);
-            KillTimer(BUTTON);
         }
         return;
     }
@@ -1133,7 +1084,14 @@ void GroupScanWnd::StopScan(bool changeFlag) {
             meshAScan->UpdateGate(2, 1, mGateScan[i].pos, mGateScan[i].width, mGateScan[i].height);
             mScanButtonValue.fill(0);
         }
+        // 保存缺陷记录
+        ORM_Model::ScanRecord::storage(mSavePath).insert_range(mScanRecordCache.begin(), mScanRecordCache.end());
+        // 保存扫查数据
+        HD_Utils::storage(mSavePath).insert_range(mReviewData.begin(), mReviewData.end());
+        // 清除扫查数据
+        mReviewData.clear();
+        mRecordCount = 0;
+        mScanRecordCache.clear();
         KillTimer(CSCAN_UPDATE);
-        KillTimer(BUTTON);
     }
 }

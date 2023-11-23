@@ -99,3 +99,28 @@ void UpdateSystemConfig(ORM_Model::SystemConfig& config);
  * @return 工作中名称
  */
 std::string GetJobGroup();
+
+class DetectionStateMachine {
+public:
+    constexpr static int FILTER_TIMES = 0;
+
+    enum class DetectionStatus {
+        Rasing = 0,
+        Falling,
+        LowLevel = 0x10,
+        HighLevel,
+    };
+    DetectionStateMachine() {
+        mRes.fill(DetectionStatus::LowLevel);
+    }
+    using DET_RES_TYPE = std::array<DetectionStatus, 12>;
+    using DET_IN_TYPE  = std::array<uint8_t, 12>;
+
+    DET_RES_TYPE UpdateData(DET_IN_TYPE& ampMax);
+
+private:
+    DET_IN_TYPE  mFilterTimes = {};
+    uint8_t      mFilterNum   = {};
+    int          mFilterIter  = {};
+    DET_RES_TYPE mRes         = {};
+};

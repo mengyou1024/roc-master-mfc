@@ -29,14 +29,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Static</UseOfMfc>
@@ -44,14 +44,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Static</UseOfMfc>
@@ -76,7 +76,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(ProjectDir)Extensions\Duckx\include;$(ProjectDir)Extensions\Duckx\src;$(ProjectDir)Extensions\rttr\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\Duckx\include;$(ProjectDir)Extensions\Duckx\src;$(ProjectDir)Extensions\rttr\include;$(IncludePath)</IncludePath>
     <CustomBuildBeforeTargets>
     </CustomBuildBeforeTargets>
   </PropertyGroup>
@@ -84,7 +84,7 @@
     <LinkIncremental>true</LinkIncremental>
     <ExternalIncludePath>$(ProjectDir)Extensions\DuiLib;$(ProjectDir)Extensions\glew-2.1.0\include;$(ProjectDir)Extensions\glm;$(ProjectDir)Extensions\freetype\include;$(ProjectDir)Extensions\NetworkMulti;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>$(OutDir);$(ProjectDir)Extensions\glew-2.1.0\lib\Release\x64;$(ProjectDir)Extensions\freetype\lib;$(ProjectDir)Extensions\NetworkMulti\x64;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\MultiButton;$(ProjectDir)Extensions\Duckx\include;$(ProjectDir)Extensions\Duckx\src;$(ProjectDir)Extensions\rttr\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Extensions\HDBridge\boards\TOFDPort\include;$(ProjectDir)Extensions\HDBridge\include;$(ProjectDir)Extensions\spdlog-1.12.0\include;$(ProjectDir)Extensions\sqlite_orm\include\sqlite_orm;$(ProjectDir)Extensions\jsoncpp\include;$(ProjectDir)Extensions\libcurl\include;$(ProjectDir);$(ProjectDir)Extensions\sqlite_orm\include;$(ProjectDir)Widgets;$(ProjectDir)UI;$(ProjectDir)Extensions\Duckx\include;$(ProjectDir)Extensions\Duckx\src;$(ProjectDir)Extensions\rttr\include;$(IncludePath)</IncludePath>
     <CustomBuildBeforeTargets>
     </CustomBuildBeforeTargets>
   </PropertyGroup>
@@ -339,7 +339,6 @@ del $(SolutionDir)Mutilple\res\Theme.zip
     <ClInclude Include="Extensions\HDBridge\boards\TOFDPort\include\TOFDPort.h" />
     <ClInclude Include="Extensions\HDBridge\include\HDBridge.h" />
     <ClInclude Include="Extensions\HDBridge\include\HDBridge\Utils.h" />
-    <ClInclude Include="Extensions\MultiButton\multi_button.h" />
     <ClInclude Include="Extensions\sqlite_orm\include\sqlite_orm\sqlite_orm.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="ICheckCarrier.h" />
@@ -423,12 +422,6 @@ del $(SolutionDir)Mutilple\res\Theme.zip
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Extensions\jsoncpp\src\json_writer.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Extensions\MultiButton\multi_button.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
