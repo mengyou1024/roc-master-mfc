@@ -79,8 +79,9 @@ std::tuple<string, string, string> GetLatestReleaseNote(std::string github_api_u
  * @param templateName Word模板名称
  * @param fileName 保存后的文件名
  * @param var 变量映射表
- */
-void WordTemplateRender(std::wstring templateName, std::wstring fileName, std::map<string, string> var);
+ * @return true 成功
+*/
+bool WordTemplateRender(std::wstring templateName, std::wstring fileName, std::map<string, string> var);
 
 /**
  * @brief 获取系统配置

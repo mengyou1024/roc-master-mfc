@@ -366,7 +366,7 @@ std::tuple<string, string, string> GetLatestReleaseNote(std::string github_api_u
     return std::tuple<string, string, string>();
 }
 
-void WordTemplateRender(std::wstring templateName, std::wstring fileName, std::map<string, string> var) {
+bool WordTemplateRender(std::wstring templateName, std::wstring fileName, std::map<string, string> var) {
     // ¿½±´Ä£°å
     std::wregex  reg(LR"(^(.+)[/\\])");
     std::wsmatch match;
@@ -375,7 +375,9 @@ void WordTemplateRender(std::wstring templateName, std::wstring fileName, std::m
         std::replace(str.begin(), str.end(), L'/', L'\\');
         CreateMultipleDirectory(str.data());
     }
-    CopyFile(templateName.data(), fileName.data(), false);
+    if (CopyFile(templateName.data(), fileName.data(), false) == 0) {
+        return false;
+    }
     duckx::Document doc(StringFromWString(fileName));
     doc.open();
     auto replaceFunc = [&var](duckx::Run& run) {
@@ -407,6 +409,7 @@ void WordTemplateRender(std::wstring templateName, std::wstring fileName, std::m
         }
     }
     doc.save();
+    return true;
 }
 
 ORM_Model::SystemConfig GetSystemConfig() {
@@ -418,8 +421,8 @@ ORM_Model::SystemConfig GetSystemConfig() {
         config.id                      = 1;
         config.groupName               = _T(DB_DIRECTORIES_PREFIX);
         ORM_Model::SystemConfig::storage().insert(config);
+        return GetSystemConfig();
     }
-    return ORM_Model::SystemConfig();
 }
 
 void UpdateSystemConfig(ORM_Model::SystemConfig& config) {

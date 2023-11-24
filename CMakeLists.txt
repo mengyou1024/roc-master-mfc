@@ -74,3 +74,8 @@ configure_file(
     @ONLY
 )
 
+execute_process(
+    COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different 
+    "${CMAKE_SOURCE_DIR}/template"
+    "${CMAKE_SOURCE_DIR}/x64/${CMAKE_BUILD_TYPE}/template"
+)

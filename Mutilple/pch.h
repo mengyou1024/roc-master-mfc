@@ -64,4 +64,8 @@ using ::CSize;
     #define DB_DIRECTORIES_PREFIX "Î´ÃüÃû"
 #endif
 
+#ifndef SCAN_DATA_DIR_NAME
+    #define SCAN_DATA_DIR_NAME "Data/"
+#endif // !SCAN_DATA_DIR_NAME
+
 #endif // PCH_H

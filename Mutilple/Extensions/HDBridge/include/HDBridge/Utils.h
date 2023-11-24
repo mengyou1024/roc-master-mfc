@@ -172,16 +172,6 @@ public:
      */
     void autoGain(int channel, int gateIndex, float goal = 0.8f, float gainStep = 0.1f);
 
-    /**
-     * @brief 扫查数据加锁
-     */
-    void lockScanData();
-
-    /**
-     * @brief 扫查数据解锁
-     */
-    void unlockScanData();
-
 #ifdef USE_SQLITE_ORM
 
     #ifndef ORM_DB_NAME

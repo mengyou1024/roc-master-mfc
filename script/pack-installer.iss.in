@@ -53,6 +53,7 @@ Source: "@CMAKE_SOURCE_DIR@/x64/Release/sqlite3.dll"; DestDir: "{app}"
 Source: "@CMAKE_SOURCE_DIR@/x64/Release/TOFDPort.dll"; DestDir: "{app}"
 Source: "@CMAKE_SOURCE_DIR@/x64/Release/libcurl.dll"; DestDir: "{app}"
 Source: "@CMAKE_SOURCE_DIR@/x64/Release/rttr_core_s.dll"; DestDir: "{app}"
+Source: "@CMAKE_SOURCE_DIR@/x64/Release/template/*"; DestDir: "{app}/template"
 Source: "@CMAKE_SOURCE_DIR@/x64/Release/vcruntime140.dll"; DestDir: "{app}"
 Source: "@CMAKE_SOURCE_DIR@/x64/Release/vcruntime140_1.dll"; DestDir: "{app}"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
@@ -60,7 +61,7 @@ Source: "@CMAKE_SOURCE_DIR@/x64/Release/vcruntime140_1.dll"; DestDir: "{app}"
 [UninstallDelete]
 Type: files; Name: "{app}/data.db"
 Type: filesandordirs; Name: "{app}/log"
-Type: filesandordirs; Name: "{app}/DB"
+Type: filesandordirs; Name: "{app}/Data"
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

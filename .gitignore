@@ -36,3 +36,4 @@ Mutilple/Version.h
 /x64/*/DB/*
 /.vscode/settings.json
 /x64/**/*.db
+/x64/*/template

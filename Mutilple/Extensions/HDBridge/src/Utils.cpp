@@ -102,14 +102,6 @@ void HD_Utils::autoGain(int channel, int gateIndex, float goal, float gainStep) 
     t.join();
 }
 
-void HD_Utils::lockScanData() {
-    mScanDataMutex.lock();
-}
-
-void HD_Utils::unlockScanData() {
-    mScanDataMutex.unlock();
-}
-
 void HD_Utils::readThread() {
     while (mReadThreadExit == false) {
         if (!mBridge) {

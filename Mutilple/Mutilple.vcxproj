@@ -131,7 +131,7 @@
     </ResourceCompile>
     <PreBuildEvent>
       <Command>cd $(SolutionDir)
-cmake -B build -G "Ninja"
+cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=$(Configuration)
 del $(SolutionDir)Mutilple\res\Theme.zip
 7z a -tZip $(SolutionDir)Mutilple\res\Theme.zip $(SolutionDir)Mutilple\res\Theme\</Command>
     </PreBuildEvent>
@@ -186,7 +186,7 @@ del $(SolutionDir)Mutilple\res\Theme.zip
     </ResourceCompile>
     <PreBuildEvent>
       <Command>cd $(SolutionDir)
-cmake -B build -G "Ninja"
+cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=$(Configuration)
 del $(SolutionDir)Mutilple\res\Theme.zip
 7z a -tZip $(SolutionDir)Mutilple\res\Theme.zip $(SolutionDir)Mutilple\res\Theme\</Command>
     </PreBuildEvent>
@@ -245,7 +245,7 @@ del $(SolutionDir)Mutilple\res\Theme.zip
     </ResourceCompile>
     <PreBuildEvent>
       <Command>cd $(SolutionDir)
-cmake -B build -G "Ninja"
+cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=$(Configuration)
 del $(SolutionDir)Mutilple\res\Theme.zip
 7z a -tZip $(SolutionDir)Mutilple\res\Theme.zip $(SolutionDir)Mutilple\res\Theme\</Command>
       <Message>生成配置文件和资源文件</Message>
@@ -303,7 +303,7 @@ del $(SolutionDir)Mutilple\res\Theme.zip
     </ResourceCompile>
     <PreBuildEvent>
       <Command>cd $(SolutionDir)
-cmake -B build -G "Ninja"
+cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=$(Configuration)
 del $(SolutionDir)Mutilple\res\Theme.zip
 7z a -tZip $(SolutionDir)Mutilple\res\Theme.zip $(SolutionDir)Mutilple\res\Theme\</Command>
       <Message>生成配置文件和资源文件</Message>

@@ -64,8 +64,9 @@ void RecordSelectWnd::OnNotifyUnique(TNotifyUI& msg) {
             }
             auto& [ret, str] = mResult;
             ret              = true;
-            str = StringFromWString(GetSystemConfig().groupName + L"/" + std::wstring(pListYearMonth->GetText().GetData()) + L"/" +
-                                    std::wstring(pListDay->GetText().GetData()) + L"/" + std::wstring(pListTime->GetText().GetData()));
+            str              = StringFromWString(_T(SCAN_DATA_DIR_NAME) + GetSystemConfig().groupName + L"/" +
+                                                 std::wstring(pListYearMonth->GetText().GetData()) + L"/" + std::wstring(pListDay->GetText().GetData()) +
+                                                 L"/" + std::wstring(pListTime->GetText().GetData()));
             Close();
         } else if (msg.pSender->GetName() == _T("BtnDEL")) {
             auto pListYearMonth = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboYearMonth"));
@@ -109,7 +110,7 @@ void RecordSelectWnd::LoadRecordUnique() const {
 
 void RecordSelectWnd::ListYearMonth() const {
     try {
-        std::wstring dirName = WStringFromString(string("./") + GetJobGroup());
+        std::wstring dirName = WStringFromString(string("./") + SCAN_DATA_DIR_NAME + GetJobGroup());
         for (auto& v : directory_iterator(dirName)) {
             auto fileName = v.path().filename().string();
             if (v.status().type() == file_type::directory) {
@@ -138,7 +139,7 @@ void RecordSelectWnd::ListDay() const {
         if (parent == L"") {
             return;
         }
-        std::wstring dirName = WStringFromString(string("./") + GetJobGroup());
+        std::wstring dirName = WStringFromString(string("./") + SCAN_DATA_DIR_NAME + GetJobGroup());
         for (auto& v : directory_iterator(dirName + L"/" + std::wstring(parent))) {
             auto fileName = v.path().filename().string();
             if (v.status().type() == file_type::directory) {
@@ -168,7 +169,7 @@ void RecordSelectWnd::ListTime() const {
             return;
         }
         std::wstring parent  = pListYearMonth->GetText() + L"/" + pListDay->GetText();
-        std::wstring dirName = WStringFromString(string("./") + GetJobGroup());
+        std::wstring dirName = WStringFromString(string("./") + SCAN_DATA_DIR_NAME + GetJobGroup());
         for (auto& v : directory_iterator(dirName + L"/" + std::wstring(parent))) {
             auto fileName = v.path().filename().string();
             if (v.status().type() == file_type::regular) {

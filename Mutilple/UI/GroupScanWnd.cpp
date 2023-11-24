@@ -479,8 +479,6 @@ void GroupScanWnd::UpdateAScanCallback(const HDBridge::NM_DATA &data, const HD_U
 }
 
 void GroupScanWnd::UpdateCScanOnTimer() {
-    mUtils->lockScanData();
-
     std::array<std::shared_ptr<HDBridge::NM_DATA>, HDBridge::CHANNEL_NUMBER> scanData = mUtils->mScanOrm.mScanData;
 
     for (auto &it : scanData) {
@@ -506,7 +504,6 @@ void GroupScanWnd::UpdateCScanOnTimer() {
         }
     }
     SaveScanData();
-    mUtils->unlockScanData();
 }
 
 void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
@@ -637,12 +634,19 @@ void GroupScanWnd::Notify(TNotifyUI &msg) {
 
         if (msg.pSender->GetName() == _T("BtnExportReport")) {
             std::map<string, string> valueMap = {};
+            valueMap["jobGroup"]              = GetJobGroup();
+            valueMap["user"]                  = StringFromWString(mUser.name);
             for (const auto &prot : type::get<ORM_Model::DetectInfo>().get_properties()) {
                 valueMap[string(prot.get_name())] = StringFromWString(prot.get_value(mDetectInfo).convert<std::wstring>());
             }
             CFileDialog dlg(false, L"docx", L"Report.docx", OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, L"Word Document (*.docx)| *.docx||");
             if (dlg.DoModal() == IDOK) {
-                WordTemplateRender(L"./template.docx", dlg.GetPathName().GetString(), valueMap);
+                if (WordTemplateRender(L"./template/template.docx", dlg.GetPathName().GetString(), valueMap) == false) {
+                    spdlog::error("export report document error!");
+                    DMessageBox(L"导出失败!");
+                } else {
+                    DMessageBox(L"导出成功!");
+                }
             }
 
         } else if (msg.pSender->GetName() == _T("BtnDetectInformation")) {
@@ -1070,7 +1074,7 @@ void GroupScanWnd::StartScan(bool changeFlag) {
             mScanTime.yearMonth = year + month;
             mScanTime.day       = day;
             mScanTime.time      = tm;
-            auto path           = string(GetJobGroup() + "/") + mScanTime.yearMonth + "/" + day;
+            auto path           = string(SCAN_DATA_DIR_NAME + GetJobGroup() + "/") + mScanTime.yearMonth + "/" + day;
             std::replace(path.begin(), path.end(), '/', '\\');
             CreateMultipleDirectory(WStringFromString(path).data());
             path += "\\" + tm + ".db";
