@@ -75,9 +75,10 @@ void RecordSelectWnd::OnNotifyUnique(TNotifyUI& msg) {
             if (pListDay->GetText().IsEmpty() || pListYearMonth->GetText().IsEmpty()) {
                 return;
             }
-            std::wstring yearMonthPath = L"./" + GetSystemConfig().groupName + L"/" + std::wstring(pListYearMonth->GetText().GetData());
-            std::wstring dayPath       = yearMonthPath + L"/" + std::wstring(pListDay->GetText().GetData());
-            std::wstring timePath      = dayPath + L"/" + std::wstring(pListTime->GetText().GetData());
+            std::wstring yearMonthPath = std::wstring(L"./") + _T(SCAN_DATA_DIR_NAME) + GetSystemConfig().groupName + L"/" +
+                                         std::wstring(pListYearMonth->GetText().GetData());
+            std::wstring dayPath  = yearMonthPath + L"/" + std::wstring(pListDay->GetText().GetData());
+            std::wstring timePath = dayPath + L"/" + std::wstring(pListTime->GetText().GetData());
             try {
                 fs::remove(timePath);
                 pListTime->RemoveAt(pListTime->GetCurSel());
@@ -110,18 +111,18 @@ void RecordSelectWnd::LoadRecordUnique() const {
 
 void RecordSelectWnd::ListYearMonth() const {
     try {
+        auto pListYearMonth = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboYearMonth"));
+        pListYearMonth->RemoveAll();
         std::wstring dirName = WStringFromString(string("./") + SCAN_DATA_DIR_NAME + GetJobGroup());
         for (auto& v : directory_iterator(dirName)) {
             auto fileName = v.path().filename().string();
             if (v.status().type() == file_type::directory) {
                 auto fileName = v.path().filename().string();
-                auto pList    = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboYearMonth"));
                 auto list     = new CListLabelElementUI;
                 list->SetText(WStringFromString(fileName).data());
-                pList->Add(list);
+                pListYearMonth->Add(list);
             }
         }
-        auto pListYearMonth = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboYearMonth"));
         if (pListYearMonth->GetCount() > 0) {
             auto it = static_cast<CListLabelElementUI*>(pListYearMonth->GetItemAt(0));
             it->Select();
@@ -139,18 +140,18 @@ void RecordSelectWnd::ListDay() const {
         if (parent == L"") {
             return;
         }
-        std::wstring dirName = WStringFromString(string("./") + SCAN_DATA_DIR_NAME + GetJobGroup());
+        std::wstring dirName  = WStringFromString(string("./") + SCAN_DATA_DIR_NAME + GetJobGroup());
+        auto         pListDay = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboDay"));
+        pListDay->RemoveAll();
         for (auto& v : directory_iterator(dirName + L"/" + std::wstring(parent))) {
             auto fileName = v.path().filename().string();
             if (v.status().type() == file_type::directory) {
                 auto fileName = v.path().filename().string();
-                auto pList    = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboDay"));
                 auto list     = new CListLabelElementUI;
                 list->SetText(WStringFromString(fileName).data());
-                pList->Add(list);
+                pListDay->Add(list);
             }
         }
-        auto pListDay = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboDay"));
         if (pListDay->GetCount() > 0) {
             auto it = static_cast<CListLabelElementUI*>(pListDay->GetItemAt(0));
             it->Select();
@@ -168,19 +169,19 @@ void RecordSelectWnd::ListTime() const {
         if (pListYearMonth->GetText() == L"" || pListDay->GetText() == L"") {
             return;
         }
-        std::wstring parent  = pListYearMonth->GetText() + L"/" + pListDay->GetText();
-        std::wstring dirName = WStringFromString(string("./") + SCAN_DATA_DIR_NAME + GetJobGroup());
+        std::wstring parent    = pListYearMonth->GetText() + L"/" + pListDay->GetText();
+        std::wstring dirName   = WStringFromString(string("./") + SCAN_DATA_DIR_NAME + GetJobGroup());
+        auto         pListTime = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboTime"));
+        pListTime->RemoveAll();
         for (auto& v : directory_iterator(dirName + L"/" + std::wstring(parent))) {
             auto fileName = v.path().filename().string();
             if (v.status().type() == file_type::regular) {
                 auto fileName = v.path().filename().string();
-                auto pList    = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboTime"));
                 auto list     = new CListLabelElementUI;
                 list->SetText(WStringFromString(fileName).data());
-                pList->Add(list);
+                pListTime->Add(list);
             }
         }
-        auto pListTime = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboTime"));
         if (pListTime->GetCount() > 0) {
             auto it = static_cast<CListLabelElementUI*>(pListTime->GetItemAt(0));
             it->Select();
