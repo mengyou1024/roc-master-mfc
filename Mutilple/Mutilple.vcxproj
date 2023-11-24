@@ -327,6 +327,7 @@ del $(SolutionDir)Mutilple\res\Theme.zip
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AbsPLCIntf.h" />
     <ClInclude Include="Define.h" />
     <ClInclude Include="Extensions\Duckx\include\constants.hpp" />
     <ClInclude Include="Extensions\Duckx\include\duckx.hpp" />
@@ -351,7 +352,6 @@ del $(SolutionDir)Mutilple\res\Theme.zip
     <ClInclude Include="Mutilple.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="RuitiePLC.h" />
     <ClInclude Include="snap7.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Thread.h" />
@@ -379,6 +379,7 @@ del $(SolutionDir)Mutilple\res\Theme.zip
     <ClInclude Include="Widgets\OpenGL.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AbsPLCIntf.cpp" />
     <ClCompile Include="Extensions\Duckx\src\duckx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -459,7 +460,6 @@ del $(SolutionDir)Mutilple\res\Theme.zip
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="RuitiePLC.cpp" />
     <ClCompile Include="snap7.cpp" />
     <ClCompile Include="Thread.cpp" />
     <ClCompile Include="ToolFunc.cpp" />

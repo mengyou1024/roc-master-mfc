@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "RuitiePLC.h"
+#include "AbsPLCIntf.h"
 #include "snap7.h"
 #include <cstdio>
 #include <memory>
@@ -31,7 +31,7 @@ static bool reconnect() {
     string ip   = "";
     int    slot = 0;
     int    rack = 0;
-    RuitiePLC::getConnectedInfo(&ip, &rack, &slot);
+    AbsPLCIntf::getConnectedInfo(&ip, &rack, &slot);
     if (ip.empty()) {
         return false;
     } else {
@@ -79,29 +79,29 @@ static bool doWithReconnect(function<bool(void)> func) {
     return true;
 }
 
-static uint16_t RuitiePLC::swaps(uint16_t sval) {
+static uint16_t AbsPLCIntf::swaps(uint16_t sval) {
     return ((sval & 0xFF) << 8) | ((sval & 0xFF00) >> 8);
 }
 
-static uint32_t RuitiePLC::swapl(uint32_t lval) {
+static uint32_t AbsPLCIntf::swapl(uint32_t lval) {
     return ((lval & 0xFF000000) >> 24) | ((lval & 0xFF0000) >> 8) | ((lval & 0xFF00) << 8) | ((lval & 0xFF) << 24);
 }
 
-static float RuitiePLC::swapf(float fval) {
+static float AbsPLCIntf::swapf(float fval) {
     uint32_t temp = *(uint32_t*)&fval;
     temp          = swapl(temp);
     float ret     = *(float*)&temp;
     return ret;
 }
 
-bool RuitiePLC::isConnected() {
+bool AbsPLCIntf::isConnected() {
     return _RuitiePLCInfo::getInstance()->m_connected;
 }
 
-bool RuitiePLC::connectTo(const char* addr, int rack, int slot) {
+bool AbsPLCIntf::connectTo(const char* addr, int rack, int slot) {
     if (isConnected()) {
         spdlog::info("already connect to :{} {} {}", _RuitiePLCInfo::getInstance()->m_addr.c_str(), _RuitiePLCInfo::getInstance()->m_rack,
-               _RuitiePLCInfo::getInstance()->m_slot);
+                     _RuitiePLCInfo::getInstance()->m_slot);
     } else {
         if (_RuitiePLCInfo::getInstance()->m_client == nullptr) {
             _RuitiePLCInfo::getInstance()->m_client = new TS7Client;
@@ -123,7 +123,7 @@ bool RuitiePLC::connectTo(const char* addr, int rack, int slot) {
     return true;
 }
 
-void RuitiePLC::disconnect(void) {
+void AbsPLCIntf::disconnect(void) {
     if (_RuitiePLCInfo::getInstance()->m_client) {
         if (isConnected()) {
             _RuitiePLCInfo::getInstance()->m_client->Disconnect();
@@ -134,7 +134,7 @@ void RuitiePLC::disconnect(void) {
     }
 }
 
-void RuitiePLC::getConnectedInfo(std::string* addr, int* rack, int* slot) {
+void AbsPLCIntf::getConnectedInfo(std::string* addr, int* rack, int* slot) {
     if (addr) {
         *addr = _RuitiePLCInfo::getInstance()->m_addr;
     }
@@ -155,7 +155,7 @@ static unique_ptr<uint8_t[]> bitExpand(uint8_t* bytes, int bits) {
 }
 
 static bool readRegion(int Area, int start, int size, const char* format, function<void(string, uint8_t)> func) {
-    if (!RuitiePLC::isConnected()) {
+    if (!AbsPLCIntf::isConnected()) {
         return false;
     }
 
@@ -180,44 +180,7 @@ static bool readRegion(int Area, int start, int size, const char* format, functi
     return true;
 }
 
-bool RuitiePLC::getMRegion(function<void(string, uint8_t)> func) {
-    if (!readRegion(S7AreaMK, 0, 10, "M%01d%01o", func)) {
-        return false;
-    }
-    if (!readRegion(S7AreaMK, 2, 16, "M%01d%01o", func)) {
-        return false;
-    }
-    if (!readRegion(S7AreaMK, 4, 19, "M%01d%01o", func)) {
-        return false;
-    }
-
-    return true;
-}
-
-bool RuitiePLC::getInput(function<void(string, uint8_t)> func) {
-    if (!readRegion(S7AreaPE, 0, 18, "I%01d%01o", func)) {
-        return false;
-    }
-    if (!readRegion(S7AreaPE, 8, 7, "I%01d%01o", func)) {
-        return false;
-    }
-    return true;
-}
-
-bool RuitiePLC::getOutput(function<void(string, uint8_t)> func) {
-    if (!isConnected()) {
-        return false;
-    }
-    if (!readRegion(S7AreaPA, 0, 12, "Q%01d%01o", func)) {
-        return false;
-    }
-    if (!readRegion(S7AreaPA, 8, 2, "Q%01d%01o", func)) {
-        return false;
-    }
-    return true;
-}
-
-int RuitiePLC::getVariable(string name, int) {
+int AbsPLCIntf::getVariable(string name, int) {
     if (!isConnected()) {
         return -1;
     }
@@ -247,7 +210,7 @@ int RuitiePLC::getVariable(string name, int) {
     return (temp & (1 << iBit)) ? 1 : 0;
 }
 
-float RuitiePLC::getVariable(string name, float) {
+float AbsPLCIntf::getVariable(string name, float) {
     if (!isConnected()) {
         return -INFINITY;
     }
@@ -271,33 +234,7 @@ float RuitiePLC::getVariable(string name, float) {
     return ret;
 }
 
-bool RuitiePLC::getVariable(function<void(string, float)> func) {
-    if (!isConnected()) {
-        return false;
-    }
-    constexpr int size = (1104 - 1000) / 4 + 1;
-    auto          temp = shared_ptr<float[]>(new float[size]);
-    auto          ret  = doWithReconnect([size, &temp]() -> bool {
-        return _RuitiePLCInfo::getInstance()->m_client->ReadArea(S7AreaDB, 1, 1000, size, S7WLReal, temp.get()) == 0;
-    });
-    if (!ret) {
-        _RuitiePLCInfo::getInstance()->m_connected = false;
-        return false;
-    }
-#if PLC_SWAP_FLOAT
-    for (int i = 0; i < size; i++) {
-        temp[i] = swapf(temp[i]);
-    }
-#endif
-    for (int i = 0; i < size; i++) {
-        char name[20] = {0};
-        snprintf(name, sizeof(name), "V%4d", 1000 + i * 4);
-        func(name, temp[i]);
-    }
-    return true;
-}
-
-bool RuitiePLC::setVariable(string s, float var) {
+bool AbsPLCIntf::setVariable(string s, float var) {
     if (!isConnected()) {
         return false;
     }
@@ -324,7 +261,7 @@ bool RuitiePLC::setVariable(string s, float var) {
     return true;
 }
 
-bool RuitiePLC::setVariable(string s, float* var, int count) {
+bool AbsPLCIntf::setVariable(string s, float* var, int count) {
     if (!isConnected()) {
         return false;
     }
@@ -355,7 +292,7 @@ bool RuitiePLC::setVariable(string s, float* var, int count) {
     return true;
 }
 
-bool RuitiePLC::setVariable(string s, bool b) {
+bool AbsPLCIntf::setVariable(string s, bool b) {
     if (!isConnected()) {
         return false;
     }

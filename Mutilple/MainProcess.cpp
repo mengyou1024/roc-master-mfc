@@ -2,7 +2,7 @@
 
 #include "MainProcess.h"
 #include "Mutilple.h"
-#include "RuitiePLC.h"
+#include "AbsPLCIntf.h"
 
 #include <HDBridge/TOFDPort.h>
 #include <HDBridge/Utils.h>
@@ -43,11 +43,11 @@ MainProcess::MainProcess() {
     spdlog::flush_on(spdlog::level::warn);
     spdlog::set_level(spdlog::level::info);
 #endif
-    RuitiePLC::connectTo();
+    AbsPLCIntf::connectTo();
 }
 
 MainProcess::~MainProcess() {
-    RuitiePLC::disconnect();
+    AbsPLCIntf::disconnect();
 #if _DEBUG
     FreeConsole();
     fclose(mFile);

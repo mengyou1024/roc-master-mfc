@@ -114,9 +114,6 @@
     <ClInclude Include="ICoder.h">
       <Filter>Header Files\接口</Filter>
     </ClInclude>
-    <ClInclude Include="RuitiePLC.h">
-      <Filter>Header Files\PLC</Filter>
-    </ClInclude>
     <ClInclude Include="snap7.h">
       <Filter>Header Files\PLC</Filter>
     </ClInclude>
@@ -231,6 +228,9 @@
     <ClInclude Include="UI\DetectionInformationEntryWnd.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
+    <ClInclude Include="AbsPLCIntf.h">
+      <Filter>Header Files\PLC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Mutilple.cpp">
@@ -244,9 +244,6 @@
     </ClCompile>
     <ClCompile Include="MainProcess.cpp">
       <Filter>Source Files\主进程</Filter>
-    </ClCompile>
-    <ClCompile Include="RuitiePLC.cpp">
-      <Filter>Source Files\PLC</Filter>
     </ClCompile>
     <ClCompile Include="snap7.cpp">
       <Filter>Source Files\PLC</Filter>
@@ -358,6 +355,9 @@
     </ClCompile>
     <ClCompile Include="UI\DetectionInformationEntryWnd.cpp">
       <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="AbsPLCIntf.cpp">
+      <Filter>Source Files\PLC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

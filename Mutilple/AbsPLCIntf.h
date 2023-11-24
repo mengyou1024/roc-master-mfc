@@ -17,7 +17,7 @@ using std::vector;
 /// 交换float类型变量的字节序
 #define PLC_SWAP_FLOAT 1
 
-namespace RuitiePLC {
+namespace AbsPLCIntf {
 
     /**
      * @brief swap 16bit
@@ -76,42 +76,6 @@ namespace RuitiePLC {
     void getConnectedInfo(std::string* addr = nullptr, int* rack = nullptr, int* slot = nullptr);
 
     /**
-     * @brief 批量获取变量 （V区）
-     *
-     * @param func
-     * @return true
-     * @return false
-     */
-    bool getVariable(function<void(string, float)> func);
-
-    /**
-     * @brief 批量获取M区的变量
-     *
-     * @param func
-     * @return true
-     * @return false
-     */
-    bool getMRegion(function<void(string, uint8_t)> func);
-
-    /**
-     * @brief 批量获取I区的变量
-     *
-     * @param func
-     * @return true
-     * @return false
-     */
-    bool getInput(function<void(string, uint8_t)> func);
-
-    /**
-     * @brief 批量获取Q区的变量
-     *
-     * @param func
-     * @return true
-     * @return false
-     */
-    bool getOutput(function<void(string, uint8_t)> func);
-
-    /**
      * @brief 获取int类型的变量 第二个参数填0
      *
      * @param name 变量名 如 I00、Q00、M00
@@ -128,7 +92,7 @@ namespace RuitiePLC {
     float getVariable(string name, float);
 
     /**
-     * @brief 设置float类型(V区)的变量 
+     * @brief 设置float类型(V区)的变量
      *
      * @param s 变量名 如 `V1000`
      * @param var
@@ -138,7 +102,7 @@ namespace RuitiePLC {
     bool setVariable(string s, float var);
 
     /**
-     * @brief 批量设置float类型(V区)的变量 
+     * @brief 批量设置float类型(V区)的变量
      *
      * @param s 起始变量名 如 `V1000`
      * @param var float类型数组地址
@@ -149,7 +113,7 @@ namespace RuitiePLC {
     bool setVariable(string s, float* var, int count);
 
     /**
-     * @brief 设置bool类型的变量 
+     * @brief 设置bool类型的变量
      *
      * @param s 变量名 如 `M00`、`I00`、`Q00`
      * @param b
@@ -158,4 +122,4 @@ namespace RuitiePLC {
      */
     bool setVariable(string s, bool b);
 
-}; // namespace RuitiePLC
+}; // namespace AbsPLCIntf
