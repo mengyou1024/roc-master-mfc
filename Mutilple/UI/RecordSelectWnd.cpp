@@ -91,7 +91,7 @@ void RecordSelectWnd::OnNotifyUnique(TNotifyUI& msg) {
                     }
                 }
             } catch (std::exception& e) {
-                spdlog::warn(e.what());
+                spdlog::warn(GB2312ToUtf8(e.what()));
                 DMessageBox(WStringFromString(string(e.what())).data());
             }
 
@@ -129,7 +129,7 @@ void RecordSelectWnd::ListYearMonth() const {
         }
     } catch (std::exception& e) {
         spdlog::error("file:{} line:{}", __FILE__, __LINE__);
-        spdlog::error(e.what());
+        spdlog::error(GB2312ToUtf8(e.what()));
     }
 }
 
@@ -158,7 +158,7 @@ void RecordSelectWnd::ListDay() const {
         }
     } catch (std::exception& e) {
         spdlog::error("file:{} line:{}", __FILE__, __LINE__);
-        spdlog::error(e.what());
+        spdlog::error(GB2312ToUtf8(e.what()));
     }
 }
 
@@ -188,6 +188,6 @@ void RecordSelectWnd::ListTime() const {
         }
     } catch (std::exception& e) {
         spdlog::error("file:{} line:{}", __FILE__, __LINE__);
-        spdlog::error(e.what());
+        spdlog::error(GB2312ToUtf8(e.what()));
     }
 }

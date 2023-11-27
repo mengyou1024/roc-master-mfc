@@ -164,7 +164,7 @@
 						<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
 							<HorizontalLayout>
 								<HorizontalLayout width="20" />
-								<List name="ListUserList" bordercolor="0xFF7F7F7F" bordersize="1" >
+								<List name="ListUserList" itemalign="center" inset="1,1,1,1" bordersize="1" bordercolor="0x7F7F7F7F" bkcolor="#FFFFFFFF" itemtextpadding="5,0,0,0" itemtextcolor="#FF000000" itembkcolor="#FFFFFFFF" itemselectedtextcolor="#FF000000" itemselectedbkcolor="#FFC1E3FF" itemhottextcolor="#FF000000" itemhotbkcolor="#FFE9F5FF" itemdisabledtextcolor="#FFCCCCCC" itemdisabledbkcolor="#FFFFFFFF" vscrollbar="true" hscrollbar="true" >
 									<ListHeader bkimage="Theme\List\list_header_bg.png" visible="false" >
 										<ListHeaderItem text="NAME" width="150" height="40" minwidth="16" sepwidth="1" align="center" hotimage="Theme\List\list_header_hot.png" pushedimage="Theme\List\list_header_pushed.png" sepimage="Theme\List\list_header_sep.png" />
 									</ListHeader>
@@ -190,7 +190,7 @@
 						<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
 							<HorizontalLayout>
 								<HorizontalLayout width="20" />
-								<List name="ListJobGroupList" bordercolor="0xFF7F7F7F" bordersize="1" >
+								<List name="ListJobGroupList" itemalign="center" inset="1,1,1,1" bordersize="1" bordercolor="0x7F7F7F7F" bkcolor="#FFFFFFFF" itemtextpadding="5,0,0,0" itemtextcolor="#FF000000" itembkcolor="#FFFFFFFF" itemselectedtextcolor="#FF000000" itemselectedbkcolor="#FFC1E3FF" itemhottextcolor="#FF000000" itemhotbkcolor="#FFE9F5FF" itemdisabledtextcolor="#FFCCCCCC" itemdisabledbkcolor="#FFFFFFFF" vscrollbar="true" hscrollbar="true" >
 									<ListHeader bkimage="Theme\List\list_header_bg.png" visible="false" >
 										<ListHeaderItem text="NAME" width="150" height="40" minwidth="16" sepwidth="1" align="center" hotimage="Theme\List\list_header_hot.png" pushedimage="Theme\List\list_header_pushed.png" sepimage="Theme\List\list_header_sep.png" />
 									</ListHeader>

@@ -46,7 +46,7 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
                     pLine->SetText(1,str.data());
                 } catch (std::exception& e) {
                     spdlog::error("file:{} line:{}", __FILE__, __LINE__);
-                    spdlog::error(e.what());
+                    spdlog::error(GB2312ToUtf8(e.what()));
                 }
             }
         } else if (msg.pSender->GetName() == L"BtnDelete") {
@@ -59,7 +59,7 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
                     TOFDUSBPort::storage().remove_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == name));
                 } catch (std::exception& e) {
                     spdlog::error("file:{} line:{}", __FILE__, __LINE__);
-                    spdlog::error(e.what());
+                    spdlog::error(GB2312ToUtf8(e.what()));
                 }
                 pList->RemoveAt(cursel);
             }
@@ -80,7 +80,7 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
                 }
             } catch (std::exception& e) {
                 spdlog::error("file:{} line:{}", __FILE__, __LINE__);
-                spdlog::error(e.what());
+                spdlog::error(GB2312ToUtf8(e.what()));
             }
         } else if (msg.pSender->GetName() == L"BtnWrite") {
             auto         pList  = static_cast<DuiLib::CListUI*>(m_PaintManager.FindControl(_T("ListParamName")));
@@ -92,8 +92,8 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
                 port.mCache = mBridge->mCache;
                 TOFDUSBPort::storage().update(port);
                 DMessageBox(L"–¥»Î≥…π¶!");
-            } catch (std::exception& e) {
-                spdlog::warn(e.what());
+            } catch (std::exception& e) { 
+                spdlog::error(GB2312ToUtf8(e.what()));
             }
         }
     }

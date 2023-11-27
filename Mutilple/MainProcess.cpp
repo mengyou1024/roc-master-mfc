@@ -35,6 +35,7 @@ MainProcess::MainProcess() {
 #if _DEBUG
     // _CrtSetBreakAlloc(1739);
     AllocConsole();
+    system("chcp 65001");
     spdlog::set_level(spdlog::level::debug);
     mFile = freopen("CONOUT$", "w", stdout);
 #else 
@@ -57,7 +58,6 @@ MainProcess::~MainProcess() {
 
 void MainProcess::InitStroage() {
     try {
-        HD_Utils::storage().sync_schema();
         TOFDUSBPort::storage().sync_schema();
         ORM_Model::User::storage().sync_schema();
         ORM_Model::SystemConfig::storage().sync_schema();
@@ -65,8 +65,8 @@ void MainProcess::InitStroage() {
         ORM_Model::DetectInfo::storage().sync_schema();
         ORM_Model::JobGroup::storage().sync_schema();
     } catch (std::exception& e) { 
-        spdlog::warn(e.what());
-        spdlog::warn("数据库文件格式出错，将重新初始化所有数据");
+        spdlog::warn(GB2312ToUtf8(e.what()));
+        spdlog::warn(GB2312ToUtf8("数据库文件格式出错，将重新初始化所有数据"));
         try {
             fs::remove(".\\" ORM_DB_NAME);
         }

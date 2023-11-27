@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <regex>
+#include <Model/UserModel.h>
 
 float PointToSegDist(float x, float y, float x1, float y1, float x2, float y2) {
     float cross = (x2 - x1) * (x - x1) + (y2 - y1) * (y - y1);
@@ -225,13 +226,13 @@ std::wstring WStringFromString(std::string str) {
 std::string GB2312ToUtf8(std::string gb2312) {
     char buf[1024] = {};
     int  len       = GB2312ToUtf8(gb2312.c_str(), buf);
-    return std::string(buf, len);
+    return std::string(buf, len-1);
 }
 
 std::string Utf8ToGB2312(std::string utf8) {
     char buf[1024] = {};
     int  len       = Utf8ToGB2312(utf8.c_str(), buf);
-    return std::string(buf, len);
+    return std::string(buf, len-1);
 }
 
 // GB2312到UTF-8的转换
@@ -361,7 +362,7 @@ std::tuple<string, string, string> GetLatestReleaseNote(std::string github_api_u
             }
         }
         return std::tuple<string, string, string>(root["tag_name"].asString(), root["body"].asString(), url);
-    } catch (std::exception& e) { spdlog::error(e.what()); }
+    } catch (std::exception& e) { spdlog::error(GB2312ToUtf8(e.what())); }
 
     return std::tuple<string, string, string>();
 }
@@ -386,7 +387,7 @@ bool WordTemplateRender(std::wstring templateName, std::wstring fileName, std::m
         string      str = run.get_text();
         if (std::regex_search(str, match, reg)) {
             string newStr = std::regex_replace(str, reg, var[(match[1].str())]);
-            spdlog::debug("replace {} ---> {}", match[1].str(), var[match[1].str()]);
+            spdlog::debug("replace {: ^24} ---> {: ^24}", match[1].str(), var[match[1].str()]);
             run.set_text(newStr);
         }
     };
@@ -416,11 +417,23 @@ ORM_Model::SystemConfig GetSystemConfig() {
     try {
         return ORM_Model::SystemConfig::storage().get<ORM_Model::SystemConfig>(1);
     } catch (std::exception&) {
-        spdlog::warn("不能加载默认的系统配置, 将初始化为默认值。");
+        spdlog::warn(GB2312ToUtf8("不能加载默认的系统配置, 将初始化为默认值。"));
         ORM_Model::SystemConfig config = {};
         config.id                      = 1;
-        config.groupName               = _T(DB_DIRECTORIES_PREFIX);
+        config.groupName               = _T(DB_UNNAMED_GROUP);
+        config.userName                = _T(DB_UNNAMED_USER);
         ORM_Model::SystemConfig::storage().insert(config);
+        try {
+            ORM_Model::JobGroup jobGroup;
+            jobGroup.groupName = _T(DB_UNNAMED_GROUP);
+            ORM_Model::JobGroup::storage().insert(jobGroup);
+            ORM_Model::User user;
+            user.name = _T(DB_UNNAMED_USER);
+            ORM_Model::User::storage().insert(user);
+        }
+        catch (std::exception& e) { 
+            spdlog::error(GB2312ToUtf8(e.what()));
+        }
         return GetSystemConfig();
     }
 }

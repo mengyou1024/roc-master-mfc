@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window size="1280,900" caption="5,5,5,52" sizebox="10,10,10,10">
+<Window size="560,320" caption="5,5,5,52" sizebox="10,10,10,10">
 	<Font name="楷体" size="14" default="true" />
 	<Font name="楷体" size="18" />
 	<Font name="楷体" size="24" />
@@ -16,7 +16,7 @@
 
 	<VerticalLayout bkcolor="0xFFFEFEFE" bordersize="1" bordercolor="0xFFDDDDDD">
 		<HorizontalLayout height="34">
-			<Label text="设置" font="0" bkimage="file='Theme\Button\union.png' dest='2,2,34,34'" textpadding="34,0,0,0" align="left" valign="center" />
+			<Label text="硬件接口" font="0" bkimage="file='Theme\Button\union.png' dest='2,2,34,34'" textpadding="34,0,0,0" align="left" valign="center" />
 			<HorizontalLayout visible="true" width="95">
 				<Button float="true" pos="0,0,0,0" name="minbtn" tooltip="最小化" width="28" height="19" bkcolor="" normalimage="Theme\Button\btn_mini_normal.png" hotimage="Theme\Button\btn_mini_highlight.png" pushedimage="Theme\Button\btn_mini_down.png" />
 				<Button float="true" pos="29,0,0,0" name="maxbtn" tooltip="最大化" width="28" height="19" bkcolor="" normalimage="Theme\Button\btn_max_normal.png" hotimage="Theme\Button\btn_max_highlight.png" pushedimage="Theme\Button\btn_max_down.png" />
@@ -26,36 +26,67 @@
 		</HorizontalLayout>
 		<VerticalLayout bkimage="Theme\Line\v_line.png" height="1" />
 		<VerticalLayout inset="10,15,10,10">
-			<HorizontalLayout inset="10,10,10,10">
-				<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
-				</VerticalLayout>
-				<Label text="检测方式" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="60" height="20" />
-			</HorizontalLayout>
-			<HorizontalLayout inset="10,10,10,10">
-				<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
-				</VerticalLayout>
-				<Label text="保存探伤记录" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="90" height="20" />
-			</HorizontalLayout>
-			<HorizontalLayout inset="10,10,10,10">
-				<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
-				</VerticalLayout>
-				<Label text="钢管规格" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="60" height="20" />
-			</HorizontalLayout>
-			<HorizontalLayout inset="10,10,10,10">
-				<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
-				</VerticalLayout>
-				<Label text="探架延迟设置" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="90" height="20" />
-			</HorizontalLayout>
-			<HorizontalLayout inset="10,10,10,10">
-				<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
-				</VerticalLayout>
-				<Label text="主板卡" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="45" height="20" />
-			</HorizontalLayout>
-			<HorizontalLayout inset="10,10,10,10">
-				<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
-				</VerticalLayout>
-				<Label text="带状图显示模式" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="105" height="20" />
-			</HorizontalLayout>
+			<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
+				<HorizontalLayout height="32">
+					<Label />
+					<Label text="读写Bit" width="120" />
+					<HorizontalLayout width="20" />
+					<Edit name="EditBit" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+					<HorizontalLayout width="20" />
+					<Button name="BtnBitRead" text="读取" width="80" height="32" />
+					<HorizontalLayout width="20" />
+					<Button name="BtnBitWrite" text="写入" width="80" height="32" />
+					<Label />
+				</HorizontalLayout>
+				<HorizontalLayout height="16"/>
+				<HorizontalLayout height="32">
+					<Label />
+					<Label text="读写Float" width="120" />
+					<HorizontalLayout width="20" />
+					<Edit name="EditFloat" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+					<HorizontalLayout width="20" />
+					<Button name="BtnFloatRead" text="读取" width="80" height="32" />
+					<HorizontalLayout width="20" />
+					<Button name="BtnFloatWrite" text="写入" width="80" height="32" />
+					<Label />
+				</HorizontalLayout>
+				<HorizontalLayout height="16"/>
+				<HorizontalLayout height="32">
+					<Label />
+					<Label text="读写int8" width="120" />
+					<HorizontalLayout width="20" />
+					<Edit name="EditInt8" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+					<HorizontalLayout width="20" />
+					<Button name="BtnInt8Read" text="读取" width="80" height="32" />
+					<HorizontalLayout width="20" />
+					<Button name="BtnInt8Write" text="写入" width="80" height="32" />
+					<Label />
+				</HorizontalLayout>
+				<HorizontalLayout height="16"/>
+				<HorizontalLayout height="32">
+					<Label />
+					<Label text="读写int16" width="120" />
+					<HorizontalLayout width="20" />
+					<Edit name="EditInt16" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+					<HorizontalLayout width="20" />
+					<Button name="BtnInt16Read" text="读取" width="80" height="32" />
+					<HorizontalLayout width="20" />
+					<Button name="BtnInt16Write" text="写入" width="80" height="32" />
+					<Label />
+				</HorizontalLayout>
+				<HorizontalLayout height="16"/>
+				<HorizontalLayout height="32">
+					<Label />
+					<Label text="读写int32" width="120" />
+					<HorizontalLayout width="20" />
+					<Edit name="EditInt32" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+					<HorizontalLayout width="20" />
+					<Button name="BtnInt32Read" text="读取" width="80" height="32" />
+					<HorizontalLayout width="20" />
+					<Button name="BtnInt32Write" text="写入" width="80" height="32" />
+					<Label />
+				</HorizontalLayout>
+			</VerticalLayout>
 		</VerticalLayout>
 	</VerticalLayout>
 </Window>

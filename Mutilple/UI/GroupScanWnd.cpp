@@ -8,6 +8,7 @@
 #include "SettingWnd.h"
 #include "Version.h"
 #include <BusyWnd.h>
+#include <HardWareWnd.h>
 #include <MeshAscan.h>
 #include <MeshGroupCScan.h>
 #include <Model.h>
@@ -22,6 +23,7 @@
 #include <regex>
 #include <rttr/type.h>
 #include <sstream>
+
 using rttr::array_range;
 using rttr::property;
 using rttr::type;
@@ -55,6 +57,7 @@ using sqlite_orm::where;
 
 GroupScanWnd::GroupScanWnd() {
     try {
+        mSystemConfig = GetSystemConfig();
         auto config = TOFDUSBPort::storage().get_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == std::wstring(SCAN_CONFIG_LAST)));
         if (config.size() == 1) {
             if (config[0].isValid) {
@@ -70,11 +73,20 @@ GroupScanWnd::GroupScanWnd() {
             mUtils = std::make_unique<HD_Utils>(std::make_unique<TOFDUSBPort>());
             mUtils->getBridge()->defaultInit();
         }
-    } catch (std::exception &e) { spdlog::error(e.what()); }
+        auto detectInfos = ORM_Model::DetectInfo::storage().get_all<ORM_Model::DetectInfo>();
+        if (detectInfos.size() == 1) {
+            mDetectInfo = detectInfos[0];
+        }
+    } catch (std::exception &e) { spdlog::error(GB2312ToUtf8(e.what())); }
 }
 
 GroupScanWnd::~GroupScanWnd() {
     try {
+        // 退出前停止扫查并且退出回放模式
+        StopScan(true);
+        if (mWidgetMode == WidgetMode::MODE_REVIEW) {
+            ExitReviewMode();
+        }
         auto tick    = GetTickCount64();
         auto bridges = TOFDUSBPort::storage().get_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == std::wstring(SCAN_CONFIG_LAST)));
         if (bridges.size() == 1) {
@@ -86,8 +98,16 @@ GroupScanWnd::~GroupScanWnd() {
             mUtils->getBridge<TOFDUSBPort *>()->isValid = true;
             TOFDUSBPort::storage().insert(*(mUtils->getBridge<TOFDUSBPort *>()));
         }
+        auto detectInfos = ORM_Model::DetectInfo::storage().get_all<ORM_Model::DetectInfo>();
+        if (detectInfos.size() == 1) {
+            mDetectInfo.id = 1;
+            ORM_Model::DetectInfo::storage().update(mDetectInfo);
+        } else {
+            ORM_Model::DetectInfo::storage().insert(mDetectInfo);
+        }
         spdlog::debug("take time: {}", GetTickCount64() - tick);
-    } catch (std::exception &e) { spdlog::error(e.what()); }
+        UpdateSystemConfig(mSystemConfig);
+    } catch (std::exception &e) { spdlog::error(GB2312ToUtf8(e.what())); }
 }
 
 void GroupScanWnd::OnBtnModelClicked(std::wstring name) {
@@ -567,14 +587,18 @@ void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
         DetectionInformationEntryWnd wnd;
         wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
         wnd.CenterWindow();
+        wnd.LoadDetectInfo(mDetectInfo, mSystemConfig.userName, mSystemConfig.groupName);
         wnd.ShowModal();
         if (wnd.GetResult()) {
-            mUser            = wnd.GetUser();
-            mDetectInfo      = wnd.GetDetectInfo();
-            auto config      = GetSystemConfig();
-            config.groupName = wnd.GetJobGroup().groupName;
-            UpdateSystemConfig(config);
+            mDetectInfo             = wnd.GetDetectInfo();
+            mSystemConfig.groupName = wnd.GetJobGroup().groupName;
+            mSystemConfig.userName  = wnd.GetUser().name;
         }
+    } else if (name == _T("HardPort")) {
+        HardWareWnd wnd;
+        wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
+        wnd.CenterWindow();
+        wnd.ShowModal();
     }
 }
 
@@ -635,7 +659,7 @@ void GroupScanWnd::Notify(TNotifyUI &msg) {
         if (msg.pSender->GetName() == _T("BtnExportReport")) {
             std::map<string, string> valueMap = {};
             valueMap["jobGroup"]              = GetJobGroup();
-            valueMap["user"]                  = StringFromWString(mUser.name);
+            valueMap["user"]                  = StringFromWString(mSystemConfig.userName);
             for (const auto &prot : type::get<ORM_Model::DetectInfo>().get_properties()) {
                 valueMap[string(prot.get_name())] = StringFromWString(prot.get_value(mDetectInfo).convert<std::wstring>());
             }
@@ -650,11 +674,16 @@ void GroupScanWnd::Notify(TNotifyUI &msg) {
             }
 
         } else if (msg.pSender->GetName() == _T("BtnDetectInformation")) {
-            DetectionInformationEntryWnd wnd(true);
+            DetectionInformationEntryWnd wnd;
             wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
-            wnd.LoadDetectInfo(mDetectInfo, mUser.name, GetSystemConfig().groupName);
+            wnd.LoadDetectInfo(mDetectInfo, mSystemConfig.userName, mSystemConfig.groupName);
             wnd.CenterWindow();
             wnd.ShowModal();
+            if (wnd.GetResult()) {
+                mDetectInfo             = wnd.GetDetectInfo();
+                mSystemConfig.groupName = wnd.GetJobGroup().groupName;
+                mSystemConfig.userName  = wnd.GetUser().name;
+            }
         }
 
         UpdateSliderAndEditValue(_currentGroup, _configType, _gateType, _channelSel);
@@ -969,11 +998,12 @@ void GroupScanWnd::EnterReviewMode(std::string name) {
     auto tick = GetTickCount64();
     // 存放回调函数
     mUtils->pushCallback();
+    // 保存配置信息备份
+    mDetectInfoBak   = mDetectInfo;
+    mSystemConfigBak = mSystemConfig;
     // 读取并加载数据
-    mUser                  = ORM_Model::User::storage(name).get<ORM_Model::User>(1);
     mDetectInfo            = ORM_Model::DetectInfo::storage(name).get<ORM_Model::DetectInfo>(1);
-    auto systemConfig      = GetSystemConfig();
-    systemConfig.groupName = ORM_Model::JobGroup::storage(name).get<ORM_Model::JobGroup>(1).groupName;
+    mSystemConfig.groupName = ORM_Model::JobGroup::storage(name).get<ORM_Model::JobGroup>(1).groupName;
     mReviewData            = HD_Utils::storage(name).get_all<HD_Utils>();
     spdlog::info("load:{}, frame:{}", name, mReviewData.size());
     // 删除所有通道的C扫数据
@@ -1041,6 +1071,8 @@ void GroupScanWnd::ExitReviewMode() {
         cMesh->RemoveDot();
         mesh->UpdateGate(2, 1, mGateScan[i].pos, mGateScan[i].width, mGateScan[i].height);
     }
+    mDetectInfo = mDetectInfoBak;
+    UpdateSystemConfig(mSystemConfigBak);
     mWidgetMode = WidgetMode::MODE_SCAN;
 }
 
@@ -1085,11 +1117,13 @@ void GroupScanWnd::StartScan(bool changeFlag) {
                 ORM_Model::DetectInfo::storage(path).sync_schema();
                 ORM_Model::DetectInfo::storage(path).insert(mDetectInfo);
                 ORM_Model::User::storage(path).sync_schema();
-                ORM_Model::User::storage(path).insert(mUser);
+                ORM_Model::User user;
+                user.name = mSystemConfig.userName;
+                ORM_Model::User::storage(path).insert(user);
                 ORM_Model::ScanRecord::storage(path).sync_schema();
                 ORM_Model::JobGroup::storage(path).sync_schema();
                 ORM_Model::JobGroup jobgroup = {};
-                jobgroup.groupName           = GetSystemConfig().groupName;
+                jobgroup.groupName           = mSystemConfig.groupName;
                 ORM_Model::JobGroup::storage(path).insert(jobgroup);
                 mReviewData.clear();
                 mRecordCount = 0;
@@ -1097,7 +1131,7 @@ void GroupScanWnd::StartScan(bool changeFlag) {
                 mScanningFlag = true;
                 SetTimer(CSCAN_UPDATE, 1000 / mSamplesPerSecond);
             } catch (std::exception &e) {
-                spdlog::warn(e.what());
+                spdlog::warn(GB2312ToUtf8(e.what()));
                 DMessageBox(L"请勿快速点击扫查按钮");
             }
         }

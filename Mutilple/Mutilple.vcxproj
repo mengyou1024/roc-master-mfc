@@ -367,6 +367,7 @@ del $(SolutionDir)Mutilple\res\Theme.zip
     <ClInclude Include="UI\DMessageBox.h" />
     <ClInclude Include="UI\DuiWindowBase.h" />
     <ClInclude Include="UI\GroupScanWnd.h" />
+    <ClInclude Include="UI\HardWareWnd.h" />
     <ClInclude Include="UI\InputDialogWnd.h" />
     <ClInclude Include="UI\ParamManagementWnd.h" />
     <ClInclude Include="UI\RecordSelectWnd.h" />
@@ -494,6 +495,12 @@ del $(SolutionDir)Mutilple\res\Theme.zip
     <ClCompile Include="UI\DMessageBox.cpp" />
     <ClCompile Include="UI\DuiWindowBase.cpp" />
     <ClCompile Include="UI\GroupScanWnd.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="UI\HardWareWnd.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

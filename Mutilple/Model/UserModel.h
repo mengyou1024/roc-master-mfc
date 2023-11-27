@@ -30,8 +30,8 @@ namespace ORM_Model {
         bool isLogin = false; ///< ÊÇ·ñµÇÂ¼
 
         static auto storage(string name) {
-            return make_storage(
-                name, make_table("User", make_column("ID", &User::id, primary_key().autoincrement()), make_column("NAME", &User::name)));
+            return make_storage(name, make_table("User", make_column("ID", &User::id, primary_key().autoincrement()),
+                                                 make_column("NAME", &User::name, unique())));
         }
 
         static auto storage(void) {

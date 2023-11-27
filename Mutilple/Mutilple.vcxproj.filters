@@ -231,6 +231,9 @@
     <ClInclude Include="AbsPLCIntf.h">
       <Filter>Header Files\PLC</Filter>
     </ClInclude>
+    <ClInclude Include="UI\HardWareWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Mutilple.cpp">
@@ -355,6 +358,9 @@
     </ClCompile>
     <ClCompile Include="AbsPLCIntf.cpp">
       <Filter>Source Files\PLC</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\HardWareWnd.cpp">
+      <Filter>Source Files\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -15,8 +15,8 @@
 #include <functional>
 #include <memory>
 #include <stack>
-#include <vector>
 #include <tuple>
+#include <vector>
 
 using std::bitset;
 using std::invoke;
@@ -28,9 +28,9 @@ using std::pair;
 using std::shared_ptr;
 using std::stack;
 using std::string;
+using std::tuple;
 using std::unique_ptr;
 using std::vector;
-using std::tuple;
 
 // OpenEW
 #define GLEW_STATIC
@@ -54,14 +54,18 @@ using std::tuple;
 using ::CPoint;
 using ::CSize;
 
+#include <Version.h>
+#include <curl/curl.h>
+#include <json/json.h>
 #include <spdlog/spdlog.h>
 #include <sqlite_orm.h>
-#include <json/json.h>
-#include <curl/curl.h>
-#include <Version.h>
 
-#ifndef DB_DIRECTORIES_PREFIX
-    #define DB_DIRECTORIES_PREFIX "Î´ÃüÃû"
+#ifndef DB_UNNAMED_GROUP
+    #define DB_UNNAMED_GROUP "Î´ÃüÃû"
+#endif
+
+#ifndef DB_UNNAMED_USER
+    #define DB_UNNAMED_USER "Î´ÃüÃû"
 #endif
 
 #ifndef SCAN_DATA_DIR_NAME
