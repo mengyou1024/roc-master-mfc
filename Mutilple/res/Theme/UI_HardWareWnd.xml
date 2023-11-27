@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window size="560,320" caption="5,5,5,52" sizebox="10,10,10,10">
+<Window size="560,360" caption="5,5,5,52" sizebox="10,10,10,10">
 	<Font name="楷体" size="14" default="true" />
 	<Font name="楷体" size="18" />
 	<Font name="楷体" size="24" />
@@ -27,63 +27,43 @@
 		<VerticalLayout bkimage="Theme\Line\v_line.png" height="1" />
 		<VerticalLayout inset="10,15,10,10">
 			<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
+				<HorizontalLayout height="60" />
 				<HorizontalLayout height="32">
 					<Label />
-					<Label text="读写Bit" width="120" />
-					<HorizontalLayout width="20" />
-					<Edit name="EditBit" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
-					<HorizontalLayout width="20" />
+					<Label text="IP:" valign="center" width="60" />
+					<Edit name="EditIpAddr" bordersize="1" align="center" bordercolor="0x7F7F7F7F" width="120" />
+					<HorizontalLayout width="15" />
+					<Button name="BtnConnectToPLC" text="连接" width="60" />
+					<HorizontalLayout width="15" />
+					<Option name="OptIsConnected" enabled="false" width="32" selectedimage="Theme\Option\indicatorLight_selected.jpg" normalimage="Theme\Option\indicatorLight_normal.jpg" disabledtextcolor="0xFF000000" />
+					<Label />
+				</HorizontalLayout>
+				<HorizontalLayout height="16"/>
+				<HorizontalLayout height="32">
+					<Label />
+					<Label text="读写Bit" width="60" />
+					<HorizontalLayout width="10" />
+					<Edit name="EditBit" width="60" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+					<HorizontalLayout width="10" />
+					<Edit name="EditBitValue" width="60" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+					<HorizontalLayout width="10" />
 					<Button name="BtnBitRead" text="读取" width="80" height="32" />
-					<HorizontalLayout width="20" />
+					<HorizontalLayout width="10" />
 					<Button name="BtnBitWrite" text="写入" width="80" height="32" />
 					<Label />
 				</HorizontalLayout>
 				<HorizontalLayout height="16"/>
 				<HorizontalLayout height="32">
 					<Label />
-					<Label text="读写Float" width="120" />
-					<HorizontalLayout width="20" />
-					<Edit name="EditFloat" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
-					<HorizontalLayout width="20" />
+					<Label text="读写Float" width="60" />
+					<HorizontalLayout width="10" />
+					<Edit name="EditFloat" width="60" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+					<HorizontalLayout width="10" />
+					<Edit name="EditFloatValue" width="60" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+					<HorizontalLayout width="10" />
 					<Button name="BtnFloatRead" text="读取" width="80" height="32" />
-					<HorizontalLayout width="20" />
+					<HorizontalLayout width="10" />
 					<Button name="BtnFloatWrite" text="写入" width="80" height="32" />
-					<Label />
-				</HorizontalLayout>
-				<HorizontalLayout height="16"/>
-				<HorizontalLayout height="32">
-					<Label />
-					<Label text="读写int8" width="120" />
-					<HorizontalLayout width="20" />
-					<Edit name="EditInt8" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
-					<HorizontalLayout width="20" />
-					<Button name="BtnInt8Read" text="读取" width="80" height="32" />
-					<HorizontalLayout width="20" />
-					<Button name="BtnInt8Write" text="写入" width="80" height="32" />
-					<Label />
-				</HorizontalLayout>
-				<HorizontalLayout height="16"/>
-				<HorizontalLayout height="32">
-					<Label />
-					<Label text="读写int16" width="120" />
-					<HorizontalLayout width="20" />
-					<Edit name="EditInt16" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
-					<HorizontalLayout width="20" />
-					<Button name="BtnInt16Read" text="读取" width="80" height="32" />
-					<HorizontalLayout width="20" />
-					<Button name="BtnInt16Write" text="写入" width="80" height="32" />
-					<Label />
-				</HorizontalLayout>
-				<HorizontalLayout height="16"/>
-				<HorizontalLayout height="32">
-					<Label />
-					<Label text="读写int32" width="120" />
-					<HorizontalLayout width="20" />
-					<Edit name="EditInt32" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
-					<HorizontalLayout width="20" />
-					<Button name="BtnInt32Read" text="读取" width="80" height="32" />
-					<HorizontalLayout width="20" />
-					<Button name="BtnInt32Write" text="写入" width="80" height="32" />
 					<Label />
 				</HorizontalLayout>
 			</VerticalLayout>

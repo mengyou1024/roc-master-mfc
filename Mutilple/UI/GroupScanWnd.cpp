@@ -593,6 +593,7 @@ void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
             mDetectInfo             = wnd.GetDetectInfo();
             mSystemConfig.groupName = wnd.GetJobGroup().groupName;
             mSystemConfig.userName  = wnd.GetUser().name;
+            UpdateSystemConfig(mSystemConfig);
         }
     } else if (name == _T("HardPort")) {
         HardWareWnd wnd;
@@ -683,6 +684,7 @@ void GroupScanWnd::Notify(TNotifyUI &msg) {
                 mDetectInfo             = wnd.GetDetectInfo();
                 mSystemConfig.groupName = wnd.GetJobGroup().groupName;
                 mSystemConfig.userName  = wnd.GetUser().name;
+                UpdateSystemConfig(mSystemConfig);
             }
         }
 

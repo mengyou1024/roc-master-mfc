@@ -44,7 +44,6 @@ MainProcess::MainProcess() {
     spdlog::flush_on(spdlog::level::warn);
     spdlog::set_level(spdlog::level::info);
 #endif
-    AbsPLCIntf::connectTo();
 }
 
 MainProcess::~MainProcess() {
