@@ -248,9 +248,6 @@
     <ClCompile Include="snap7.cpp">
       <Filter>Source Files\PLC</Filter>
     </ClCompile>
-    <ClCompile Include="RuitiePLC.cpp">
-      <Filter>Source Files\PLC</Filter>
-    </ClCompile>
     <ClCompile Include="snap7.cpp">
       <Filter>Source Files\PLC</Filter>
     </ClCompile>

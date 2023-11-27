@@ -70,7 +70,7 @@ void MainProcess::InitStroage() {
         try {
             fs::remove(".\\" ORM_DB_NAME);
         }
-        catch (std::exception& e) {
+        catch (std::exception&) {
 
         }
 

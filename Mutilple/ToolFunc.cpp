@@ -415,7 +415,7 @@ bool WordTemplateRender(std::wstring templateName, std::wstring fileName, std::m
 ORM_Model::SystemConfig GetSystemConfig() {
     try {
         return ORM_Model::SystemConfig::storage().get<ORM_Model::SystemConfig>(1);
-    } catch (std::exception& e) {
+    } catch (std::exception&) {
         spdlog::warn("不能加载默认的系统配置, 将初始化为默认值。");
         ORM_Model::SystemConfig config = {};
         config.id                      = 1;

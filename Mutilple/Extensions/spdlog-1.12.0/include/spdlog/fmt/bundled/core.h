@@ -2312,7 +2312,7 @@ FMT_CONSTEXPR auto code_point_length(const Char* begin) -> int {
   // Compute the pointer to the next character early so that the next
   // iteration can start working on the next character. Neither Clang
   // nor GCC figure out this reordering on their own.
-  return len + !len;
+  return len + (len > 0 ? 0 : 1);
 }
 
 // Return the result via the out param to workaround gcc bug 77539.
@@ -2427,7 +2427,8 @@ FMT_CONSTEXPR auto do_parse_arg_id(const Char* begin, const Char* end,
   auto it = begin;
   do {
     ++it;
-  } while (it != end && (is_name_start(c = *it) || ('0' <= c && c <= '9')));
+    c = *it;
+  } while (it != end && (is_name_start(c) || ('0' <= c && c <= '9')));
   handler(basic_string_view<Char>(begin, to_unsigned(it - begin)));
   return it;
 }
