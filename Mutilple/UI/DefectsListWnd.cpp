@@ -2,8 +2,8 @@
 #include "ModelAScan.h"
 #include <HDBridge/TOFDPort.h>
 #include <InputDialogWnd.h>
-#include <regex>
 #include <Model/ScanRecord.h>
+#include <regex>
 
 using sqlite_orm::c;
 using sqlite_orm::column;
@@ -53,7 +53,7 @@ void DefectsListWnd::LoadDefectsList(std::string time) {
         auto path  = string(SCAN_DATA_DIR_NAME + GetJobGroup() + "/") + year + month + "/" + day;
         std::replace(path.begin(), path.end(), '/', '\\');
         path += "\\" + tm + ".db";
-        auto list = ORM_Model::ScanRecord::storage(path).get_all<ORM_Model::ScanRecord>();
+        auto list  = ORM_Model::ScanRecord::storage(path).get_all<ORM_Model::ScanRecord>();
         auto pList = static_cast<CListUI*>(m_PaintManager.FindControl(L"ListDefects"));
         pList->RemoveAll();
         for (auto& it : list) {

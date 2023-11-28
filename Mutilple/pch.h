@@ -60,6 +60,7 @@ using ::CSize;
 #include <spdlog/spdlog.h>
 #include <sqlite_orm.h>
 
+
 #ifndef DB_UNNAMED_GROUP
     #define DB_UNNAMED_GROUP "未命名"
 #endif
@@ -71,5 +72,13 @@ using ::CSize;
 #ifndef SCAN_DATA_DIR_NAME
     #define SCAN_DATA_DIR_NAME "Data/"
 #endif // !SCAN_DATA_DIR_NAME
+
+// 是否检查程序更新
+#ifndef APP_CHECK_UPDATE
+    #define APP_CHECK_UPDATE 0
+#endif 
+
+#include "MainProcess.h"
+extern MainProcess g_MainProcess;
 
 #endif // PCH_H

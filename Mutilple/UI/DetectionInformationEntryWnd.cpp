@@ -1,8 +1,8 @@
 #include "DetectionInformationEntryWnd.h"
 #include "ModelAScan.h"
+#include <filesystem>
 #include <regex>
 #include <rttr/type.h>
-#include <filesystem>
 
 namespace fs = std::filesystem;
 
@@ -64,10 +64,10 @@ void DetectionInformationEntryWnd::Notify(TNotifyUI& msg) {
             } catch (std::exception& e) { spdlog::warn(GB2312ToUtf8(e.what())); }
         } else if (msg.pSender->GetName() == L"BtnJobGroupDel") {
             try {
-                auto list = static_cast<CListUI*>(m_PaintManager.FindControl(L"ListJobGroupList"));
+                auto         list = static_cast<CListUI*>(m_PaintManager.FindControl(L"ListJobGroupList"));
                 std::wstring groupDirName;
                 if (list->GetCurSel() >= 0) {
-                    auto item = static_cast<CListTextElementUI*>(list->GetItemAt(list->GetCurSel()));
+                    auto item    = static_cast<CListTextElementUI*>(list->GetItemAt(list->GetCurSel()));
                     groupDirName = std::wstring(item->GetText(0));
                     JobGroup::storage().remove_all<JobGroup>(where(c(&::JobGroup::groupName) == groupDirName));
                 }

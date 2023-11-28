@@ -5,11 +5,11 @@
 #include <HDBridge.h>
 #include <HDBridge/TOFDPort.h>
 #include <HDBridge/Utils.h>
+#include <Model/DefectInfo.h>
 #include <Model/DetectInfo.h>
 #include <Model/ScanRecord.h>
 #include <Model/SystemConfig.h>
 #include <Model/UserModel.h>
-#include <Model/DefectInfo.h>
 #include <map>
 #include <memory>
 
@@ -79,7 +79,7 @@ private:
 
     /// Edit控件显示的单位文本
     const static inline std::map<ConfigType, CString> mConfigTextext = {
-        {ConfigType::DetectRange, _T("")  },
+        {ConfigType::DetectRange, _T("mm")},
         {ConfigType::Gain,        _T("dB")},
         {ConfigType::GateStart,   _T("%") },
         {ConfigType::GateWidth,   _T("%") },
@@ -112,8 +112,6 @@ private:
         {ConfigType::GateHeight,  0.1},
     };
 
-    bool mScanningFlag = false;
-
     constexpr static auto BTN_SELECT_GROUP_MAX = 3;
 
     /**
@@ -139,12 +137,12 @@ private:
     int                                       mRecordCount       = {};                      ///< 扫查数据计数
     std::vector<ORM_Model::ScanRecord>        mScanRecordCache   = {};                      ///< 扫查记录缓存(缺陷)
     DetectionStateMachine                     mDetectionSM       = {};                      ///< 探伤的状态机
-    ORM_Model::SystemConfig                   mSystemConfig      = {};                      ///< 系统配置
     std::vector<ORM_Model::DefectInfo>        mDefectInfo        = {};                      ///< 探伤缺陷
+    bool                                      mScanningFlag      = false;                   ///< 判断当前是否正在扫查
 
     // 参数备份
-    ORM_Model::DetectInfo   mDetectInfoBak   = {};
-    ORM_Model::SystemConfig mSystemConfigBak = {};
+    ORM_Model::DetectInfo mDetectInfoBak   = {};
+    std::wstring          mJobGroupNameBak = {};
 
     /**
      * @brief 选组按钮单击回调函数
@@ -255,6 +253,12 @@ private:
      * @param channel 通道号
      */
     void SaveDefectEndID(int channel);
+
+    /**
+     * @brief 检查并更新
+     * @param showNoUpdate 无更新可用时是否显示窗口
+     */
+    void CheckAndUpdate(bool showNoUpdate = false);
 };
 
 #pragma pop_macro("GATE_A")

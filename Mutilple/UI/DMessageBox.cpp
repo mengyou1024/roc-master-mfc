@@ -8,8 +8,7 @@ CDMessageBox::CDMessageBox(LPCTSTR lpStr, LPCTSTR lpTitle, UINT iType) {
     m_iType   = iType;
 }
 
-CDMessageBox::~CDMessageBox(void) {
-}
+CDMessageBox::~CDMessageBox(void) {}
 
 LRESULT CDMessageBox::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {

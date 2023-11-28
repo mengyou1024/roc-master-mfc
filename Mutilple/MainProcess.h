@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <Model/SystemConfig.h>
 
 class MainProcess {
@@ -8,10 +9,11 @@ public:
     ~MainProcess();
 
     void InitStroage();
+    void RegistFuncOnDestory(std::function<void(void)> func);
 
-public:
+private:
+    std::vector<std::function<void(void)>> mFuncWhenDestory = {};
 #if _DEBUG
     FILE *mFile = nullptr;
 #endif
-    MAINPROCESS_TYPE m_enumMainProType = {};
 };

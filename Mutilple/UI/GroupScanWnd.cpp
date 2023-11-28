@@ -57,8 +57,7 @@ using sqlite_orm::where;
 
 GroupScanWnd::GroupScanWnd() {
     try {
-        mSystemConfig = GetSystemConfig();
-        auto config   = TOFDUSBPort::storage().get_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == std::wstring(SCAN_CONFIG_LAST)));
+        auto config = TOFDUSBPort::storage().get_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == std::wstring(SCAN_CONFIG_LAST)));
         if (config.size() == 1) {
             if (config[0].isValid) {
                 mUtils = std::make_unique<HD_Utils>(std::make_unique<TOFDUSBPort>(config[0]));
@@ -106,7 +105,6 @@ GroupScanWnd::~GroupScanWnd() {
             ORM_Model::DetectInfo::storage().insert(mDetectInfo);
         }
         spdlog::debug("take time: {}", GetTickCount64() - tick);
-        UpdateSystemConfig(mSystemConfig);
     } catch (std::exception &e) { spdlog::error(GB2312ToUtf8(e.what())); }
 }
 
@@ -192,27 +190,7 @@ void GroupScanWnd::InitOnThread() {
     mUtils->start();
     auto model = static_cast<ModelGroupAScan *>(m_OpenGL_ASCAN.m_pModel[0]);
     mUtils->addReadCallback(std::bind(&GroupScanWnd::UpdateAScanCallback, this, std::placeholders::_1, std::placeholders::_2));
-    // #ifndef _DEBUG
-    //     auto [tag, body, url] = GetLatestReleaseNote("https://api.github.com/repos/mengyou1024/roc-master-mfc/releases/latest");
-    //     if (Check4Update("v0.0", tag)) {
-    //         std::wstring wBody  = WStringFromString(body);
-    //         std::wstring wTitle = std::wstring(L"更新可用:") + WStringFromString(tag);
-    //         auto         ret    = DMessageBox(wBody.data(), wTitle.data(), MB_YESNO);
-    //         spdlog::debug("ret = {}", ret);
-    //         spdlog::info("tag: {}\n body: {} \n url: {}", tag, body, url);
-    //         FILE *fp   = fopen("./upgrade.exe", "wb");
-    //         CURL *curl = curl_easy_init();
-    //         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
-    //         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-    //         curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
-    //         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, fwrite);
-    //         CURLcode result = curl_easy_perform(curl);
-    //         fclose(fp);
-    //         curl_easy_cleanup(curl);
-    //         auto aret = system(".\\upgrade.exe /verysilent /suppressmsgboxes");
-    //         spdlog::info("ret={}", aret);
-    //     }
-    // #endif // !_DEBUG
+    CheckAndUpdate();
 }
 
 void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig, GateType newGate, ChannelSel newChannelSel,
@@ -587,13 +565,14 @@ void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
         DetectionInformationEntryWnd wnd;
         wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
         wnd.CenterWindow();
-        wnd.LoadDetectInfo(mDetectInfo, mSystemConfig.userName, mSystemConfig.groupName);
+        wnd.LoadDetectInfo(mDetectInfo, GetSystemConfig().userName, GetSystemConfig().groupName);
         wnd.ShowModal();
         if (wnd.GetResult()) {
-            mDetectInfo             = wnd.GetDetectInfo();
-            mSystemConfig.groupName = wnd.GetJobGroup().groupName;
-            mSystemConfig.userName  = wnd.GetUser().name;
-            UpdateSystemConfig(mSystemConfig);
+            mDetectInfo            = wnd.GetDetectInfo();
+            auto systemConfig      = GetSystemConfig();
+            systemConfig.groupName = wnd.GetJobGroup().groupName;
+            systemConfig.userName  = wnd.GetUser().name;
+            UpdateSystemConfig(systemConfig);
         }
     } else if (name == _T("HardPort")) {
         HardWareWnd wnd;
@@ -660,7 +639,7 @@ void GroupScanWnd::Notify(TNotifyUI &msg) {
         if (msg.pSender->GetName() == _T("BtnExportReport")) {
             std::map<string, string> valueMap = {};
             valueMap["jobGroup"]              = GetJobGroup();
-            valueMap["user"]                  = StringFromWString(mSystemConfig.userName);
+            valueMap["user"]                  = StringFromWString(GetSystemConfig().userName);
             for (const auto &prot : type::get<ORM_Model::DetectInfo>().get_properties()) {
                 valueMap[string(prot.get_name())] = StringFromWString(prot.get_value(mDetectInfo).convert<std::wstring>());
             }
@@ -688,11 +667,12 @@ void GroupScanWnd::Notify(TNotifyUI &msg) {
         } else if (msg.pSender->GetName() == _T("BtnDetectInformation")) {
             DetectionInformationEntryWnd wnd;
             wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
-            wnd.LoadDetectInfo(mDetectInfo, mSystemConfig.userName, mSystemConfig.groupName);
+            wnd.LoadDetectInfo(mDetectInfo, GetSystemConfig().userName, GetSystemConfig().groupName);
             wnd.CenterWindow();
             wnd.ShowModal();
             if (wnd.GetResult()) {
                 mDetectInfo             = wnd.GetDetectInfo();
+                auto mSystemConfig      = GetSystemConfig();
                 mSystemConfig.groupName = wnd.GetJobGroup().groupName;
                 mSystemConfig.userName  = wnd.GetUser().name;
                 UpdateSystemConfig(mSystemConfig);
@@ -975,6 +955,70 @@ void GroupScanWnd::SaveDefectEndID(int channel) {
     scanRecord.endID = mRecordCount + (int)mReviewData.size();
 }
 
+void GroupScanWnd::CheckAndUpdate(bool showNoUpdate) {
+#if !defined(_DEBUG) && APP_CHECK_UPDATE
+    if (!GetSystemConfig().checkUpdate) {
+        return;
+    }
+    auto [tag, body, url] = GetLatestReleaseNote("https://api.github.com/repos/mengyou1024/roc-master-mfc/releases/latest");
+    if (Check4Update("v0.0", tag)) {
+        std::wstring wBody  = WStringFromString(body);
+        std::wstring wTitle = std::wstring(L"更新可用:") + WStringFromString(tag);
+        auto         ret    = DMessageBox(
+            (std::wstring(APP_VERSIONW) + L"--->" + WStringFromString(tag) + L"\n\n是:立即更新\n否:关闭程序后更新\n右上角叉:不进行更新")
+                .data(),
+            wTitle.data(), MB_YESNO);
+        spdlog::info("tag: {}\n body: {} \n url: {}", tag, body, url);
+        if (ret == 0x6 || ret == 0x2) {
+            spdlog::debug("ret = {}", ret);
+            CURLcode result = CURL_LAST;
+            BusyWnd  wnd([url, &result]() {
+                FILE *fp     = fopen("./newVersion.exe", "wb");
+                CURL *curl   = curl_easy_init();
+                auto  config = GetSystemConfig();
+                if (config.enableProxy) {
+                    curl_easy_setopt(curl, CURLOPT_PROXY, StringFromWString(config.httpProxy).c_str());
+                    curl_easy_setopt(curl, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+                    curl_easy_setopt(curl, CURLOPT_HTTPPROXYTUNNEL, 1);
+                }
+                curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+                curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+                curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+                curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, fwrite);
+                result = curl_easy_perform(curl);
+                fclose(fp);
+                curl_easy_cleanup(curl);
+            });
+            wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
+            wnd.ShowModal();
+            if (result != CURLE_OK) {
+                DMessageBox(L"下载文件失败");
+                spdlog::error(GB2312ToUtf8("下载更新文件失败"));
+                return;
+            }
+            g_MainProcess.RegistFuncOnDestory([]() -> void {
+                TCHAR path[MAX_PATH];
+                ZeroMemory(path, MAX_PATH);
+                GetModuleFileName(NULL, path, MAX_PATH);
+                CString strPath = path;
+                int     pos     = strPath.ReverseFind('\\');
+                strPath         = strPath.Left(pos);
+                CString strDir  = strPath;
+                strPath += _T("\\newVersion.exe");
+                ShellExecute(NULL, _T("open"), strPath, NULL, strDir, SW_HIDE);
+            });
+            if (ret == 0x6) {
+                Close();
+            }
+        }
+    } else {
+        if (showNoUpdate) {
+            DMessageBox(L"当前已是最新版本");
+        }
+    }
+#endif
+}
+
 void GroupScanWnd::SaveScanData() {
     // 保存当前扫查波门的位置信息
     for (int i = 0; i < HDBridge::CHANNEL_NUMBER; i++) {
@@ -1012,13 +1056,15 @@ void GroupScanWnd::EnterReviewMode(std::string name) {
     // 存放回调函数
     mUtils->pushCallback();
     // 保存配置信息备份
-    mDetectInfoBak   = mDetectInfo;
-    mSystemConfigBak = mSystemConfig;
+    mDetectInfoBak    = mDetectInfo;
+    auto systemConfig = GetSystemConfig();
+    mJobGroupNameBak  = systemConfig.groupName;
     // 读取并加载数据
-    mDetectInfo             = ORM_Model::DetectInfo::storage(name).get<ORM_Model::DetectInfo>(1);
-    mSystemConfig.groupName = ORM_Model::JobGroup::storage(name).get<ORM_Model::JobGroup>(1).groupName;
-    mReviewData             = HD_Utils::storage(name).get_all<HD_Utils>();
-    mDefectInfo             = ORM_Model::DefectInfo::storage(name).get_all<ORM_Model::DefectInfo>();
+    mDetectInfo            = ORM_Model::DetectInfo::storage(name).get<ORM_Model::DetectInfo>(1);
+    systemConfig.groupName = ORM_Model::JobGroup::storage(name).get<ORM_Model::JobGroup>(1).groupName;
+    mReviewData            = HD_Utils::storage(name).get_all<HD_Utils>();
+    mDefectInfo            = ORM_Model::DefectInfo::storage(name).get_all<ORM_Model::DefectInfo>();
+    UpdateSystemConfig(systemConfig);
     spdlog::info("load:{}, frame:{}", name, mReviewData.size());
     // 删除所有通道的C扫数据
     for (int index = 0; index < HDBridge::CHANNEL_NUMBER; index++) {
@@ -1085,8 +1131,10 @@ void GroupScanWnd::ExitReviewMode() {
         cMesh->RemoveDot();
         mesh->UpdateGate(2, 1, mGateScan[i].pos, mGateScan[i].width, mGateScan[i].height);
     }
-    mDetectInfo = mDetectInfoBak;
-    UpdateSystemConfig(mSystemConfigBak);
+    mDetectInfo            = mDetectInfoBak;
+    auto systemConfig      = GetSystemConfig();
+    systemConfig.groupName = mJobGroupNameBak;
+    UpdateSystemConfig(systemConfig);
     mWidgetMode = WidgetMode::MODE_SCAN;
 }
 
@@ -1132,12 +1180,12 @@ void GroupScanWnd::StartScan(bool changeFlag) {
                 ORM_Model::DetectInfo::storage(path).insert(mDetectInfo);
                 ORM_Model::User::storage(path).sync_schema();
                 ORM_Model::User user;
-                user.name = mSystemConfig.userName;
+                user.name = GetSystemConfig().userName;
                 ORM_Model::User::storage(path).insert(user);
                 ORM_Model::ScanRecord::storage(path).sync_schema();
                 ORM_Model::JobGroup::storage(path).sync_schema();
                 ORM_Model::JobGroup jobgroup = {};
-                jobgroup.groupName           = mSystemConfig.groupName;
+                jobgroup.groupName           = GetSystemConfig().groupName;
                 ORM_Model::JobGroup::storage(path).insert(jobgroup);
                 mReviewData.clear();
                 mRecordCount = 0;

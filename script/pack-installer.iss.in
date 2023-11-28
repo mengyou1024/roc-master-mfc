@@ -62,6 +62,7 @@ Source: "@CMAKE_SOURCE_DIR@/x64/Release/vcruntime140_1.dll"; DestDir: "{app}"
 Type: files; Name: "{app}/data.db"
 Type: filesandordirs; Name: "{app}/log"
 Type: filesandordirs; Name: "{app}/Data"
+Type: filesandordirs; Name: "{app}/newVersion.exe"
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

@@ -5,11 +5,9 @@
 #include "Mutilple.h"
 #include <iostream>
 
-CDuiWindowBase::CDuiWindowBase(void) {
-}
+CDuiWindowBase::CDuiWindowBase(void) {}
 
-CDuiWindowBase::~CDuiWindowBase(void) {
-}
+CDuiWindowBase::~CDuiWindowBase(void) {}
 
 void CDuiWindowBase::InitWindow() {
     WindowImplBase::InitWindow();
@@ -34,31 +32,31 @@ LRESULT CDuiWindowBase::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) {
         case WM_TIMER: {
             OnTimer((int)wParam);
             break;
-        } 
+        }
         case WM_LBUTTONDOWN: {
             OnLButtonDown(LOWORD(wParam), (::CPoint)lParam);
             break;
-        } 
+        }
         case WM_LBUTTONUP: {
             OnLButtonUp(LOWORD(wParam), (::CPoint)lParam);
             break;
-        } 
+        }
         case WM_RBUTTONDOWN: {
             OnRButtonDown(LOWORD(wParam), (::CPoint)lParam);
             break;
-        } 
+        }
         case WM_RBUTTONUP: {
             OnRButtonUp(LOWORD(wParam), (::CPoint)lParam);
             break;
-        } 
+        }
         case WM_LBUTTONDBLCLK: {
             OnLButtonDClick(LOWORD(wParam), (::CPoint)lParam);
             break;
-        } 
+        }
         case WM_MOUSEMOVE: {
             OnMouseMove(LOWORD(wParam), (::CPoint)lParam);
             break;
-        } 
+        }
         case WM_MOUSEWHEEL: {
             ::CPoint pt;
             pt.x = (short)LOWORD(lParam);
@@ -121,26 +119,18 @@ BOOL CDuiWindowBase::KillTimer(UINT_PTR iIDEvent) {
     return ::KillTimer(m_hWnd, iIDEvent);
 }
 
-void CDuiWindowBase::OnTimer(int iIdEvent) {
-}
+void CDuiWindowBase::OnTimer(int iIdEvent) {}
 
-void CDuiWindowBase::OnLButtonDown(UINT nFlags, ::CPoint pt) {
-}
+void CDuiWindowBase::OnLButtonDown(UINT nFlags, ::CPoint pt) {}
 
-void CDuiWindowBase::OnRButtonDown(UINT nFlags, ::CPoint pt) {
-}
+void CDuiWindowBase::OnRButtonDown(UINT nFlags, ::CPoint pt) {}
 
-void CDuiWindowBase::OnLButtonUp(UINT nFlags, ::CPoint pt) {
-}
+void CDuiWindowBase::OnLButtonUp(UINT nFlags, ::CPoint pt) {}
 
-void CDuiWindowBase::OnRButtonUp(UINT nFlags, ::CPoint pt) {
-}
+void CDuiWindowBase::OnRButtonUp(UINT nFlags, ::CPoint pt) {}
 
-void CDuiWindowBase::OnLButtonDClick(UINT nFlags, ::CPoint pt) {
-}
+void CDuiWindowBase::OnLButtonDClick(UINT nFlags, ::CPoint pt) {}
 
-void CDuiWindowBase::OnMouseMove(UINT nFlags, ::CPoint pt) {
-}
+void CDuiWindowBase::OnMouseMove(UINT nFlags, ::CPoint pt) {}
 
-void CDuiWindowBase::OnMouseWheel(UINT nFlags, short zDelta, ::CPoint pt) {
-}
+void CDuiWindowBase::OnMouseWheel(UINT nFlags, short zDelta, ::CPoint pt) {}

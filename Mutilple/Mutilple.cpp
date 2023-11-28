@@ -3,19 +3,17 @@
 //
 #include "pch.h"
 
-
 #include "Mutilple.h"
 #include "framework.h"
 
-
 #ifdef _DEBUG
 // #define new DEBUG_NEW
-    
+
     #define _CRTDBG_MAP_ALLOC
     #include <stdlib.h>
 
     #include <crtdbg.h>
-    //#define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
+// #define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
 #endif
 
 // CMutilpleApp
@@ -84,7 +82,7 @@ BOOL CMutilpleApp::InitInstance() {
     //_CrtSetBreakAlloc(2816);
     // 版本
     TITLE   = GetProfileString(_T("Application"), _T("Title"), _T("苏州罗克莱管材探伤机"));
-    VERSION = GetProfileString(_T("Application"), _T("Version"), _T("1.0.230710"));
+    VERSION = GetProfileString(_T("Application"), _T("Version"), _T(APP_VERSION));
 
     if (FAILED(::CoInitialize(NULL)))
         return 0;                                         // 初始化COM库

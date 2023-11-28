@@ -53,6 +53,9 @@ MainProcess::~MainProcess() {
     fclose(mFile);
 #endif
     spdlog::drop_all();
+    for (const auto& func : mFuncWhenDestory) {
+        func();
+    }
 }
 
 void MainProcess::InitStroage() {
@@ -74,4 +77,8 @@ void MainProcess::InitStroage() {
         }
 
     }
+}
+
+void MainProcess::RegistFuncOnDestory(std::function<void(void)> func) {
+    mFuncWhenDestory.push_back(func);
 }

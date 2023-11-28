@@ -107,7 +107,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;ORMPP_ENABLE_SQLITE3;ORM_DB_NAME="data.db";SPDLOG_WCHAR_TO_UTF8_SUPPORT;USE_SQLITE_ORM;USE_SPDLOG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;APP_CHECK_UPDATE=1;ORMPP_ENABLE_SQLITE3;ORM_DB_NAME="data.db";SPDLOG_WCHAR_TO_UTF8_SUPPORT;USE_SQLITE_ORM;USE_SPDLOG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -162,7 +162,7 @@ del $(SolutionDir)Mutilple\res\Theme.zip
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING;ORMPP_ENABLE_SQLITE3;ORM_DB_NAME="data.db";SPDLOG_WCHAR_TO_UTF8_SUPPORT;USE_SQLITE_ORM;USE_SPDLOG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;APP_CHECK_UPDATE=1;_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING;ORMPP_ENABLE_SQLITE3;ORM_DB_NAME="data.db";SPDLOG_WCHAR_TO_UTF8_SUPPORT;USE_SQLITE_ORM;USE_SPDLOG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -220,7 +220,7 @@ del $(SolutionDir)Mutilple\res\Theme.zip
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;ORMPP_ENABLE_SQLITE3;ORM_DB_NAME="data.db";SPDLOG_WCHAR_TO_UTF8_SUPPORT;USE_SQLITE_ORM;USE_SPDLOG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;APP_CHECK_UPDATE=1;ORMPP_ENABLE_SQLITE3;ORM_DB_NAME="data.db";SPDLOG_WCHAR_TO_UTF8_SUPPORT;USE_SQLITE_ORM;USE_SPDLOG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -278,7 +278,7 @@ del $(SolutionDir)Mutilple\res\Theme.zip
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;ORMPP_ENABLE_SQLITE3;ORM_DB_NAME="data.db";SPDLOG_WCHAR_TO_UTF8_SUPPORT;USE_SQLITE_ORM;USE_SPDLOG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;APP_CHECK_UPDATE=1;ORMPP_ENABLE_SQLITE3;ORM_DB_NAME="data.db";SPDLOG_WCHAR_TO_UTF8_SUPPORT;USE_SQLITE_ORM;USE_SPDLOG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
