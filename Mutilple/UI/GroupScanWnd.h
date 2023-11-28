@@ -9,6 +9,7 @@
 #include <Model/ScanRecord.h>
 #include <Model/SystemConfig.h>
 #include <Model/UserModel.h>
+#include <Model/DefectInfo.h>
 #include <map>
 #include <memory>
 
@@ -139,6 +140,7 @@ private:
     std::vector<ORM_Model::ScanRecord>        mScanRecordCache   = {};                      ///< É¨²é¼ÇÂ¼»º´æ(È±ÏÝ)
     DetectionStateMachine                     mDetectionSM       = {};                      ///< Ì½ÉËµÄ×´Ì¬»ú
     ORM_Model::SystemConfig                   mSystemConfig      = {};                      ///< ÏµÍ³ÅäÖÃ
+    std::vector<ORM_Model::DefectInfo>        mDefectInfo        = {};                      ///< Ì½ÉËÈ±ÏÝ
 
     // ²ÎÊý±¸·Ý
     ORM_Model::DetectInfo   mDetectInfoBak   = {};

@@ -58,7 +58,7 @@ using sqlite_orm::where;
 GroupScanWnd::GroupScanWnd() {
     try {
         mSystemConfig = GetSystemConfig();
-        auto config = TOFDUSBPort::storage().get_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == std::wstring(SCAN_CONFIG_LAST)));
+        auto config   = TOFDUSBPort::storage().get_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == std::wstring(SCAN_CONFIG_LAST)));
         if (config.size() == 1) {
             if (config[0].isValid) {
                 mUtils = std::make_unique<HD_Utils>(std::make_unique<TOFDUSBPort>(config[0]));
@@ -664,6 +664,17 @@ void GroupScanWnd::Notify(TNotifyUI &msg) {
             for (const auto &prot : type::get<ORM_Model::DetectInfo>().get_properties()) {
                 valueMap[string(prot.get_name())] = StringFromWString(prot.get_value(mDetectInfo).convert<std::wstring>());
             }
+            for (auto index = 0; index < mDefectInfo.size(); index++) {
+                for (const auto &prot : type::get<ORM_Model::DefectInfo>().get_properties()) {
+                    std::stringstream ss;
+                    ss << "defect[" << index << "]." << prot.get_name();
+                    if (prot.get_name() == "id") {
+                        valueMap[ss.str()] = std::to_string(prot.get_value(mDefectInfo[index]).convert<std::uint32_t>());
+                    } else {
+                        valueMap[ss.str()] = StringFromWString(prot.get_value(mDefectInfo[index]).convert<std::wstring>());
+                    }
+                }
+            }
             CFileDialog dlg(false, L"docx", L"Report.docx", OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, L"Word Document (*.docx)| *.docx||");
             if (dlg.DoModal() == IDOK) {
                 if (WordTemplateRender(L"./template/template.docx", dlg.GetPathName().GetString(), valueMap) == false) {
@@ -1004,9 +1015,10 @@ void GroupScanWnd::EnterReviewMode(std::string name) {
     mDetectInfoBak   = mDetectInfo;
     mSystemConfigBak = mSystemConfig;
     // 读取并加载数据
-    mDetectInfo            = ORM_Model::DetectInfo::storage(name).get<ORM_Model::DetectInfo>(1);
+    mDetectInfo             = ORM_Model::DetectInfo::storage(name).get<ORM_Model::DetectInfo>(1);
     mSystemConfig.groupName = ORM_Model::JobGroup::storage(name).get<ORM_Model::JobGroup>(1).groupName;
-    mReviewData            = HD_Utils::storage(name).get_all<HD_Utils>();
+    mReviewData             = HD_Utils::storage(name).get_all<HD_Utils>();
+    mDefectInfo             = ORM_Model::DefectInfo::storage(name).get_all<ORM_Model::DefectInfo>();
     spdlog::info("load:{}, frame:{}", name, mReviewData.size());
     // 删除所有通道的C扫数据
     for (int index = 0; index < HDBridge::CHANNEL_NUMBER; index++) {
@@ -1164,7 +1176,11 @@ void GroupScanWnd::StopScan(bool changeFlag) {
         ORM_Model::ScanRecord::storage(mSavePath).insert_range(mScanRecordCache.begin(), mScanRecordCache.end());
         // 保存扫查数据
         HD_Utils::storage(mSavePath).insert_range(mReviewData.begin(), mReviewData.end());
+        // 保存缺陷数据
+        ORM_Model::DefectInfo::storage(mSavePath).sync_schema();
+        ORM_Model::DefectInfo::storage(mSavePath).insert_range(mDefectInfo.begin(), mDefectInfo.end());
         // 清除扫查数据
+        mDefectInfo.clear();
         mReviewData.clear();
         mRecordCount = 0;
         mScanRecordCache.clear();

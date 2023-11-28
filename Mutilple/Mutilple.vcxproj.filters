@@ -234,6 +234,9 @@
     <ClInclude Include="UI\HardWareWnd.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Model\DefectInfo.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Mutilple.cpp">
@@ -361,6 +364,9 @@
     </ClCompile>
     <ClCompile Include="UI\HardWareWnd.cpp">
       <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\DefectInfo.cpp">
+      <Filter>Source Files\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
