@@ -1,22 +1,22 @@
 #include "pch.h"
 
+#include "AbsPLCIntf.h"
 #include "MainProcess.h"
 #include "Mutilple.h"
-#include "AbsPLCIntf.h"
 
+#include <DMessageBox.h>
 #include <HDBridge/TOFDPort.h>
 #include <HDBridge/Utils.h>
+#include <Model/DetectInfo.h>
 #include <Model/ScanRecord.h>
 #include <Model/SystemConfig.h>
 #include <Model/UserModel.h>
-#include <Model/DetectInfo.h>
-#include <iostream>
-#include <spdlog/sinks/rotating_file_sink.h>
 #include <curl/curl.h>
-#include <filesystem>
 #include <duckx.hpp>
+#include <filesystem>
+#include <iostream>
 #include <rttr/type.h>
-#include <DMessageBox.h>
+#include <spdlog/sinks/rotating_file_sink.h>
 
 namespace fs = std::filesystem;
 
@@ -41,13 +41,14 @@ MainProcess::MainProcess() {
     AllocConsole();
     system("chcp 65001");
     spdlog::set_level(spdlog::level::debug);
-     mFile = freopen("CONOUT$", "w", stdout);
-#else 
+    mFile = freopen("CONOUT$", "w", stdout);
+#else
     spdlog::set_default_logger(spdlog::rotating_logger_st("Mutilple", "log/log.txt", static_cast<size_t>(1024 * 1024 * 5), 5));
     spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%l] %v");
     spdlog::flush_on(spdlog::level::info);
     spdlog::set_level(spdlog::level::info);
 #endif
+    spdlog::info("{:-^80}", "application start, version: " APP_VERSION);
 }
 
 MainProcess::~MainProcess() {
@@ -77,16 +78,12 @@ void MainProcess::InitStroage() {
         ORM_Model::ScanRecord::storage().sync_schema();
         ORM_Model::DetectInfo::storage().sync_schema();
         ORM_Model::JobGroup::storage().sync_schema();
-    } catch (std::exception& e) { 
+    } catch (std::exception& e) {
         spdlog::warn(GB2312ToUtf8(e.what()));
         spdlog::warn(GB2312ToUtf8("数据库文件格式出错，将重新初始化所有数据"));
         try {
             fs::remove(".\\" ORM_DB_NAME);
-        }
-        catch (std::exception&) {
-
-        }
-
+        } catch (std::exception&) {}
     }
 }
 
