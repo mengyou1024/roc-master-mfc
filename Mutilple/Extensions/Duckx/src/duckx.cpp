@@ -304,7 +304,7 @@ void duckx::Document::save() const {
         zip_open(original_file.c_str(), ZIP_DEFAULT_COMPRESSION_LEVEL, 'r');
 
     // Loop & copy each relevant entry in the original zip
-    int orig_zip_entry_ct = zip_total_entries(orig_zip);
+    int orig_zip_entry_ct = (int)zip_entries_total(orig_zip);
     for (int i = 0; i < orig_zip_entry_ct; i++) {
         zip_entry_openbyindex(orig_zip, i);
         const char *name = zip_entry_name(orig_zip);

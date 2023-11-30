@@ -368,6 +368,9 @@
     <ClCompile Include="Model\DefectInfo.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
+    <ClCompile Include="Extensions\Duckx\src\minidocx.cpp">
+      <Filter>Source Files\Duckx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Mutilple.rc">

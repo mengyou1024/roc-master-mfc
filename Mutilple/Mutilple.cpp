@@ -5,6 +5,9 @@
 
 #include "Mutilple.h"
 #include "framework.h"
+#include <filesystem>
+#include <regex>
+namespace fs = std::filesystem;
 
 #ifdef _DEBUG
 // #define new DEBUG_NEW
@@ -92,6 +95,18 @@ BOOL CMutilpleApp::InitInstance() {
     m_pMainFrame = new GroupScanWnd;
     m_pMainFrame->Create(NULL, m_pMainFrame->GetWindowClassName(), UI_WNDSTYLE_FRAME, UI_WNDSTYLE_EX_FRAME);
     m_pMainFrame->CenterWindow();
+    string filePath = {};
+    {
+        spdlog::info(L"CommandLine: {}", std::wstring(::GetCommandLine()));
+        const static std::wregex regex(L"\"[^\"]+\"\\s+\"([^\"]+)\"");
+        std::wsmatch             match;
+        std::wstring             mStr = std::wstring(::GetCommandLine());
+        if (std::regex_match(mStr, match, regex)) {
+            spdlog::info(L"file path: \"{}\"", match[1].str());
+            filePath = StringFromWString(match[1].str());
+        }
+    }
+    m_pMainFrame->EnterReview(filePath);
     m_pMainFrame->ShowModal();
     delete m_pMainFrame;
 

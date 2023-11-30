@@ -17,6 +17,7 @@
 #include <stack>
 #include <tuple>
 #include <vector>
+#include <map>
 
 using std::bitset;
 using std::invoke;
@@ -28,6 +29,8 @@ using std::pair;
 using std::shared_ptr;
 using std::stack;
 using std::string;
+using std::wstring;
+using std::map;
 using std::tuple;
 using std::unique_ptr;
 using std::vector;
@@ -76,6 +79,11 @@ using ::CSize;
 // 是否检查程序更新
 #ifndef APP_CHECK_UPDATE
     #define APP_CHECK_UPDATE 0
+#endif 
+
+// 扫查数据保存的后缀
+#ifndef APP_SCAN_DATA_SUFFIX
+    #define APP_SCAN_DATA_SUFFIX ".usddb"
 #endif 
 
 #include "MainProcess.h"

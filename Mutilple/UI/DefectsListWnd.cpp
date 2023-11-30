@@ -52,7 +52,7 @@ void DefectsListWnd::LoadDefectsList(std::string time) {
         auto tm    = match[4].str();
         auto path  = string(SCAN_DATA_DIR_NAME + GetJobGroup() + "/") + year + month + "/" + day;
         std::replace(path.begin(), path.end(), '/', '\\');
-        path += "\\" + tm + ".db";
+        path += "\\" + tm + APP_SCAN_DATA_SUFFIX;
         auto list  = ORM_Model::ScanRecord::storage(path).get_all<ORM_Model::ScanRecord>();
         auto pList = static_cast<CListUI*>(m_PaintManager.FindControl(L"ListDefects"));
         pList->RemoveAll();

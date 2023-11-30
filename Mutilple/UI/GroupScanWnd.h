@@ -31,6 +31,8 @@ public:
     virtual void       OnLButtonDClick(UINT nFlags, ::CPoint pt) override;
     virtual void       OnTimer(int iIdEvent) override;
 
+    void EnterReview(std::string path = {});
+
 private:
     constexpr static int SCAN_RECORD_CACHE_MAX_ITEMS = 1000; ///< 扫查数据最大缓存数量
 
@@ -139,6 +141,7 @@ private:
     DetectionStateMachine                     mDetectionSM       = {};                      ///< 探伤的状态机
     std::vector<ORM_Model::DefectInfo>        mDefectInfo        = {};                      ///< 探伤缺陷
     bool                                      mScanningFlag      = false;                   ///< 判断当前是否正在扫查
+    std::string                               mReviewPathEntry   = {};                      ///< 回放路径入口
 
     // 参数备份
     ORM_Model::DetectInfo mDetectInfoBak   = {};

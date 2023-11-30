@@ -9,6 +9,9 @@
 #define MoroseInstallDir "@CMAKE_SOURCE_DIR@/output"
 #define MoroseIcon  "@CMAKE_SOURCE_DIR@/Mutilple/res/Mutilple.ico"
 #define MoroseInstallerName "@PROJECT_NAME@Installer"
+#define MyAppAssocName "union scan data db"
+#define MyAppAssocExt ".usddb"
+#define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -57,6 +60,13 @@ Source: "@CMAKE_SOURCE_DIR@/x64/Release/template/*"; DestDir: "{app}/template"
 Source: "@CMAKE_SOURCE_DIR@/x64/Release/vcruntime140.dll"; DestDir: "{app}"
 Source: "@CMAKE_SOURCE_DIR@/x64/Release/vcruntime140_1.dll"; DestDir: "{app}"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+
+[Registry]
+Root: HKA; Subkey: "Software\Classes\{#MyAppAssocExt}\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppAssocKey}"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}"; ValueType: string; ValueName: ""; ValueData: "{#MyAppAssocName}"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".myp"; ValueData: ""; Flags: uninsdeletekey
 
 [UninstallDelete]
 Type: files; Name: "{app}/data.db"

@@ -190,6 +190,9 @@ void GroupScanWnd::InitOnThread() {
     mUtils->start();
     auto model = static_cast<ModelGroupAScan *>(m_OpenGL_ASCAN.m_pModel[0]);
     mUtils->addReadCallback(std::bind(&GroupScanWnd::UpdateAScanCallback, this, std::placeholders::_1, std::placeholders::_2));
+    if (!mReviewPathEntry.empty()) {
+        EnterReviewMode(mReviewPathEntry);
+    }
     CheckAndUpdate();
 }
 
@@ -901,6 +904,10 @@ void GroupScanWnd::OnTimer(int iIdEvent) {
     }
 }
 
+void GroupScanWnd::EnterReview(std::string path) {
+    mReviewPathEntry = path;
+}
+
 void GroupScanWnd::OnBtnSelectGroupClicked(long index) {
     if (index == mCurrentGroup) {
         return;
@@ -1052,6 +1059,7 @@ void GroupScanWnd::SaveScanData() {
 }
 
 void GroupScanWnd::EnterReviewMode(std::string name) {
+    try {
     auto tick = GetTickCount64();
     // 存放回调函数
     mUtils->pushCallback();
@@ -1112,6 +1120,9 @@ void GroupScanWnd::EnterReviewMode(std::string name) {
     layout->SetVisible(true);
     mWidgetMode = WidgetMode::MODE_REVIEW;
     spdlog::info("takes time: {} ms", GetTickCount64() - tick);
+    } catch (std::exception &e) { 
+        spdlog::error(e.what());
+    }
 }
 
 void GroupScanWnd::ExitReviewMode() {
@@ -1171,22 +1182,29 @@ void GroupScanWnd::StartScan(bool changeFlag) {
             auto path           = string(SCAN_DATA_DIR_NAME + GetJobGroup() + "/") + mScanTime.yearMonth + "/" + day;
             std::replace(path.begin(), path.end(), '/', '\\');
             CreateMultipleDirectory(WStringFromString(path).data());
-            path += "\\" + tm + ".db";
+            path += "\\" + tm + APP_SCAN_DATA_SUFFIX;
             mSavePath = path;
             // 创建表
             try {
                 HD_Utils::storage(path).sync_schema();
+                // 探伤信息
                 ORM_Model::DetectInfo::storage(path).sync_schema();
                 ORM_Model::DetectInfo::storage(path).insert(mDetectInfo);
+                ORM_Model::DetectInfo::storage(path).vacuum();
+                // 用户信息
                 ORM_Model::User::storage(path).sync_schema();
                 ORM_Model::User user;
                 user.name = GetSystemConfig().userName;
                 ORM_Model::User::storage(path).insert(user);
-                ORM_Model::ScanRecord::storage(path).sync_schema();
+                ORM_Model::User::storage(path).vacuum();
+                // 班组信息
                 ORM_Model::JobGroup::storage(path).sync_schema();
                 ORM_Model::JobGroup jobgroup = {};
                 jobgroup.groupName           = GetSystemConfig().groupName;
                 ORM_Model::JobGroup::storage(path).insert(jobgroup);
+                ORM_Model::JobGroup::storage(path).vacuum();
+                // 扫查数据
+                ORM_Model::ScanRecord::storage(path).sync_schema();
                 mReviewData.clear();
                 mRecordCount = 0;
                 mScanRecordCache.clear();
@@ -1222,11 +1240,14 @@ void GroupScanWnd::StopScan(bool changeFlag) {
         }
         // 保存缺陷记录
         ORM_Model::ScanRecord::storage(mSavePath).insert_range(mScanRecordCache.begin(), mScanRecordCache.end());
+        ORM_Model::ScanRecord::storage(mSavePath).vacuum();
         // 保存扫查数据
         HD_Utils::storage(mSavePath).insert_range(mReviewData.begin(), mReviewData.end());
+        HD_Utils::storage(mSavePath).vacuum();
         // 保存缺陷数据
         ORM_Model::DefectInfo::storage(mSavePath).sync_schema();
         ORM_Model::DefectInfo::storage(mSavePath).insert_range(mDefectInfo.begin(), mDefectInfo.end());
+        ORM_Model::DefectInfo::storage(mSavePath).vacuum();
         // 清除扫查数据
         mDefectInfo.clear();
         mReviewData.clear();
