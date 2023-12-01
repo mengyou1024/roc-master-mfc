@@ -1,3 +1,5 @@
+#include "pch.h"
+
 #include "BusyWnd.h"
 
 BusyWnd::BusyWnd(std::function<void(void)> _func) {
@@ -17,11 +19,11 @@ CDuiString BusyWnd::GetSkinFile() {
 void BusyWnd::InitWindow() {
     CDuiWindowBase::InitWindow();
     CenterWindow();
-    std::thread t([this]() {
+
+    AddTaskToQueue([this]() {
         std::invoke(func);
         Close();
     });
-    t.detach();
 }
 
 void BusyWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {}

@@ -1,5 +1,6 @@
 #include "HDBridge/Utils.h"
 #include <chrono>
+#include <future>
 
 std::thread::id HD_Utils::start() {
     mReadThreadExit = false;
@@ -47,7 +48,8 @@ void HD_Utils::autoGain(int channel, int gateIndex, float goal, float gainStep) 
     if (!getBridge()->isOpen()) {
         return;
     }
-    std::thread t([this, channel, gateIndex, goal, gainStep]() {
+
+    auto  ret = std::async(std::launch::deferred, [this, channel, gateIndex, goal, gainStep]() {
         volatile bool                                                             getGoal  = false;
         float                                                                     lastGain = getBridge()->getGain(channel);
         std::function<void(const HDBridge::NM_DATA& data, const HD_Utils& utils)> f        = [&getGoal, lastGain, channel, gateIndex, goal, gainStep](const HDBridge::NM_DATA& data, const HD_Utils& utils) -> void {
@@ -99,7 +101,7 @@ void HD_Utils::autoGain(int channel, int gateIndex, float goal, float gainStep) 
         mReadCallback.pop_back();
         mReadCallbackMutex.unlock();
     });
-    t.join();
+    ret.get();
 }
 
 void HD_Utils::readThread() {

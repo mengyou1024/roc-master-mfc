@@ -1,10 +1,11 @@
 #include "pch.h"
 
 #include "ToolFunc.h"
+#include <Model/UserModel.h>
+#include <Thread.h>
 #include <fstream>
 #include <iostream>
 #include <regex>
-#include <Model/UserModel.h>
 
 float PointToSegDist(float x, float y, float x1, float y1, float x2, float y2) {
     float cross = (x2 - x1) * (x - x1) + (y2 - y1) * (y - y1);
@@ -226,13 +227,13 @@ std::wstring WStringFromString(std::string str) {
 std::string GB2312ToUtf8(std::string gb2312) {
     char buf[1024] = {};
     int  len       = GB2312ToUtf8(gb2312.c_str(), buf);
-    return std::string(buf, len-1);
+    return std::string(buf, len - 1);
 }
 
 std::string Utf8ToGB2312(std::string utf8) {
     char buf[1024] = {};
     int  len       = Utf8ToGB2312(utf8.c_str(), buf);
-    return std::string(buf, len-1);
+    return std::string(buf, len - 1);
 }
 
 // GB2312到UTF-8的转换
@@ -431,10 +432,7 @@ ORM_Model::SystemConfig GetSystemConfig() {
             ORM_Model::User user;
             user.name = _T(DB_UNNAMED_USER);
             ORM_Model::User::storage().insert(user);
-        }
-        catch (std::exception& e) { 
-            spdlog::error(GB2312ToUtf8(e.what()));
-        }
+        } catch (std::exception& e) { spdlog::error(GB2312ToUtf8(e.what())); }
         return GetSystemConfig();
     }
 }
@@ -451,6 +449,11 @@ void UpdateSystemConfig(ORM_Model::SystemConfig& config) {
 
 std::string GetJobGroup() {
     return StringFromWString(GetSystemConfig().groupName);
+}
+
+void AddTaskToQueue(std::function<void(void)> func, std::string id, bool rm_same_id) {
+    static TaskQueue gTaskQueue;
+    gTaskQueue.AddTask(func, id, rm_same_id);
 }
 
 bool IncChinese(std::wstring str) {

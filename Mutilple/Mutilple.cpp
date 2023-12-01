@@ -7,6 +7,7 @@
 #include "framework.h"
 #include <filesystem>
 #include <regex>
+#include <Thread.h>
 namespace fs = std::filesystem;
 
 #ifdef _DEBUG

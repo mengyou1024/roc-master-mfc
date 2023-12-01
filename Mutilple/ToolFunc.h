@@ -125,3 +125,11 @@ private:
     int          mFilterIter  = {};
     DET_RES_TYPE mRes         = {};
 };
+
+/**
+ * @brief 添加任务到队列
+ * @param func 可调用对象
+ * @param id 对象ID
+ * @param rm_same_id 是否覆盖相同ID
+*/
+void AddTaskToQueue(std::function<void(void)> func, std::string id = "", bool rm_same_id = false);

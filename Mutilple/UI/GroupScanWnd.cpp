@@ -171,8 +171,7 @@ void GroupScanWnd::InitWindow() {
 
     InitOpenGL();
     // 初始化
-    std::thread Init(&GroupScanWnd::InitOnThread, this);
-    Init.detach(); // 线程分离
+    AddTaskToQueue(std::bind(&GroupScanWnd::InitOnThread, this));
 
     UpdateSliderAndEditValue(mCurrentGroup, mConfigType, mGateType, mChannelSel, true);
 }
@@ -414,8 +413,7 @@ void GroupScanWnd::SetConfigValue(float val, bool sync) {
         }
     }
     if (sync) {
-        std::thread t([bridge]() { bridge->flushSetting(); });
-        t.detach();
+        AddTaskToQueue([bridge]() { bridge->flushSetting(); }, 0, true);
     }
 }
 
@@ -516,7 +514,9 @@ void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
         wnd.ShowModal();
     } else if (name == _T("AutoScan")) {
         if (mScanningFlag == true) {
-            StopScan();
+            BusyWnd wnd([this]() { StopScan(); });
+            wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
+            wnd.ShowModal();
             auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnUIAutoScan")));
             btn->SetBkColor(0xFFEEEEEE);
         } else {
@@ -1043,8 +1043,8 @@ void GroupScanWnd::SaveScanData() {
     if (mReviewData.size() >= SCAN_RECORD_CACHE_MAX_ITEMS) {
         std::vector<HD_Utils> copyData = mReviewData;
         // 线程中将扫查数据保存
-        std::thread t([this, copyData]() { HD_Utils::storage(mSavePath).insert_range(copyData.begin(), copyData.end()); });
-        t.detach();
+        std::string savePath = mSavePath;
+        AddTaskToQueue([savePath, copyData]() { HD_Utils::storage(savePath).insert_range(copyData.begin(), copyData.end()); });
         mRecordCount += (int)mReviewData.size();
         mReviewData.clear();
     } else {
