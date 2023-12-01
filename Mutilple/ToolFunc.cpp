@@ -41,7 +41,7 @@ void RemoveBaseline(USHORT* pInput, float* pOutput, int iSize) {
     }
 }
 
-// Ïß¶ÎÏà½»
+// çº¿æ®µç›¸äº¤
 float LineIntersection(float p0_x, float p0_y, float p1_x, float p1_y, float p2_x, float p2_y, float p3_x, float p3_y, glm::vec2& pt) {
     float s02_x, s02_y, s10_x, s10_y, s32_x, s32_y, s_numer, t_numer, denom, t;
     s10_x = p1_x - p0_x;
@@ -235,7 +235,7 @@ std::string Utf8ToGB2312(std::string utf8) {
     return std::string(buf, len-1);
 }
 
-// GB2312µ½UTF-8µÄ×ª»»
+// GB2312åˆ°UTF-8çš„è½¬æ¢
 int GB2312ToUtf8(const char* gb2312, char* utf8) {
     int      len  = MultiByteToWideChar(CP_ACP, 0, gb2312, -1, NULL, 0);
     wchar_t* wstr = new wchar_t[len + 1];
@@ -248,7 +248,7 @@ int GB2312ToUtf8(const char* gb2312, char* utf8) {
     return len;
 }
 
-// UTF-8µ½GB2312µÄ×ª»»
+// UTF-8åˆ°GB2312çš„è½¬æ¢
 int Utf8ToGB2312(const char* utf8, char* gb2312) {
     int      len  = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, NULL, 0);
     wchar_t* wstr = new wchar_t[len + 1];
@@ -262,29 +262,29 @@ int Utf8ToGB2312(const char* utf8, char* gb2312) {
 }
 
 bool CreateMultipleDirectory(LPCTSTR szPath) {
-    CString strDir(szPath);                               // ´æ·ÅÒª´´½¨µÄÄ¿Â¼×Ö·û´®
-    if (strDir.GetAt(strDir.GetLength() - 1) != _T('\\')) // È·±£ÒÔ'\'½áÎ²ÒÔ´´½¨×îºóÒ»¸öÄ¿Â¼
+    CString strDir(szPath);                               // å­˜æ”¾è¦åˆ›å»ºçš„ç›®å½•å­—ç¬¦ä¸²
+    if (strDir.GetAt(strDir.GetLength() - 1) != _T('\\')) // ç¡®ä¿ä»¥'\'ç»“å°¾ä»¥åˆ›å»ºæœ€åä¸€ä¸ªç›®å½•
     {
         strDir.AppendChar(_T('\\'));
     }
-    vector<CString> vPath;            // ´æ·ÅÃ¿Ò»²ãÄ¿Â¼×Ö·û´®
-    CString         strTemp;          // Ò»¸öÁÙÊ±±äÁ¿,´æ·ÅÄ¿Â¼×Ö·û´®
-    bool            bSuccess = false; // ³É¹¦±êÖ¾
-    // ±éÀúÒª´´½¨µÄ×Ö·û´®
+    vector<CString> vPath;            // å­˜æ”¾æ¯ä¸€å±‚ç›®å½•å­—ç¬¦ä¸²
+    CString         strTemp;          // ä¸€ä¸ªä¸´æ—¶å˜é‡,å­˜æ”¾ç›®å½•å­—ç¬¦ä¸²
+    bool            bSuccess = false; // æˆåŠŸæ ‡å¿—
+    // éå†è¦åˆ›å»ºçš„å­—ç¬¦ä¸²
     for (int i = 0; i < strDir.GetLength(); ++i) {
-        if (strDir.GetAt(i) != _T('\\')) { // Èç¹ûµ±Ç°×Ö·û²»ÊÇ'\\'
+        if (strDir.GetAt(i) != _T('\\')) { // å¦‚æœå½“å‰å­—ç¬¦ä¸æ˜¯'\\'
             strTemp.AppendChar(strDir.GetAt(i));
-        } else {                      // Èç¹ûµ±Ç°×Ö·ûÊÇ'\\'
-            vPath.push_back(strTemp); // ½«µ±Ç°²ãµÄ×Ö·û´®Ìí¼Óµ½Êı×éÖĞ
+        } else {                      // å¦‚æœå½“å‰å­—ç¬¦æ˜¯'\\'
+            vPath.push_back(strTemp); // å°†å½“å‰å±‚çš„å­—ç¬¦ä¸²æ·»åŠ åˆ°æ•°ç»„ä¸­
             strTemp.AppendChar(_T('\\'));
         }
     }
-    // ±éÀú´æ·ÅÄ¿Â¼µÄÊı×é,´´½¨Ã¿²ãÄ¿Â¼
+    // éå†å­˜æ”¾ç›®å½•çš„æ•°ç»„,åˆ›å»ºæ¯å±‚ç›®å½•
     vector<CString>::const_iterator vIter;
     for (vIter = vPath.begin(); vIter != vPath.end(); vIter++) {
-        if (!PathIsDirectory(*vIter)) // ÅĞ¶Ïµ±Ç°Ä¿Â¼Ê±ºò´æÔÚ£¬²»´æÔÚ¾Í´´½¨
+        if (!PathIsDirectory(*vIter)) // åˆ¤æ–­å½“å‰ç›®å½•æ—¶å€™å­˜åœ¨ï¼Œä¸å­˜åœ¨å°±åˆ›å»º
         {
-            // Èç¹ûCreateDirectoryÖ´ĞĞ³É¹¦,·µ»Øtrue,·ñÔò·µ»Øfalse
+            // å¦‚æœCreateDirectoryæ‰§è¡ŒæˆåŠŸ,è¿”å›true,å¦åˆ™è¿”å›false
             bSuccess = CreateDirectory(*vIter, NULL) ? true : false;
         }
     }
@@ -329,10 +329,10 @@ size_t write_data(void* ptr, size_t size, size_t nmemb, void* stream) {
 std::tuple<string, string, string> GetLatestReleaseNote(std::string github_api_url) {
     std::stringstream out;
     void*             curl = curl_easy_init();
-    // ÉèÖÃURL
+    // è®¾ç½®URL
     curl_easy_setopt(curl, CURLOPT_URL, github_api_url.c_str());
     curl_easy_setopt(curl, CURLOPT_USERAGENT, "Dark Secret Ninja/1.0");
-    // ÉèÖÃ½ÓÊÕÊı¾İµÄ´¦Àíº¯ÊıºÍ´æ·Å±äÁ¿
+    // è®¾ç½®æ¥æ”¶æ•°æ®çš„å¤„ç†å‡½æ•°å’Œå­˜æ”¾å˜é‡
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &out);
 
@@ -368,7 +368,7 @@ std::tuple<string, string, string> GetLatestReleaseNote(std::string github_api_u
 }
 
 bool WordTemplateRender(std::wstring templateName, std::wstring fileName, std::map<string, string> var) {
-    // ¿½±´Ä£°å
+    // æ‹·è´æ¨¡æ¿
     std::wregex  reg(LR"(^(.+)[/\\])");
     std::wsmatch match;
     if (std::regex_search(fileName, match, reg)) {
@@ -416,8 +416,9 @@ bool WordTemplateRender(std::wstring templateName, std::wstring fileName, std::m
 ORM_Model::SystemConfig GetSystemConfig() {
     try {
         return ORM_Model::SystemConfig::storage().get<ORM_Model::SystemConfig>(1);
-    } catch (std::exception&) {
-        spdlog::warn(GB2312ToUtf8("²»ÄÜ¼ÓÔØÄ¬ÈÏµÄÏµÍ³ÅäÖÃ, ½«³õÊ¼»¯ÎªÄ¬ÈÏÖµ¡£"));
+    } catch (std::exception& e) {
+        spdlog::debug(e.what());
+        spdlog::warn("ä¸èƒ½åŠ è½½é»˜è®¤çš„ç³»ç»Ÿé…ç½®, å°†åˆå§‹åŒ–ä¸ºé»˜è®¤å€¼ã€‚");
         ORM_Model::SystemConfig config = {};
         config.id                      = 1;
         config.groupName               = _T(DB_UNNAMED_GROUP);
@@ -443,7 +444,7 @@ void UpdateSystemConfig(ORM_Model::SystemConfig& config) {
     try {
         ORM_Model::SystemConfig::storage().update(config);
     } catch (std::exception& e) {
-        spdlog::error("²»ÄÜĞ´ÈëÏµÍ³ÅäÖÃ");
+        spdlog::error("ä¸èƒ½å†™å…¥ç³»ç»Ÿé…ç½®");
         spdlog::error(e.what());
     }
 }

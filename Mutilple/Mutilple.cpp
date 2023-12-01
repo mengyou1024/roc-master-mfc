@@ -83,15 +83,15 @@ BOOL CMutilpleApp::InitInstance() {
     SetRegistryKey(_T("Mutilple"));
 
     //_CrtSetBreakAlloc(2816);
-    // °æ±¾
-    TITLE   = GetProfileString(_T("Application"), _T("Title"), _T("ËÕÖİÂŞ¿ËÀ³¹Ü²ÄÌ½ÉË»ú"));
+    // ç‰ˆæœ¬
+    TITLE   = GetProfileString(_T("Application"), _T("Title"), _T("è‹å·ç½—å…‹è±ç®¡ææ¢ä¼¤æœº"));
     VERSION = GetProfileString(_T("Application"), _T("Version"), _T(APP_VERSION));
 
     if (FAILED(::CoInitialize(NULL)))
-        return 0;                                         // ³õÊ¼»¯COM¿â
-    CPaintManagerUI::SetInstance(AfxGetInstanceHandle()); // ÉèÖÃäÖÈ¾ÊµÀı
+        return 0;                                         // åˆå§‹åŒ–COMåº“
+    CPaintManagerUI::SetInstance(AfxGetInstanceHandle()); // è®¾ç½®æ¸²æŸ“å®ä¾‹
 
-    // Ö÷´°¿Ú
+    // ä¸»çª—å£
     m_pMainFrame = new GroupScanWnd;
     m_pMainFrame->Create(NULL, m_pMainFrame->GetWindowClassName(), UI_WNDSTYLE_FRAME, UI_WNDSTYLE_EX_FRAME);
     m_pMainFrame->CenterWindow();
@@ -112,10 +112,10 @@ BOOL CMutilpleApp::InitInstance() {
 
     m_pMainFrame = NULL;
 
-    WindowImplBase::Term();  // ÊÍ·ÅDuilibÖĞµÄ¾²Ì¬×ÊÔ´
-    CPaintManagerUI::Term(); // ÊÍ·ÅDuilibÖĞµÄ¾²Ì¬×ÊÔ´
+    WindowImplBase::Term();  // é‡Šæ”¾Duilibä¸­çš„é™æ€èµ„æº
+    CPaintManagerUI::Term(); // é‡Šæ”¾Duilibä¸­çš„é™æ€èµ„æº
 
-    // É¾³ıÉÏÃæ´´½¨µÄ shell ¹ÜÀíÆ÷¡£
+    // åˆ é™¤ä¸Šé¢åˆ›å»ºçš„ shell ç®¡ç†å™¨ã€‚
     if (m_pShellManager != nullptr) {
         delete m_pShellManager;
     }

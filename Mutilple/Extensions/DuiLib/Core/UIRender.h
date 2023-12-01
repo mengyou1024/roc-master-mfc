@@ -17,7 +17,7 @@ public:
     HRGN hOldRgn;
 
     static void GenerateClip(HDC hDC, RECT rc, CRenderClip& clip);
-	//width£ºÒ»¸ö½ÇµÄ¿í¶È£¬height£ºÒ»¸ö½ÇµÄ¸ß¶È
+	//widthï¼šä¸€ä¸ªè§’çš„å®½åº¦ï¼Œheightï¼šä¸€ä¸ªè§’çš„é«˜åº¦
     static void GenerateRoundClip(HDC hDC, RECT rc, RECT rcItem, int width, int height, CRenderClip& clip);
     static void UseOldClipBegin(HDC hDC, CRenderClip& clip);
     static void UseOldClipEnd(HDC hDC, CRenderClip& clip);
@@ -41,8 +41,8 @@ public:
 	static void DrawColor(HDC hDC, const RECT& rc, DWORD color);
     static void DrawGradient(HDC hDC, const RECT& rc, DWORD dwFirst, DWORD dwSecond, bool bVertical, int nSteps);
 
-	// ÒÔÏÂº¯ÊıÄ¬ÈÏÊ¹ÓÃGdi+äÖÈ¾£¬Ö§³ÖalphaÍ¨µÀ
-	// Ê¹ÓÃUSE_GDI_RENDERºêºóÊ¹ÓÃGdiäÖÈ¾£¬²»Ö§³ÖalphaÍ¨µÀ
+	// ä»¥ä¸‹å‡½æ•°é»˜è®¤ä½¿ç”¨Gdi+æ¸²æŸ“ï¼Œæ”¯æŒalphaé€šé“
+	// ä½¿ç”¨USE_GDI_RENDERå®åä½¿ç”¨Gdiæ¸²æŸ“ï¼Œä¸æ”¯æŒalphaé€šé“
 	static void DrawLine(HDC hDC, const RECT& rc, int nSize, DWORD dwPenColor, int nStyle = PS_SOLID);
 	static void DrawRect(HDC hDC, const RECT& rc, int nSize, DWORD dwPenColor);
 	static void DrawRoundRect(HDC hDC, const RECT& rc, int width, int height, int nSize, DWORD dwPenColor);

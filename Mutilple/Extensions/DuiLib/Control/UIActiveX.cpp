@@ -775,7 +775,7 @@ LPCTSTR CActiveXWnd::GetWindowClassName() const
 
 void CActiveXWnd::OnFinalMessage(HWND hWnd)
 {
-    //delete this; // 这里不需要清理，CActiveXUI会清理的
+    //delete this; // 杩欓噷涓嶉渶瑕佹竻鐞嗭紝CActiveXUI浼氭竻鐞嗙殑
 }
 
 void CActiveXWnd::DoVerb(LONG iVerb)

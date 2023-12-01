@@ -25,7 +25,7 @@ void MeshGroupCScan::SetSize(int left, int top, int right, int bottom) {
 void MeshGroupCScan::CreateBK() {}
 
 void MeshGroupCScan::Setup() {
-    // 用于 `DrawLineY`
+    // 鐢ㄤ簬 `DrawLineY`
     if (m_iQuadVAO == 0) {
         GLuint pIndex[] = {0, 1, 2, 1, 2, 3};
         GenVAO(m_iQuadVAO, m_iQuadVBO, m_iQuadEBO);
@@ -60,16 +60,16 @@ void MeshGroupCScan::Setup() {
 }
 
 void MeshGroupCScan::DrawAixs() {
-    // 不绘制坐标轴
+    // 涓嶇粯鍒跺潗鏍囪酱
 }
 
 void MeshGroupCScan::DrawAixsText() {
-    // 不绘制坐标轴文本
+    // 涓嶇粯鍒跺潗鏍囪酱鏂囨湰
 }
 
 void MeshGroupCScan::Render() {
 
-    // 绘制线条
+    // 缁樺埗绾挎潯
     glViewport(m_rcItem.vleft, m_rcItem.vtop, m_rcItem.vWidth(), m_rcItem.vHeight());
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -87,7 +87,7 @@ void MeshGroupCScan::Render() {
 }
 
 void MeshGroupCScan::RenderBK() {
-    // 清除区域
+    // 娓呴櫎鍖哄煙
     glEnable(GL_SCISSOR_TEST);
     glClearColor(0.0f, 0.01f, 0.01f, 1.0f);
     glScissor(m_rcItem.vleft, m_rcItem.vtop, m_rcItem.vWidth(), m_rcItem.vHeight());

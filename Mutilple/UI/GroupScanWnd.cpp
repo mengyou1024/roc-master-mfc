@@ -49,7 +49,7 @@ constexpr int swapAScanIndex(int x) {
     return result * 4 + remain;
 }
 
-constexpr std::wstring_view SCAN_CONFIG_LAST = _T("ÉÏÒ»´ÎÅäÖÃ");
+constexpr std::wstring_view SCAN_CONFIG_LAST = _T("ä¸Šä¸€æ¬¡é…ç½®");
 using sqlite_orm::c;
 using sqlite_orm::column;
 using sqlite_orm::columns;
@@ -81,7 +81,7 @@ GroupScanWnd::GroupScanWnd() {
 
 GroupScanWnd::~GroupScanWnd() {
     try {
-        // ÍË³öÇ°Í£Ö¹É¨²é²¢ÇÒÍË³ö»Ø·ÅÄ£Ê½
+        // é€€å‡ºå‰åœæ­¢æ‰«æŸ¥å¹¶ä¸”é€€å‡ºå›æ”¾æ¨¡å¼
         StopScan(true);
         if (mWidgetMode == WidgetMode::MODE_REVIEW) {
             ExitReviewMode();
@@ -118,7 +118,7 @@ void GroupScanWnd::OnBtnModelClicked(std::wstring name) {
             BusyWnd wnd([this]() { ExitReviewMode(); });
             wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
             wnd.ShowModal();
-            // ÍË³öºóÖØĞÂ¿ªÊ¼É¨²é
+            // é€€å‡ºåé‡æ–°å¼€å§‹æ‰«æŸ¥
             StartScan(false);
         }
 
@@ -133,10 +133,10 @@ void GroupScanWnd::OnBtnModelClicked(std::wstring name) {
         }
         btnScanMode->SetBkColor(0xFFEEEEEE);
         btnReviewMode->SetBkColor(0xFF339933);
-        // ´ò¿ªÑ¡Ôñ´°¿Ú
+        // æ‰“å¼€é€‰æ‹©çª—å£
         auto   &selName = name;
         BusyWnd wnd([this, &selName]() {
-            // ½øÈëÇ°ÏÈÔİÍ£É¨²é
+            // è¿›å…¥å‰å…ˆæš‚åœæ‰«æŸ¥
             StopScan(false);
             EnterReviewMode(selName);
         });
@@ -146,12 +146,12 @@ void GroupScanWnd::OnBtnModelClicked(std::wstring name) {
 }
 
 void GroupScanWnd::InitOpenGL() {
-    // ³õÊ¼»¯OpenGL´°¿Ú
-    // AÉ¨´°¿Ú
+    // åˆå§‹åŒ–OpenGLçª—å£
+    // Aæ‰«çª—å£
     m_pWndOpenGL_ASCAN = static_cast<CWindowUI *>(m_PaintManager.FindControl(_T("WndOpenGL_ASCAN")));
     m_OpenGL_ASCAN.Create(m_hWnd);
     m_OpenGL_ASCAN.Attach(m_pWndOpenGL_ASCAN);
-    // CÉ¨´°¿Ú
+    // Cæ‰«çª—å£
     m_pWndOpenGL_CSCAN = static_cast<CWindowUI *>(m_PaintManager.FindControl(_T("WndOpenGL_CSCAN")));
     m_OpenGL_CSCAN.Create(m_hWnd);
     m_OpenGL_CSCAN.Attach(m_pWndOpenGL_CSCAN);
@@ -169,15 +169,15 @@ void GroupScanWnd::InitWindow() {
     CDuiWindowBase::InitWindow();
 
     InitOpenGL();
-    // ³õÊ¼»¯
+    // åˆå§‹åŒ–
     std::thread Init(&GroupScanWnd::InitOnThread, this);
-    Init.detach(); // Ïß³Ì·ÖÀë
+    Init.detach(); // çº¿ç¨‹åˆ†ç¦»
 
     UpdateSliderAndEditValue(mCurrentGroup, mConfigType, mGateType, mChannelSel, true);
 }
 
 void GroupScanWnd::InitOnThread() {
-    // ÑÓ³Ù×î´ó»¯´°¿Ú
+    // å»¶è¿Ÿæœ€å¤§åŒ–çª—å£
     // Sleep(100);
     SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE, 0);
 
@@ -185,7 +185,7 @@ void GroupScanWnd::InitOnThread() {
 
     m_OpenGL_ASCAN.AddGroupAScanModel();
     m_OpenGL_CSCAN.AddGroupCScanModel();
-    // ÉèÖÃ°å¿¨²ÎÊı
+    // è®¾ç½®æ¿å¡å‚æ•°
     Sleep(100);
     mUtils->start();
     auto model = static_cast<ModelGroupAScan *>(m_OpenGL_ASCAN.m_pModel[0]);
@@ -210,18 +210,18 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
     mGateType   = newGate;
     mChannelSel = newChannelSel;
 
-    // ÉèÖÃEditµ¥Î»
+    // è®¾ç½®Editå•ä½
     auto edit = static_cast<CEditUI *>(m_PaintManager.FindControl(_T("EditConfig")));
     if (edit) {
         edit->SetEnabled(true);
         edit->SetTextExt(mConfigTextext.at(mConfigType));
     }
-    // ÉèÖÃSliderµÄmin¡¢max
+    // è®¾ç½®Sliderçš„minã€max
     auto slider = static_cast<CSliderUI *>(m_PaintManager.FindControl(_T("SliderConfig")));
     if (slider) {
         slider->SetEnabled(true);
         slider->SetCanSendMove(true);
-        // ÖØĞÂ¼ÆËã²¨ÃÅÆğµãºÍ²¨ÃÅ¿í¶ÈµÄ×î´óÖµ
+        // é‡æ–°è®¡ç®—æ³¢é—¨èµ·ç‚¹å’Œæ³¢é—¨å®½åº¦çš„æœ€å¤§å€¼
         int    gate    = static_cast<int>(mGateType);
         size_t chIndex = static_cast<size_t>(mChannelSel) + static_cast<size_t>(mCurrentGroup) * 4ull;
         switch (mConfigType) {
@@ -289,7 +289,7 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
         slider->SetMinValue(static_cast<int>(mConfigLimits.at(mConfigType).first));
         slider->SetMaxValue(static_cast<int>(mConfigLimits.at(mConfigType).second));
     }
-    // DONE: ÖØĞÂ¶ÁÈ¡ÊıÖµ
+    // DONE: é‡æ–°è¯»å–æ•°å€¼
     double reloadValue = 0.0;
     int    _channelSel = static_cast<int>(mChannelSel) + mCurrentGroup * 4;
     int    gate        = static_cast<int>(mGateType);
@@ -355,7 +355,7 @@ void GroupScanWnd::SetConfigValue(float val, bool sync) {
     switch (mConfigType) {
         case GroupScanWnd::ConfigType::DetectRange: {
             bridge->setSampleDepth(_channelSel, (float)(bridge->distance2time((double)val)));
-            // ÖØĞÂ¼ÆËã²ÉÑùÒò×Ó
+            // é‡æ–°è®¡ç®—é‡‡æ ·å› å­
             auto depth        = bridge->getSampleDepth()[_channelSel];
             auto delay        = bridge->getDelay()[_channelSel] + bridge->getZeroBias()[_channelSel];
             auto sampleFactor = static_cast<int>(std::round((depth - delay) * 100.0 / 1024.0));
@@ -448,7 +448,7 @@ void GroupScanWnd::UpdateAScanCallback(const HDBridge::NM_DATA &data, const HD_U
     for (int i = 0; i < 2; i++) {
         const auto ampData = mesh->getAmpMemoryData(i);
         auto       g       = bridge->getGateInfo(i, data.iChannel);
-        // »ñÈ¡²¨ÃÅÄÚµÄÊı¾İ
+        // è·å–æ³¢é—¨å†…çš„æ•°æ®
         auto l = data.pAscan.begin() + static_cast<int64_t>(std::round(static_cast<float>(data.pAscan.size()) * g.pos));
         auto r = data.pAscan.begin() + static_cast<int64_t>(std::round(static_cast<float>(data.pAscan.size()) * (g.pos + g.width)));
         std::vector<uint8_t> newAmpData(l, r);
@@ -520,7 +520,7 @@ void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
             btn->SetBkColor(0xFFEEEEEE);
         } else {
             if (!mUtils->getBridge()->isOpen()) {
-                DMessageBox(L"³¬Éù°åÎ´´ò¿ª£¬ÇëÈ·ÈÏÊÇ·ñÁ¬½Ó£¡");
+                DMessageBox(L"è¶…å£°æ¿æœªæ‰“å¼€ï¼Œè¯·ç¡®è®¤æ˜¯å¦è¿æ¥ï¼");
                 return;
             }
             StartScan();
@@ -534,7 +534,7 @@ void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
         wnd.ShowModal();
         UpdateSliderAndEditValue(mCurrentGroup, mConfigType, mGateType, mChannelSel, true);
     } else if (name == _T("About")) {
-        DMessageBox(APP_VERSIONW, L"Èí¼ş°æ±¾");
+        DMessageBox(APP_VERSIONW, L"è½¯ä»¶ç‰ˆæœ¬");
     } else if (name == _T("Freeze")) {
         auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnUIFreeze")));
         if (btn->GetBkColor() == 0xFFEEEEEE) {
@@ -661,9 +661,9 @@ void GroupScanWnd::Notify(TNotifyUI &msg) {
             if (dlg.DoModal() == IDOK) {
                 if (WordTemplateRender(L"./template/template.docx", dlg.GetPathName().GetString(), valueMap) == false) {
                     spdlog::error("export report document error!");
-                    DMessageBox(L"µ¼³öÊ§°Ü!");
+                    DMessageBox(L"å¯¼å‡ºå¤±è´¥!");
                 } else {
-                    DMessageBox(L"µ¼³ö³É¹¦!");
+                    DMessageBox(L"å¯¼å‡ºæˆåŠŸ!");
                 }
             }
 
@@ -695,12 +695,12 @@ void GroupScanWnd::Notify(TNotifyUI &msg) {
                 edit->SetText(val);
                 spdlog::debug(_T("setValue: {}"), val);
 
-                // ÉèÖÃEditÊıÖµ
+                // è®¾ç½®Editæ•°å€¼
                 auto edit = static_cast<CEditUI *>(m_PaintManager.FindControl(_T("EditConfig")));
                 if (edit) {
                     edit->SetText(std::to_wstring(sliderValue).data());
                 }
-                // ÉèÖÃ³¬Éù°åÊıÖµ
+                // è®¾ç½®è¶…å£°æ¿æ•°å€¼
                 if (msg.pSender->IsEnabled()) {
                     SetConfigValue(static_cast<float>(sliderValue));
                 }
@@ -718,7 +718,7 @@ void GroupScanWnd::Notify(TNotifyUI &msg) {
         }
     } else if (msg.sType == DUI_MSGTYPE_TEXTCHANGED) {
         if (msg.pSender->GetName() == _T("EditConfig")) {
-            // ÏŞÖÆÊäÈëµÄ×Ö·û
+            // é™åˆ¶è¾“å…¥çš„å­—ç¬¦
             auto         edit = static_cast<CEditUI *>(msg.pSender);
             std::wstring text = edit->GetText();
             if (text.length() > 0) {
@@ -734,7 +734,7 @@ void GroupScanWnd::Notify(TNotifyUI &msg) {
         }
     } else if (msg.sType == DUI_MSGTYPE_RETURN) {
         if (msg.pSender->GetName() == _T("EditConfig")) {
-            // ÏŞÖÆEditµÄÊäÈë·¶Î§
+            // é™åˆ¶Editçš„è¾“å…¥èŒƒå›´
             auto         edit         = static_cast<CEditUI *>(msg.pSender);
             std::wstring text         = edit->GetText();
             auto         currentValue = _wtof(text.data());
@@ -757,18 +757,18 @@ void GroupScanWnd::Notify(TNotifyUI &msg) {
                     edit->SetSel(static_cast<long>(match[0].str().length()), static_cast<long>(match[1].str().length()));
                 }
             }
-            // ÖØĞÂ»ñÈ¡Öµ
+            // é‡æ–°è·å–å€¼
             text         = edit->GetText();
             currentValue = _wtof(text.data());
             spdlog::debug("EditConfigSetValue: {}", currentValue);
 
-            // ÉèÖÃslider Öµ
+            // è®¾ç½®slider å€¼
             auto slider = static_cast<CSliderUI *>(m_PaintManager.FindControl(_T("SliderConfig")));
             if (slider) {
                 slider->SetValue(static_cast<int>(std::round(currentValue)));
             }
 
-            // ÉèÖÃ³¬Éù°åÊıÖµ
+            // è®¾ç½®è¶…å£°æ¿æ•°å€¼
             SetConfigValue(static_cast<float>(currentValue));
         }
     } else if (msg.sType == DUI_MSGTYPE_MOUSEWHELL) {
@@ -793,7 +793,7 @@ void GroupScanWnd::Notify(TNotifyUI &msg) {
                 edit->SetText(match[0].str().data());
             }
 
-            // ÉèÖÃslider Öµ
+            // è®¾ç½®slider å€¼
             auto slider = static_cast<CSliderUI *>(m_PaintManager.FindControl(_T("SliderConfig")));
             if (slider) {
                 slider->SetValue(static_cast<int>(std::round(currentValue)));
@@ -801,7 +801,7 @@ void GroupScanWnd::Notify(TNotifyUI &msg) {
 
             spdlog::debug("Mouse Wheel config value: {}", currentValue);
 
-            // ÉèÖÃ³¬Éù°åÊıÖµ
+            // è®¾ç½®è¶…å£°æ¿æ•°å€¼
             SetConfigValue(static_cast<float>(currentValue));
         }
     }
@@ -852,30 +852,30 @@ void GroupScanWnd::OnLButtonDClick(UINT nFlags, ::CPoint pt) {
                 if (index >= static_cast<size_t>(mCurrentGroup * 4) && index < static_cast<size_t>((mCurrentGroup + 1) * 4) &&
                     ptr->IsInArea(temp)) {
                     KillUITimer();
-                    // Èç¹ûÕıÔÚÉ¨²éÔòÍ£Ö¹É¨²é
+                    // å¦‚æœæ­£åœ¨æ‰«æŸ¥åˆ™åœæ­¢æ‰«æŸ¥
                     if (mScanningFlag == true) {
                         StopScan(false);
                     }
                     spdlog::debug("double click: {}", swapAScanIndex(static_cast<int>(index)));
                     mUtils->pushCallback();
-                    // ÒÆ½»ËùÓĞÈ¨
+                    // ç§»äº¤æ‰€æœ‰æƒ
                     ChannelSettingWnd *wnd = new ChannelSettingWnd(std::move(mUtils), swapAScanIndex(static_cast<int>(index)));
                     wnd->Create(m_hWnd, wnd->GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
                     wnd->CenterWindow();
                     wnd->ShowModal();
-                    // ÒÆ»ØËùÓĞÈ¨
+                    // ç§»å›æ‰€æœ‰æƒ
                     mUtils = std::move(wnd->returnHDUtils());
                     delete wnd;
                     mUtils->popCallback();
                     ResumeUITimer();
-                    // Èç¹ûÕıÔÚÉ¨²éÔòÖØĞÂ¿ªÊ¼É¨²é
+                    // å¦‚æœæ­£åœ¨æ‰«æŸ¥åˆ™é‡æ–°å¼€å§‹æ‰«æŸ¥
                     if (mScanningFlag == true) {
                         StartScan(false);
                     }
                 }
             }
         } else {
-            // ÁĞ³öÈ±ÏİÁĞ±í
+            // åˆ—å‡ºç¼ºé™·åˆ—è¡¨
             DefectsListWnd wnd;
             wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
             wnd.LoadDefectsList(mDetectInfo.time);
@@ -914,7 +914,7 @@ void GroupScanWnd::OnBtnSelectGroupClicked(long index) {
     }
     mCurrentGroup = index;
 
-    // ÉèÖÃÍ¨µÀÑ¡ÔñµÄText
+    // è®¾ç½®é€šé“é€‰æ‹©çš„Text
     for (int i = 0; i < 4; i++) {
         CString name;
         name.Format(_T("OptChannel%d"), i);
@@ -926,7 +926,7 @@ void GroupScanWnd::OnBtnSelectGroupClicked(long index) {
         }
     }
 
-    // ÉèÖÃÑ¡Ïî°´Å¥µÄÑÕÉ«
+    // è®¾ç½®é€‰é¡¹æŒ‰é’®çš„é¢œè‰²
     for (long i = 0; i < BTN_SELECT_GROUP_MAX; i++) {
         CString str;
         str.Format(_T("BtnSelectGroup%d"), i);
@@ -970,9 +970,9 @@ void GroupScanWnd::CheckAndUpdate(bool showNoUpdate) {
     auto [tag, body, url] = GetLatestReleaseNote("https://api.github.com/repos/mengyou1024/roc-master-mfc/releases/latest");
     if (Check4Update("v0.0", tag)) {
         std::wstring wBody  = WStringFromString(body);
-        std::wstring wTitle = std::wstring(L"¸üĞÂ¿ÉÓÃ:") + WStringFromString(tag);
+        std::wstring wTitle = std::wstring(L"æ›´æ–°å¯ç”¨:") + WStringFromString(tag);
         auto         ret    = DMessageBox(
-            (std::wstring(APP_VERSIONW) + L"--->" + WStringFromString(tag) + L"\n\nÊÇ:Á¢¼´¸üĞÂ\n·ñ:¹Ø±Õ³ÌĞòºó¸üĞÂ\nÓÒÉÏ½Ç²æ:²»½øĞĞ¸üĞÂ")
+            (std::wstring(APP_VERSIONW) + L"--->" + WStringFromString(tag) + L"\n\næ˜¯:ç«‹å³æ›´æ–°\nå¦:å…³é—­ç¨‹åºåæ›´æ–°\nå³ä¸Šè§’å‰:ä¸è¿›è¡Œæ›´æ–°")
                 .data(),
             wTitle.data(), MB_YESNO);
         spdlog::info("tag: {}\n body: {} \n url: {}", tag, body, url);
@@ -999,8 +999,8 @@ void GroupScanWnd::CheckAndUpdate(bool showNoUpdate) {
             wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
             wnd.ShowModal();
             if (result != CURLE_OK) {
-                DMessageBox(L"ÏÂÔØÎÄ¼şÊ§°Ü");
-                spdlog::error(GB2312ToUtf8("ÏÂÔØ¸üĞÂÎÄ¼şÊ§°Ü"));
+                DMessageBox(L"ä¸‹è½½æ–‡ä»¶å¤±è´¥");
+                spdlog::error("ä¸‹è½½æ›´æ–°æ–‡ä»¶å¤±è´¥");
                 return;
             }
             g_MainProcess.RegistFuncOnDestory([]() -> void {
@@ -1020,27 +1020,27 @@ void GroupScanWnd::CheckAndUpdate(bool showNoUpdate) {
         }
     } else {
         if (showNoUpdate) {
-            DMessageBox(L"µ±Ç°ÒÑÊÇ×îĞÂ°æ±¾");
+            DMessageBox(L"å½“å‰å·²æ˜¯æœ€æ–°ç‰ˆæœ¬");
         }
     }
 #endif
 }
 
 void GroupScanWnd::SaveScanData() {
-    // ±£´æµ±Ç°É¨²é²¨ÃÅµÄÎ»ÖÃĞÅÏ¢
+    // ä¿å­˜å½“å‰æ‰«æŸ¥æ³¢é—¨çš„ä½ç½®ä¿¡æ¯
     for (int i = 0; i < HDBridge::CHANNEL_NUMBER; i++) {
         mUtils->mScanOrm.mScanData[i]->scanGateInfo.pos    = mGateScan[i].pos;
         mUtils->mScanOrm.mScanData[i]->scanGateInfo.width  = mGateScan[i].width;
         mUtils->mScanOrm.mScanData[i]->scanGateInfo.height = mGateScan[i].height;
     }
-    // ±£´æCÉ¨µÄ×ø±êĞÅÏ¢
+    // ä¿å­˜Cæ‰«çš„åæ ‡ä¿¡æ¯
     auto [minLimit, maxLimit]        = m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->GetAxisRange();
     mUtils->mScanOrm.mCScanLimits[0] = minLimit;
     mUtils->mScanOrm.mCScanLimits[1] = maxLimit;
-    // ±£´æÉ¨²éÊı¾İ
+    // ä¿å­˜æ‰«æŸ¥æ•°æ®
     if (mReviewData.size() >= SCAN_RECORD_CACHE_MAX_ITEMS) {
         std::vector<HD_Utils> copyData = mReviewData;
-        // Ïß³ÌÖĞ½«É¨²éÊı¾İ±£´æ
+        // çº¿ç¨‹ä¸­å°†æ‰«æŸ¥æ•°æ®ä¿å­˜
         std::thread t([this, copyData]() { HD_Utils::storage(mSavePath).insert_range(copyData.begin(), copyData.end()); });
         t.detach();
         mRecordCount += (int)mReviewData.size();
@@ -1061,20 +1061,20 @@ void GroupScanWnd::SaveScanData() {
 void GroupScanWnd::EnterReviewMode(std::string name) {
     try {
     auto tick = GetTickCount64();
-    // ´æ·Å»Øµ÷º¯Êı
+    // å­˜æ”¾å›è°ƒå‡½æ•°
     mUtils->pushCallback();
-    // ±£´æÅäÖÃĞÅÏ¢±¸·İ
+    // ä¿å­˜é…ç½®ä¿¡æ¯å¤‡ä»½
     mDetectInfoBak    = mDetectInfo;
     auto systemConfig = GetSystemConfig();
     mJobGroupNameBak  = systemConfig.groupName;
-    // ¶ÁÈ¡²¢¼ÓÔØÊı¾İ
+    // è¯»å–å¹¶åŠ è½½æ•°æ®
     mDetectInfo            = ORM_Model::DetectInfo::storage(name).get<ORM_Model::DetectInfo>(1);
     systemConfig.groupName = ORM_Model::JobGroup::storage(name).get<ORM_Model::JobGroup>(1).groupName;
     mReviewData            = HD_Utils::storage(name).get_all<HD_Utils>();
     mDefectInfo            = ORM_Model::DefectInfo::storage(name).get_all<ORM_Model::DefectInfo>();
     UpdateSystemConfig(systemConfig);
     spdlog::info("load:{}, frame:{}", name, mReviewData.size());
-    // É¾³ıËùÓĞÍ¨µÀµÄCÉ¨Êı¾İ
+    // åˆ é™¤æ‰€æœ‰é€šé“çš„Cæ‰«æ•°æ®
     for (int index = 0; index < HDBridge::CHANNEL_NUMBER; index++) {
         auto mesh = static_cast<MeshGroupCScan *>(((ModelGroupCScan *)m_OpenGL_CSCAN.m_pModel[0])->m_pMesh[index]);
         mesh->RemoveDot();
@@ -1104,14 +1104,14 @@ void GroupScanWnd::EnterReviewMode(std::string name) {
         }
     }
 
-    // »Ø·ÅµÄCÉ¨·¶Î§ÎªµÚÒ»·ùÍ¼µÄ×îĞ¡Öµµ½×îºóÒ»·ùÍ¼µÄ×î´óÖµ
+    // å›æ”¾çš„Cæ‰«èŒƒå›´ä¸ºç¬¬ä¸€å¹…å›¾çš„æœ€å°å€¼åˆ°æœ€åä¸€å¹…å›¾çš„æœ€å¤§å€¼
     if (mReviewData.size() > 0) {
         float cScanMinLimits = (*std::begin(mReviewData)).mScanOrm.mCScanLimits[0];
         float cScanMaxLimits = (*std::rbegin(mReviewData)).mScanOrm.mCScanLimits[1];
         m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->SetAxisRange(cScanMinLimits, cScanMaxLimits);
     }
 
-    // ÇĞ»»½çÃæ²¼¾Ö
+    // åˆ‡æ¢ç•Œé¢å¸ƒå±€
     auto layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutParamSetting")));
     layout->SetVisible(false);
     layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutFunctionButton")));
@@ -1161,7 +1161,7 @@ void GroupScanWnd::StartScan(bool changeFlag) {
         return;
     }
     if (mScanningFlag == false) {
-        // ±£´æµ±Ç°Ê±¼ä
+        // ä¿å­˜å½“å‰æ—¶é—´
         std::stringstream                     buffer = {};
         std::chrono::system_clock::time_point t      = std::chrono::system_clock::now();
         time_t                                tm     = std::chrono::system_clock::to_time_t(t);
@@ -1184,26 +1184,26 @@ void GroupScanWnd::StartScan(bool changeFlag) {
             CreateMultipleDirectory(WStringFromString(path).data());
             path += "\\" + tm + APP_SCAN_DATA_SUFFIX;
             mSavePath = path;
-            // ´´½¨±í
+            // åˆ›å»ºè¡¨
             try {
                 HD_Utils::storage(path).sync_schema();
-                // Ì½ÉËĞÅÏ¢
+                // æ¢ä¼¤ä¿¡æ¯
                 ORM_Model::DetectInfo::storage(path).sync_schema();
                 ORM_Model::DetectInfo::storage(path).insert(mDetectInfo);
                 ORM_Model::DetectInfo::storage(path).vacuum();
-                // ÓÃ»§ĞÅÏ¢
+                // ç”¨æˆ·ä¿¡æ¯
                 ORM_Model::User::storage(path).sync_schema();
                 ORM_Model::User user;
                 user.name = GetSystemConfig().userName;
                 ORM_Model::User::storage(path).insert(user);
                 ORM_Model::User::storage(path).vacuum();
-                // °à×éĞÅÏ¢
+                // ç­ç»„ä¿¡æ¯
                 ORM_Model::JobGroup::storage(path).sync_schema();
                 ORM_Model::JobGroup jobgroup = {};
                 jobgroup.groupName           = GetSystemConfig().groupName;
                 ORM_Model::JobGroup::storage(path).insert(jobgroup);
                 ORM_Model::JobGroup::storage(path).vacuum();
-                // É¨²éÊı¾İ
+                // æ‰«æŸ¥æ•°æ®
                 ORM_Model::ScanRecord::storage(path).sync_schema();
                 mReviewData.clear();
                 mRecordCount = 0;
@@ -1212,7 +1212,7 @@ void GroupScanWnd::StartScan(bool changeFlag) {
                 SetTimer(CSCAN_UPDATE, 1000 / mSamplesPerSecond);
             } catch (std::exception &e) {
                 spdlog::warn(GB2312ToUtf8(e.what()));
-                DMessageBox(L"ÇëÎğ¿ìËÙµã»÷É¨²é°´Å¥");
+                DMessageBox(L"è¯·å‹¿å¿«é€Ÿç‚¹å‡»æ‰«æŸ¥æŒ‰é’®");
             }
         }
     }
@@ -1238,17 +1238,17 @@ void GroupScanWnd::StopScan(bool changeFlag) {
             meshAScan->UpdateGate(2, 1, mGateScan[i].pos, mGateScan[i].width, mGateScan[i].height);
             mScanButtonValue.fill(0);
         }
-        // ±£´æÈ±Ïİ¼ÇÂ¼
+        // ä¿å­˜ç¼ºé™·è®°å½•
         ORM_Model::ScanRecord::storage(mSavePath).insert_range(mScanRecordCache.begin(), mScanRecordCache.end());
         ORM_Model::ScanRecord::storage(mSavePath).vacuum();
-        // ±£´æÉ¨²éÊı¾İ
+        // ä¿å­˜æ‰«æŸ¥æ•°æ®
         HD_Utils::storage(mSavePath).insert_range(mReviewData.begin(), mReviewData.end());
         HD_Utils::storage(mSavePath).vacuum();
-        // ±£´æÈ±ÏİÊı¾İ
+        // ä¿å­˜ç¼ºé™·æ•°æ®
         ORM_Model::DefectInfo::storage(mSavePath).sync_schema();
         ORM_Model::DefectInfo::storage(mSavePath).insert_range(mDefectInfo.begin(), mDefectInfo.end());
         ORM_Model::DefectInfo::storage(mSavePath).vacuum();
-        // Çå³ıÉ¨²éÊı¾İ
+        // æ¸…é™¤æ‰«æŸ¥æ•°æ®
         mDefectInfo.clear();
         mReviewData.clear();
         mRecordCount = 0;

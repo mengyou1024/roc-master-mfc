@@ -11,149 +11,149 @@ namespace TOFDPort
 {
 	typedef struct _tagNM_DATA
 	{
-		int iChannel;					//Í¨µÀºÅ
-		int iPackage;					//°üĞòÁĞ
-		int iAScanSize;					//AÉ¨³¤¶È
-		unsigned char* pAscan;			//AÉ¨Êı¾İ
-		int pCoder[2];					//±àÂëÆ÷Öµ
-		int pCoderZF[2];				//ZÖµµÚÒ»È¦
-		int pCoderZC[2];				//ZÖµÈ¦Êı
-		int pCoderZ[2];					//ZÖµ
-		int pGatePos[2];				//²¨ÃÅÎ»ÖÃ
-		unsigned char pGateAmp[2];		//²¨ÃÅ²¨·ù
-		int pAlarm[2];					//²¨ÃÅ±¨¾¯
+		int iChannel;					//é€šé“å·
+		int iPackage;					//åŒ…åºåˆ—
+		int iAScanSize;					//Aæ‰«é•¿åº¦
+		unsigned char* pAscan;			//Aæ‰«æ•°æ®
+		int pCoder[2];					//ç¼–ç å™¨å€¼
+		int pCoderZF[2];				//Zå€¼ç¬¬ä¸€åœˆ
+		int pCoderZC[2];				//Zå€¼åœˆæ•°
+		int pCoderZ[2];					//Zå€¼
+		int pGatePos[2];				//æ³¢é—¨ä½ç½®
+		unsigned char pGateAmp[2];		//æ³¢é—¨æ³¢å¹…
+		int pAlarm[2];					//æ³¢é—¨æŠ¥è­¦
 	}NM_DATA, * P_NM_DATA;
 
-	//Á¬½Ó³¬Éù°å¿¨
+	//è¿æ¥è¶…å£°æ¿å¡
 	Dll_API bool TOFD_PORT_OpenDevice();
-	//¶Ï¿ªÒÑÁ¬½ÓµÄ³¬Éù°å
+	//æ–­å¼€å·²è¿æ¥çš„è¶…å£°æ¿
 	Dll_API bool TOFD_PORT_CloseDevice();
-	//ÅĞ¶Ï³¬Éù°åÓëµçÄÔÊÇ·ñÁ¬½Ó
+	//åˆ¤æ–­è¶…å£°æ¿ä¸ç”µè„‘æ˜¯å¦è¿æ¥
 	Dll_API bool TOFD_PORT_IsOpen();
-	//ÅĞ¶Ï³¬Éù°åÓëµçÄÔÊÇ·ñÁ¬½Ó
+	//åˆ¤æ–­è¶…å£°æ¿ä¸ç”µè„‘æ˜¯å¦è¿æ¥
 	Dll_API bool TOFD_PORT_IsDeviceExist();
 
-	//ÉèÖÃ×ÜÖØ¸´ÆµÂÊ
+	//è®¾ç½®æ€»é‡å¤é¢‘ç‡
 	Dll_API bool TOFD_PORT_SetFrequency(int iFrequency);
-	//ÉèÖÃ¸ßÑ¹
+	//è®¾ç½®é«˜å‹
 	Dll_API bool TOFD_PORT_SetVoltage(int iVoltage);
-	//ÉèÖÃÍ¨µÀ±êÖ¾
+	//è®¾ç½®é€šé“æ ‡å¿—
 	Dll_API bool TOFD_PORT_SetChannelFlag(int iChannelFlag);
-	//ÉèÖÃÉ¨²éÔöÁ¿
+	//è®¾ç½®æ‰«æŸ¥å¢é‡
 	Dll_API bool TOFD_PORT_SetScanIncrement(int iScanIncrement);
-	//ÉèÖÃ±àÂëÆ÷ÇåÁã±êÖ¾Î»
+	//è®¾ç½®ç¼–ç å™¨æ¸…é›¶æ ‡å¿—ä½
 	Dll_API bool TOFD_PORT_SetResetCoder(int iResetCoder);
-	//ÉèÖÃÏµÍ³Ö¸Ê¾µÆ
+	//è®¾ç½®ç³»ç»ŸæŒ‡ç¤ºç¯
 	Dll_API bool TOFD_PORT_SetLED(int iLEDStatus);
-	//ÉèÖÃ¹«¹²Í¨µÀ¼ÌµçÆ÷
+	//è®¾ç½®å…¬å…±é€šé“ç»§ç”µå™¨
 	Dll_API bool TOFD_PORT_SetDamperFlag(int iDamperFlag);
-	//ÉèÖÃ±àÂëÆ÷´¥·¢Âö³å
+	//è®¾ç½®ç¼–ç å™¨è§¦å‘è„‰å†²
 	Dll_API bool TOFD_PORT_SetEncoderPulse(int iEncoderPulse);
 
-	//ÉèÖÃÍ¨µÀÂö³å¿í¶È
+	//è®¾ç½®é€šé“è„‰å†²å®½åº¦
 	Dll_API bool TOFD_PORT_SetPulseWidth(int iChannel, float fPulseWidth/*ns*/);
-	//ÉèÖÃÍ¨µÀÑÓÊ±
+	//è®¾ç½®é€šé“å»¶æ—¶
 	Dll_API bool TOFD_PORT_SetDelay(int iChannel, float fDelay/*us*/);
-	//ÉèÖÃÍ¨µÀ²ÉÑùÉî¶È
+	//è®¾ç½®é€šé“é‡‡æ ·æ·±åº¦
 	Dll_API bool TOFD_PORT_SetSampleDepth(int iChannel, float fSampleDepth/*us*/);
-	//ÉèÖÃÍ¨µÀ²ÉÑùÒò×Ó
+	//è®¾ç½®é€šé“é‡‡æ ·å› å­
 	Dll_API bool TOFD_PORT_SetSampleFactor(int iChannel, int iSampleFactor);
-	//ÉèÖÃÍ¨µÀÔöÒæ
+	//è®¾ç½®é€šé“å¢ç›Š
 	Dll_API bool TOFD_PORT_SetGain(int iChannel, float fGain/*dB*/);
-	//ÉèÖÃÂË²¨Æµ´ø
+	//è®¾ç½®æ»¤æ³¢é¢‘å¸¦
 	Dll_API bool TOFD_PORT_SetFilter(int iChannel, int iFilter);
-	//ÉèÖÃ¼ì²¨·½Ê½
+	//è®¾ç½®æ£€æ³¢æ–¹å¼
 	Dll_API bool TOFD_PORT_SetDemodu(int iChannel, int iDemodu);
-	//ÉèÖÃAÉ¨ĞÅºÅÏàÎ»
+	//è®¾ç½®Aæ‰«ä¿¡å·ç›¸ä½
 	Dll_API bool TOFD_PORT_SetPhaseReverse(int iChannel, int iPhaseReverse);
 
 
-	//ÉèÖÃ²¨ÃÅĞÅÏ¢
+	//è®¾ç½®æ³¢é—¨ä¿¡æ¯
 	Dll_API bool TOFD_PORT_SetGateInfo(int iChannel, int iGate, int iActive, int iAlarmType, float fPos/*%*/, float fWidth/*%*/, float fHeight/*%*/);
-	//ÉèÖÃ²¨ÃÅ2ÀàĞÍ
+	//è®¾ç½®æ³¢é—¨2ç±»å‹
 	Dll_API bool TOFD_PORT_SetGate2Type(int iChannel, int iType);
-	//ÏÂ·¢²ÎÊı
+	//ä¸‹å‘å‚æ•°
 	Dll_API bool TOFD_PORT_FlushSetting();
 
-	//»ñÈ¡Êı¾İ
+	//è·å–æ•°æ®
 	Dll_API bool TOFD_PORT_ReadDatas(unsigned char* pBuff, unsigned int iSize);
-	//»ñÈ¡NM_DATAÊı¾İ°ü
+	//è·å–NM_DATAæ•°æ®åŒ…
 	Dll_API NM_DATA* TOFD_PORT_ReadDatasFormat();
-	//ÊÍ·ÅNM_DATA¶ÔÏó
+	//é‡Šæ”¾NM_DATAå¯¹è±¡
 	Dll_API void TOFD_PORT_Free_NM_DATA(NM_DATA* pData);
-	//»ñÈ¡±àÂëÆ÷Öµ
+	//è·å–ç¼–ç å™¨å€¼
 	Dll_API bool TOFD_PORT_GetCoderValue(int* pCoder0, int* pCoder1);
-	//»ñÈ¡±àÂëÆ÷Öµ
+	//è·å–ç¼–ç å™¨å€¼
 	Dll_API bool TOFD_PORT_GetCoderValueZ(int* pCoderZ0, int* pCoderZ1, int* pCoderF0, int* pCoderF1, int* pCoderC0, int* pCoderC1);
 
-	//±àÂëÆ÷ÇåÁã
+	//ç¼–ç å™¨æ¸…é›¶
 	Dll_API bool TOFD_PORT_ResetCoder_Immediate();
 }
 
 
-//À©Õ¹Ïî
+//æ‰©å±•é¡¹
 
 namespace TOFDPortExtensions
 {
-	//¶¯Ì¬¿â³õÊ¼»¯Ò»´Î
+	//åŠ¨æ€åº“åˆå§‹åŒ–ä¸€æ¬¡
 	Dll_API void ITS_init();
-	//usbÊÇ·ñ²åÈë
+	//usbæ˜¯å¦æ’å…¥
 	Dll_API bool ITS_IsExist();
-	//usbÊÇ·ñÒÑ´ò¿ª
+	//usbæ˜¯å¦å·²æ‰“å¼€
 	Dll_API bool ITS_IsOpen();
-	//´ò¿ªUSB
+	//æ‰“å¼€USB
 	Dll_API bool ITS_OpenUSB();
-	//¹Ø±ÕUSB
+	//å…³é—­USB
 	Dll_API void ITS_CloseUSB();
 
-	//ÉèÖÃÍ¨µÀ
+	//è®¾ç½®é€šé“
 	Dll_API void ITS_SetCh(unsigned int ch_left_s, unsigned int ch_left_r, unsigned int ch_right_s, unsigned int ch_right_r);
-	//ÉèÖÃÍ¨µÀÆµÂÊ [µ±Ç°È¡×óÓÒÉèÖÃÖµµÄºÍ hz_left+hz_right Îª×ÜÖØ¸´ÆµÂÊ)
+	//è®¾ç½®é€šé“é¢‘ç‡ [å½“å‰å–å·¦å³è®¾ç½®å€¼çš„å’Œ hz_left+hz_right ä¸ºæ€»é‡å¤é¢‘ç‡)
 	Dll_API void ITS_SetHZ(unsigned int hz_left, unsigned int hz_right);
-	//ÉèÖÃÓ²¼şÁãµã [In ²ÉÑùµãÊı 10nsÒ»¸öµã]
+	//è®¾ç½®ç¡¬ä»¶é›¶ç‚¹ [In é‡‡æ ·ç‚¹æ•° 10nsä¸€ä¸ªç‚¹]
 	Dll_API void ITS_SetHard_Delayns(unsigned int delayns);
 
-	//ÉèÖÃÂö³å¿í¶È [In µ¥Î»10ns  ÀıÈçplus_left = 16 ±íÊ¾160ns]
+	//è®¾ç½®è„‰å†²å®½åº¦ [In å•ä½10ns  ä¾‹å¦‚plus_left = 16 è¡¨ç¤º160ns]
 	Dll_API void ITS_SetPlusWidth(unsigned int plus_left, unsigned int plus_right);
-	//ÉèÖÃÑÓ³Ù [In ²ÉÑùµãÊı 10nsÒ»¸öµã]
+	//è®¾ç½®å»¶è¿Ÿ [In é‡‡æ ·ç‚¹æ•° 10nsä¸€ä¸ªç‚¹]
 	Dll_API void ITS_SetXmove(unsigned int xmove_left, unsigned int xmove_right);
-	//ÉèÖÃÔöÒæ [In µ¥Î»0.1db ÀıÈçdB_left = 312 ±íÊ¾31.2dB]
+	//è®¾ç½®å¢ç›Š [In å•ä½0.1db ä¾‹å¦‚dB_left = 312 è¡¨ç¤º31.2dB]
 	Dll_API void ITS_SetdB(unsigned int dB_left, unsigned int dB_right);
-	//ÉèÖÃÉù³Ì [In ²ÉÑùµãÊı 10nsÒ»¸öµã]
+	//è®¾ç½®å£°ç¨‹ [In é‡‡æ ·ç‚¹æ•° 10nsä¸€ä¸ªç‚¹]
 	Dll_API void ITS_SetDis(unsigned int dis_left, unsigned int dis_right);
 
 
-	//³ö³§²âÊÔ(ÉèÖÃ¹«¹²Í¨µÀ)
+	//å‡ºå‚æµ‹è¯•(è®¾ç½®å…¬å…±é€šé“)
 	Dll_API void ITS_Selfcheck(unsigned int ch_left, unsigned int ch_right);
-	//ÉèÖÃË®Æ½»ùÏßÎ»ÖÃ
+	//è®¾ç½®æ°´å¹³åŸºçº¿ä½ç½®
 	Dll_API void ITS_SetZeroLeavel(unsigned int zl_left, unsigned int  zl_right);
-	//ÉèÖÃ³ö³§²âÊÔ½Ó¿ÚDA
+	//è®¾ç½®å‡ºå‚æµ‹è¯•æ¥å£DA
 	Dll_API void ITS_TestSetDB(unsigned int  dB_A1, unsigned int  dB_A2, unsigned int  dB_A3, unsigned int  dB_B1, unsigned int  dB_B2, unsigned int  dB_B3);
-	//»ñÈ¡³ö³§²âÊÔ½Ó¿ÚDA
+	//è·å–å‡ºå‚æµ‹è¯•æ¥å£DA
 	Dll_API void ITS_TestGetDB(unsigned int* dB_A1, unsigned int* dB_A2, unsigned int* dB_A3, unsigned int* dB_B1, unsigned int* dB_B2, unsigned int* dB_B3);
 
-	//ÉèÖÃÑ¹Ëõ±È [µ¥´Î²ÉÑùµã Ïà¶ÔÓÚ1024µÄ±È]
+	//è®¾ç½®å‹ç¼©æ¯” [å•æ¬¡é‡‡æ ·ç‚¹ ç›¸å¯¹äº1024çš„æ¯”]
 	Dll_API void ITS_SetZip(unsigned int zip_left, unsigned int zip_right);
-	//¼ÆËãÑ¹Ëõ±È
+	//è®¡ç®—å‹ç¼©æ¯”
 	Dll_API unsigned int ITS_GetZip(unsigned int ch);
 
 
-	//ÖØÖÃ±àÂëÆ÷
+	//é‡ç½®ç¼–ç å™¨
 	Dll_API void ITS_ReSetEncoder(unsigned int ch, unsigned int flag);
-	//»ñÈ¡±àÂëÆ÷µÄÖµ
+	//è·å–ç¼–ç å™¨çš„å€¼
 	Dll_API signed int ITS_GetEncoder(unsigned int ch, unsigned int mode);
 
-	//Æô¶¯²É¼¯
+	//å¯åŠ¨é‡‡é›†
 	Dll_API bool ITS_Start(unsigned char* buf_left, unsigned char* buf_right);
 
-	///(°å¿¨²»°üº¬¸Ã¹¦ÄÜ)
+	///(æ¿å¡ä¸åŒ…å«è¯¥åŠŸèƒ½)
 
-	//ÉèÖÃ±àÂëÆ÷ÆµÂÊ
+	//è®¾ç½®ç¼–ç å™¨é¢‘ç‡
 	Dll_API void ITS_SetEncoder_frequency(unsigned int ch, unsigned int freq);
-	//ÉèÖÃ±àÂëÆ÷ÆµÂÊ
+	//è®¾ç½®ç¼–ç å™¨é¢‘ç‡
 	Dll_API unsigned int ITS_GetWorkID();
 
-	///ÒÉÎÊÏî £º1.Í¨µÀÆµÂÊ 2.»ñÈ¡±àÂëÆ÷
+	///ç–‘é—®é¡¹ ï¼š1.é€šé“é¢‘ç‡ 2.è·å–ç¼–ç å™¨
 
 }
 

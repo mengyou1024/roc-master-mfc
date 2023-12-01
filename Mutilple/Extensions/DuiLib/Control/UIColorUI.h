@@ -22,7 +22,7 @@ namespace DuiLib
 
 	public:
 		DWORD  m_pBmpbits[COLOR_WIDTH];
-		//��ͼͼ��DC
+		//»æÍ¼Í¼ÏñDC
 		HDC m_hMemDC;
 		HBITMAP m_hMemBmp;
 	};

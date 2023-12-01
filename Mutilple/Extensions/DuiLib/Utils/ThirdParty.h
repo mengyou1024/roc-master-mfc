@@ -10,21 +10,21 @@ namespace DuiLib
 		BYTE* ParseImage(BYTE const *buffer, int len, OUT int &width, OUT int &height);
 		void  FreeImage(void *pImage);
 
-		// Èç¹ûflagsÎª2£¬±íÊ¾´ÓÎÄ¼ş¼ÓÔØ£¬Ö¸¶¨bufferÎªÎÄ¼şÃû£¬²»ĞèÒªÖ¸¶¨len
-		// Èç¹ûflagsÎª3£¬±íÊ¾´ÓÄÚ´æ¼ÓÔØ£¬Ö¸¶¨bufferÎªÄÚ´æ¿é,lenÎªbuffer³¤¶È
+		// å¦‚æœflagsä¸º2ï¼Œè¡¨ç¤ºä»æ–‡ä»¶åŠ è½½ï¼ŒæŒ‡å®šbufferä¸ºæ–‡ä»¶åï¼Œä¸éœ€è¦æŒ‡å®šlen
+		// å¦‚æœflagsä¸º3ï¼Œè¡¨ç¤ºä»å†…å­˜åŠ è½½ï¼ŒæŒ‡å®šbufferä¸ºå†…å­˜å—,lenä¸ºbufferé•¿åº¦
 		HANDLE OpenZip(void *buffer, unsigned int len, DWORD flags);
 		void CloseZip(HANDLE hz);
 
-		// strFilePath:Ïà¶ÔÆ¤·ôÎÄ¼ş¼ĞµÄÎÄ¼şÂ·¾¶
+		// strFilePath:ç›¸å¯¹çš®è‚¤æ–‡ä»¶å¤¹çš„æ–‡ä»¶è·¯å¾„
 		BYTE* LoadFromFile(LPCTSTR strFilePath, OUT DWORD &dwFileSize);
 
-		// strFilePath:Ïà¶ÔÆ¤·ôÎÄ¼ş¼ĞµÄÎÄ¼şÂ·¾¶
+		// strFilePath:ç›¸å¯¹çš®è‚¤æ–‡ä»¶å¤¹çš„æ–‡ä»¶è·¯å¾„
 		BYTE* LoadFromZip(LPCTSTR strFilePath, OUT DWORD &dwFileSize);
 
-		// strFilePath:ÎÄ¼ş¾ø¶ÔÂ·¾¶
+		// strFilePath:æ–‡ä»¶ç»å¯¹è·¯å¾„
 		BYTE* LoadFromAbsoluteFile(LPCTSTR strFilePath, OUT DWORD &dwFileSize);
 
-		// strResName:×ÊÔ´Ãû×Ö£»resType:×ÊÔ´ÀàĞÍ
+		// strResName:èµ„æºåå­—ï¼›resType:èµ„æºç±»å‹
 		BYTE* LoadFromResource(LPCTSTR strResName, LPCTSTR resType, OUT DWORD &dwFileSize);
 	}
 }// namespace DuiLib

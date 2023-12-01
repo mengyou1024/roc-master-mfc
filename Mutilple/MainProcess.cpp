@@ -58,7 +58,7 @@ MainProcess::~MainProcess() {
     fclose(mFile);
 #endif
     spdlog::drop_all();
-    // ÍË³öÇ°Ñ¹ËõÊı¾İ±í
+    // é€€å‡ºå‰å‹ç¼©æ•°æ®è¡¨
     TOFDUSBPort::storage().vacuum();
     ORM_Model::User::storage().vacuum();
     ORM_Model::SystemConfig::storage().vacuum();
@@ -80,7 +80,7 @@ void MainProcess::InitStroage() {
         ORM_Model::JobGroup::storage().sync_schema();
     } catch (std::exception& e) {
         spdlog::warn(GB2312ToUtf8(e.what()));
-        spdlog::warn(GB2312ToUtf8("Êı¾İ¿âÎÄ¼ş¸ñÊ½³ö´í£¬½«ÖØĞÂ³õÊ¼»¯ËùÓĞÊı¾İ"));
+        spdlog::warn("æ•°æ®åº“æ–‡ä»¶æ ¼å¼å‡ºé”™ï¼Œå°†é‡æ–°åˆå§‹åŒ–æ‰€æœ‰æ•°æ®");
         try {
             fs::remove(".\\" ORM_DB_NAME);
         } catch (std::exception&) {}

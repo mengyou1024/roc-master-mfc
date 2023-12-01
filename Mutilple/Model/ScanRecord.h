@@ -15,9 +15,9 @@ namespace ORM_Model {
     class ScanRecord {
     public:
         uint32_t    id      = {}; ///< id
-        int         channel = {}; ///< È±ÏÝÍ¨µÀºÅ
-        int         startID = {}; ///< È±ÏÝµÄÆðÊ¼ID
-        int         endID   = {}; ///< È±ÏÝµÄ½áÊøID
+        int         channel = {}; ///< ç¼ºé™·é€šé“å·
+        int         startID = {}; ///< ç¼ºé™·çš„èµ·å§‹ID
+        int         endID   = {}; ///< ç¼ºé™·çš„ç»“æŸID
 
         static auto storage(std::string dbName) {
             return make_storage(dbName,

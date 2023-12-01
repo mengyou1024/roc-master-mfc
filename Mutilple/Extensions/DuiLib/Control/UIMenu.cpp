@@ -173,7 +173,7 @@ void CMenuWnd::Init(CMenuElementUI* pOwner, STRINGorID xml, POINT point,
 	m_xml = xml;
 	m_dwAlignment = dwAlignment;
 
-	// 如果是一级菜单的创建
+	// 濡傛灉鏄竴绾ц彍鍗曠殑鍒涘缓
 	if (pOwner == NULL)
 	{
 		ASSERT(pMainPaintManager != NULL);
@@ -334,7 +334,7 @@ void CMenuWnd::ResizeMenu()
 	szAvailable = pRoot->EstimateSize(szAvailable);
 	m_pm.SetInitSize(szAvailable.cx, szAvailable.cy);
 
-	//必须是Menu标签作为xml的根节点
+	//蹇呴』鏄疢enu鏍囩浣滀负xml鐨勬牴鑺傜偣
 	CMenuUI *pMenuRoot = static_cast<CMenuUI*>(pRoot);
 	ASSERT(pMenuRoot);
 

@@ -1514,7 +1514,7 @@ void CListHeaderItemUI::DoEvent(TEventUI& event)
     {
         if( !IsEnabled() ) return;
         RECT rcSeparator = GetThumbRect();
-		if (m_iSepWidth>=0)//111024 by cddjr, 增加分隔符区域，方便用户拖动
+		if (m_iSepWidth>=0)//111024 by cddjr, 澧炲姞鍒嗛殧绗﹀尯鍩燂紝鏂逛究鐢ㄦ埛鎷栧姩
 			rcSeparator.left-=4;
 		else
 			rcSeparator.right+=4;
@@ -1567,7 +1567,7 @@ void CListHeaderItemUI::DoEvent(TEventUI& event)
     if( event.Type == UIEVENT_SETCURSOR )
     {
         RECT rcSeparator = GetThumbRect();
-		if (m_iSepWidth>=0)//111024 by cddjr, 增加分隔符区域，方便用户拖动
+		if (m_iSepWidth>=0)//111024 by cddjr, 澧炲姞鍒嗛殧绗﹀尯鍩燂紝鏂逛究鐢ㄦ埛鎷栧姩
 			rcSeparator.left-=4;
 		else
 			rcSeparator.right+=4;

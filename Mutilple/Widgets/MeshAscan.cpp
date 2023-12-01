@@ -94,7 +94,7 @@ void MeshAscan::Setup() {
         glBindVertexArray(0);
     }
 
-    // Ä¸ÏßDAC
+    // æ¯çº¿DAC
     if (m_iDACVAO == 0) {
         GenVAO(m_iDACVAO, m_iDACVBO);
         glBindVertexArray(m_iDACVAO);
@@ -129,7 +129,7 @@ void MeshAscan::Setup() {
         }
     }
 
-    // Íø¸ñ
+    // ç½‘æ ¼
     if (m_iMeshVAO == 0) {
         GenVAO(m_iMeshVAO, m_iMeshVBO);
         glBindVertexArray(m_iMeshVAO);
@@ -147,7 +147,7 @@ void MeshAscan::Setup() {
         glBindVertexArray(0);
     }
 
-    // ·åÖµ¼ÇÒä
+    // å³°å€¼è®°å¿†
     for (int i = 0; i < MAX_GATE_NUM; i++) {
         if (m_iAmpMemoryLineVAO[i] == 0) {
             GenVAO(m_iAmpMemoryLineVAO[i], m_iAmpMemoryLineVBO[i]);
@@ -288,7 +288,7 @@ void MeshAscan::DrawAixsText() {
     CString   strInfo;
     glm::vec4 color(1.0f, 0, 0, 1.0f);
 
-    // ×ø±ê
+    // åæ ‡
     // x
     glScissor(m_rcItem.vleft, m_rcItem.top, m_rcItem.vWidth(), m_rcItem.iAxisWidth);
     glPushMatrix();
@@ -332,13 +332,13 @@ void MeshAscan::DrawAixsText() {
 }
 
 void MeshAscan::RenderBK() {
-    // ±³¾°
+    // èƒŒæ™¯
     glBindVertexArray(m_iBkVAO);
-    glDrawElements(GL_TRIANGLES, (int)m_pBkIndex.size(), GL_UNSIGNED_INT, 0); // Èı¸öÇøÓò 6¸öÈı½ÇĞÎ £¬18¸öµã×é³É
+    glDrawElements(GL_TRIANGLES, (int)m_pBkIndex.size(), GL_UNSIGNED_INT, 0); // ä¸‰ä¸ªåŒºåŸŸ 6ä¸ªä¸‰è§’å½¢ ï¼Œ18ä¸ªç‚¹ç»„æˆ
     glBindVertexArray(0);
-    // ×ø±ê
-    m_pAxis[AXIS_X].Set(m_rcItem.vWidth() - 1, 50, m_fScanMin, m_fScanMax); // ×ø±ê50µÈ·İ
-    m_pAxis[AXIS_Y].Set(m_rcItem.vHeight() - 1, 20, 100.0f, 0.0f);          // ×ø±ê20µÈ·İ
+    // åæ ‡
+    m_pAxis[AXIS_X].Set(m_rcItem.vWidth() - 1, 50, m_fScanMin, m_fScanMax); // åæ ‡50ç­‰ä»½
+    m_pAxis[AXIS_Y].Set(m_rcItem.vHeight() - 1, 20, 100.0f, 0.0f);          // åæ ‡20ç­‰ä»½
     DrawAixs();
 }
 
@@ -354,7 +354,7 @@ void MeshAscan::Render() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    // Íø¸ñ
+    // ç½‘æ ¼
     glEnable(GL_BLEND);
     glLineStipple(1, 0x0101);
     glEnable(GL_LINE_STIPPLE);

@@ -120,7 +120,7 @@ DWORD CRenderEngine::AdjustColor(DWORD dwColor, short H, short S, short L)
 
 HBITMAP CRenderEngine::CreateBitmap(HDC hDC, int cx, int cy, BYTE** pBits)
 {
-	//½¨Á¢up-left Bitmap
+	//å»ºç«‹up-left Bitmap
 	BITMAPINFO bmi;
 	::ZeroMemory(&bmi, sizeof(BITMAPINFO));
 	LPBITMAPINFO lpbiSrc = NULL;
@@ -155,7 +155,7 @@ void CRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const RECT& rcDest, cons
     ::SetStretchBltMode(hDC, HALFTONE);
 
     RECT rcTemp = {0};
-    RECT rcRealDest = {0};//Êµ¼ÊµÄ»æÖÆÎ»ÖÃ
+    RECT rcRealDest = {0};//å®é™…çš„ç»˜åˆ¶ä½ç½®
     if( isAlpha || uAlpha < 255 ) 
 	{
         BLENDFUNCTION bf = { AC_SRC_OVER, 0, uAlpha, AC_SRC_ALPHA };
@@ -660,14 +660,14 @@ bool CRenderEngine::DrawImage(HDC hDC, CPaintManagerUI* pManager, const RECT& rc
 	rcDest.top += rcControl.top;
 	if (image.m_rcDest.top == 0 && image.m_rcDest.left == 0 && image.m_rcDest.right == 0 && image.m_rcDest.bottom == 0)
 	{
-		//Èç¹ûÎª¿ÕÔò¸³ÖµÎª¿Ø¼şÖµ
+		//å¦‚æœä¸ºç©ºåˆ™èµ‹å€¼ä¸ºæ§ä»¶å€¼
 		rcDest.right += rcControl.right;
 		rcDest.bottom += rcControl.bottom;
 	}
 	else
 	{
-		//²»Îª¿ÕÔò¼ÆËãÓÒÏÂ½Ç×ø±êÖµ
-		//¼ÆËãÍ¼Æ¬µÄ¿í¸ß
+		//ä¸ä¸ºç©ºåˆ™è®¡ç®—å³ä¸‹è§’åæ ‡å€¼
+		//è®¡ç®—å›¾ç‰‡çš„å®½é«˜
 		int nWidth = image.m_rcDest.right - image.m_rcDest.left;
 		int nHeight = image.m_rcDest.bottom - image.m_rcDest.top;
 		rcDest.right = rcDest.left + nWidth;
@@ -750,7 +750,7 @@ void CRenderEngine::DrawText(HDC hDC, CPaintManagerUI* pManager, RECT& rc, LPCTS
 			Gdiplus::RectF bounds;
 			graphics.MeasureString(pstrText, -1, &font, rectF, &stringFormat, &bounds);
 
-			// MeasureString´æÔÚ¼ÆËãÎó²î£¬ÕâÀï¼ÓÒ»ÏñËØ
+			// MeasureStringå­˜åœ¨è®¡ç®—è¯¯å·®ï¼Œè¿™é‡ŒåŠ ä¸€åƒç´ 
 			rc.bottom = rc.top + (long)bounds.Height + 1;
 			rc.right = rc.left + (long)bounds.Width + 1;
 		}
@@ -921,25 +921,25 @@ void CRenderEngine::DrawRoundRect(HDC hDC, const RECT& rc, int nSize, int width,
 	pen.SetAlignment(Gdiplus::PenAlignmentInset);
 
 	Gdiplus::GraphicsPath path;
-	// °ÑÔ²½Ç¾ØĞÎ·Ö³ÉÖ±Ïß¡¢»¡µÄ×éºÏ£¬ÒÀ´Î¼Óµ½Â·¾¶ÖĞ
-	//×ó
+	// æŠŠåœ†è§’çŸ©å½¢åˆ†æˆç›´çº¿ã€å¼§çš„ç»„åˆï¼Œä¾æ¬¡åŠ åˆ°è·¯å¾„ä¸­
+	//å·¦
 	path.AddLine(Gdiplus::Point(rc.left, rc.bottom - height), Gdiplus::Point(rc.left, rc.top + height));
-	//×óÉÏ
+	//å·¦ä¸Š
 	path.AddArc(rc.left, rc.top, width * 2, height * 2, (Gdiplus::REAL)180, (Gdiplus::REAL)90);
 
-	//ÉÏ
+	//ä¸Š
 	path.AddLine(Gdiplus::Point(rc.left + width, rc.top), Gdiplus::Point(rc.right - width, rc.top));
-	//ÓÒÉÏ
+	//å³ä¸Š
 	path.AddArc(rc.right - width * 2-1, rc.top, width * 2, height * 2, (Gdiplus::REAL)270, (Gdiplus::REAL)90);
 
-	//ÓÒ
+	//å³
 	path.AddLine(Gdiplus::Point(rc.right-1, rc.top + height), Gdiplus::Point(rc.right-1, rc.bottom - height));
-	//ÓÒÏÂ
+	//å³ä¸‹
 	path.AddArc(rc.right - width * 2-1, rc.bottom - height * 2-1, width * 2, height * 2, (Gdiplus::REAL)0, (Gdiplus::REAL)90);
 
-	//ÏÂ
+	//ä¸‹
 	path.AddLine(Gdiplus::Point(rc.right - width, rc.bottom-1), Gdiplus::Point(rc.left + width, rc.bottom-1));
-	//×óÏÂ
+	//å·¦ä¸‹
 	path.AddArc(rc.left, rc.bottom - height * 2-1, width * 2, height * 2, (Gdiplus::REAL)90, (Gdiplus::REAL)90);
 	
 	graphics.DrawPath(&pen, &path);
@@ -949,8 +949,8 @@ void CRenderEngine::DrawRoundRect(HDC hDC, const RECT& rc, int nSize, int width,
 
 void CRenderEngine::DrawHtmlText(HDC hDC, CPaintManagerUI* pManager, RECT& rc, LPCTSTR pstrText, DWORD dwTextColor, RECT* prcLinks, CDuiString* sLinks, int& nLinkRects, UINT uStyle)
 {
-    // ¿¼ÂÇµ½ÔÚxml±à¼­Æ÷ÖĞÊ¹ÓÃ<>·ûºÅ²»·½±ã£¬¿ÉÒÔÊ¹ÓÃ{}·ûºÅ´úÌæ
-    // Ö§³Ö±êÇ©Ç¶Ì×£¨Èç<l><b>text</b></l>£©£¬µ«ÊÇ½»²æÇ¶Ì×ÊÇÓ¦¸Ã±ÜÃâµÄ£¨Èç<l><b>text</l></b>£©
+    // è€ƒè™‘åˆ°åœ¨xmlç¼–è¾‘å™¨ä¸­ä½¿ç”¨<>ç¬¦å·ä¸æ–¹ä¾¿ï¼Œå¯ä»¥ä½¿ç”¨{}ç¬¦å·ä»£æ›¿
+    // æ”¯æŒæ ‡ç­¾åµŒå¥—ï¼ˆå¦‚<l><b>text</b></l>ï¼‰ï¼Œä½†æ˜¯äº¤å‰åµŒå¥—æ˜¯åº”è¯¥é¿å…çš„ï¼ˆå¦‚<l><b>text</l></b>ï¼‰
     // The string formatter supports a kind of "mini-html" that consists of various short tags:
     //
     //   Bold:             <b>text</b>
@@ -1036,7 +1036,7 @@ void CRenderEngine::DrawHtmlText(HDC hDC, CPaintManagerUI* pManager, RECT& rc, L
     bool bInSelected = false;
     int iLineLinkIndex = 0;
 
-    // ÅÅ°æÏ°¹ßÊÇÍ¼ÎÄµ×²¿¶ÔÆë£¬ËùÒÔÃ¿ĞĞ»æÖÆ¶¼Òª·ÖÁ½²½£¬ÏÈ¼ÆËã¸ß¶È£¬ÔÙ»æÖÆ
+    // æ’ç‰ˆä¹ æƒ¯æ˜¯å›¾æ–‡åº•éƒ¨å¯¹é½ï¼Œæ‰€ä»¥æ¯è¡Œç»˜åˆ¶éƒ½è¦åˆ†ä¸¤æ­¥ï¼Œå…ˆè®¡ç®—é«˜åº¦ï¼Œå†ç»˜åˆ¶
     CStdPtrArray aLineFontArray;
     CStdPtrArray aLineColorArray;
     CStdPtrArray aLinePIndentArray;
@@ -1045,7 +1045,7 @@ void CRenderEngine::DrawHtmlText(HDC hDC, CPaintManagerUI* pManager, RECT& rc, L
     bool bLineInLink = false;
     bool bLineInSelected = false;
     int cyLineHeight = 0;
-    bool bLineDraw = false; // ĞĞµÄµÚ¶ş½×¶Î£º»æÖÆ
+    bool bLineDraw = false; // è¡Œçš„ç¬¬äºŒé˜¶æ®µï¼šç»˜åˆ¶
     while( *pstrText != _T('\0') ) {
         if( pt.x >= rc.right || *pstrText == _T('\n') || bLineEnd ) {
             if( *pstrText == _T('\n') ) pstrText++;
@@ -1158,7 +1158,7 @@ void CRenderEngine::DrawHtmlText(HDC hDC, CPaintManagerUI* pManager, RECT& rc, L
                     while( *pstrText > _T('\0') && *pstrText <= _T(' ') ) pstrText = ::CharNext(pstrText);
                     LPCTSTR pstrTemp = pstrText;
                     int iFont = (int) _tcstol(pstrText, const_cast<LPTSTR*>(&pstrText), 10);
-                    //if( isdigit(*pstrText) ) { // debug°æ±¾»áÒıÆğÒì³£
+                    //if( isdigit(*pstrText) ) { // debugç‰ˆæœ¬ä¼šå¼•èµ·å¼‚å¸¸
                     if( pstrTemp != pstrText ) {
                         TFontInfo* pFontInfo = pManager->GetFontInfo(iFont);
                         aFontArray.Add(pFontInfo);
@@ -1445,7 +1445,7 @@ void CRenderEngine::DrawHtmlText(HDC hDC, CPaintManagerUI* pManager, RECT& rc, L
                     if( pTm->tmItalic && pFontInfo->bItalic == false ) {
                         ABC abc;
                         ::GetCharABCWidths(hDC, _T(' '), _T(' '), &abc);
-                        pt.x += abc.abcC / 2; // ¼òµ¥ĞŞÕıÒ»ÏÂĞ±Ìå»ìÅÅµÄÎÊÌâ, ÕıÈ·×ö·¨Ó¦¸ÃÊÇhttp://support.microsoft.com/kb/244798/en-us
+                        pt.x += abc.abcC / 2; // ç®€å•ä¿®æ­£ä¸€ä¸‹æ–œä½“æ··æ’çš„é—®é¢˜, æ­£ç¡®åšæ³•åº”è¯¥æ˜¯http://support.microsoft.com/kb/244798/en-us
                     }
                     pTm = &pFontInfo->tm;
                     ::SelectObject(hDC, pFontInfo->hFont);

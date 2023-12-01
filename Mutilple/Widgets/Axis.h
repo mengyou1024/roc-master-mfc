@@ -14,7 +14,7 @@ public:
 	float& operator[]( size_t iIndex );
 
 public:
-	vector<FLOAT> m_pAxis;			//¿Ì¶È
-	vector<int> m_pAxisType;		//0:ÆÕÍ¨¿Ì¶È£¬1:Ğ¡¿Ì¶È£¬ 2£º´ó¿Ì¶È
-	vector<FLOAT> m_pAxis_value;	//¿Ì¶ÈÖµ
+	vector<FLOAT> m_pAxis;			//åˆ»åº¦
+	vector<int> m_pAxisType;		//0:æ™®é€šåˆ»åº¦ï¼Œ1:å°åˆ»åº¦ï¼Œ 2ï¼šå¤§åˆ»åº¦
+	vector<FLOAT> m_pAxis_value;	//åˆ»åº¦å€¼
 };

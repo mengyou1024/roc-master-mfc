@@ -153,22 +153,22 @@ public:
     void removeReadCallback();
 
     /**
-     * @brief ½«»Øµ÷º¯ÊıÁĞ±íÑ¹ÈëÕ»,
-     * @note ´Ë²Ù×÷ÔÚÑ¹ÈëÕ»ºó, »áµ÷ÓÃ`removeReadCallback`É¾³ıËùÓĞµÄ»Øµ÷º¯Êı
+     * @brief å°†å›è°ƒå‡½æ•°åˆ—è¡¨å‹å…¥æ ˆ,
+     * @note æ­¤æ“ä½œåœ¨å‹å…¥æ ˆå, ä¼šè°ƒç”¨`removeReadCallback`åˆ é™¤æ‰€æœ‰çš„å›è°ƒå‡½æ•°
      */
     void pushCallback();
 
     /**
-     * @brief ´ÓÕ»ÖĞ»Ö¸´»Øµ÷º¯ÊıÁĞ±í
+     * @brief ä»æ ˆä¸­æ¢å¤å›è°ƒå‡½æ•°åˆ—è¡¨
      */
     void popCallback();
 
     /**
-     * @brief ×Ô¶¯ÔöÒæ
-     * @param channel Í¨µÀºÅ
-     * @param gateIndex ²¨ÃÅË÷Òı
-     * @param goal Ä¿±êÖµ
-     * @param gainStep ÔöÒæ²½½ø
+     * @brief è‡ªåŠ¨å¢ç›Š
+     * @param channel é€šé“å·
+     * @param gateIndex æ³¢é—¨ç´¢å¼•
+     * @param goal ç›®æ ‡å€¼
+     * @param gainStep å¢ç›Šæ­¥è¿›
      */
     void autoGain(int channel, int gateIndex, float goal = 0.8f, float gainStep = 0.1f);
 

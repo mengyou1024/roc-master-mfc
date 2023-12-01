@@ -76,7 +76,7 @@ void Mesh::CreateBK() {
     m_pBkVertices[iIndex + 3].y = (float)m_rcItem.bottom;
     m_pBkVertices[iIndex + 3].z = 0;
     m_pBkVertices[iIndex + 3].s = 1;
-    m_pBkVertices[iIndex + 3].t = m_fBkCoord; // ²¨ĞÎ±³¾°ÇøÓò4¸öµã×é³ÉµÄ2¸öÈı½ÇĞÎ
+    m_pBkVertices[iIndex + 3].t = m_fBkCoord; // æ³¢å½¢èƒŒæ™¯åŒºåŸŸ4ä¸ªç‚¹ç»„æˆçš„2ä¸ªä¸‰è§’å½¢
 
     m_pBkIndex[iEbo]     = iIndex;
     m_pBkIndex[iEbo + 1] = iIndex + 1;
@@ -84,7 +84,7 @@ void Mesh::CreateBK() {
     m_pBkIndex[iEbo + 3] = iIndex + 1;
     m_pBkIndex[iEbo + 4] = iIndex + 2;
     m_pBkIndex[iEbo + 5] = iIndex + 3;
-    iIndex += 4, iEbo += 6; // Èı½ÇĞÎµãµÄ»æÖÆË³Ğò 012 /123
+    iIndex += 4, iEbo += 6; // ä¸‰è§’å½¢ç‚¹çš„ç»˜åˆ¶é¡ºåº 012 /123
 
     // Axis X BK
     m_pBkVertices[iIndex].x = (float)m_rcItem.vleft;
@@ -155,7 +155,7 @@ void Mesh::CreateBK() {
 }
 
 void Mesh::Setup() {
-    // ±³¾°
+    // èƒŒæ™¯
     if (m_iBkVAO == 0) {
         GenVAO(m_iBkVAO, m_iBkVBO, m_iBkEBO);
         glBindVertexArray(m_iBkVAO);
@@ -178,7 +178,7 @@ void Mesh::Setup() {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
-    // ¿Ì¶È
+    // åˆ»åº¦
     if (m_iAxisVAO == 0) {
         GenVAO(m_iAxisVAO, m_iAxisVBO);
         glBindVertexArray(m_iAxisVAO);
@@ -317,7 +317,7 @@ void Mesh::DrawAixs() {
     glBindBuffer(GL_ARRAY_BUFFER, m_iAxisVBO);
     m_pAxisVertices.resize(2);
 
-    // ×ø±ê
+    // åæ ‡
     for (int i = 0; i < (int)m_pAxis[AXIS_X].GetCount(); ++i) {
         float x = (float)m_rcItem.vleft + 1 + m_pAxis[AXIS_X][i];
         float y = (float)m_rcItem.vtop;
@@ -417,13 +417,13 @@ void Mesh::DrawAixsText() {
     CString   strInfo;
     glm::vec4 color(1.0f, 0, 0, 1.0f);
 
-    // ×ø±ê
+    // åæ ‡
     glScissor(m_rcItem.vleft, m_rcItem.top, m_rcItem.vWidth(), m_rcItem.iAxisWidth);
     glPushMatrix();
     glTranslatef((float)m_rcItem.vleft, (float)m_rcItem.top, 0.0F);
     for (int i = 0; i < (int)m_pAxis[AXIS_X].GetCount(); ++i) {
         if (m_pAxis[AXIS_X].m_pAxisType[i] == 2) {
-            // ¿Ì¶ÈÎÄ×Ö
+            // åˆ»åº¦æ–‡å­—
             if (m_pAxis[AXIS_X].m_pAxis_value[i] == 0) {
                 strInfo.Format(_T("%.1fmm"), m_pAxis[AXIS_X].m_pAxis_value[i]);
                 color = glm::vec4(1.0f, 0, 0, 1.0f);
@@ -462,12 +462,12 @@ void Mesh::DrawAixsText() {
 }
 
 void Mesh::RenderBK() {
-    // ±³¾°
+    // èƒŒæ™¯
     glBindVertexArray(m_iBkVAO);
     glDrawElements(GL_TRIANGLES, (int)m_pBkIndex.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 
-    // ×ø±ê
+    // åæ ‡
     m_pAxis[AXIS_X].Set(m_rcItem.vWidth() - 1, m_pScanMin[AXIS_X], m_pScanMax[AXIS_X]);
     m_pAxis[AXIS_Y].Set(m_rcItem.vHeight() - 1, m_pScanMin[AXIS_Y], m_pScanMax[AXIS_Y]);
     DrawAixs();

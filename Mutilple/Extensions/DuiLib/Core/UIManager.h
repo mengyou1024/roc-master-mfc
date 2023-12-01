@@ -213,11 +213,11 @@ public:
     static void SetCurrentPath(LPCTSTR pStrPath);
     static void SetResourceDll(HINSTANCE hInst);
     static void SetResourcePath(LPCTSTR pStrPath);
-	//´Ó×ÊÔ´ÎÄ¼şÖĞ¼ÓÔØzip
+	//ä»èµ„æºæ–‡ä»¶ä¸­åŠ è½½zip
 	static void SetResourceZip(UINT nResID);
-	//´ÓÄÚ´æÊı¾İ¼ÓÔØzip
+	//ä»å†…å­˜æ•°æ®åŠ è½½zip
 	static void SetResourceZip(LPVOID pVoid, unsigned int len);
-	//´Ó±¾µØzip¼ÓÔØzip
+	//ä»æœ¬åœ°zipåŠ è½½zip
     static void SetResourceZip(LPCTSTR pstrZip, bool bCachedResourceZip = false);
     static void GetHSL(short* H, short* S, short* L);
     static void SetHSL(bool bUseHSL, short H, short S, short L); // H:0~360, S:0~200, L:0~200 
@@ -346,22 +346,22 @@ private:
     static CControlUI* CALLBACK __FindControlsFromClass(CControlUI* pThis, LPVOID pData);
 
 private:
-    HWND	m_hWndPaint;	//Ëù¸½¼ÓµÄ´°ÌåµÄ¾ä±ú
-	int		m_nOpacity;		//´°ÌåÍ¸Ã÷¶È
-    HDC		m_hDcPaint;		//´°ÌåDC
+    HWND	m_hWndPaint;	//æ‰€é™„åŠ çš„çª—ä½“çš„å¥æŸ„
+	int		m_nOpacity;		//çª—ä½“é€æ˜åº¦
+    HDC		m_hDcPaint;		//çª—ä½“DC
     HDC		m_hDcOffscreen;
     HBITMAP m_hbmpOffscreen;
 	LPBYTE	m_pBmpOffscreenBits;
 
 	bool	m_bLayeredWindow;
-	RECT	m_rcInvalidate;		// °ëÍ¸Ã÷ÒìĞÎ´°ÌåÖĞ£¬±£´æË¢ĞÂÇøÓò
-	RECT	m_rcRichEditCorner;	// RichEdit¿Ø¼şµÄ·¶Î§£¨¾àÀë×óÉÏÓÒÏÂ´°ÌåµÄ±ß¾à£©£¬ÔÚ·Ö²ã´°ÌåÖĞ£¬ÓÃÓÚĞŞ¸´RichEditµÄAlphaÍ¨µÀ
+	RECT	m_rcInvalidate;		// åŠé€æ˜å¼‚å½¢çª—ä½“ä¸­ï¼Œä¿å­˜åˆ·æ–°åŒºåŸŸ
+	RECT	m_rcRichEditCorner;	// RichEditæ§ä»¶çš„èŒƒå›´ï¼ˆè·ç¦»å·¦ä¸Šå³ä¸‹çª—ä½“çš„è¾¹è·ï¼‰ï¼Œåœ¨åˆ†å±‚çª—ä½“ä¸­ï¼Œç”¨äºä¿®å¤RichEditçš„Alphaé€šé“
 	bool	m_bIsRestore;
 	bool	m_bUseGdiplusText;
 
 	CShadowUI m_shadow;
 
-	//¹â±ê
+	//å…‰æ ‡
 	RECT m_rcCaret;
 	bool m_bCaretActive;
 	bool m_bCaretShowing;

@@ -129,8 +129,8 @@ namespace DuiLib {
 		if (pStrImage == NULL)
 			return;
 
-		// 1¡¢aaa.jpg
-		// 2¡¢file='aaa.jpg' res='' restype='0' dest='0,0,0,0' source='0,0,0,0' corner='0,0,0,0' 
+		// 1Â¡Â¢aaa.jpg
+		// 2Â¡Â¢file='aaa.jpg' res='' restype='0' dest='0,0,0,0' source='0,0,0,0' corner='0,0,0,0' 
 		// mask='#FF0000' fade='255' hole='false' xtiled='false' ytiled='false'
 		CDuiString sItem;
 		CDuiString sValue;

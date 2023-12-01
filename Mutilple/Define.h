@@ -1,28 +1,28 @@
 #pragma once
 
-#pragma region ²ÎÊı
+#pragma region å‚æ•°
 #include <pch.h>
 
 #pragma warning(disable :26495)
 
-// ÎÄ¼ş¹Ø¼ü×Ö ±ê¼Ç
-#define FK_NEWFILE            0x55545041 // ¿ªÊ¼Î»
-#define FK_DATA_SYSFILE       0x55545042 // ÏµÍ³²ÎÊıÎ» System
-#define FK_DATA_CHFILE        0x55545043 // Í¨µÀ²ÎÊıÎ»  Channel*10
-#define FK_DATA_SPECIFILE     0x55545044 // ¹¤¼ş²ÎÊı/³µÂÖ²ÎÊı
-#define FK_DATA_PLCFILE       0x55545045 // PLCÏÂ·¢µÄ²ÎÊı
-#define FK_DATA_USERFILE      0x55545046 // µ±Ç°Ì½ÉË¹¤ĞÅÏ¢
-#define FK_DATA_STDDETECTFILE 0x55545047 // ±ê×¼Ì½ÉËÊı¾İ
-#define FK_DATA_SCANFILE      0x55545048 // É¨²îÊı¾İ
-#define FK_DATA_DEFECTFILE    0x55545049 // È±ÏİÊı¾İ
-#define FK_DATA_PLCSPEED      0x55545051 // PLCËÙ¶È²ÎÊı ºóÔö
-#define FK_DATA_END           0x55545050 // Êı¾İ½áÊø
+// æ–‡ä»¶å…³é”®å­— æ ‡è®°
+#define FK_NEWFILE            0x55545041 // å¼€å§‹ä½
+#define FK_DATA_SYSFILE       0x55545042 // ç³»ç»Ÿå‚æ•°ä½ System
+#define FK_DATA_CHFILE        0x55545043 // é€šé“å‚æ•°ä½  Channel*10
+#define FK_DATA_SPECIFILE     0x55545044 // å·¥ä»¶å‚æ•°/è½¦è½®å‚æ•°
+#define FK_DATA_PLCFILE       0x55545045 // PLCä¸‹å‘çš„å‚æ•°
+#define FK_DATA_USERFILE      0x55545046 // å½“å‰æ¢ä¼¤å·¥ä¿¡æ¯
+#define FK_DATA_STDDETECTFILE 0x55545047 // æ ‡å‡†æ¢ä¼¤æ•°æ®
+#define FK_DATA_SCANFILE      0x55545048 // æ‰«å·®æ•°æ®
+#define FK_DATA_DEFECTFILE    0x55545049 // ç¼ºé™·æ•°æ®
+#define FK_DATA_PLCSPEED      0x55545051 // PLCé€Ÿåº¦å‚æ•° åå¢
+#define FK_DATA_END           0x55545050 // æ•°æ®ç»“æŸ
 
-const INT   HD_CHANNEL_NUM_12 = 12;                // Ó²¼şÍ¨µÀÊı
-const INT   HD_CHANNEL_NUM    = HD_CHANNEL_NUM_12; // ÉÏ²ãÍ¨µÀÊı
-const int   MAX_GATE_NUM      = 3;                 // ×î´ó²¨ÃÅÊı
-const int   MAX_ML_NUM        = 2;                 // ²âÁ¿Ïß
-const int   COLOR_LIST_NUM    = 6;                 // É«²Ê±í
+const INT   HD_CHANNEL_NUM_12 = 12;                // ç¡¬ä»¶é€šé“æ•°
+const INT   HD_CHANNEL_NUM    = HD_CHANNEL_NUM_12; // ä¸Šå±‚é€šé“æ•°
+const int   MAX_GATE_NUM      = 3;                 // æœ€å¤§æ³¢é—¨æ•°
+const int   MAX_ML_NUM        = 2;                 // æµ‹é‡çº¿
+const int   COLOR_LIST_NUM    = 6;                 // è‰²å½©è¡¨
 const float MAX_AMP           = 255.0F;
 
 const float ANGLE_LEFT  = 120;
@@ -34,7 +34,7 @@ const float MIN_GAIN         = 0.0F;
 const float MAX_GAIN         = 110.0F;
 const int   MIN_VELOCITY     = 500;
 const int   MAX_VELOCITY     = 20000;
-const float MIN_DELAY        = 0.0F; //-10.24F; 10Í¨µÀ°å¿¨ÑÓÊ±Îª¸ºÖµµÄÒâÒå£¿
+const float MIN_DELAY        = 0.0F; //-10.24F; 10é€šé“æ¿å¡å»¶æ—¶ä¸ºè´Ÿå€¼çš„æ„ä¹‰ï¼Ÿ
 const float MAX_DELAY        = 1700.0F;
 const int   MIN_FREQUENCY    = 50;
 const int   MAX_FREQUENCY    = 5000;
@@ -50,7 +50,7 @@ const int   MIN_DAC_Hole     = 10;
 const int   MAX_DAC_Hole     = 500;
 const int   MIN_DAC_AMP      = 0;
 const int   MAX_DAC_AMP      = 100;
-// PLC¿ØÖÆ·ÃÎÊ
+// PLCæ§åˆ¶è®¿é—®
 const int MIN_X_POS = 0;
 const int MAX_X_POS = 1000;
 
@@ -60,17 +60,17 @@ const int MAX_Y_POS = 1000;
 const int MIN_Y_Speed = 0;
 const int MAX_Y_Speed = 100;
 //
-const INT DAC_HOLE_NUM = 12; // DAC ²É¼¯¿×µÄ¸öÊı
+const INT DAC_HOLE_NUM = 12; // DAC é‡‡é›†å­”çš„ä¸ªæ•°
 //
 const int TIMER_TIME  = 100;
 const int TIMER_SCAN  = 111;
-const int MESSURE_NUM = 4; // ²ÎÊıµ÷½ÌlistÀïÃæ ÁĞ¸öÊı
+const int MESSURE_NUM = 4; // å‚æ•°è°ƒæ•™listé‡Œé¢ åˆ—ä¸ªæ•°
 //
-// É¨²éÊÓÍ¼
+// æ‰«æŸ¥è§†å›¾
 const DWORD A_SCAN = 0x00000001;
 const DWORD C_SCAN = 0x00000008;
 
-// Ä¬ÈÏÉ«²Ê±í
+// é»˜è®¤è‰²å½©è¡¨
 const DWORD COLOR_TAB[3][256] = {
     {0xFCFDFE, 0x1F7FBFE, 0x2F2F8FD, 0x3EDF5FD, 0x4E7F2FC, 0x5E2EFFC, 0x6DDECFB, 0x7D8EAFB, 0x8D2E7FA, 0x9CDE4FA, 0xAC8E1F9,
      0xBC3DEF9, 0xCBDDBF8, 0xDB8D8F8, 0xEB3D6F7, 0xFAED3F7, 0x10A8D0F6, 0x11A3CDF6, 0x129ECAF5, 0x1399C7F5, 0x1485BCF2, 0x1581BAF1,
@@ -145,26 +145,26 @@ const DWORD COLOR_TAB[3][256] = {
      0xF2FF0400, 0xF3FF0400, 0xF4FF0400, 0xF5FF0400, 0xF6FF0400, 0xF7FF0400, 0xF8FF0400, 0xF9FF0400, 0xFAFF0400, 0xFBFF0400, 0xFCFF0400,
      0xFDFF0400, 0xFEFF0400, 0xFFFF0400}
 };
-// ÈğÌú10Í¨µÀÑÕÉ«  ²»¼ì²â ºÚÉ« 0 ¼ì²âÎŞÈ±Ïİ ´¿°×11      ÓĞÈ±Ïİ 1-10 Í¨µÀºÅ
+// ç‘é“10é€šé“é¢œè‰²  ä¸æ£€æµ‹ é»‘è‰² 0 æ£€æµ‹æ— ç¼ºé™· çº¯ç™½11      æœ‰ç¼ºé™· 1-10 é€šé“å·
 const DWORD COLOR_TAB_CH[12] = {
-    0xFF000000, // ºÚÉ« 0
-    0xFFDC143C, // ĞÉºì 1
-    0xFFC71585, // ÊÊÖĞµÄ×ÏÂŞÀ¼ºìÉ«2
-    0xFF800080, // ×ÏÉ« 2
-    0xFF483D8B, // ÉîÑÒ°µÀ¶»ÒÉ«3
-    0xFF0000FF, // ´¿À¶ 4
-    0xFF00BFFF, // ÉîÌìÀ¶6
-    0xFF00FFFF, // Ë®ÂÌÉ«7
-    0xFF2E8B57, // º£ÑóÂÌ8
-    0xFF00FF00, // Ëá³ÈÉ«9
-    0xFFDAA520, // Çï÷è÷ë 10
-    0x01505050  // ´¿°×
+    0xFF000000, // é»‘è‰² 0
+    0xFFDC143C, // çŒ©çº¢ 1
+    0xFFC71585, // é€‚ä¸­çš„ç´«ç½—å…°çº¢è‰²2
+    0xFF800080, // ç´«è‰² 2
+    0xFF483D8B, // æ·±å²©æš—è“ç°è‰²3
+    0xFF0000FF, // çº¯è“ 4
+    0xFF00BFFF, // æ·±å¤©è“6
+    0xFF00FFFF, // æ°´ç»¿è‰²7
+    0xFF2E8B57, // æµ·æ´‹ç»¿8
+    0xFF00FF00, // é…¸æ©™è‰²9
+    0xFFDAA520, // ç§‹éº’éºŸ 10
+    0x01505050  // çº¯ç™½
 };
 
 #define WM_DEFECTLISTITEMSELECT WM_USER + 30
 
 #define PI                      3.141592653f
-#define ANG2RAD(x)              (0.017453292f * (x)) // 1¶È=¦Ğ/180¡Ö0.01745»¡¶È
+#define ANG2RAD(x)              (0.017453292f * (x)) // 1åº¦=Ï€/180â‰ˆ0.01745å¼§åº¦
 #define RAD2ANG(x)              ((x) / 0.017453292f)
 #define _Tr                     __T
 
@@ -175,8 +175,8 @@ const DWORD COLOR_TAB_CH[12] = {
 #define AXIS_Z                  2
 #define GATE_A                  0
 #define GATE_B                  1
-#define EPS                     0.00001 // ÅĞ¶Ï¸¡¶¯ÊıÏàµÈµÄÎ¢Ğ¡Îó²î
-// °´¼ü
+#define EPS                     0.00001 // åˆ¤æ–­æµ®åŠ¨æ•°ç›¸ç­‰çš„å¾®å°è¯¯å·®
+// æŒ‰é”®
 enum class ITEM_KEYDOWN_TYPE {
     ITEM_KEYDOWN_NONE,
     ITEM_KEYDOWN_NORMAL,
@@ -196,67 +196,67 @@ enum ITEM_VIEW_TYPE {
 
 #pragma endregion
 
-#pragma region ½á¹¹Ìå
+#pragma region ç»“æ„ä½“
 
-// Êı¾İ¶ÁÈ¡
+// æ•°æ®è¯»å–
 typedef struct _tagREAD_DATA {
-    float fAngle; // ±àÂë½Ç¶È
+    float fAngle; // ç¼–ç è§’åº¦
 
-    __int32      pAxle[HD_CHANNEL_NUM]       = {}; // ÖáºÅ
-    __int32      pChannel[HD_CHANNEL_NUM]    = {}; // Í¨µÀºÅ
-    __int32      pPackage[HD_CHANNEL_NUM]    = {}; // °üĞòÁĞ
-    vector<BYTE> pAscan[HD_CHANNEL_NUM]      = {}; // AÉ¨Êı¾İ
-    __int32      pCoder[HD_CHANNEL_NUM][2]   = {}; // ±àÂëÆ÷Öµ
-    __int32      pGatePos[HD_CHANNEL_NUM][2] = {}; // ²¨ÃÅÎ»ÖÃ
-    __int32      pGateAmp[HD_CHANNEL_NUM][2] = {}; // ²¨ÃÅ²¨·ù
-    __int32      pAlarm[HD_CHANNEL_NUM][2]   = {}; // ²¨ÃÅ±¨¾¯
+    __int32      pAxle[HD_CHANNEL_NUM]       = {}; // è½´å·
+    __int32      pChannel[HD_CHANNEL_NUM]    = {}; // é€šé“å·
+    __int32      pPackage[HD_CHANNEL_NUM]    = {}; // åŒ…åºåˆ—
+    vector<BYTE> pAscan[HD_CHANNEL_NUM]      = {}; // Aæ‰«æ•°æ®
+    __int32      pCoder[HD_CHANNEL_NUM][2]   = {}; // ç¼–ç å™¨å€¼
+    __int32      pGatePos[HD_CHANNEL_NUM][2] = {}; // æ³¢é—¨ä½ç½®
+    __int32      pGateAmp[HD_CHANNEL_NUM][2] = {}; // æ³¢é—¨æ³¢å¹…
+    __int32      pAlarm[HD_CHANNEL_NUM][2]   = {}; // æ³¢é—¨æŠ¥è­¦
 } READ_DATA, *P_READ_DATA;
 
-// Êı¾İ
+// æ•°æ®
 typedef struct _tagDRAW_BUFFER {
     HANDLE           hReady                      = {};
-    int              pCoder[HD_CHANNEL_NUM][2]   = {}; // ±àÂëÆ÷Öµ
-    __int32          pGatePos[HD_CHANNEL_NUM][2] = {}; // ²¨ÃÅÎ»ÖÃ
-    __int32          pGateAmp[HD_CHANNEL_NUM][2] = {}; // ²¨ÃÅ²¨·ù
-    vector<float>    pData[HD_CHANNEL_NUM]       = {}; // ÊµÊ±²É¼¯Ê± ÒÑ¾­ /MAX_AMP £¨0.1-1.0f£©
+    int              pCoder[HD_CHANNEL_NUM][2]   = {}; // ç¼–ç å™¨å€¼
+    __int32          pGatePos[HD_CHANNEL_NUM][2] = {}; // æ³¢é—¨ä½ç½®
+    __int32          pGateAmp[HD_CHANNEL_NUM][2] = {}; // æ³¢é—¨æ³¢å¹…
+    vector<float>    pData[HD_CHANNEL_NUM]       = {}; // å®æ—¶é‡‡é›†æ—¶ å·²ç» /MAX_AMP ï¼ˆ0.1-1.0fï¼‰
     _tagDRAW_BUFFER* pNext;
 } DRAW_BUFFER, *P_DRAW_BUFFER;
 
-// Êı¾İ¼ÇÂ¼
+// æ•°æ®è®°å½•
 typedef struct _tagRECORD_DATA {
-    __int32 pGatePos[HD_CHANNEL_NUM][2] = {}; // ²¨ÃÅÎ»ÖÃ
-    __int32 pGateAmp[HD_CHANNEL_NUM][2] = {}; // ²¨ÃÅ²¨·ù
+    __int32 pGatePos[HD_CHANNEL_NUM][2] = {}; // æ³¢é—¨ä½ç½®
+    __int32 pGateAmp[HD_CHANNEL_NUM][2] = {}; // æ³¢é—¨æ³¢å¹…
 
-    __int64      iAscanSize[HD_CHANNEL_NUM] = {}; // pAscan ´óĞ¡
-    vector<BYTE> pAscan[HD_CHANNEL_NUM]     = {}; // ËùÓĞÍ¨µÀÊı¾İ¶¼¼ÇÂ¼
+    __int64      iAscanSize[HD_CHANNEL_NUM] = {}; // pAscan å¤§å°
+    vector<BYTE> pAscan[HD_CHANNEL_NUM]     = {}; // æ‰€æœ‰é€šé“æ•°æ®éƒ½è®°å½•
 } RECORD_DATA, *P_RECORD_DATA;
 
 typedef struct _tagRECORD_DATA_RES {
-    __int32 pGatePos[HD_CHANNEL_NUM][2]{}; // ²¨ÃÅÎ»ÖÃ
-    __int32 pGateAmp[HD_CHANNEL_NUM][2]{}; // ²¨ÃÅ²¨·ù
+    __int32 pGatePos[HD_CHANNEL_NUM][2]{}; // æ³¢é—¨ä½ç½®
+    __int32 pGateAmp[HD_CHANNEL_NUM][2]{}; // æ³¢é—¨æ³¢å¹…
 
-    __int64      iAscanSize[HD_CHANNEL_NUM]{};  // pAscan ´óĞ¡
-    vector<BYTE> pAscan[HD_CHANNEL_NUM]{};      // ËùÓĞÍ¨µÀÊı¾İ¶¼¼ÇÂ¼
-    float        fDb[HD_CHANNEL_NUM]{};         // È±Ïİ´óĞ¡
-    int          bDefectType[HD_CHANNEL_NUM]{}; // È±ÏİÀàĞÍ 0 È±Ïİ 1. Í¸Éù²»Á¼
+    __int64      iAscanSize[HD_CHANNEL_NUM]{};  // pAscan å¤§å°
+    vector<BYTE> pAscan[HD_CHANNEL_NUM]{};      // æ‰€æœ‰é€šé“æ•°æ®éƒ½è®°å½•
+    float        fDb[HD_CHANNEL_NUM]{};         // ç¼ºé™·å¤§å°
+    int          bDefectType[HD_CHANNEL_NUM]{}; // ç¼ºé™·ç±»å‹ 0 ç¼ºé™· 1. é€å£°ä¸è‰¯
 } RECORD_DATA_RES, *P_RECORD_DATA_RES;
 
 typedef struct _tagFILE_INFO {
     bool  bSelected         = {};
-    TCHAR pName[_MAX_FNAME] = {}; // ÎÄ¼şÃû
-    TCHAR pPath[_MAX_FNAME] = {}; // Â·¾¶
-    TCHAR pUser[128]        = {}; // É¨²éÈËÔ±
-    TCHAR pDate[32]         = {}; // É¨²éÈÕÆÚ
+    TCHAR pName[_MAX_FNAME] = {}; // æ–‡ä»¶å
+    TCHAR pPath[_MAX_FNAME] = {}; // è·¯å¾„
+    TCHAR pUser[128]        = {}; // æ‰«æŸ¥äººå‘˜
+    TCHAR pDate[32]         = {}; // æ‰«æŸ¥æ—¥æœŸ
 } FILE_INFO, *P_FILE_INFO;
-// ÇøÓò
+// åŒºåŸŸ
 typedef struct _tagGL_RECT {
-    // ÕûÌåÇøÓò
+    // æ•´ä½“åŒºåŸŸ
     int left{};
     int right{};
     int top{};
     int bottom{};
 
-    // ÊÓÍ¼ÇøÓò
+    // è§†å›¾åŒºåŸŸ
     int vleft{};
     int vright{};
     int vtop{};

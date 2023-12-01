@@ -14,7 +14,7 @@ using std::pair;
 using std::string;
 using std::vector;
 
-/// ½»»»floatÀàĞÍ±äÁ¿µÄ×Ö½ÚĞò
+/// äº¤æ¢floatç±»å‹å˜é‡çš„å­—èŠ‚åº
 #define PLC_SWAP_FLOAT 1
 
 namespace AbsPLCIntf {
@@ -76,25 +76,25 @@ namespace AbsPLCIntf {
     void getConnectedInfo(std::string* addr = nullptr, int* rack = nullptr, int* slot = nullptr);
 
     /**
-     * @brief »ñÈ¡intÀàĞÍµÄ±äÁ¿ µÚ¶ş¸ö²ÎÊıÌî0
+     * @brief è·å–intç±»å‹çš„å˜é‡ ç¬¬äºŒä¸ªå‚æ•°å¡«0
      *
-     * @param name ±äÁ¿Ãû Èç I00¡¢Q00¡¢M00
+     * @param name å˜é‡å å¦‚ I00ã€Q00ã€M00
      * @return
      */
     int getVariable(string name, int);
 
     /**
-     * @brief »ñÈ¡floatÀàĞÍµÄ±äÁ¿ µÚ¶ş¸ö²ÎÊıÌî0.0f
+     * @brief è·å–floatç±»å‹çš„å˜é‡ ç¬¬äºŒä¸ªå‚æ•°å¡«0.0f
      *
-     * @param name ±äÁ¿Ãû Èç `V1000`
+     * @param name å˜é‡å å¦‚ `V1000`
      * @return
      */
     float getVariable(string name, float);
 
     /**
-     * @brief ÉèÖÃfloatÀàĞÍ(VÇø)µÄ±äÁ¿
+     * @brief è®¾ç½®floatç±»å‹(VåŒº)çš„å˜é‡
      *
-     * @param s ±äÁ¿Ãû Èç `V1000`
+     * @param s å˜é‡å å¦‚ `V1000`
      * @param var
      * @return true
      * @return false
@@ -102,20 +102,20 @@ namespace AbsPLCIntf {
     bool setVariable(string s, float var);
 
     /**
-     * @brief ÅúÁ¿ÉèÖÃfloatÀàĞÍ(VÇø)µÄ±äÁ¿
+     * @brief æ‰¹é‡è®¾ç½®floatç±»å‹(VåŒº)çš„å˜é‡
      *
-     * @param s ÆğÊ¼±äÁ¿Ãû Èç `V1000`
-     * @param var floatÀàĞÍÊı×éµØÖ·
-     * @param size floatÀàĞÍÊı×éµÄ¸öÊı
+     * @param s èµ·å§‹å˜é‡å å¦‚ `V1000`
+     * @param var floatç±»å‹æ•°ç»„åœ°å€
+     * @param size floatç±»å‹æ•°ç»„çš„ä¸ªæ•°
      * @return true
      * @return false
      */
     bool setVariable(string s, float* var, int count);
 
     /**
-     * @brief ÉèÖÃboolÀàĞÍµÄ±äÁ¿
+     * @brief è®¾ç½®boolç±»å‹çš„å˜é‡
      *
-     * @param s ±äÁ¿Ãû Èç `M00`¡¢`I00`¡¢`Q00`
+     * @param s å˜é‡å å¦‚ `M00`ã€`I00`ã€`Q00`
      * @param b
      * @return true
      * @return false

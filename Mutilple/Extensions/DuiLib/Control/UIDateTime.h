@@ -7,7 +7,7 @@ namespace DuiLib
 {
 	class CDateTimeWnd;
 
-	/// 时间选择控件
+	/// 鏃堕棿閫夋嫨鎺т欢
 	class UILIB_API CDateTimeUI : public CButtonUI
 	{
 		friend class CDateTimeWnd;

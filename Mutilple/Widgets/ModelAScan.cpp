@@ -29,9 +29,9 @@ void ModelAScan::Init() {
 
 void ModelAScan::SetSize(int left, int top, int right, int bottom) {
     mSetSizeRect = {left, top, right, bottom};
-    // AÉ¨¿í¶È
+    // Aæ‰«å®½åº¦
     int iAscanWidth = ((right - left) - 3);
-    // AÉ¨¸ß¶È
+    // Aæ‰«é«˜åº¦
     int iAscanHeight = ((bottom - top) - 6);
 
     for (auto& [_, ptr] : m_pMesh) {
@@ -71,7 +71,7 @@ void ModelAScan::RenderBK() {
 void ModelAScan::Render() {
     for (auto& [index, ptr] : m_pMesh) {
         if (ptr) {
-            // ¸üĞÂAÉ¨Êı¾İ
+            // æ›´æ–°Aæ‰«æ•°æ®
             ((MeshAscan*)ptr)->UpdateAScanData();
             ((MeshAscan*)ptr)->UpdateAmpMemoryData();
             ptr->Render();

@@ -37,9 +37,9 @@ private:
     FLOAT   m_fScanMin;
     FLOAT   m_fScanMax;
     GLsizei m_iAScanSize;
-    GLsizei m_iDACSize;                        // 母线DAC
+    GLsizei m_iDACSize;                        // 姣嶇嚎DAC
     GLsizei m_iDACLineSize[MAX_DAC_LINES_NUM]; // RL SL
-    GLsizei m_iAmpMemoryLineSize[MAX_GATE_NUM]; ///< 峰值记忆的大小
+    GLsizei m_iAmpMemoryLineSize[MAX_GATE_NUM]; ///< 宄板�艰蹇嗙殑澶у皬
     struct _gate_info {
         bool  bEnable;
         float fPos;

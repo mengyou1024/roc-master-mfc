@@ -6,7 +6,7 @@
 #include "Mutilple.h"
 #include "OpenGL.h"
 
-// TODO: ÔİÊ±ÆÁ±Î¾¯¸æ
+// TODO: æš‚æ—¶å±è”½è­¦å‘Š
 #pragma warning(disable :4267 4244 4552 4305 4101)
 
 constexpr auto TIMER_OPENGL_RENDER = 0x00;
@@ -116,12 +116,12 @@ void OpenGL::Init() {
     glewExperimental = GL_TRUE;
     glewInit();
 
-    // ¼ÓÔØ×ÖÌå
+    // åŠ è½½å­—ä½“
     m_Font.Create(IDR_MYFONT1, 20);
 
-    SetTimer(m_hWnd, TIMER_OPENGL_RENDER, 15, NULL); // 15FPSË¢ĞÂËÙ¶È¡£
+    SetTimer(m_hWnd, TIMER_OPENGL_RENDER, 15, NULL); // 15FPSåˆ·æ–°é€Ÿåº¦ã€‚
 
-    // ³õÊ¼»¯É«²ÊÎÆÀí
+    // åˆå§‹åŒ–è‰²å½©çº¹ç†
     InitColorTable();
 }
 
@@ -130,12 +130,12 @@ void OpenGL::InitColorTable() {
         int iIndex = y * COLOR_TEX_WIDTH;
 
         switch (y) {
-                // ²¨·ù
+                // æ³¢å¹…
             case BK_TEX_AMP:
                 for (int x = 0; x < COLOR_TEX_WIDTH; x++)
                     m_pColor[iIndex + x] = COLOR_TAB[1][x];
                 break;
-                // AÉ¨
+                // Aæ‰«
             case BK_TEX_RANGE:
                 for (int x = 0; x < COLOR_TEX_WIDTH; x++)
                     m_pColor[iIndex + x] = 0xFF306090;
@@ -155,17 +155,17 @@ void OpenGL::InitColorTable() {
                 for (int x = 0; x < COLOR_TEX_WIDTH; x++)
                     m_pColor[iIndex + x] = 0xFF218868;
                 break;
-                // ¿Ì¶È±³¾°
+                // åˆ»åº¦èƒŒæ™¯
             case BK_TEX_AXIS_BK:
                 for (int x = 0; x < COLOR_TEX_WIDTH; x++)
                     m_pColor[iIndex + x] = 0xFF000000;
                 break;
-                // ¿Ì¶È
+                // åˆ»åº¦
             case BK_TEX_AXIS:
                 for (int x = 0; x < COLOR_TEX_WIDTH; x++)
                     m_pColor[iIndex + x] = 0xFFFFFFFF;
                 break;
-                // Áã¿Ì¶È
+                // é›¶åˆ»åº¦
             case BK_TEX_AXIS_ZERO:
                 for (int x = 0; x < COLOR_TEX_WIDTH; x++)
                     m_pColor[iIndex + x] = 0xFFFF0000;
@@ -175,12 +175,12 @@ void OpenGL::InitColorTable() {
                 for (int x = 0; x < COLOR_TEX_WIDTH; x++)
                     m_pColor[iIndex + x] = 0xFF << 24 | x << 16 | x << 8 | x;
                 break;
-                // Íø¸ñ
+                // ç½‘æ ¼
             case BK_TEX_MESH:
                 for (int x = 0; x < COLOR_TEX_WIDTH; x++)
                     m_pColor[iIndex + x] = 0x7FFFFF00;
                 break;
-                // Ä¬ÈÏÉ«
+                // é»˜è®¤è‰²
             default:
                 for (int x = 0; x < COLOR_TEX_WIDTH; x++)
                     m_pColor[iIndex + x] = 0x00000000;
@@ -245,28 +245,28 @@ void OpenGL::SetPos(int iWidth, int iHeight) {
 }
 
 float OpenGL::FPS() {
-    static float fps         = 0;    // ÎÒÃÇĞèÒª¼ÆËãµÄFPSÖµ
-    static int   frameCount  = 0;    // Ö¡Êı
-    static float currentTime = 0.0f; // µ±Ç°Ê±¼ä
-    static float lastTime    = 0.0f; // ³ÖĞøÊ±¼ä
+    static float fps         = 0;    // æˆ‘ä»¬éœ€è¦è®¡ç®—çš„FPSå€¼
+    static int   frameCount  = 0;    // å¸§æ•°
+    static float currentTime = 0.0f; // å½“å‰æ—¶é—´
+    static float lastTime    = 0.0f; // æŒç»­æ—¶é—´
 
-    frameCount++; // Ã¿µ÷ÓÃÒ»´ÎGet_FPS()º¯Êı£¬Ö¡Êı×ÔÔö1
+    frameCount++; // æ¯è°ƒç”¨ä¸€æ¬¡Get_FPS()å‡½æ•°ï¼Œå¸§æ•°è‡ªå¢1
     currentTime =
-        GetTickCount64() * 0.001f; // »ñÈ¡ÏµÍ³Ê±¼ä£¬ÆäÖĞtimeGetTimeº¯Êı·µ»ØµÄÊÇÒÔºÁÃëÎªµ¥Î»µÄÏµÍ³Ê±¼ä£¬ËùÒÔĞèÒª³ËÒÔ0.001£¬µÃµ½µ¥Î»ÎªÃëµÄÊ±¼ä
+        GetTickCount64() * 0.001f; // è·å–ç³»ç»Ÿæ—¶é—´ï¼Œå…¶ä¸­timeGetTimeå‡½æ•°è¿”å›çš„æ˜¯ä»¥æ¯«ç§’ä¸ºå•ä½çš„ç³»ç»Ÿæ—¶é—´ï¼Œæ‰€ä»¥éœ€è¦ä¹˜ä»¥0.001ï¼Œå¾—åˆ°å•ä½ä¸ºç§’çš„æ—¶é—´
 
-    // Èç¹ûµ±Ç°Ê±¼ä¼õÈ¥³ÖĞøÊ±¼ä´óÓÚÁË1ÃëÖÓ£¬¾Í½øĞĞÒ»´ÎFPSµÄ¼ÆËãºÍ³ÖĞøÊ±¼äµÄ¸üĞÂ£¬²¢½«Ö¡ÊıÖµÇåÁã
-    if (currentTime - lastTime > 1.0f) // ½«Ê±¼ä¿ØÖÆÔÚ1ÃëÖÓ
+    // å¦‚æœå½“å‰æ—¶é—´å‡å»æŒç»­æ—¶é—´å¤§äºäº†1ç§’é’Ÿï¼Œå°±è¿›è¡Œä¸€æ¬¡FPSçš„è®¡ç®—å’ŒæŒç»­æ—¶é—´çš„æ›´æ–°ï¼Œå¹¶å°†å¸§æ•°å€¼æ¸…é›¶
+    if (currentTime - lastTime > 1.0f) // å°†æ—¶é—´æ§åˆ¶åœ¨1ç§’é’Ÿ
     {
-        fps        = (float)frameCount / (currentTime - lastTime); // ¼ÆËãÕâ1ÃëÖÓµÄFPSÖµ
-        lastTime   = currentTime; // ½«µ±Ç°Ê±¼äcurrentTime¸³¸ø³ÖĞøÊ±¼älastTime£¬×÷ÎªÏÂÒ»ÃëµÄ»ù×¼Ê±¼ä
-        frameCount = 0;           // ½«±¾´ÎÖ¡ÊıframeCountÖµÇåÁã
+        fps        = (float)frameCount / (currentTime - lastTime); // è®¡ç®—è¿™1ç§’é’Ÿçš„FPSå€¼
+        lastTime   = currentTime; // å°†å½“å‰æ—¶é—´currentTimeèµ‹ç»™æŒç»­æ—¶é—´lastTimeï¼Œä½œä¸ºä¸‹ä¸€ç§’çš„åŸºå‡†æ—¶é—´
+        frameCount = 0;           // å°†æœ¬æ¬¡å¸§æ•°frameCountå€¼æ¸…é›¶
     }
 
     return fps;
 }
 
 void OpenGL::Render() {
-    // Éè¶¨OpenGLµ±Ç°Ïß³ÌµÄäÖÈ¾»·¾³
+    // è®¾å®šOpenGLå½“å‰çº¿ç¨‹çš„æ¸²æŸ“ç¯å¢ƒ
     wglMakeCurrent(m_hDC, m_hRC);
 
     size_t iSize = m_pModel.size();
@@ -276,10 +276,10 @@ void OpenGL::Render() {
         }
     }
 
-    // ÖØÖÃÊÓ¿Ú
+    // é‡ç½®è§†å£
     InitViewport();
 
-    // µ±Ç°»º³åÇøÇå³ı
+    // å½“å‰ç¼“å†²åŒºæ¸…é™¤
     glClearColor(0.95F, 0.95F, 0.95F, 0.95F);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -301,7 +301,7 @@ void OpenGL::Render() {
     InitViewport();
 
     for (size_t i = 0; i < iSize; i++) {
-        m_pModel[i]->RenderFore(); // ÎÄ×Ö
+        m_pModel[i]->RenderFore(); // æ–‡å­—
     }
 
 #ifdef _DEBUG
@@ -332,18 +332,18 @@ void OpenGL::Release() {
     DeleteTexture(m_iColorTexture);
 }
 
-// °´¼ü ÉÏÏÂ×óÓÒ
-void OpenGL::OnKeyUp() { // ÉÏÒ»È¦
+// æŒ‰é”® ä¸Šä¸‹å·¦å³
+void OpenGL::OnKeyUp() { // ä¸Šä¸€åœˆ
 
 }
-void OpenGL::OnKeyDown() { // ÏÂÒ»È¦
+void OpenGL::OnKeyDown() { // ä¸‹ä¸€åœˆ
 
 }
 
-void OpenGL::OnKeyLeft() { // Ç°Ò»¸öµã
+void OpenGL::OnKeyLeft() { // å‰ä¸€ä¸ªç‚¹
 
 }
-void OpenGL::OnKeyRight() { // ºóÒ»¸öµã
+void OpenGL::OnKeyRight() { // åä¸€ä¸ªç‚¹
 
 }
 

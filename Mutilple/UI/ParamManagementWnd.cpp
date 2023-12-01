@@ -76,7 +76,7 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
                     bridge->name   = data[0].name;
                     bridge->mCache = data[0].mCache;
                     bridge->syncCache2Board();
-                    DMessageBox(L"读取成功!");
+                    DMessageBox(L"璇诲彇鎴愬姛!");
                 }
             } catch (std::exception& e) {
                 spdlog::error("file:{} line:{}", __FILE__, __LINE__);
@@ -91,7 +91,7 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
                 auto port   = TOFDUSBPort::storage().get<TOFDUSBPort>(id);
                 port.mCache = mBridge->mCache;
                 TOFDUSBPort::storage().update(port);
-                DMessageBox(L"写入成功!");
+                DMessageBox(L"鍐欏叆鎴愬姛!");
             } catch (std::exception& e) { spdlog::error(GB2312ToUtf8(e.what())); }
         }
     }

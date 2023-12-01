@@ -52,21 +52,21 @@ void ModelGroupCScan::DrawAxis(void) {
 
     glBindVertexArray(0);
 
-    // ×ø±êÖáÊıÖµ
+    // åæ ‡è½´æ•°å€¼
     glEnable(GL_SCISSOR_TEST);
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
 
     CString   strInfo;
     glm::vec4 color(1.0f, 0, 0, 1.0f);
-    // ×ø±ê
+    // åæ ‡
     glScissor(mAxisViewPort.left, mAxisViewPort.top, std::abs(mAxisViewPort.right - mAxisViewPort.left),
               std::abs(mAxisViewPort.top - mAxisViewPort.bottom));
     glPushMatrix();
     glTranslatef((float)mAxisViewPort.left + 3, (float)mAxisViewPort.top + 5, 0.0F);
     for (int i = 0; i < (int)m_pAxis.GetCount(); ++i) {
         if (m_pAxis.m_pAxisType[i] == 2) {
-            // ¿Ì¶ÈÎÄ×Ö
+            // åˆ»åº¦æ–‡å­—
             if (m_pAxis.m_pAxis_value[i] == 0) {
                 strInfo.Format(_T("%.1fmm"), m_pAxis.m_pAxis_value[i]);
                 color = glm::vec4(1.0f, 0, 0, 1.0f);
@@ -93,7 +93,7 @@ ModelGroupCScan::~ModelGroupCScan() {
 void ModelGroupCScan::Init() {
     Release();
 
-    // `VIEW_CSCAN_NUM`¸öAÉ¨
+    // `VIEW_CSCAN_NUM`ä¸ªAæ‰«
     for (size_t view = 0; view < (size_t)(HD_CHANNEL_NUM); view++) {
         if (m_pMesh.count(view) == 0) {
             m_pMesh.insert(std::pair<size_t, Mesh *>(view, new MeshGroupCScan(m_pOpenGL)));
@@ -103,16 +103,16 @@ void ModelGroupCScan::Init() {
 }
 
 void ModelGroupCScan::SetSize(int left, int top, int right, int bottom) {
-    // µ±Ç°ÊÓ¿Ú
+    // å½“å‰è§†å£
     mCurrentViewPort.left   = left;
     mCurrentViewPort.right  = right;
     mCurrentViewPort.bottom = bottom;
     mCurrentViewPort.top    = top;
-    // Æ«ÒÆÒ»¸ö×ø±êÖáµÄ¸ß¶È
+    // åç§»ä¸€ä¸ªåæ ‡è½´çš„é«˜åº¦
     bottom -= 26;
-    // CÉ¨¿í¶È
+    // Cæ‰«å®½åº¦
     int iViewWidth = ((right - left) - 3) / VIEW_CSCAN_COLUMNS;
-    // CÉ¨¸ß¶È
+    // Cæ‰«é«˜åº¦
     int iViewHeight = ((bottom - top) - 6) / (VIEW_CSCAN_NUM / VIEW_CSCAN_COLUMNS);
 
     mAxisViewPort.left   = left - 1;
@@ -121,7 +121,7 @@ void ModelGroupCScan::SetSize(int left, int top, int right, int bottom) {
     mAxisViewPort.top    = bottom + 1;
 
     RECT rc{0};
-    // ¼ÆËãAÉ¨ÏÔÊ¾ÇøÓò
+    // è®¡ç®—Aæ‰«æ˜¾ç¤ºåŒºåŸŸ
     for (int i = 0; i < VIEW_CSCAN_NUM; i++) {
         rc.left  = (i % VIEW_CSCAN_COLUMNS) * (iViewWidth + 1);
         rc.right = rc.left + iViewWidth;
@@ -132,7 +132,7 @@ void ModelGroupCScan::SetSize(int left, int top, int right, int bottom) {
             rc.bottom = rc.top + iViewHeight;
         }
 
-        // OpenGLÊÓÍ¼×ø±ê0µãÔÚ×óÏÂ½Ç
+        // OpenGLè§†å›¾åæ ‡0ç‚¹åœ¨å·¦ä¸‹è§’
         for (int offset = 0; offset < 3; offset++) {
             size_t iView = offset * 4 + static_cast<size_t>(VIEW_TYPE::VIEW_CSCAN_0) +
                            (static_cast<size_t>((VIEW_CSCAN_NUM / VIEW_CSCAN_COLUMNS - 1)) - i / VIEW_CSCAN_COLUMNS) * VIEW_CSCAN_COLUMNS +
@@ -211,13 +211,13 @@ void ModelGroupCScan::RenderFore() {
     m_pAxis.Set(std::abs(mAxisViewPort.right - mAxisViewPort.left - 1), mAxisMin, mAxisMax);
     DrawAxis();
 
-    // ×ø±êÖáÊıÖµ
+    // åæ ‡è½´æ•°å€¼
     glEnable(GL_SCISSOR_TEST);
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
 
     glm::vec4 color(0.2f, 0.6f, 0.9f, 1.0f);
-    // »æÖÆË÷Òı
+    // ç»˜åˆ¶ç´¢å¼•
     glScissor(mCurrentViewPort.left, mCurrentViewPort.top, std::abs(mCurrentViewPort.right - mCurrentViewPort.left),
               std::abs(mCurrentViewPort.top - mCurrentViewPort.bottom));
     glPushMatrix();

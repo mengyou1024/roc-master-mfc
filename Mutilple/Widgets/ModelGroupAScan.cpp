@@ -24,7 +24,7 @@ void ModelGroupAScan::OnMouseWheel(UINT nFlags, short zDelta, ::CPoint pt) {}
 void ModelGroupAScan::Init() {
     Release();
 
-    // `VIEW_ASCAN_NUM`¸öAÉ¨
+    // `VIEW_ASCAN_NUM`ä¸ªAæ‰«
     for (size_t view = 0; view < HD_CHANNEL_NUM; view++) {
         if (m_pMesh.count(view) == 0) {
             m_pMesh.insert(std::pair<size_t, Mesh*>(view, new MeshAscan(m_pOpenGL)));
@@ -35,13 +35,13 @@ void ModelGroupAScan::Init() {
 
 void ModelGroupAScan::SetSize(int left, int top, int right, int bottom) {
     mSetSizeRect = {left, top, right, bottom};
-    // AÉ¨¿í¶È
+    // Aæ‰«å®½åº¦
     int iAscanWidth = ((right - left) - 3) / VIEW_ASCAN_COLUMNS;
-    // AÉ¨¸ß¶È
+    // Aæ‰«é«˜åº¦
     int iAscanHeight = ((bottom - top) - 6) / (VIEW_ASCAN_NUM / VIEW_ASCAN_COLUMNS);
 
     RECT rc{0};
-    // ¼ÆËãAÉ¨ÏÔÊ¾ÇøÓò
+    // è®¡ç®—Aæ‰«æ˜¾ç¤ºåŒºåŸŸ
     for (int i = 0; i < VIEW_ASCAN_NUM; i++) {
         rc.left  = (i % VIEW_ASCAN_COLUMNS) * (iAscanWidth + 1);
         rc.right = rc.left + iAscanWidth;
@@ -53,7 +53,7 @@ void ModelGroupAScan::SetSize(int left, int top, int right, int bottom) {
         }
 
         for (size_t offset = 0ull; offset < HD_CHANNEL_NUM / VIEW_ASCAN_NUM; offset++) {
-            // OpenGLÊÓÍ¼×ø±ê0µãÔÚ×óÏÂ½Ç
+            // OpenGLè§†å›¾åæ ‡0ç‚¹åœ¨å·¦ä¸‹è§’
             size_t iView = offset * 4 + static_cast<size_t>(VIEW_TYPE::VIEW_ASCAN_0) +
                            (static_cast<size_t>((VIEW_ASCAN_NUM / VIEW_ASCAN_COLUMNS - 1)) - i / VIEW_ASCAN_COLUMNS) * VIEW_ASCAN_COLUMNS +
                            (i % VIEW_ASCAN_COLUMNS);
@@ -93,7 +93,7 @@ void ModelGroupAScan::RenderBK() {
 void ModelGroupAScan::Render() {
     for (auto& [index, ptr] : m_pMesh) {
         if (ptr && (index >= mGroupIndex * 4 && index < (static_cast<size_t>(mGroupIndex * 4) + VIEW_ASCAN_NUM))) {
-            // ¸üÐÂAÉ¨Êý¾Ý
+            // æ›´æ–°Aæ‰«æ•°æ®
             ((MeshAscan*)ptr)->UpdateAScanData();
             ((MeshAscan*)ptr)->UpdateAmpMemoryData();
             ptr->Render();

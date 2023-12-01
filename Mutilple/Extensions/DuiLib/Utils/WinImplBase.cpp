@@ -106,7 +106,7 @@ LRESULT WindowImplBase::OnNcCalcSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 	}
 
 	if ( ::IsZoomed(m_hWnd))
-	{	// ◊Ó¥ÛªØ ±£¨º∆À„µ±«∞œ‘ æ∆˜◊Ó  ∫œøÌ∏ﬂ∂»
+	{	// ÊúÄÂ§ßÂåñÊó∂ÔºåËÆ°ÁÆóÂΩìÂâçÊòæÁ§∫Âô®ÊúÄÈÄÇÂêàÂÆΩÈ´òÂ∫¶
 		MONITORINFO oMonitor = {};
 		oMonitor.cbSize = sizeof(oMonitor);
 		::GetMonitorInfo(::MonitorFromWindow(*this, MONITOR_DEFAULTTONEAREST), &oMonitor);
@@ -129,7 +129,7 @@ LRESULT WindowImplBase::OnNcPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPa
 
 LRESULT WindowImplBase::OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
-	POINT pt; pt.x = GET_X_LPARAM(lParam); pt.y = GET_Y_LPARAM(lParam);
+    POINT pt = {GET_X_LPARAM(lParam), pt.y = GET_Y_LPARAM(lParam)};
 	::ScreenToClient(*this, &pt);
 
 	RECT rcClient;
@@ -180,7 +180,7 @@ LRESULT WindowImplBase::OnGetMinMaxInfo(UINT uMsg, WPARAM wParam, LPARAM lParam,
 	CDuiRect rcMonitor = oMonitor.rcMonitor;
 	rcWork.Offset(-oMonitor.rcMonitor.left, -oMonitor.rcMonitor.top);
 
-	// º∆À„◊Ó¥ÛªØ ±£¨’˝»∑µƒ‘≠µ„◊¯±Í
+	// ËÆ°ÁÆóÊúÄÂ§ßÂåñÊó∂ÔºåÊ≠£Á°ÆÁöÑÂéüÁÇπÂùêÊ†á
 	lpMMI->ptMaxPosition.x	= rcWork.left;
 	lpMMI->ptMaxPosition.y	= rcWork.top;
 
@@ -244,13 +244,13 @@ LRESULT WindowImplBase::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 	LRESULT lRes = CWindowWnd::HandleMessage(uMsg, wParam, lParam);
 	if( ::IsZoomed(*this) != bZoomed )
 	{
-		CControlUI* pbtnMax     = static_cast<CControlUI*>(m_PaintManager.FindControl(_T("maxbtn")));       // ◊Ó¥ÛªØ∞¥≈•
-		CControlUI* pbtnRestore = static_cast<CControlUI*>(m_PaintManager.FindControl(_T("restorebtn")));   // ªπ‘≠∞¥≈•
+		CControlUI* pbtnMax     = static_cast<CControlUI*>(m_PaintManager.FindControl(_T("maxbtn")));       // ÊúÄÂ§ßÂåñÊåâÈíÆ
+		CControlUI* pbtnRestore = static_cast<CControlUI*>(m_PaintManager.FindControl(_T("restorebtn")));   // ËøòÂéüÊåâÈíÆ
 
-		// «–ªª◊Ó¥ÛªØ∞¥≈•∫Õªπ‘≠∞¥≈•µƒ◊¥Ã¨
+		// ÂàáÊç¢ÊúÄÂ§ßÂåñÊåâÈíÆÂíåËøòÂéüÊåâÈíÆÁöÑÁä∂ÊÄÅ
 		if (pbtnMax && pbtnRestore)
 		{
-			pbtnMax->SetVisible(TRUE == bZoomed);       // ¥À¥¶”√±Ì¥Ô Ω «Œ™¡À±‹√‚±‡“Î∆˜BOOL◊™ªªµƒæØ∏Ê
+			pbtnMax->SetVisible(TRUE == bZoomed);       // Ê≠§Â§ÑÁî®Ë°®ËææÂºèÊòØ‰∏∫‰∫ÜÈÅøÂÖçÁºñËØëÂô®BOOLËΩ¨Êç¢ÁöÑË≠¶Âëä
 			pbtnRestore->SetVisible(FALSE == bZoomed);
 		}
 		
@@ -287,7 +287,7 @@ LRESULT WindowImplBase::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 	ASSERT(pRoot);
 	if (pRoot==NULL)
 	{
-		MessageBox(NULL,_T("º”‘ÿ◊ ‘¥Œƒº˛ ß∞‹"),_T("Duilib"),MB_OK|MB_ICONERROR);
+		MessageBox(NULL,_T("Âä†ËΩΩËµÑÊ∫êÊñá‰ª∂Â§±Ë¥•"),_T("Duilib"),MB_OK|MB_ICONERROR);
 		ExitProcess(1);
 		return 0;
 	}
@@ -352,7 +352,7 @@ LRESULT WindowImplBase::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 	ASSERT(pRoot);
 	if (pRoot==NULL)
 	{
-		MessageBox(NULL, _T("º”‘ÿ◊ ‘¥Œƒº˛ ß∞‹"),_T("Duilib"),MB_OK|MB_ICONERROR);
+		MessageBox(NULL, _T("Âä†ËΩΩËµÑÊ∫êÊñá‰ª∂Â§±Ë¥•"),_T("Duilib"),MB_OK|MB_ICONERROR);
 		ExitProcess(1);
 		return 0;
 	}

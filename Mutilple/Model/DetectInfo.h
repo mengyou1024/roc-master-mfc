@@ -14,29 +14,29 @@ namespace ORM_Model {
     class DetectInfo {
     public:
         uint32_t    id   = {}; ///< id
-        std::string time = {}; ///< É¨²éµÄÊ±¼ä
-        // »ù±¾ÐÅÏ¢
-        std::wstring customer               = {}; ///< ¿Í»§
-        std::wstring customerContractNumber = {}; ///< ¿Í»§ºÏÍ¬±àºÅ
-        std::wstring workOrder              = {}; ///< ¹¤×÷Áî
-        std::wstring reportNumber           = {}; ///< ±¨¸æ±àºÅ
-        // ¹¤¼þ
-        std::wstring description       = {}; ///< ÃèÊö
-        std::wstring materialStandards = {}; ///< ²ÄÖÊ±ê×¼
-        std::wstring surfaceStates     = {}; ///< ±íÃæ×´Ì¬
-        std::wstring surveyedArea      = {}; ///< ¼ì²âÇøÓò
-        // Æ÷²Ä¼°²ÎÊý
-        std::wstring unitType            = {}; ///< Éè±¸ÐÍºÅ
-        std::wstring probeType           = {}; ///< Ì½Í·ÐÅºÅ
-        std::wstring referenceBlock      = {}; ///< ²Î¿¼ÊÔ¿é
-        std::wstring waveform            = {}; ///< ²¨ÐÎ
-        std::wstring scanningSensitivity = {}; ///< É¨²éÁéÃô¶È
-        std::wstring couplingAgent       = {}; ///< ñîºÏ¼Á
-        // Ì½Í·ÐÍºÅ
-        std::wstring executiveStandard   = {}; ///< Ö´ÐÐ±ê×¼
-        std::wstring acceptanceStandard  = {}; ///< ÑéÊÕ±ê×¼
-        std::wstring detectRatio         = {}; ///< ¼ì²â±ÈÀý
-        std::wstring detectProcessNumber = {}; ///< ¼ì²â¹¤ÒÕ±àºÅ
+        std::string time = {}; ///< æ‰«æŸ¥çš„æ—¶é—´
+        // åŸºæœ¬ä¿¡æ¯
+        std::wstring customer               = {}; ///< å®¢æˆ·
+        std::wstring customerContractNumber = {}; ///< å®¢æˆ·åˆåŒç¼–å·
+        std::wstring workOrder              = {}; ///< å·¥ä½œä»¤
+        std::wstring reportNumber           = {}; ///< æŠ¥å‘Šç¼–å·
+        // å·¥ä»¶
+        std::wstring description       = {}; ///< æè¿°
+        std::wstring materialStandards = {}; ///< æè´¨æ ‡å‡†
+        std::wstring surfaceStates     = {}; ///< è¡¨é¢çŠ¶æ€
+        std::wstring surveyedArea      = {}; ///< æ£€æµ‹åŒºåŸŸ
+        // å™¨æåŠå‚æ•°
+        std::wstring unitType            = {}; ///< è®¾å¤‡åž‹å·
+        std::wstring probeType           = {}; ///< æŽ¢å¤´ä¿¡å·
+        std::wstring referenceBlock      = {}; ///< å‚è€ƒè¯•å—
+        std::wstring waveform            = {}; ///< æ³¢å½¢
+        std::wstring scanningSensitivity = {}; ///< æ‰«æŸ¥çµæ•åº¦
+        std::wstring couplingAgent       = {}; ///< è€¦åˆå‰‚
+        // æŽ¢å¤´åž‹å·
+        std::wstring executiveStandard   = {}; ///< æ‰§è¡Œæ ‡å‡†
+        std::wstring acceptanceStandard  = {}; ///< éªŒæ”¶æ ‡å‡†
+        std::wstring detectRatio         = {}; ///< æ£€æµ‹æ¯”ä¾‹
+        std::wstring detectProcessNumber = {}; ///< æ£€æµ‹å·¥è‰ºç¼–å·
 
         static auto storage(std::string name) {
             return make_storage(

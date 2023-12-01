@@ -20,13 +20,13 @@ namespace DuiLib
 
 	LPCTSTR CColorUI::GetClass() const
 	{
-		// Õâ¸öÊÇÀàÃû£¬È¥µô¿ªÍ·µÄÊÇC×Ö·û
+		// è¿™ä¸ªæ˜¯ç±»åï¼Œå»æ‰å¼€å¤´çš„æ˜¯Cå­—ç¬¦
 		return DUI_CTR_COLOR;
 	}
 
 	LPVOID CColorUI::GetInterface(LPCTSTR pstrName)
 	{
-		// Õâ¸öÊÇxml¿Ø¼şµÄÃû³Æ
+		// è¿™ä¸ªæ˜¯xmlæ§ä»¶çš„åç§°
 		if (_tcscmp(pstrName, DUI_CTR_COLOR) == 0)
 			return static_cast<CColorUI*>(this);
 

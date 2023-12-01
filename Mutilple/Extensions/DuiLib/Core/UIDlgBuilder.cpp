@@ -14,8 +14,8 @@ CControlUI* CDialogBuilder::Create(STRINGorID xml, LPCTSTR type, IDialogBuilderC
 	BYTE* pByte = NULL;
 	DWORD dwSize = 0;
 
-	//×ÊÔ´IDÎª0-65535£¬Á½¸ö×Ö½Ú£»×Ö·û´®Ö¸ÕëÎª4¸ö×Ö½Ú
-	//×Ö·û´®ÒÔ<¿ªÍ·ÈÏÎªÊÇXML×Ö·û´®£¬·ñÔòÈÏÎªÊÇXMLÎÄ¼ş
+	//èµ„æºIDä¸º0-65535ï¼Œä¸¤ä¸ªå­—èŠ‚ï¼›å­—ç¬¦ä¸²æŒ‡é’ˆä¸º4ä¸ªå­—èŠ‚
+	//å­—ç¬¦ä¸²ä»¥<å¼€å¤´è®¤ä¸ºæ˜¯XMLå­—ç¬¦ä¸²ï¼Œå¦åˆ™è®¤ä¸ºæ˜¯XMLæ–‡ä»¶
 
     if( HIWORD(xml.m_lpstr) != NULL ) 
 	{
@@ -322,7 +322,7 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
             if ( !node.GetAttributeValue(_T("source"), szValue, cchLen) ) continue;
             for ( int i = 0; i < count; i++ ) {
                 CDialogBuilder builder;
-                if( m_pstrtype != NULL ) { // Ê¹ÓÃ×ÊÔ´dll£¬´Ó×ÊÔ´ÖĞ¶ÁÈ¡
+                if( m_pstrtype != NULL ) { // ä½¿ç”¨èµ„æºdllï¼Œä»èµ„æºä¸­è¯»å–
                     WORD id = (WORD)_tcstol(szValue, &pstr, 10); 
                     pControl = builder.Create((UINT)id, m_pstrtype, m_pCallback, pManager, pParent);
                 }
@@ -332,7 +332,7 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
             }
             continue;
         }
-		//Ê÷¿Ø¼şXML½âÎö
+		//æ ‘æ§ä»¶XMLè§£æ
 		else if( _tcscmp(pstrClass, _T("TreeNode")) == 0 ) {
 			CTreeNodeUI* pParentNode	= static_cast<CTreeNodeUI*>(pParent->GetInterface(_T("TreeNode")));
 			CTreeNodeUI* pNode			= new CTreeNodeUI();
@@ -343,7 +343,7 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
 				}
 			}
 
-			// ÈôÓĞ¿Ø¼şÄ¬ÈÏÅäÖÃÏÈ³õÊ¼»¯Ä¬ÈÏÊôĞÔ
+			// è‹¥æœ‰æ§ä»¶é»˜è®¤é…ç½®å…ˆåˆå§‹åŒ–é»˜è®¤å±æ€§
 			if( pManager ) {
 				pNode->SetManager(pManager, NULL, false);
 				LPCTSTR pDefaultAttributes = pManager->GetDefaultAttributeList(pstrClass);
@@ -352,7 +352,7 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
 				}
 			}
 
-			// ½âÎöËùÓĞÊôĞÔ²¢¸²¸ÇÄ¬ÈÏÊôĞÔ
+			// è§£ææ‰€æœ‰å±æ€§å¹¶è¦†ç›–é»˜è®¤å±æ€§
 			if( node.HasAttributes() ) {
 				TCHAR szValue[500] = { 0 };
 				SIZE_T cchLen = lengthof(szValue) - 1;
@@ -363,7 +363,7 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
 				}
 			}
 
-			//¼ìË÷×Ó½Úµã¼°¸½¼Ó¿Ø¼ş
+			//æ£€ç´¢å­èŠ‚ç‚¹åŠé™„åŠ æ§ä»¶
 			if(node.HasChildren()){
 				CControlUI* pSubControl = _Parse(&node,pNode,pManager);
 				if(pSubControl && _tcscmp(pSubControl->GetClass(),_T("TreeNodeUI")) != 0)
@@ -471,7 +471,7 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
 			if( pControl == NULL )
 			{
 #ifdef _DEBUG
-				DUITRACE(_T("Î´Öª¿Ø¼ş:%s"),pstrClass);
+				DUITRACE(_T("æœªçŸ¥æ§ä»¶:%s"),pstrClass);
 #else
 				continue;
 #endif
@@ -482,7 +482,7 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
             _Parse(&node, pControl, pManager);
         }
         // Attach to parent
-        // ÒòÎªÄ³Ğ©ÊôĞÔºÍ¸¸´°¿ÚÏà¹Ø£¬±ÈÈçselected£¬±ØĞëÏÈAddµ½¸¸´°¿Ú
+        // å› ä¸ºæŸäº›å±æ€§å’Œçˆ¶çª—å£ç›¸å…³ï¼Œæ¯”å¦‚selectedï¼Œå¿…é¡»å…ˆAddåˆ°çˆ¶çª—å£
 		if( pParent != NULL ) {
 			CTreeNodeUI* pContainerNode = static_cast<CTreeNodeUI*>(pParent->GetInterface(_T("TreeNode")));
 			if(pContainerNode)

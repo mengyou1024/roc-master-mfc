@@ -32,13 +32,13 @@ namespace DuiLib
 
 	LPCTSTR CClickNumUI::GetClass() const
     {
-        // Õâ¸öÊÇÀàÃû£¬È¥µô¿ªÍ·µÄÊÇC×Ö·û
+        // è¿™ä¸ªæ˜¯ç±»åï¼Œå»æ‰å¼€å¤´çš„æ˜¯Cå­—ç¬¦
         return DUI_CTR_CLICKNUM;
     }
 
     LPVOID CClickNumUI::GetInterface(LPCTSTR pstrName)
     {
-        // Õâ¸öÊÇxml¿Ø¼şµÄÃû³Æ
+        // è¿™ä¸ªæ˜¯xmlæ§ä»¶çš„åç§°
         if (_tcscmp(pstrName, DUI_CTR_CLICKNUM) == 0)
             return static_cast<CClickNumUI*>(this);
 
@@ -328,7 +328,7 @@ namespace DuiLib
 			CRenderEngine::DrawText(hDC, m_pManager, rc, pBuffer, m_dwDisabledTextColor, m_iFont, DT_SINGLELINE | m_uTextStyle);
 		}
 
-		_stprintf_s( pBuffer, _T("¡À%d"), m_iStep );
+		_stprintf_s( pBuffer, _T("Â±%d"), m_iStep );
 
 		UINT iTextStyle = DT_SINGLELINE | DT_VCENTER | DT_RIGHT;
 		CRenderEngine::DrawText(hDC, m_pManager, rc, pBuffer, m_dwDisabledTextColor, m_iFont, DT_SINGLELINE | iTextStyle);
@@ -375,9 +375,9 @@ namespace DuiLib
 		}
 
 		if( m_fStep < 1 )
-			_stprintf_s( pBuffer, _T("¡À%.1f"), m_fStep );
+			_stprintf_s( pBuffer, _T("Â±%.1f"), m_fStep );
 		else
-			_stprintf_s( pBuffer, _T("¡À%.0f"), m_fStep );
+			_stprintf_s( pBuffer, _T("Â±%.0f"), m_fStep );
 
 		UINT iTextStyle = DT_SINGLELINE | DT_VCENTER | DT_RIGHT;
 		CRenderEngine::DrawText(hDC, m_pManager, rc, pBuffer, m_dwDisabledTextColor, m_iFont, DT_SINGLELINE | iTextStyle);

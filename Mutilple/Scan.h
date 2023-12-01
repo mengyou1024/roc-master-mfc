@@ -3,7 +3,7 @@
 class Scan {
 public:
     ~Scan();
-    // ³ÉÏñÃ¿È¦µãÊı
+    // æˆåƒæ¯åœˆç‚¹æ•°
     void SetSidePoints(int iPoints);
     int  GetSidePoint() {
         return m_iSidePoints;
@@ -20,57 +20,57 @@ public:
         return m_fTreadAngleStep;
     }
 
-    // É¨²éÊ±£¬Ã¿È¦°ë¾¶£¬fRadius:µÚÒ»È¦°ë¾¶
+    // æ‰«æŸ¥æ—¶ï¼Œæ¯åœˆåŠå¾„ï¼ŒfRadius:ç¬¬ä¸€åœˆåŠå¾„
     void SetScanRadius(float fRadius);
 
     void InitScanData();
 
 public:
-    // Ì½Í··Ö²¼
-    int m_pTreadProbe[6]{0, 1, 2, 3, 4, 5}; // Ì¤Ãæ6¸öÈı¸ö»¡¶È Èı¸öÖ±Ì½Í·
-    int m_pSideProbe[4]{6, 7, 8, 9};        // ²àÃæ4¸ö 2¸öË«¾§
-    int m_pSideTrUT[2]{6, 7};               // Í¸Éù¼ì²éÍ¨µÀ
+    // æ¢å¤´åˆ†å¸ƒ
+    int m_pTreadProbe[6]{0, 1, 2, 3, 4, 5}; // è¸é¢6ä¸ªä¸‰ä¸ªå¼§åº¦ ä¸‰ä¸ªç›´æ¢å¤´
+    int m_pSideProbe[4]{6, 7, 8, 9};        // ä¾§é¢4ä¸ª 2ä¸ªåŒæ™¶
+    int m_pSideTrUT[2]{6, 7};               // é€å£°æ£€æŸ¥é€šé“
 
-    // É¨²éÊ±£¬²àÃæÇ°½ø²½½ø
+    // æ‰«æŸ¥æ—¶ï¼Œä¾§é¢å‰è¿›æ­¥è¿›
     float m_fSideStep{1.0f};
-    // É¨²éÊ±Ì¤ÃæÇ°½ø²½½ø
+    // æ‰«æŸ¥æ—¶è¸é¢å‰è¿›æ­¥è¿›
     //  float m_fTreadStep{1.0f };
 
-    // ²àÃæ/Ì¤Ãæ£¬¼ì²âÈ¦Êı   PLCµÄµÄ ÆğÊ¼-½áÊø /²½½ø
+    // ä¾§é¢/è¸é¢ï¼Œæ£€æµ‹åœˆæ•°   PLCçš„çš„ èµ·å§‹-ç»“æŸ /æ­¥è¿›
     union {
         int m_iSideSize{10};
         int m_iTreadSize;
     };
 
-    int m_iDrawProbleSideSize;  // ²àÃæ»æÍ¼Á½¸öÌ½Í·Ö®¼äµÄÈ¦Êı
-    int m_iDrawProbleTreadSize; // Ì¤Ãæ»æÍ¼Á½¸öÌ½Í·Ö®¼äµÄÈ¦Êı
+    int m_iDrawProbleSideSize;  // ä¾§é¢ç»˜å›¾ä¸¤ä¸ªæ¢å¤´ä¹‹é—´çš„åœˆæ•°
+    int m_iDrawProbleTreadSize; // è¸é¢ç»˜å›¾ä¸¤ä¸ªæ¢å¤´ä¹‹é—´çš„åœˆæ•°
 
-    int m_iDrawSideSize  = {0};  // ²àÃæ»æÍ¼È¦Êı   ¸ù¾İ ¼ì²â·¶Î§ /²½½ø      ÂÖéşÍâ¾¶£¨7£©-ÂÖéşÄÚ¾¶£¨8£©
-    int m_iDrawTreadSize = {0}; // Ì¤Ãæ»æÍ¼È¦Êı ¸ù¾İ ¼ì²â·¶Î§/²½½ø        Ì¤ÃæÂÖéşºñ¶È£¨2£©-ÂÖÔµºñ¶È£¨8£©
+    int m_iDrawSideSize  = {0};  // ä¾§é¢ç»˜å›¾åœˆæ•°   æ ¹æ® æ£€æµ‹èŒƒå›´ /æ­¥è¿›      è½®è¾‹å¤–å¾„ï¼ˆ7ï¼‰-è½®è¾‹å†…å¾„ï¼ˆ8ï¼‰
+    int m_iDrawTreadSize = {0}; // è¸é¢ç»˜å›¾åœˆæ•° æ ¹æ® æ£€æµ‹èŒƒå›´/æ­¥è¿›        è¸é¢è½®è¾‹åšåº¦ï¼ˆ2ï¼‰-è½®ç¼˜åšåº¦ï¼ˆ8ï¼‰
 
-    // ²àÃæÃ¿È¦¼ì²â°ë¾¶
+    // ä¾§é¢æ¯åœˆæ£€æµ‹åŠå¾„
     std::vector<float> m_pSideRadius;
 
-    // BÉ¨Í¼ÏñÊı¾İ //AÃÅ×î¸ß²¨   //DAC ×î¸ßÈ±ÏİdB
+    // Bæ‰«å›¾åƒæ•°æ® //Aé—¨æœ€é«˜æ³¢   //DAC æœ€é«˜ç¼ºé™·dB
     std::vector<UCHAR> m_pBscanData;
-    std::vector<UCHAR> m_pBscanCH; // È±ÏİÍ¨µÀ 0 ÎŞÈ±Ïİ 1-10 ¶ÔÓ¦·¢ÏÖÈ±ÏİµÄÍ¨µÀ »æÍ¼Ê±Ñ¡¶ÔÓ¦µÄÍ¨µÀÑÕÉ«
+    std::vector<UCHAR> m_pBscanCH; // ç¼ºé™·é€šé“ 0 æ— ç¼ºé™· 1-10 å¯¹åº”å‘ç°ç¼ºé™·çš„é€šé“ ç»˜å›¾æ—¶é€‰å¯¹åº”çš„é€šé“é¢œè‰²
 
-    //  std::vector<int> m_pBscanIndex;   //È±Ïİ ¶ÔÓ¦µÄrecordÖĞÈ±ÏİÊı¾İË÷Òı
+    //  std::vector<int> m_pBscanIndex;   //ç¼ºé™· å¯¹åº”çš„recordä¸­ç¼ºé™·æ•°æ®ç´¢å¼•
 
-    // CÉ¨Í¼ÏñÊı¾İ //AÃÅ×î¸ß²¨
+    // Cæ‰«å›¾åƒæ•°æ® //Aé—¨æœ€é«˜æ³¢
     std::vector<UCHAR> m_pCscanData;
-    std::vector<UCHAR> m_pCscanCH; // È±ÏİÍ¨µÀ 0 ÎŞÈ±Ïİ 1-10 ¶ÔÓ¦·¢ÏÖÈ±ÏİµÄÍ¨µÀ  »æÍ¼Ê±Ñ¡¶ÔÓ¦µÄÍ¨µÀÑÕÉ«
+    std::vector<UCHAR> m_pCscanCH; // ç¼ºé™·é€šé“ 0 æ— ç¼ºé™· 1-10 å¯¹åº”å‘ç°ç¼ºé™·çš„é€šé“  ç»˜å›¾æ—¶é€‰å¯¹åº”çš„é€šé“é¢œè‰²
 
-    // std::vector<int> m_pCscanIndex;   //È±Ïİ ¶ÔÓ¦µÄrecordÖĞÈ±ÏİÊı¾İË÷Òı
+    // std::vector<int> m_pCscanIndex;   //ç¼ºé™· å¯¹åº”çš„recordä¸­ç¼ºé™·æ•°æ®ç´¢å¼•
 private:
-    // ²àÃæÃ¿È¦¼ì²âµãÊı
+    // ä¾§é¢æ¯åœˆæ£€æµ‹ç‚¹æ•°
     int m_iSidePoints{72};
-    // Ì¤ÃæÃ¿È¦¼ì²âµãÊı
+    // è¸é¢æ¯åœˆæ£€æµ‹ç‚¹æ•°
     int m_iTreadPoints{72};
 
-    // Ã¿µãÊı½Ç¶È²½½ø
+    // æ¯ç‚¹æ•°è§’åº¦æ­¥è¿›
     float m_fSideAngleStep{5.0f};
-    // Ã¿µãÊı½Ç¶È²½½ø
+    // æ¯ç‚¹æ•°è§’åº¦æ­¥è¿›
     float m_fTreadAngleStep{5.0f};
 
     //

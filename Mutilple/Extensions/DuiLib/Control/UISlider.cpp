@@ -96,7 +96,7 @@ namespace DuiLib
 		Invalidate();
 	}
 
-	void CSliderUI::SetValue(int nValue) //2014.7.28 redrain  µ±Êó±êÕıÔÚ»¬¶¯»¬¿éÊ±²»»áÊÕµ½SetValueµÄÓ°Ïì£¬±ÈÈç»¬¶¯¸Ä±äÒôÀÖµÄ½ø¶È£¬²»»áÒòÎªÍâ²¿Ò»Ö±µ÷ÓÃSetValue¶øÈÃÎÒÃÇÎŞ·¨»¬¶¯»¬¿é
+	void CSliderUI::SetValue(int nValue) //2014.7.28 redrain  å½“é¼ æ ‡æ­£åœ¨æ»‘åŠ¨æ»‘å—æ—¶ä¸ä¼šæ”¶åˆ°SetValueçš„å½±å“ï¼Œæ¯”å¦‚æ»‘åŠ¨æ”¹å˜éŸ³ä¹çš„è¿›åº¦ï¼Œä¸ä¼šå› ä¸ºå¤–éƒ¨ä¸€ç›´è°ƒç”¨SetValueè€Œè®©æˆ‘ä»¬æ— æ³•æ»‘åŠ¨æ»‘å—
 	{
 		if( (m_uButtonState & UISTATE_CAPTURED) != 0 ) 
 			return;
@@ -112,7 +112,7 @@ namespace DuiLib
 
 		if( event.Type == UIEVENT_BUTTONDOWN || event.Type == UIEVENT_DBLCLICK )
 		{
-			if( IsEnabled() ) {//2014.7.28 redrain ×¢ÊÍµôÔ­À´µÄ´úÂë£¬¼ÓÉÏÕâĞ©´úÂëºó¿ÉÒÔÈÃSlider²»ÊÇÔÚÊó±êµ¯ÆğÊ±²Å¸Ä±ä»¬¿éµÄÎ»ÖÃ
+			if( IsEnabled() ) {//2014.7.28 redrain æ³¨é‡Šæ‰åŸæ¥çš„ä»£ç ï¼ŒåŠ ä¸Šè¿™äº›ä»£ç åå¯ä»¥è®©Sliderä¸æ˜¯åœ¨é¼ æ ‡å¼¹èµ·æ—¶æ‰æ”¹å˜æ»‘å—çš„ä½ç½®
 				m_uButtonState |= UISTATE_CAPTURED;
 
 				int nValue;
@@ -152,7 +152,7 @@ namespace DuiLib
 				else if( event.ptMouse.y <= m_rcItem.top + m_szThumb.cy / 2  ) nValue = m_nMax;
 				else nValue = m_nMin + (m_nMax - m_nMin) * (m_rcItem.bottom - event.ptMouse.y - m_szThumb.cy / 2 ) / (m_rcItem.bottom - m_rcItem.top - m_szThumb.cy);
 			}
-			if(/*m_nValue !=nValue && 2014.7.28 redrain Õâ¸ö×¢ÊÍºÜ¹Ø¼ü£¬ÊÇËûµ¼ÖÂÁËÊó±êÍÏ¶¯»¬¿éÎŞ·¨·¢³öDUI_MSGTYPE_VALUECHANGEDÏûÏ¢*/nValue>=m_nMin && nValue<=m_nMax)
+			if(/*m_nValue !=nValue && 2014.7.28 redrain è¿™ä¸ªæ³¨é‡Šå¾ˆå…³é”®ï¼Œæ˜¯ä»–å¯¼è‡´äº†é¼ æ ‡æ‹–åŠ¨æ»‘å—æ— æ³•å‘å‡ºDUI_MSGTYPE_VALUECHANGEDæ¶ˆæ¯*/nValue>=m_nMin && nValue<=m_nMax)
 			{
 				m_nValue =nValue;
 				m_pManager->SendNotify(this, DUI_MSGTYPE_VALUECHANGED);
@@ -179,7 +179,7 @@ namespace DuiLib
 		}
 		if( event.Type == UIEVENT_MOUSEMOVE )
 		{
-			if( (m_uButtonState & UISTATE_CAPTURED) != 0 ) {//2014.7.28 redrain ÖØĞ´Õâ¸öÏûÏ¢ÅĞ¶ÏÈÃSlider·¢³öDUI_MSGTYPE_VALUECHANGED_MOVEÏûÏ¢£¬ÈÃËûÔÚ»¬¶¯¹ı³ÌÒ²·¢³öÏûÏ¢£¬±ÈÈçÓÃÔÚ¸Ä±äÒôÁ¿Ê±£¬Ò»±ß»¬¶¯¾Í¿ÉÒÔÒ»±ß¸Ä±äÒôÁ¿
+			if( (m_uButtonState & UISTATE_CAPTURED) != 0 ) {//2014.7.28 redrain é‡å†™è¿™ä¸ªæ¶ˆæ¯åˆ¤æ–­è®©Sliderå‘å‡ºDUI_MSGTYPE_VALUECHANGED_MOVEæ¶ˆæ¯ï¼Œè®©ä»–åœ¨æ»‘åŠ¨è¿‡ç¨‹ä¹Ÿå‘å‡ºæ¶ˆæ¯ï¼Œæ¯”å¦‚ç”¨åœ¨æ”¹å˜éŸ³é‡æ—¶ï¼Œä¸€è¾¹æ»‘åŠ¨å°±å¯ä»¥ä¸€è¾¹æ”¹å˜éŸ³é‡
 				if( m_bHorizontal ) {
 					if( event.ptMouse.x >= m_rcItem.right - m_szThumb.cx / 2 ) m_nValue = m_nMax;
 					else if( event.ptMouse.x <= m_rcItem.left + m_szThumb.cx / 2 ) m_nValue = m_nMin;

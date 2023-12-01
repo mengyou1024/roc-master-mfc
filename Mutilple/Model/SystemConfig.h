@@ -15,11 +15,11 @@ namespace ORM_Model {
     class SystemConfig {
     public:
         uint32_t     id          = {}; ///< id
-        bool         checkUpdate = {}; ///< Èí¼þ¼ì²é×îÐÂ°æ±¾
-        std::wstring groupName   = {}; ///< °à×é
-        std::wstring userName    = {}; ///< ÓÃ»§ÐÕÃû
-        bool         enableProxy = {}; ///< ´úÀí
-        std::wstring httpProxy   = {}; ///< http´úÀí
+        bool         checkUpdate = {}; ///< è½¯ä»¶æ£€æŸ¥æœ€æ–°ç‰ˆæœ¬
+        std::wstring groupName   = {}; ///< ç­ç»„
+        std::wstring userName    = {}; ///< ç”¨æˆ·å§“å
+        bool         enableProxy = {}; ///< ä»£ç†
+        std::wstring httpProxy   = {}; ///< httpä»£ç†
         static auto  storage(void) {
             return make_storage(ORM_DB_NAME, make_table("SystemConfig", make_column("ID", &SystemConfig::id, primary_key().autoincrement()),
                                                          make_column("CHECK_UPDATE", &SystemConfig::checkUpdate),

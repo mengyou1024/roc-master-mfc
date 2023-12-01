@@ -12,7 +12,7 @@ namespace DuiLib
 		m_dwSelItemHotTextColor	= 0;
 
 		pTreeView		= NULL;
-		m_bIsVisable	= false;  //edit by redrain 2014.11.7,Ó¦¸ÃÎªfalse,Ô­À´Îªtrue
+		m_bIsVisable	= false;  //edit by redrain 2014.11.7,åº”è¯¥ä¸ºfalse,åŸæ¥ä¸ºtrue
 		m_bIsCheckBox	= false;
 		pParentTreeNode	= NULL;
 
@@ -214,11 +214,11 @@ namespace DuiLib
 	}
 
 		//************************************
-	// º¯ÊıÃû³Æ: AddAt
-	// ·µ»ØÀàĞÍ: bool
-	// ²ÎÊıĞÅÏ¢: CControlUI * pControl
-	// ²ÎÊıĞÅÏ¢: int iIndex				¸Ã²ÎÊı½öÕë¶Ôµ±Ç°½ÚµãÏÂµÄĞÖµÜË÷Òı£¬²¢·ÇÁĞ±íÊÓÍ¼Ë÷Òı
-	// º¯ÊıËµÃ÷: TreeNodeÖ¸¶¨Ë÷ÒıÎ»ÖÃ²åÈë×Ó½Úµã(edit by joe 2014/7/28)
+	// å‡½æ•°åç§°: AddAt
+	// è¿”å›ç±»å‹: bool
+	// å‚æ•°ä¿¡æ¯: CControlUI * pControl
+	// å‚æ•°ä¿¡æ¯: int iIndex				è¯¥å‚æ•°ä»…é’ˆå¯¹å½“å‰èŠ‚ç‚¹ä¸‹çš„å…„å¼Ÿç´¢å¼•ï¼Œå¹¶éåˆ—è¡¨è§†å›¾ç´¢å¼•
+	// å‡½æ•°è¯´æ˜: TreeNodeæŒ‡å®šç´¢å¼•ä½ç½®æ’å…¥å­èŠ‚ç‚¹(edit by joe 2014/7/28)
 	//************************************
 	bool CTreeNodeUI::AddAt( CControlUI* pControl, int iIndex )
 	{
@@ -661,11 +661,11 @@ namespace DuiLib
 	}
 
 	//************************************
-	// º¯ÊıÃû³Æ: AddAt
-	// ·µ»ØÀàĞÍ: long
-	// ²ÎÊıĞÅÏ¢: CTreeNodeUI * pControl
-	// ²ÎÊıĞÅÏ¢: int iIndex
-	// º¯ÊıËµÃ÷: ¸Ã·½·¨²»»á½«´ı²åÈëµÄ½Úµã½øĞĞËõÎ»´¦Àí£¬Èô´òËã²åÈëµÄ½ÚµãÎª·Ç¸ù½Úµã£¬ÇëÊ¹ÓÃAddAt(CTreeNodeUI* pControl,CTreeNodeUI* _IndexNode) ·½·¨
+	// å‡½æ•°åç§°: AddAt
+	// è¿”å›ç±»å‹: long
+	// å‚æ•°ä¿¡æ¯: CTreeNodeUI * pControl
+	// å‚æ•°ä¿¡æ¯: int iIndex
+	// å‡½æ•°è¯´æ˜: è¯¥æ–¹æ³•ä¸ä¼šå°†å¾…æ’å…¥çš„èŠ‚ç‚¹è¿›è¡Œç¼©ä½å¤„ç†ï¼Œè‹¥æ‰“ç®—æ’å…¥çš„èŠ‚ç‚¹ä¸ºéæ ¹èŠ‚ç‚¹ï¼Œè¯·ä½¿ç”¨AddAt(CTreeNodeUI* pControl,CTreeNodeUI* _IndexNode) æ–¹æ³•
 	//************************************
 	long CTreeViewUI::AddAt( CTreeNodeUI* pControl, int iIndex )
 	{
@@ -742,10 +742,10 @@ namespace DuiLib
 	}
 
 	//************************************
-	// º¯ÊıÃû³Æ: Remove
-	// ·µ»ØÀàĞÍ: bool
-	// ²ÎÊıĞÅÏ¢: CTreeNodeUI * pControl
-	// º¯ÊıËµÃ÷: pControl ¶ÔÏóÒÔ¼°ÏÂµÄËùÓĞ½Úµã½«±»Ò»²¢ÒÆ³ı
+	// å‡½æ•°åç§°: Remove
+	// è¿”å›ç±»å‹: bool
+	// å‚æ•°ä¿¡æ¯: CTreeNodeUI * pControl
+	// å‡½æ•°è¯´æ˜: pControl å¯¹è±¡ä»¥åŠä¸‹çš„æ‰€æœ‰èŠ‚ç‚¹å°†è¢«ä¸€å¹¶ç§»é™¤
 	//************************************
 	bool CTreeViewUI::Remove( CTreeNodeUI* pControl )
 	{
@@ -765,10 +765,10 @@ namespace DuiLib
 	}
 
 	//************************************
-	// º¯ÊıÃû³Æ: RemoveAt
-	// ·µ»ØÀàĞÍ: bool
-	// ²ÎÊıĞÅÏ¢: int iIndex
-	// º¯ÊıËµÃ÷: iIndex Ë÷ÒıÒÔ¼°ÏÂµÄËùÓĞ½Úµã½«±»Ò»²¢ÒÆ³ı
+	// å‡½æ•°åç§°: RemoveAt
+	// è¿”å›ç±»å‹: bool
+	// å‚æ•°ä¿¡æ¯: int iIndex
+	// å‡½æ•°è¯´æ˜: iIndex ç´¢å¼•ä»¥åŠä¸‹çš„æ‰€æœ‰èŠ‚ç‚¹å°†è¢«ä¸€å¹¶ç§»é™¤
 	//************************************
 	bool CTreeViewUI::RemoveAt( int iIndex )
 	{
@@ -827,7 +827,7 @@ namespace DuiLib
 			CTreeNodeUI* pItem		= static_cast<CTreeNodeUI*>(pMsg->pSender);
 			CCheckBoxUI* pFolder	= pItem->GetFolderButton();
 			pFolder->Selected(!pFolder->IsSelected());    
-//			pItem->SetVisibleTag(pFolder->GetCheck());		//edit by:Redrain  2014.11.12 ÕâÁ½ĞĞ´úÂëÎŞÓÃ£¬pFolder->Selected(!pFolder->IsSelected()); »á´¥·¢OnFolderChangedº¯Êı£¬OnFolderChangedº¯Êı»áÖ´ĞĞÕâÁ½ĞĞ´úÂë
+//			pItem->SetVisibleTag(pFolder->GetCheck());		//edit by:Redrain  2014.11.12 è¿™ä¸¤è¡Œä»£ç æ— ç”¨ï¼ŒpFolder->Selected(!pFolder->IsSelected()); ä¼šè§¦å‘OnFolderChangedå‡½æ•°ï¼ŒOnFolderChangedå‡½æ•°ä¼šæ‰§è¡Œè¿™ä¸¤è¡Œä»£ç 
 //			SetItemExpand(pFolder->GetCheck(),pItem);
 			return true;
 		}

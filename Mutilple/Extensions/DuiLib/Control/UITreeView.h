@@ -59,7 +59,7 @@ namespace DuiLib
 
 		void	SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 		
-		void	IsAllChildChecked(); //检测所有子项是否都选中 2014.12.11 redrain
+		void	IsAllChildChecked(); //妫�娴嬫墍鏈夊瓙椤规槸鍚﹂兘閫変腑 2014.12.11 redrain
 		CStdPtrArray GetTreeNodes();
 
 		int			 GetTreeIndex();

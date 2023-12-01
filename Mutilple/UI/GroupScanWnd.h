@@ -34,28 +34,28 @@ public:
     void EnterReview(std::string path = {});
 
 private:
-    constexpr static int SCAN_RECORD_CACHE_MAX_ITEMS = 1000; ///< É¨²éÊı¾İ×î´ó»º´æÊıÁ¿
+    constexpr static int SCAN_RECORD_CACHE_MAX_ITEMS = 1000; ///< æ‰«æŸ¥æ•°æ®æœ€å¤§ç¼“å­˜æ•°é‡
 
     struct {
         float pos    = {};
         float width  = {};
         float height = {};
-    } mGateScan[HD_CHANNEL_NUM]; ///< É¨²é²¨ÃÅ
+    } mGateScan[HD_CHANNEL_NUM]; ///< æ‰«æŸ¥æ³¢é—¨
 
     struct {
         string yearMonth = {};
         string day       = {};
         string time      = {};
-    } mScanTime; ///< É¨²éÊ±¼ä
+    } mScanTime; ///< æ‰«æŸ¥æ—¶é—´
 
-    string mSavePath = {}; ///< ±£´æÂ·¾¶
+    string mSavePath = {}; ///< ä¿å­˜è·¯å¾„
 
-    /// É¨²é°´Å¥Öµ
+    /// æ‰«æŸ¥æŒ‰é’®å€¼
     inline static std::array<uint8_t, HDBridge::CHANNEL_NUMBER> mScanButtonValue = {};
 
     enum class WidgetMode { MODE_SCAN = 0, MODE_REVIEW };
 
-    /// ÅäÖÃÀàĞÍ
+    /// é…ç½®ç±»å‹
     enum class ConfigType {
         DetectRange = 0,
         Gain,
@@ -64,14 +64,14 @@ private:
         GateHeight,
     };
 
-    /// ²¨ÃÅÀàĞÍ
+    /// æ³¢é—¨ç±»å‹
     enum class GateType {
         GATE_A = 0,
         GATE_B,
         GATE_SCAN,
     };
 
-    /// Í¨µÀÑ¡Ôñ
+    /// é€šé“é€‰æ‹©
     enum class ChannelSel {
         CHANNEL_1 = 0,
         CHANNEL_2,
@@ -79,7 +79,7 @@ private:
         CHANNEL_4,
     };
 
-    /// Edit¿Ø¼şÏÔÊ¾µÄµ¥Î»ÎÄ±¾
+    /// Editæ§ä»¶æ˜¾ç¤ºçš„å•ä½æ–‡æœ¬
     const static inline std::map<ConfigType, CString> mConfigTextext = {
         {ConfigType::DetectRange, _T("mm")},
         {ConfigType::Gain,        _T("dB")},
@@ -96,7 +96,7 @@ private:
         {ConfigType::GateHeight,  _T(R"((-?[1-9](\d+)?\.?(\d{0,2})|-?0\.(\d{0,2}))|-0|-?\.\d{0,2}|-|0)")},
     };
 
-    /// SliderµÄ¼«ÏŞ·¶Î§
+    /// Sliderçš„æé™èŒƒå›´
     static inline std::map<ConfigType, std::pair<float, float>> mConfigLimits = {
         {ConfigType::DetectRange, {0.f, 100.f}},
         {ConfigType::Gain,        {0.f, 110.f}},
@@ -105,7 +105,7 @@ private:
         {ConfigType::GateHeight,  {0.f, 100.f}},
     };
 
-    /// Edit¿Ø¼şÊó±ê¹öÂÖÊÂ¼şµÄ²½½ø
+    /// Editæ§ä»¶é¼ æ ‡æ»šè½®äº‹ä»¶çš„æ­¥è¿›
     const static inline std::map<ConfigType, double> mConfigStep = {
         {ConfigType::DetectRange, 0.1},
         {ConfigType::Gain,        0.1},
@@ -117,149 +117,149 @@ private:
     constexpr static auto BTN_SELECT_GROUP_MAX = 3;
 
     /**
-     * @brief µ±Ç°Ñ¡ÖĞµÄÍ¨µÀ
-     * @note ²¢²»ÊÇ±íÊ¾Êµ¼ÊµÄÍ¨µÀÖµ, ¶øÊÇ±íÊ¾µÚ¼¸¸öÑ¡Ïî£¬ÀıÈç`CHANNEL_1`±íÊ¾µÚÒ»¸öÍ¨µÀÑ¡Ïî
-     * Êµ¼ÊµÄÍ¨µÀºÅ¿ÉÄÜÊÇ 1,5,9 ÖĞµÄÒ»¸ö
+     * @brief å½“å‰é€‰ä¸­çš„é€šé“
+     * @note å¹¶ä¸æ˜¯è¡¨ç¤ºå®é™…çš„é€šé“å€¼, è€Œæ˜¯è¡¨ç¤ºç¬¬å‡ ä¸ªé€‰é¡¹ï¼Œä¾‹å¦‚`CHANNEL_1`è¡¨ç¤ºç¬¬ä¸€ä¸ªé€šé“é€‰é¡¹
+     * å®é™…çš„é€šé“å·å¯èƒ½æ˜¯ 1,5,9 ä¸­çš„ä¸€ä¸ª
      */
     ChannelSel                                mChannelSel        = ChannelSel::CHANNEL_1;
-    CWindowUI*                                m_pWndOpenGL_ASCAN = nullptr;                 ///< AÉ¨DuilibµÄ´°¿ÚÖ¸Õë
-    CWindowUI*                                m_pWndOpenGL_CSCAN = nullptr;                 ///< CÉ¨DuilibµÄ´°¿ÚÖ¸Õë
-    OpenGL                                    m_OpenGL_ASCAN     = {};                      ///< AÉ¨OpenGL´°¿Ú
-    OpenGL                                    m_OpenGL_CSCAN     = {};                      ///< CÉ¨OpenGL´°¿Ú
-    long                                      mCurrentGroup      = 0;                       ///< µ±Ç°·Ö×é
-    ConfigType                                mConfigType        = ConfigType::DetectRange; ///< µ±Ç°Ñ¡ÖĞÉèÖÃÀàĞÍ
-    GateType                                  mGateType          = GateType::GATE_A;        ///< µ±Ç°Ñ¡ÖĞµÄ²¨ÃÅÀàĞÍ
-    std::unique_ptr<HD_Utils>                 mUtils             = nullptr;                 ///< Ó²¼ş½Ó¿Ú
-    WidgetMode                                mWidgetMode        = {WidgetMode::MODE_SCAN}; ///< µ±Ç°´°¿ÚµÄÄ£Ê½
-    std::vector<HD_Utils>                     mReviewData        = {};                      ///< É¨²éÈ±ÏİÊı¾İ
-    int                                       mSamplesPerSecond  = 33;                      ///< CÉ¨Í¼Ã¿ÃëÖÓ²Éµã¸öÊı
-    bool                                      mEnableAmpMemory   = false;                   ///< ·åÖµ¼ÇÒä
-    std::array<int, HDBridge::CHANNEL_NUMBER> mIDDefectRecord    = {};                      ///< È±Ïİ¼ÇÂ¼µÄË÷ÒıID
-    ORM_Model::DetectInfo                     mDetectInfo        = {};                      ///< Ì½ÉËĞÅÏ¢
-    int                                       mRecordCount       = {};                      ///< É¨²éÊı¾İ¼ÆÊı
-    std::vector<ORM_Model::ScanRecord>        mScanRecordCache   = {};                      ///< É¨²é¼ÇÂ¼»º´æ(È±Ïİ)
-    DetectionStateMachine                     mDetectionSM       = {};                      ///< Ì½ÉËµÄ×´Ì¬»ú
-    std::vector<ORM_Model::DefectInfo>        mDefectInfo        = {};                      ///< Ì½ÉËÈ±Ïİ
-    bool                                      mScanningFlag      = false;                   ///< ÅĞ¶Ïµ±Ç°ÊÇ·ñÕıÔÚÉ¨²é
-    std::string                               mReviewPathEntry   = {};                      ///< »Ø·ÅÂ·¾¶Èë¿Ú
+    CWindowUI*                                m_pWndOpenGL_ASCAN = nullptr;                 ///< Aæ‰«Duilibçš„çª—å£æŒ‡é’ˆ
+    CWindowUI*                                m_pWndOpenGL_CSCAN = nullptr;                 ///< Cæ‰«Duilibçš„çª—å£æŒ‡é’ˆ
+    OpenGL                                    m_OpenGL_ASCAN     = {};                      ///< Aæ‰«OpenGLçª—å£
+    OpenGL                                    m_OpenGL_CSCAN     = {};                      ///< Cæ‰«OpenGLçª—å£
+    long                                      mCurrentGroup      = 0;                       ///< å½“å‰åˆ†ç»„
+    ConfigType                                mConfigType        = ConfigType::DetectRange; ///< å½“å‰é€‰ä¸­è®¾ç½®ç±»å‹
+    GateType                                  mGateType          = GateType::GATE_A;        ///< å½“å‰é€‰ä¸­çš„æ³¢é—¨ç±»å‹
+    std::unique_ptr<HD_Utils>                 mUtils             = nullptr;                 ///< ç¡¬ä»¶æ¥å£
+    WidgetMode                                mWidgetMode        = {WidgetMode::MODE_SCAN}; ///< å½“å‰çª—å£çš„æ¨¡å¼
+    std::vector<HD_Utils>                     mReviewData        = {};                      ///< æ‰«æŸ¥ç¼ºé™·æ•°æ®
+    int                                       mSamplesPerSecond  = 33;                      ///< Cæ‰«å›¾æ¯ç§’é’Ÿé‡‡ç‚¹ä¸ªæ•°
+    bool                                      mEnableAmpMemory   = false;                   ///< å³°å€¼è®°å¿†
+    std::array<int, HDBridge::CHANNEL_NUMBER> mIDDefectRecord    = {};                      ///< ç¼ºé™·è®°å½•çš„ç´¢å¼•ID
+    ORM_Model::DetectInfo                     mDetectInfo        = {};                      ///< æ¢ä¼¤ä¿¡æ¯
+    int                                       mRecordCount       = {};                      ///< æ‰«æŸ¥æ•°æ®è®¡æ•°
+    std::vector<ORM_Model::ScanRecord>        mScanRecordCache   = {};                      ///< æ‰«æŸ¥è®°å½•ç¼“å­˜(ç¼ºé™·)
+    DetectionStateMachine                     mDetectionSM       = {};                      ///< æ¢ä¼¤çš„çŠ¶æ€æœº
+    std::vector<ORM_Model::DefectInfo>        mDefectInfo        = {};                      ///< æ¢ä¼¤ç¼ºé™·
+    bool                                      mScanningFlag      = false;                   ///< åˆ¤æ–­å½“å‰æ˜¯å¦æ­£åœ¨æ‰«æŸ¥
+    std::string                               mReviewPathEntry   = {};                      ///< å›æ”¾è·¯å¾„å…¥å£
 
-    // ²ÎÊı±¸·İ
+    // å‚æ•°å¤‡ä»½
     ORM_Model::DetectInfo mDetectInfoBak   = {};
     std::wstring          mJobGroupNameBak = {};
 
     /**
-     * @brief Ñ¡×é°´Å¥µ¥»÷»Øµ÷º¯Êı
-     * @param index Ë÷Òı
+     * @brief é€‰ç»„æŒ‰é’®å•å‡»å›è°ƒå‡½æ•°
+     * @param index ç´¢å¼•
      */
     void OnBtnSelectGroupClicked(long index);
 
     /**
-     * @brief Ä£Ê½°´Å¥µ¥»÷»Øµ÷º¯Êı
-     * @param name °´Å¥ID
+     * @brief æ¨¡å¼æŒ‰é’®å•å‡»å›è°ƒå‡½æ•°
+     * @param name æŒ‰é’®ID
      */
     void OnBtnModelClicked(std::wstring name);
 
     /**
-     * @brief ³õÊ¼»¯OpenGL´°¿Ú
+     * @brief åˆå§‹åŒ–OpenGLçª—å£
      */
     void InitOpenGL();
 
     /**
-     * @brief Ïß³ÌÖĞ³õÊ¼»¯
+     * @brief çº¿ç¨‹ä¸­åˆå§‹åŒ–
      */
     void InitOnThread();
 
     /**
-     * @brief ¸üĞÂSliderºÍEdit¿Ø¼şµÄÖµ
+     * @brief æ›´æ–°Sliderå’ŒEditæ§ä»¶çš„å€¼
      * @param newGroup
      * @param newConfig
      * @param newGate
      * @param newChannelSel
-     * @praram bypassCheck ÈÆ¹ıÖØ¸´¼ì²é
+     * @praram bypassCheck ç»•è¿‡é‡å¤æ£€æŸ¥
      */
     void UpdateSliderAndEditValue(long newGroup, ConfigType newConfig, GateType newGate, ChannelSel newChannelSel,
                                   bool bypassCheck = false);
 
     /**
-     * @brief ÉèÖÃConfigÖµ
+     * @brief è®¾ç½®Configå€¼
      * @param val value
-     * @param sync ¿ØÖÆÊÇ·ñÁ¢¼´Í¬²½
+     * @param sync æ§åˆ¶æ˜¯å¦ç«‹å³åŒæ­¥
      */
     void SetConfigValue(float val, bool sync = true);
 
     /**
-     * @brief ¸üĞÂAÉ¨»Øµ÷º¯Êı
-     * @param data AÉ¨Êı¾İ
-     * @param caller µ÷ÓÃÀà
+     * @brief æ›´æ–°Aæ‰«å›è°ƒå‡½æ•°
+     * @param data Aæ‰«æ•°æ®
+     * @param caller è°ƒç”¨ç±»
      */
     void UpdateAScanCallback(const HDBridge::NM_DATA& data, const HD_Utils& caller);
 
     /**
-     * @brief ¶¨Ê±Æ÷ÖĞ¸üĞÂCÉ¨Í¼Ïñ
+     * @brief å®šæ—¶å™¨ä¸­æ›´æ–°Cæ‰«å›¾åƒ
      */
     void UpdateCScanOnTimer();
 
     /**
-     * @brief UI °´Å¥ĞÅºÅ
-     * @param name °´¼üÃû³Æ
+     * @brief UI æŒ‰é’®ä¿¡å·
+     * @param name æŒ‰é”®åç§°
      */
     void OnBtnUIClicked(std::wstring& name);
 
     /**
-     * @brief Í£Ö¹ËùÓĞ¶¨Ê±Æ÷
+     * @brief åœæ­¢æ‰€æœ‰å®šæ—¶å™¨
      * @param
      */
     void KillUITimer(void);
 
     /**
-     * @brief ÖØÆôËùÓĞ¶¨Ê±Æ÷
+     * @brief é‡å¯æ‰€æœ‰å®šæ—¶å™¨
      * @param
      */
     void ResumeUITimer(void);
 
     /**
-     * @brief ±£´æÈ±ÏİÊı¾İ
+     * @brief ä¿å­˜ç¼ºé™·æ•°æ®
      */
     void SaveScanData();
 
     /**
-     * @brief ½øÈë»Ø·ÅÄ£Ê½
-     * @param name È±Ïİ¼ÇÂ¼µÄÃû³Æ
+     * @brief è¿›å…¥å›æ”¾æ¨¡å¼
+     * @param name ç¼ºé™·è®°å½•çš„åç§°
      */
     void EnterReviewMode(std::string name);
 
     /**
-     * @brief ÍË³ö»Ø·ÅÄ£Ê½
+     * @brief é€€å‡ºå›æ”¾æ¨¡å¼
      */
     void ExitReviewMode();
 
     /**
-     * @brief ¿ªÊ¼É¨²é
-     * @param changeFlag ÊÇ·ñ¸Ä±ä±êÖ¾Î»
+     * @brief å¼€å§‹æ‰«æŸ¥
+     * @param changeFlag æ˜¯å¦æ”¹å˜æ ‡å¿—ä½
      */
     void StartScan(bool changeFlag = true);
 
     /**
-     * @brief Í£Ö¹É¨²é
-     * @param changeFlag ÊÇ·ñ¸Ä±ä±êÖ¾Î»
+     * @brief åœæ­¢æ‰«æŸ¥
+     * @param changeFlag æ˜¯å¦æ”¹å˜æ ‡å¿—ä½
      */
     void StopScan(bool changeFlag = true);
 
     /**
-     * @brief ±£´æÈ±ÏİµÄÆğÊ¼ID
-     * @param channel Í¨µÀºÅ
+     * @brief ä¿å­˜ç¼ºé™·çš„èµ·å§‹ID
+     * @param channel é€šé“å·
      */
     void SaveDefectStartID(int channel);
 
     /**
-     * @brief ±£´æÈ±ÏİµÄÖÕÖ¹ID
-     * @param channel Í¨µÀºÅ
+     * @brief ä¿å­˜ç¼ºé™·çš„ç»ˆæ­¢ID
+     * @param channel é€šé“å·
      */
     void SaveDefectEndID(int channel);
 
     /**
-     * @brief ¼ì²é²¢¸üĞÂ
-     * @param showNoUpdate ÎŞ¸üĞÂ¿ÉÓÃÊ±ÊÇ·ñÏÔÊ¾´°¿Ú
+     * @brief æ£€æŸ¥å¹¶æ›´æ–°
+     * @param showNoUpdate æ— æ›´æ–°å¯ç”¨æ—¶æ˜¯å¦æ˜¾ç¤ºçª—å£
      */
     void CheckAndUpdate(bool showNoUpdate = false);
 };

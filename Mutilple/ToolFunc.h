@@ -3,11 +3,11 @@
 #include "duckx.hpp"
 #include <Model/SystemConfig.h>
 
-// µãµ½Ïß¶Î¾àÀë
+// ç‚¹åˆ°çº¿æ®µè·ç¦»
 float PointToSegDist(float x, float y, float x1, float y1, float x2, float y2);
-// È¥»ùÏß
+// å»åŸºçº¿
 void RemoveBaseline(USHORT* pInput, float* pOutput, int iSize);
-// Ïß¶ÎÊÇ·ñÏà½»
+// çº¿æ®µæ˜¯å¦ç›¸äº¤
 float LineIntersection(float p0_x, float p0_y, float p1_x, float p1_y, float p2_x, float p2_y, float p3_x, float p3_y, glm::vec2& pt);
 void  GenVAO(GLuint& VAO, GLuint& VBO, GLuint& VEO);
 void  GenVAO(GLuint& VAO, GLuint& VBO);
@@ -31,73 +31,73 @@ int GB2312ToUtf8(const char* gb2312, char* utf8);
 int Utf8ToGB2312(const char* utf8, char* gb2312);
 
 /**
- * @brief ÅĞ¶ÏÊÇ·ñ°üº¬ÖĞÎÄ
+ * @brief åˆ¤æ–­æ˜¯å¦åŒ…å«ä¸­æ–‡
  * @param str
  * @return bool
  */
 bool IncChinese(std::wstring str);
 
 /**
- * @brief ´´½¨¶à¼¶Ä¿Â¼
- * @param szPath Â·¾¶
+ * @brief åˆ›å»ºå¤šçº§ç›®å½•
+ * @param szPath è·¯å¾„
  * @return bool
  */
 bool CreateMultipleDirectory(LPCTSTR szPath);
 
 /**
- * @brief µãÊÇ·ñÔÚ¾ØĞÎ¿òÄÚ
- * @param rc ¾ØĞÎ
- * @param pt µã
+ * @brief ç‚¹æ˜¯å¦åœ¨çŸ©å½¢æ¡†å†…
+ * @param rc çŸ©å½¢
+ * @param pt ç‚¹
  * @return bool
  */
 bool PointInRect(RECT rc, ::CPoint pt);
 
 /**
- * @brief »ñÈ¡°æ±¾µÄÕûĞÎÂë
- * @param version °æ±¾ºÅ×Ö·û´®
+ * @brief è·å–ç‰ˆæœ¬çš„æ•´å½¢ç 
+ * @param version ç‰ˆæœ¬å·å­—ç¬¦ä¸²
  * @return versionCode
  */
 int GetVersionCode(std::string version);
 
 /**
- * @brief ¼ì²é¸üĞÂ
- * @param currentVersion µ±Ç°°æ±¾
- * @param newVersion ĞÂ°æ±¾
- * @return ÊÇ·ñµ°¸üĞÂ¿ÉÓÃ
+ * @brief æ£€æŸ¥æ›´æ–°
+ * @param currentVersion å½“å‰ç‰ˆæœ¬
+ * @param newVersion æ–°ç‰ˆæœ¬
+ * @return æ˜¯å¦è›‹æ›´æ–°å¯ç”¨
  */
 bool Check4Update(std::string currentVersion, std::string newVersion);
 
 /**
- * @brief »ñÈ¡×îĞÂµÄ·¢²¼ĞÅÏ¢
- * @param github_api_url github apiµØÖ·
+ * @brief è·å–æœ€æ–°çš„å‘å¸ƒä¿¡æ¯
+ * @param github_api_url github apiåœ°å€
  * @return [tag, body, download_url}
  */
 std::tuple<string, string, string> GetLatestReleaseNote(std::string github_api_url);
 
 /**
- * @brief wordÄ£°å±äÁ¿Ìæ»»
- * @param templateName WordÄ£°åÃû³Æ
- * @param fileName ±£´æºóµÄÎÄ¼şÃû
- * @param var ±äÁ¿Ó³Éä±í
- * @return true ³É¹¦
+ * @brief wordæ¨¡æ¿å˜é‡æ›¿æ¢
+ * @param templateName Wordæ¨¡æ¿åç§°
+ * @param fileName ä¿å­˜åçš„æ–‡ä»¶å
+ * @param var å˜é‡æ˜ å°„è¡¨
+ * @return true æˆåŠŸ
 */
 bool WordTemplateRender(std::wstring templateName, std::wstring fileName, std::map<string, string> var);
 
 /**
- * @brief »ñÈ¡ÏµÍ³ÅäÖÃ
- * @return ÏµÍ³ÅäÖÃ½á¹¹Ìå
+ * @brief è·å–ç³»ç»Ÿé…ç½®
+ * @return ç³»ç»Ÿé…ç½®ç»“æ„ä½“
  */
 ORM_Model::SystemConfig GetSystemConfig();
 
 /**
- * @brief ¸üĞÂÏµÍ³ÅäÖÃ
- * @param config ÏµÍ³ÅäÖÃ½á¹¹Ìå
+ * @brief æ›´æ–°ç³»ç»Ÿé…ç½®
+ * @param config ç³»ç»Ÿé…ç½®ç»“æ„ä½“
  */
 void UpdateSystemConfig(ORM_Model::SystemConfig& config);
 
 /**
- * @brief »ñÈ¡¹¤×÷×é
- * @return ¹¤×÷ÖĞÃû³Æ
+ * @brief è·å–å·¥ä½œç»„
+ * @return å·¥ä½œä¸­åç§°
  */
 std::string GetJobGroup();
 

@@ -228,7 +228,7 @@ void CPaintManagerUI::SetInstance(HINSTANCE hInst)
 {
     m_hInstance = hInst;
 	m_pGdiplusStartupInput = new Gdiplus::GdiplusStartupInput;
-	Gdiplus::GdiplusStartup(&m_gdiplusToken, m_pGdiplusStartupInput, NULL); // ¼ÓÔØGDI+½Ó¿Ú
+	Gdiplus::GdiplusStartup(&m_gdiplusToken, m_pGdiplusStartupInput, NULL); // åŠ è½½GDI+æ¥å£
 	CShadowUI::Initialize(hInst);
 }
 
@@ -369,13 +369,13 @@ TImageInfo* CPaintManagerUI::LoadImage(STRINGorID bitmap, LPCTSTR type, DWORD ma
 
 	if (!pData)
 	{
-		//¶Á²»µ½Í¼Æ¬, ÔòÖ±½ÓÈ¥¶ÁÈ¡bitmap.m_lpstrÖ¸ÏòµÄÂ·¾¶
+		//è¯»ä¸åˆ°å›¾ç‰‡, åˆ™ç›´æ¥å»è¯»å–bitmap.m_lpstræŒ‡å‘çš„è·¯å¾„
 		pData = ThirdParty::LoadFromAbsoluteFile(bitmap.m_lpstr, dwSize);
 	}
 
 	if (!pData)
 	{
-		//::MessageBox(0, _T("¶ÁÈ¡Í¼Æ¬Êı¾İÊ§°Ü£¡"), _T("×¥BUG"), MB_OK);
+		//::MessageBox(0, _T("è¯»å–å›¾ç‰‡æ•°æ®å¤±è´¥ï¼"), _T("æŠ“BUG"), MB_OK);
 		return NULL;
 	}
 
@@ -890,17 +890,17 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
 			   SetNextTabControl();
 		   }
 
-		   // ÊÇ·ñ¿ªÆôÁË°ëÍ¸Ã÷´°ÌåÄ£Ê½
+		   // æ˜¯å¦å¼€å¯äº†åŠé€æ˜çª—ä½“æ¨¡å¼
 		   if(m_bLayeredWindow)
 		   {
-			   // ÉèÖÃ²ãÑùÊ½
+			   // è®¾ç½®å±‚æ ·å¼
 			   DWORD dwExStyle = GetWindowLong(m_hWndPaint, GWL_EXSTYLE);
 			   if((dwExStyle&WS_EX_LAYERED) != WS_EX_LAYERED)
 				   SetWindowLong(m_hWndPaint, GWL_EXSTYLE, dwExStyle|WS_EX_LAYERED);
 
 			   RECT rcClient = {0};
 			   GetClientRect(m_hWndPaint, &rcClient);
-			   // Èç¹û´°Ìå´Ó×îĞ¡»¯»Ö¸´£¬ÔòË¢ĞÂÕû¸öÈí¼ş
+			   // å¦‚æœçª—ä½“ä»æœ€å°åŒ–æ¢å¤ï¼Œåˆ™åˆ·æ–°æ•´ä¸ªè½¯ä»¶
 			   if (m_bIsRestore)
 			   {
 				   rcPaint = rcClient;
@@ -955,10 +955,10 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
 				   }
 			   }
 #else
-			   //Ä¬ÈÏÊ¹ÓÃGdi+äÖÈ¾£¬´ËÊ±Ö»ĞèÒªÎªRichEdit¿Ø¼şĞŞ²¹alpha¼´¿É
+			   //é»˜è®¤ä½¿ç”¨Gdi+æ¸²æŸ“ï¼Œæ­¤æ—¶åªéœ€è¦ä¸ºRichEditæ§ä»¶ä¿®è¡¥alphaå³å¯
 			   if (m_rcRichEditCorner.left > 0 || m_rcRichEditCorner.top > 0 || m_rcRichEditCorner.right > 0 || m_rcRichEditCorner.bottom > 0)
 			   {
-				   //»ñÈ¡ĞèÒª¸üĞÂµÄRichEdit·¶Î§
+				   //è·å–éœ€è¦æ›´æ–°çš„RichEditèŒƒå›´
 				   RECT rcRichEdit = rcClient;
 				   rcRichEdit.left += m_rcRichEditCorner.left;
 				   rcRichEdit.top += m_rcRichEditCorner.top;
@@ -979,7 +979,7 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
 #endif
 			   ::RestoreDC(m_hDcOffscreen, iSaveDC);
 
-			   // Ìùµ½Ö÷´°Ìå
+			   // è´´åˆ°ä¸»çª—ä½“
 			   RECT rcWnd = {0};
 			   ::GetWindowRect(m_hWndPaint, &rcWnd);
 			   POINT pt = {rcWnd.left, rcWnd.top};
@@ -1552,7 +1552,7 @@ void CPaintManagerUI::MessageLoop()
 
 void CPaintManagerUI::Term()
 {
-	Gdiplus::GdiplusShutdown(m_gdiplusToken);	//  Ğ¶ÔØGDI+½Ó¿Ú
+	Gdiplus::GdiplusShutdown(m_gdiplusToken);	//  å¸è½½GDI+æ¥å£
 	delete m_pGdiplusStartupInput;
 
     if( m_bCachedResourceZip && m_hResourceZip != NULL )
@@ -1643,7 +1643,7 @@ bool CPaintManagerUI::SetTimer(CControlUI* pControl, UINT nTimerID, UINT uElapse
         }
     }
 
-    m_uTimerID = (++m_uTimerID) % 0xF0; //0xf1-0xfeÌØÊâÓÃÍ¾
+    m_uTimerID = (++m_uTimerID) % 0xF0; //0xf1-0xfeç‰¹æ®Šç”¨é€”
     if( !::SetTimer(m_hWndPaint, m_uTimerID, uElapse, NULL) ) return FALSE;
     TIMERINFO* pTimer = new TIMERINFO;
     if( pTimer == NULL ) return FALSE;

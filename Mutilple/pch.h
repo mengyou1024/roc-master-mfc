@@ -65,23 +65,23 @@ using ::CSize;
 
 
 #ifndef DB_UNNAMED_GROUP
-    #define DB_UNNAMED_GROUP "Î´ÃüÃû"
+    #define DB_UNNAMED_GROUP "æœªå‘½å"
 #endif
 
 #ifndef DB_UNNAMED_USER
-    #define DB_UNNAMED_USER "Î´ÃüÃû"
+    #define DB_UNNAMED_USER "æœªå‘½å"
 #endif
 
 #ifndef SCAN_DATA_DIR_NAME
     #define SCAN_DATA_DIR_NAME "Data/"
 #endif // !SCAN_DATA_DIR_NAME
 
-// ÊÇ·ñ¼ì²é³ÌĞò¸üĞÂ
+// æ˜¯å¦æ£€æŸ¥ç¨‹åºæ›´æ–°
 #ifndef APP_CHECK_UPDATE
     #define APP_CHECK_UPDATE 0
 #endif 
 
-// É¨²éÊı¾İ±£´æµÄºó×º
+// æ‰«æŸ¥æ•°æ®ä¿å­˜çš„åç¼€
 #ifndef APP_SCAN_DATA_SUFFIX
     #define APP_SCAN_DATA_SUFFIX ".usddb"
 #endif 

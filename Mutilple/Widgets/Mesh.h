@@ -47,7 +47,7 @@ public:
 public:
     OpenGL* m_pOpenGL;
 
-    //ɨ�鷶Χ
+    //É¨²é·¶Î§
     FLOAT m_pScanMin[2];
     FLOAT m_pScanMax[2];
     CAxis m_pAxis[2];

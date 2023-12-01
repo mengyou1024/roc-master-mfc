@@ -31,9 +31,9 @@ namespace DuiLib
 	public:
 		BOOL m_bSelectedNum;
 
-		//ÀàĞÍ£¬0£ºint, 1:float
+		//ç±»å‹ï¼Œ0ï¼šint, 1:float
 		INT   m_iType;
-		//Ğ¡ÊıÎ»Êı
+		//å°æ•°ä½æ•°
 		INT m_iAutoFormat;
 		INT m_iFormat;
 

@@ -21,7 +21,7 @@ namespace DuiLib
 
     LPVOID CClickEditUI::GetInterface(LPCTSTR pstrName)
     {
-        // Õâ¸öÊÇxml¿Ø¼şµÄÃû³Æ
+        // è¿™ä¸ªæ˜¯xmlæ§ä»¶çš„åç§°
         if (_tcscmp(pstrName, DUI_CTR_CLICKEDIT) == 0)
             return static_cast<CClickEditUI*>(this);
 

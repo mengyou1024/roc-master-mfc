@@ -1,27 +1,27 @@
 #pragma once
 
-// ×ÖÌå¿â
+// å­—ä½“åº“
 #include "FreeFont.h"
 #include <type_traits>
 #include <assert.h>
 
 const int FRONT_MAX = 3;
 
-const int COLOR_TEX_WIDTH  = 256; // É«²ÊÎÆÀí¿í¶È
-const int COLOR_TEX_HEIGHT = 32;  // É«²ÊÎÆÀí¸ß¶È
+const int COLOR_TEX_WIDTH  = 256; // è‰²å½©çº¹ç†å®½åº¦
+const int COLOR_TEX_HEIGHT = 32;  // è‰²å½©çº¹ç†é«˜åº¦
 
-// ±³¾°Í¼ÎÆÀíÎ»ÖÃ
-const int BK_TEX_DEF       = 0;  // ÊÓÍ¼±³¾°
-const int BK_TEX_AMP       = 1;  // ²¨·ùÎÆÀíÎ»ÖÃ
-const int BK_TEX_RANGE     = 3;  // Éù³ÌÎÆÀíÎ»ÖÃ
-const int BK_TEX_UT        = 5;  // UTÎÆÀíÎ»ÖÃ
-const int BK_TEX_STEP      = 7;  // ²½½øÎÆÀíÎ»ÖÃ
-const int BK_TEX_SCAN      = 9;  // É¨²éÎÆÀíÎ»ÖÃ
-const int BK_TEX_AXIS_BK   = 11; // ¿Ì¶È±³¾°
-const int BK_TEX_AXIS      = 13; // ¿Ì¶È
-const int BK_TEX_AXIS_ZERO = 15; // Áã¿Ì¶È
+// èƒŒæ™¯å›¾çº¹ç†ä½ç½®
+const int BK_TEX_DEF       = 0;  // è§†å›¾èƒŒæ™¯
+const int BK_TEX_AMP       = 1;  // æ³¢å¹…çº¹ç†ä½ç½®
+const int BK_TEX_RANGE     = 3;  // å£°ç¨‹çº¹ç†ä½ç½®
+const int BK_TEX_UT        = 5;  // UTçº¹ç†ä½ç½®
+const int BK_TEX_STEP      = 7;  // æ­¥è¿›çº¹ç†ä½ç½®
+const int BK_TEX_SCAN      = 9;  // æ‰«æŸ¥çº¹ç†ä½ç½®
+const int BK_TEX_AXIS_BK   = 11; // åˆ»åº¦èƒŒæ™¯
+const int BK_TEX_AXIS      = 13; // åˆ»åº¦
+const int BK_TEX_AXIS_ZERO = 15; // é›¶åˆ»åº¦
 const int BK_TEX_TOFD_AMP  = 17; // TOFD
-const int BK_TEX_MESH      = 19; // Íø¸ñ
+const int BK_TEX_MESH      = 19; // ç½‘æ ¼
 
 class Model;
 class Techniques;
@@ -59,13 +59,13 @@ public:
     float FPS();
     void  Render();
     void  Release();
-    // °´¼ü ÉÏÏÂ×óÓÒ
+    // æŒ‰é”® ä¸Šä¸‹å·¦å³
     void OnKeyLeft();
     void OnKeyRight();
     void OnKeyDown();
     void OnKeyUp();
 
-    // Êó±êÏûÏ¢
+    // é¼ æ ‡æ¶ˆæ¯
     void OnLButtonDown(UINT nFlags, ::CPoint pt);
     void OnLButtonUp(UINT nFlags, ::CPoint pt);
     void OnLButtonDClick(UINT nFlags, ::CPoint pt);
@@ -76,7 +76,7 @@ public:
     void OnMouseWheel(UINT nFlags, short zDelta, ::CPoint pt);
     void OnKey(TCHAR cKey);
 
-    // ´°¿Ú¹ı³Ìº¯Êı
+    // çª—å£è¿‡ç¨‹å‡½æ•°
     static LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
     template <class T>
@@ -105,10 +105,10 @@ public:
     GLuint m_iColorTexture{};
     DWORD* m_pColor{};
 
-    float m_fPt_Xscale{}; // Ì¤Ãæ µã»÷µÄÎ»ÖÃÔÚ»æÍ¼x·½ÏòµÄ±ÈÀı  ²àÃæÎªÔ°µÄ±ÈÀı
-    int   m_fPt_Cir{};    // µã»÷µÄÎ»ÖÃÔÚµÄÈ¦Êı £¨±£´æÊı¾İµÄÎ»ÖÃ£©
+    float m_fPt_Xscale{}; // è¸é¢ ç‚¹å‡»çš„ä½ç½®åœ¨ç»˜å›¾xæ–¹å‘çš„æ¯”ä¾‹  ä¾§é¢ä¸ºå›­çš„æ¯”ä¾‹
+    int   m_fPt_Cir{};    // ç‚¹å‡»çš„ä½ç½®åœ¨çš„åœˆæ•° ï¼ˆä¿å­˜æ•°æ®çš„ä½ç½®ï¼‰
 
-    int m_fPtC_DrawCir{}; // µã»÷µÄÎ»ÖÃÔÚµÄÈ¦Êı £¨³ÉÏñÈ¦ÊıµÄÎ»ÖÃ£¬¿¼ÂÇ¶à×éÌ½Í·£©
-    int m_nProbleGrope{}; // µã»÷µÄµÚ¼¸×éÌ½Í·£¬Ì¤Ãæ0,1,2 ²àÃæ 3,4
-    int m_nDefectCh{};    // È±ÏİÍ¨µÀ  1-12 ºÍ»æÍ¼ÑÕÉ«Ò»Ö±
+    int m_fPtC_DrawCir{}; // ç‚¹å‡»çš„ä½ç½®åœ¨çš„åœˆæ•° ï¼ˆæˆåƒåœˆæ•°çš„ä½ç½®ï¼Œè€ƒè™‘å¤šç»„æ¢å¤´ï¼‰
+    int m_nProbleGrope{}; // ç‚¹å‡»çš„ç¬¬å‡ ç»„æ¢å¤´ï¼Œè¸é¢0,1,2 ä¾§é¢ 3,4
+    int m_nDefectCh{};    // ç¼ºé™·é€šé“  1-12 å’Œç»˜å›¾é¢œè‰²ä¸€ç›´
 };

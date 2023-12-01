@@ -22,12 +22,12 @@ namespace ORM_Model {
         rmaker(_rmaker) {}
 
         uint32_t          id        = {}; ///< id
-        std::wstring      name      = {}; ///< ÐÕÃû
-        uint32_t          jobNumber = {}; ///< ¹¤ºÅ
-        std::vector<char> pswd      = {}; ///< ÃÜÂë
-        std::wstring      rmaker    = {}; ///< ±¸×¢
+        std::wstring      name      = {}; ///< å§“å
+        uint32_t          jobNumber = {}; ///< å·¥å·
+        std::vector<char> pswd      = {}; ///< å¯†ç 
+        std::wstring      rmaker    = {}; ///< å¤‡æ³¨
 
-        bool isLogin = false; ///< ÊÇ·ñµÇÂ¼
+        bool isLogin = false; ///< æ˜¯å¦ç™»å½•
 
         static auto storage(string name) {
             return make_storage(name, make_table("User", make_column("ID", &User::id, primary_key().autoincrement()),
@@ -42,7 +42,7 @@ namespace ORM_Model {
     class JobGroup {
     public:
         int          id        = {};
-        std::wstring groupName = {}; ///< °à×éÃû
+        std::wstring groupName = {}; ///< ç­ç»„å
         static auto  storage(string name) {
             return make_storage(name, make_table("JobGroup", make_column("ID", &JobGroup::id, primary_key().autoincrement()),
                                                   make_column("GROUP_NAME", &JobGroup::groupName, unique())));

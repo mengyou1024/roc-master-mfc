@@ -6,10 +6,10 @@
 #include "freetype/freetype.h"
 
 struct Character{
-    GLuint     TextureID;  // ×ÖĞÎÎÆÀíID
-    glm::ivec2 Size;       // ×ÖĞÎ´ó´óĞ¡
-    glm::ivec2 Bearing;    // ×ÖĞÎ»ùÓÚ»ùÏßºÍÆğµãµÄÎ»ÖÃ
-    GLuint     Advance;    // Æğµãµ½ÏÂÒ»¸ö×ÖĞÎÆğµãµÄ¾àÀë
+    GLuint     TextureID;  // å­—å½¢çº¹ç†ID
+    glm::ivec2 Size;       // å­—å½¢å¤§å¤§å°
+    glm::ivec2 Bearing;    // å­—å½¢åŸºäºåŸºçº¿å’Œèµ·ç‚¹çš„ä½ç½®
+    GLuint     Advance;    // èµ·ç‚¹åˆ°ä¸‹ä¸€ä¸ªå­—å½¢èµ·ç‚¹çš„è·ç¦»
 };
 
 class CFreeFont

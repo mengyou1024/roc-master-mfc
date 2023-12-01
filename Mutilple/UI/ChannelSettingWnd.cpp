@@ -87,7 +87,7 @@ void ChannelSettingWnd::Notify(TNotifyUI& msg) {
                 }
             }
             mUtils->getBridge()->paramCopy(static_cast<size_t>(mChannel), dist);
-            DMessageBox(L"通道拷贝成功!");
+            DMessageBox(L"閫氶亾鎷疯礉鎴愬姛!");
         }
     }
     mUtils->getBridge()->flushSetting();

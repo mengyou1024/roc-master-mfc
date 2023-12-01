@@ -394,7 +394,7 @@ typedef struct {
     int MaxBusRate;
 } TS7CpInfo, *PS7CpInfo;
 
-// See §33.1 of "System Software for S7-300/400 System and Standard Functions"
+// See ยง33.1 of "System Software for S7-300/400 System and Standard Functions"
 // and see SFC51 description too
 typedef struct {
     word LENTHDR;
@@ -412,7 +412,7 @@ typedef struct {
     word       List[0x2000 - 2];
 } TS7SZLList, *PS7SZLList;
 
-// See §33.19 of "System Software for S7-300/400 System and Standard Functions"
+// See ยง33.19 of "System Software for S7-300/400 System and Standard Functions"
 typedef struct {
     word sch_schal;
     word sch_par;

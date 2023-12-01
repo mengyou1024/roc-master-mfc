@@ -19,11 +19,11 @@ void CAxis::Set(int iLen, int iCount, float fMin, float fMax) {
     m_pAxisType.resize(iSize);
 
     for (int i = 0; i < iSize; i++) {
-        m_pAxis[i]       = fScale * i;       // ×ø±êÏñËØ
-        m_pAxis_value[i] = fMin + i * fStep; // ×ø±êÊµ¼ÊÖµ
+        m_pAxis[i]       = fScale * i;       // åæ ‡åƒç´ 
+        m_pAxis_value[i] = fMin + i * fStep; // åæ ‡å®é™…å€¼
 
         if (i % 10 == 0)
-            m_pAxisType[i] = 2; // Çø·Ö´óĞ¡¿Ì¶È
+            m_pAxisType[i] = 2; // åŒºåˆ†å¤§å°åˆ»åº¦
         else if (i % 5 == 0)
             m_pAxisType[i] = 1;
         else
@@ -35,12 +35,12 @@ void CAxis::Set(int iLen, float fMin, float fMax) {
     float min = ::min(fMin, fMax);
     float max = ::max(fMin, fMax);
 
-    // ¼ÆËãÏñËØ´óĞ¡
+    // è®¡ç®—åƒç´ å¤§å°
     float fPixel = (max - min) / iLen;
-    // iAxis:10*Ã¿¿Ì¶È´óĞ¡£¬È¥µôĞ¡ÊıÖµÈ¡Õû
+    // iAxis:10*æ¯åˆ»åº¦å¤§å°ï¼Œå»æ‰å°æ•°å€¼å–æ•´
     int iAxis = (int(fPixel * 10 * 10) / 5 + 1) * 5;
 
-    // ¿Ì¶È¹ı´óÊ±£¬È¥³ıĞ¡¿Ì¶È
+    // åˆ»åº¦è¿‡å¤§æ—¶ï¼Œå»é™¤å°åˆ»åº¦
     int iComp = 100;
     int iScal = 50;
     while (iAxis > iComp) {
@@ -49,12 +49,12 @@ void CAxis::Set(int iLen, float fMin, float fMax) {
         iScal *= 10;
     }
 
-    // ¼ÆËã×ó²à×îĞ¡¿Ì¶È
+    // è®¡ç®—å·¦ä¾§æœ€å°åˆ»åº¦
     float fLeft = float((int(min * 10) / iAxis) * iAxis) / 10.0F;
     if (fLeft < min)
         fLeft += (iAxis / 10.0F);
 
-    // ¼ÆËã¿Ì¶È×ÜÊı
+    // è®¡ç®—åˆ»åº¦æ€»æ•°
     int iSize = int((max - fLeft) * 10 / iAxis + 1);
 
     m_pAxis.resize(iSize);

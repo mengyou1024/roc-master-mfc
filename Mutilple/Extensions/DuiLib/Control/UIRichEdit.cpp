@@ -1784,8 +1784,8 @@ void CRichEditUI::OnTxNotify(DWORD iNotify, void *pv)
 	}
 }
 
-// ¶àÐÐ·Çrich¸ñÊ½µÄricheditÓÐÒ»¸ö¹ö¶¯Ìõbug£¬ÔÚ×îºóÒ»ÐÐÊÇ¿ÕÐÐÊ±£¬LineDownºÍSetScrollPosÎÞ·¨¹ö¶¯µ½×îºó
-// ÒýÈëiPos¾ÍÊÇÎªÁËÐÞÕýÕâ¸öbug
+// å¤šè¡Œéžrichæ ¼å¼çš„richeditæœ‰ä¸€ä¸ªæ»šåŠ¨æ¡bugï¼Œåœ¨æœ€åŽä¸€è¡Œæ˜¯ç©ºè¡Œæ—¶ï¼ŒLineDownå’ŒSetScrollPosæ— æ³•æ»šåŠ¨åˆ°æœ€åŽ
+// å¼•å…¥iPoså°±æ˜¯ä¸ºäº†ä¿®æ­£è¿™ä¸ªbug
 void CRichEditUI::SetScrollPos(SIZE szPos)
 {
     int cx = 0;
@@ -2033,7 +2033,7 @@ void CRichEditUI::PaintStatusImage(HDC hDC)
 
 SIZE CRichEditUI::EstimateSize(SIZE szAvailable)
 {
-    //return CSize(m_rcItem); // ÕâÖÖ·½Ê½ÔÚµÚÒ»´ÎÉèÖÃ´óÐ¡Ö®ºó¾Í´óÐ¡²»±äÁË
+    //return CSize(m_rcItem); // è¿™ç§æ–¹å¼åœ¨ç¬¬ä¸€æ¬¡è®¾ç½®å¤§å°ä¹‹åŽå°±å¤§å°ä¸å˜äº†
     return CContainerUI::EstimateSize(szAvailable);
 }
 
@@ -2393,7 +2393,7 @@ LRESULT CRichEditUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, boo
 
 	if (uMsg == WM_IME_COMPOSITION)
 	{
-		// ½â¾öÎ¢ÈíÊäÈë·¨Î»ÖÃÒì³£µÄÎÊÌâ
+		// è§£å†³å¾®è½¯è¾“å…¥æ³•ä½ç½®å¼‚å¸¸çš„é—®é¢˜
 		HIMC hIMC = ImmGetContext(GetManager()->GetPaintWindow());
 		if (hIMC) 
 		{

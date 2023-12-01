@@ -91,7 +91,7 @@ namespace DuiLib
 		{
 			::SetFocus(m_hWnd);
 		}
-		// 根据网络博客所知bug修复
+		// 鏍规嵁缃戠粶鍗氬鎵�鐭ug淇
 		if( uMsg == WM_KILLFOCUS )
 		{		
 			HWND hCanlender=::FindWindow( MONTHCAL_CLASS, NULL);
@@ -103,12 +103,12 @@ namespace DuiLib
 				::ScreenToClient(hCanlender,&hitInfo.pt);
 				hitInfo.cbSize=sizeof(hitInfo);
 				MonthCal_HitTest(hCanlender,&hitInfo);
-				//下一个月
+				//涓嬩竴涓湀
 				if(hitInfo.uHit==MCHT_TITLEBTNNEXT)
 				{
 					return 1;
 				}
-				//上一个月
+				//涓婁竴涓湀
 				if(hitInfo.uHit==MCHT_TITLEBTNPREV)
 				{
 					return 1;
@@ -178,7 +178,7 @@ namespace DuiLib
 		m_bReadOnly = false;
 		m_pWindow = NULL;
 		m_nDTUpdateFlag=DT_UPDATE;
-		UpdateText();		// add by:daviyang35 初始化界面时显示时间
+		UpdateText();		// add by:daviyang35 鍒濆鍖栫晫闈㈡椂鏄剧ず鏃堕棿
 		m_nDTUpdateFlag = DT_NONE;
 	}
 

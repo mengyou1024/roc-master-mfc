@@ -27,6 +27,6 @@ public:
 
 private:
     std::thread* _pthread;
-    //线程事件
+    //绾跨▼浜嬩欢
     HANDLE _hevent;
 };
