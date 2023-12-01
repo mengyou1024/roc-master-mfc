@@ -50,7 +50,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "@CMAKE_SOURCE_DIR@/x64/Release/ftd2xx.dll"; DestDir: "{app}"
 Source: "@CMAKE_SOURCE_DIR@/x64/Release/msvcp140.dll"; DestDir: "{app}"
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/Mutilple.exe"; DestDir: "{app}"
+Source: "@CMAKE_SOURCE_DIR@/x64/Release/Mutilple.exe"; DestDir: "{app}"; Flags: comparetimestamp
 Source: "@CMAKE_SOURCE_DIR@/x64/Release/snap7.dll"; DestDir: "{app}"
 Source: "@CMAKE_SOURCE_DIR@/x64/Release/sqlite3.dll"; DestDir: "{app}"
 Source: "@CMAKE_SOURCE_DIR@/x64/Release/TOFDPort.dll"; DestDir: "{app}"

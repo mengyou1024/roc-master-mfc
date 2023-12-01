@@ -19,6 +19,7 @@
 #include <algorithm>
 #include <array>
 #include <chrono>
+#include <future>
 #include <iomanip>
 #include <regex>
 #include <rttr/type.h>
@@ -968,21 +969,19 @@ void GroupScanWnd::CheckAndUpdate(bool showNoUpdate) {
         return;
     }
     auto [tag, body, url] = GetLatestReleaseNote("https://api.github.com/repos/mengyou1024/roc-master-mfc/releases/latest");
-    if (Check4Update("v0.0", tag)) {
-        std::wstring wBody  = WStringFromString(body);
-        std::wstring wTitle = std::wstring(L"更新可用:") + WStringFromString(tag);
-        auto         ret    = DMessageBox(
-            (std::wstring(APP_VERSIONW) + L"--->" + WStringFromString(tag) + L"\n\n是:立即更新\n否:关闭程序后更新\n右上角叉:不进行更新")
-                .data(),
-            wTitle.data(), MB_YESNO);
-        spdlog::info("tag: {}\n body: {} \n url: {}", tag, body, url);
-        if (ret == 0x6 || ret == 0x2) {
+    if (Check4Update(APP_VERSION, tag)) {
+        std::wstring wBody   = WStringFromString(body);
+        std::wstring wTitle  = std::wstring(L"更新可用:") + WStringFromString(tag);
+        std::wstring message = std::wstring(APP_VERSIONW) + L"--->" + WStringFromString(tag) + L"\n\n是:立即下载\n否:不更新";
+        auto         ret     = DMessageBox(message.data(), wTitle.data(), MB_YESNO);
+        spdlog::info("更新可用:\ntag: {}\n body: {} \n url: {}", tag, body, url);
+        if (ret == 0x6) {
             spdlog::debug("ret = {}", ret);
-            CURLcode result = CURL_LAST;
-            BusyWnd  wnd([url, &result]() {
-                FILE *fp     = fopen("./newVersion.exe", "wb");
-                CURL *curl   = curl_easy_init();
-                auto  config = GetSystemConfig();
+            auto result = std::async([url]() -> CURLcode {
+                CURLcode result = CURL_LAST;
+                FILE    *fp     = fopen("./newVersion.exe", "wb");
+                CURL    *curl   = curl_easy_init();
+                auto     config = GetSystemConfig();
                 if (config.enableProxy) {
                     curl_easy_setopt(curl, CURLOPT_PROXY, StringFromWString(config.httpProxy).c_str());
                     curl_easy_setopt(curl, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
@@ -995,13 +994,18 @@ void GroupScanWnd::CheckAndUpdate(bool showNoUpdate) {
                 result = curl_easy_perform(curl);
                 fclose(fp);
                 curl_easy_cleanup(curl);
+                return result;
             });
-            wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
-            wnd.ShowModal();
-            if (result != CURLE_OK) {
-                DMessageBox(L"下载文件失败");
-                spdlog::error("下载更新文件失败");
+            if (result.wait_for(std::chrono::milliseconds(60000)) == std::future_status::timeout) {
+                DMessageBox(L"下载文件超时.");
+                spdlog::warn("下载文件超时.");
                 return;
+            }
+
+            if (result.get() == CURLE_OK) {
+                if (DMessageBox(L"新版本已下载，是否立即更新", L"关闭并更新", MB_YESNO) != 0x06) {
+                    return;
+                }
             }
             g_MainProcess.RegistFuncOnDestory([]() -> void {
                 TCHAR path[MAX_PATH];
@@ -1014,9 +1018,7 @@ void GroupScanWnd::CheckAndUpdate(bool showNoUpdate) {
                 strPath += _T("\\newVersion.exe");
                 ShellExecute(NULL, _T("open"), strPath, NULL, strDir, SW_HIDE);
             });
-            if (ret == 0x6) {
-                Close();
-            }
+            Close();
         }
     } else {
         if (showNoUpdate) {
@@ -1060,69 +1062,67 @@ void GroupScanWnd::SaveScanData() {
 
 void GroupScanWnd::EnterReviewMode(std::string name) {
     try {
-    auto tick = GetTickCount64();
-    // 存放回调函数
-    mUtils->pushCallback();
-    // 保存配置信息备份
-    mDetectInfoBak    = mDetectInfo;
-    auto systemConfig = GetSystemConfig();
-    mJobGroupNameBak  = systemConfig.groupName;
-    // 读取并加载数据
-    mDetectInfo            = ORM_Model::DetectInfo::storage(name).get<ORM_Model::DetectInfo>(1);
-    systemConfig.groupName = ORM_Model::JobGroup::storage(name).get<ORM_Model::JobGroup>(1).groupName;
-    mReviewData            = HD_Utils::storage(name).get_all<HD_Utils>();
-    mDefectInfo            = ORM_Model::DefectInfo::storage(name).get_all<ORM_Model::DefectInfo>();
-    UpdateSystemConfig(systemConfig);
-    spdlog::info("load:{}, frame:{}", name, mReviewData.size());
-    // 删除所有通道的C扫数据
-    for (int index = 0; index < HDBridge::CHANNEL_NUMBER; index++) {
-        auto mesh = static_cast<MeshGroupCScan *>(((ModelGroupCScan *)m_OpenGL_CSCAN.m_pModel[0])->m_pMesh[index]);
-        mesh->RemoveDot();
-        mesh->RemoveLine();
-    }
-    for (const auto &data : mReviewData) {
+        auto tick = GetTickCount64();
+        // 存放回调函数
+        mUtils->pushCallback();
+        // 保存配置信息备份
+        mDetectInfoBak    = mDetectInfo;
+        auto systemConfig = GetSystemConfig();
+        mJobGroupNameBak  = systemConfig.groupName;
+        // 读取并加载数据
+        mDetectInfo            = ORM_Model::DetectInfo::storage(name).get<ORM_Model::DetectInfo>(1);
+        systemConfig.groupName = ORM_Model::JobGroup::storage(name).get<ORM_Model::JobGroup>(1).groupName;
+        mReviewData            = HD_Utils::storage(name).get_all<HD_Utils>();
+        mDefectInfo            = ORM_Model::DefectInfo::storage(name).get_all<ORM_Model::DefectInfo>();
+        UpdateSystemConfig(systemConfig);
+        spdlog::info("load:{}, frame:{}", name, mReviewData.size());
+        // 删除所有通道的C扫数据
         for (int index = 0; index < HDBridge::CHANNEL_NUMBER; index++) {
             auto mesh = static_cast<MeshGroupCScan *>(((ModelGroupCScan *)m_OpenGL_CSCAN.m_pModel[0])->m_pMesh[index]);
-            if (data.mScanOrm.mScanData[index]->scanGateInfo.width != 0.0f) {
-                auto l = static_cast<size_t>(
-                    std::round(data.mScanOrm.mScanData[index]->scanGateInfo.pos * data.mScanOrm.mScanData[index]->pAscan.size()));
-                auto r = static_cast<size_t>(
-                    std::round((data.mScanOrm.mScanData[index]->scanGateInfo.pos + data.mScanOrm.mScanData[index]->scanGateInfo.width) *
-                               data.mScanOrm.mScanData[index]->pAscan.size()));
-                auto      max   = std::max_element(std::begin(data.mScanOrm.mScanData[index]->pAscan) + l,
-                                                   std::begin(data.mScanOrm.mScanData[index]->pAscan) + r);
-                glm::vec4 color = {};
-                if (*max > data.mScanOrm.mScanData[index]->pGateAmp[1]) {
-                    color = {1.0f, 0.f, 0.f, 1.0f};
+            mesh->RemoveDot();
+            mesh->RemoveLine();
+        }
+        for (const auto &data : mReviewData) {
+            for (int index = 0; index < HDBridge::CHANNEL_NUMBER; index++) {
+                auto mesh = static_cast<MeshGroupCScan *>(((ModelGroupCScan *)m_OpenGL_CSCAN.m_pModel[0])->m_pMesh[index]);
+                if (data.mScanOrm.mScanData[index]->scanGateInfo.width != 0.0f) {
+                    auto l = static_cast<size_t>(
+                        std::round(data.mScanOrm.mScanData[index]->scanGateInfo.pos * data.mScanOrm.mScanData[index]->pAscan.size()));
+                    auto r = static_cast<size_t>(
+                        std::round((data.mScanOrm.mScanData[index]->scanGateInfo.pos + data.mScanOrm.mScanData[index]->scanGateInfo.width) *
+                                   data.mScanOrm.mScanData[index]->pAscan.size()));
+                    auto      max   = std::max_element(std::begin(data.mScanOrm.mScanData[index]->pAscan) + l,
+                                                       std::begin(data.mScanOrm.mScanData[index]->pAscan) + r);
+                    glm::vec4 color = {};
+                    if (*max > data.mScanOrm.mScanData[index]->pGateAmp[1]) {
+                        color = {1.0f, 0.f, 0.f, 1.0f};
+                    } else {
+                        color = {1.0f, 1.0f, 1.0f, 1.0f};
+                    }
+                    mesh->AppendDot(*max, color, MAXSIZE_T);
                 } else {
-                    color = {1.0f, 1.0f, 1.0f, 1.0f};
+                    mesh->AppendDot(0, {0.0f, 1.0f, 0.0f, 1.0f}, MAXSIZE_T);
                 }
-                mesh->AppendDot(*max, color, MAXSIZE_T);
-            } else {
-                mesh->AppendDot(0, {0.0f, 1.0f, 0.0f, 1.0f}, MAXSIZE_T);
             }
         }
-    }
 
-    // 回放的C扫范围为第一幅图的最小值到最后一幅图的最大值
-    if (mReviewData.size() > 0) {
-        float cScanMinLimits = (*std::begin(mReviewData)).mScanOrm.mCScanLimits[0];
-        float cScanMaxLimits = (*std::rbegin(mReviewData)).mScanOrm.mCScanLimits[1];
-        m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->SetAxisRange(cScanMinLimits, cScanMaxLimits);
-    }
+        // 回放的C扫范围为第一幅图的最小值到最后一幅图的最大值
+        if (mReviewData.size() > 0) {
+            float cScanMinLimits = (*std::begin(mReviewData)).mScanOrm.mCScanLimits[0];
+            float cScanMaxLimits = (*std::rbegin(mReviewData)).mScanOrm.mCScanLimits[1];
+            m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->SetAxisRange(cScanMinLimits, cScanMaxLimits);
+        }
 
-    // 切换界面布局
-    auto layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutParamSetting")));
-    layout->SetVisible(false);
-    layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutFunctionButton")));
-    layout->SetVisible(false);
-    layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutReviewExt")));
-    layout->SetVisible(true);
-    mWidgetMode = WidgetMode::MODE_REVIEW;
-    spdlog::info("takes time: {} ms", GetTickCount64() - tick);
-    } catch (std::exception &e) { 
-        spdlog::error(e.what());
-    }
+        // 切换界面布局
+        auto layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutParamSetting")));
+        layout->SetVisible(false);
+        layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutFunctionButton")));
+        layout->SetVisible(false);
+        layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutReviewExt")));
+        layout->SetVisible(true);
+        mWidgetMode = WidgetMode::MODE_REVIEW;
+        spdlog::info("takes time: {} ms", GetTickCount64() - tick);
+    } catch (std::exception &e) { spdlog::error(e.what()); }
 }
 
 void GroupScanWnd::ExitReviewMode() {
