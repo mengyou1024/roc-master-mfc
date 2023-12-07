@@ -58,7 +58,9 @@ using sqlite_orm::where;
 
 GroupScanWnd::GroupScanWnd() {
     try {
-        auto config = TOFDUSBPort::storage().get_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == std::wstring(SCAN_CONFIG_LAST)));
+        mCScanThreadRunning = true;
+        mCScanThread        = std::thread(&GroupScanWnd::ThreadCScan, this);
+        auto config         = TOFDUSBPort::storage().get_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == std::wstring(SCAN_CONFIG_LAST)));
         if (config.size() == 1) {
             if (config[0].isValid) {
                 mUtils = std::make_unique<HD_Utils>(std::make_unique<TOFDUSBPort>(config[0]));
@@ -82,6 +84,9 @@ GroupScanWnd::GroupScanWnd() {
 
 GroupScanWnd::~GroupScanWnd() {
     try {
+        mCScanThreadRunning = false;
+        mCScanNotify.notify_all();
+        mCScanThread.join();
         // 退出前停止扫查并且退出回放模式
         StopScan(true);
         if (mWidgetMode == WidgetMode::MODE_REVIEW) {
@@ -413,7 +418,7 @@ void GroupScanWnd::SetConfigValue(float val, bool sync) {
         }
     }
     if (sync) {
-        AddTaskToQueue([bridge]() { bridge->flushSetting(); }, 0, true);
+        AddTaskToQueue([bridge]() { bridge->flushSetting(); }, "flushSetting", true);
     }
 }
 
@@ -439,7 +444,7 @@ void GroupScanWnd::UpdateAScanCallback(const HDBridge::NM_DATA &data, const HD_U
 
     if (!mEnableAmpMemory) {
         for (int i = 0; i < 3; i++) {
-            mesh->hootAmpMemoryData(i, nullptr);
+            mesh->hookAmpMemoryData(i, nullptr);
             mesh->ClearAmpMemoryData(i);
         }
         return;
@@ -458,7 +463,7 @@ void GroupScanWnd::UpdateAScanCallback(const HDBridge::NM_DATA &data, const HD_U
                 }
             }
         }
-        mesh->hootAmpMemoryData(i, std::make_shared<std::vector<uint8_t>>(newAmpData));
+        mesh->hookAmpMemoryData(i, std::make_shared<std::vector<uint8_t>>(newAmpData));
     }
     {
         const auto ampData = mesh->getAmpMemoryData(2);
@@ -474,36 +479,12 @@ void GroupScanWnd::UpdateAScanCallback(const HDBridge::NM_DATA &data, const HD_U
                 }
             }
         }
-        mesh->hootAmpMemoryData(2, std::make_shared<std::vector<uint8_t>>(newAmpData));
+        mesh->hookAmpMemoryData(2, std::make_shared<std::vector<uint8_t>>(newAmpData));
     }
 }
 
 void GroupScanWnd::UpdateCScanOnTimer() {
-    std::array<std::shared_ptr<HDBridge::NM_DATA>, HDBridge::CHANNEL_NUMBER> scanData = mUtils->mScanOrm.mScanData;
-
-    for (auto &it : scanData) {
-        if (it != nullptr) {
-            auto mesh = static_cast<MeshGroupCScan *>(((ModelGroupCScan *)m_OpenGL_CSCAN.m_pModel[0])->m_pMesh[it->iChannel]);
-            if (mGateScan[it->iChannel].width != 0.0f) {
-                auto l = static_cast<size_t>(std::round(mGateScan[it->iChannel].pos * it->pAscan.size()));
-                auto r = static_cast<size_t>(std::round((mGateScan[it->iChannel].pos + mGateScan[it->iChannel].width) * it->pAscan.size()));
-                auto max        = std::max_element(std::begin(it->pAscan) + l, std::begin(it->pAscan) + r);
-                glm::vec4 color = {};
-                if (*max > it->pGateAmp[1]) {
-                    color = {1.0f, 0.f, 0.f, 1.0f};
-                } else {
-                    color = {1.0f, 1.0f, 1.0f, 1.0f};
-                }
-                if (*max > 255 / 4) {
-                    GroupScanWnd::mScanButtonValue[it->iChannel] = 1;
-                } else {
-                    GroupScanWnd::mScanButtonValue[it->iChannel] = 0;
-                }
-                mesh->AppendDot(*max, color);
-            }
-        }
-    }
-    SaveScanData();
+    mCScanNotify.notify_one();
 }
 
 void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
@@ -703,7 +684,7 @@ void GroupScanWnd::Notify(TNotifyUI &msg) {
                 }
                 // 设置超声板数值
                 if (msg.pSender->IsEnabled()) {
-                    SetConfigValue(static_cast<float>(sliderValue));
+                    AddTaskToQueue([this, sliderValue]() { SetConfigValue(static_cast<float>(sliderValue)); }, "OnValueChanged", true);
                 }
             }
         }
@@ -909,6 +890,43 @@ void GroupScanWnd::EnterReview(std::string path) {
     mReviewPathEntry = path;
 }
 
+void GroupScanWnd::ThreadCScan(void) {
+    while (1) {
+        std::unique_lock lock(mCScanMutex);
+        mCScanNotify.wait(lock);
+        if (!mCScanThreadRunning) {
+            break;
+        }
+
+        // 更新C扫
+        std::array<std::shared_ptr<HDBridge::NM_DATA>, HDBridge::CHANNEL_NUMBER> scanData = mUtils->mScanOrm.mScanData;
+        for (auto &it : scanData) {
+            if (it != nullptr) {
+                auto mesh = static_cast<MeshGroupCScan *>(((ModelGroupCScan *)m_OpenGL_CSCAN.m_pModel[0])->m_pMesh[it->iChannel]);
+                if (mGateScan[it->iChannel].width != 0.0f) {
+                    auto l = static_cast<size_t>(std::round(mGateScan[it->iChannel].pos * it->pAscan.size()));
+                    auto r =
+                        static_cast<size_t>(std::round((mGateScan[it->iChannel].pos + mGateScan[it->iChannel].width) * it->pAscan.size()));
+                    auto      max   = std::max_element(std::begin(it->pAscan) + l, std::begin(it->pAscan) + r);
+                    glm::vec4 color = {};
+                    if (*max > it->pGateAmp[1]) {
+                        color = {1.0f, 0.f, 0.f, 1.0f};
+                    } else {
+                        color = {1.0f, 1.0f, 1.0f, 1.0f};
+                    }
+                    if (*max > 255 / 4) {
+                        mDefectJudgmentValue[it->iChannel] = 1;
+                    } else {
+                        mDefectJudgmentValue[it->iChannel] = 0;
+                    }
+                    mesh->AppendDot(*max, color);
+                }
+            }
+        }
+        SaveScanData();
+    }
+}
+
 void GroupScanWnd::OnBtnSelectGroupClicked(long index) {
     if (index == mCurrentGroup) {
         return;
@@ -1050,7 +1068,7 @@ void GroupScanWnd::SaveScanData() {
     } else {
         mReviewData.push_back(*mUtils);
     }
-    auto &res = mDetectionSM.UpdateData(mScanButtonValue);
+    auto &res = mDetectionSM.UpdateData(mDefectJudgmentValue);
     for (int i = 0; i < res.size(); i++) {
         if (res[i] == DetectionStateMachine::DetectionStatus::Rasing) {
             SaveDefectStartID(i);
@@ -1064,7 +1082,9 @@ void GroupScanWnd::EnterReviewMode(std::string name) {
     try {
         auto tick = GetTickCount64();
         // 存放回调函数
-        mUtils->pushCallback();
+        if (mWidgetMode != WidgetMode::MODE_REVIEW) {
+            mUtils->pushCallback();
+        }
         // 保存配置信息备份
         mDetectInfoBak    = mDetectInfo;
         auto systemConfig = GetSystemConfig();
@@ -1122,11 +1142,16 @@ void GroupScanWnd::EnterReviewMode(std::string name) {
         layout->SetVisible(true);
         mWidgetMode = WidgetMode::MODE_REVIEW;
         spdlog::info("takes time: {} ms", GetTickCount64() - tick);
-    } catch (std::exception &e) { spdlog::error(e.what()); }
+    } catch (std::exception &e) { 
+        spdlog::error(e.what()); 
+        mUtils->popCallback();
+    }
 }
 
 void GroupScanWnd::ExitReviewMode() {
-    mUtils->popCallback();
+    if (mWidgetMode == WidgetMode::MODE_REVIEW) {
+        mUtils->popCallback();
+    }
     mReviewData.clear();
     auto layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutParamSetting")));
     layout->SetVisible(true);
@@ -1168,7 +1193,7 @@ void GroupScanWnd::StartScan(bool changeFlag) {
         buffer << std::put_time(localtime(&tm), "%Y-%m-%d__%H-%M-%S");
         mDetectInfo.time = buffer.str();
 
-        mScanButtonValue.fill(0);
+        mDefectJudgmentValue.fill(0);
         std::regex  reg(R"((\d+)-(\d+)-(\d+)__(.+))");
         std::smatch match;
         if (std::regex_match(mDetectInfo.time, match, reg)) {
@@ -1230,13 +1255,15 @@ void GroupScanWnd::StopScan(bool changeFlag) {
     }
     if (mScanningFlag == true) {
         mScanningFlag = false;
+        KillTimer(CSCAN_UPDATE);
+        Sleep(10);
         for (int i = 0; i < HDBridge::CHANNEL_NUMBER; i++) {
             auto meshAScan = static_cast<MeshAscan *>(((ModelGroupAScan *)m_OpenGL_ASCAN.m_pModel[0])->m_pMesh[i]);
             auto meshCScan = static_cast<MeshGroupCScan *>(((ModelGroupCScan *)m_OpenGL_CSCAN.m_pModel[0])->m_pMesh[i]);
             meshCScan->RemoveLine();
             meshCScan->RemoveDot();
             meshAScan->UpdateGate(2, 1, mGateScan[i].pos, mGateScan[i].width, mGateScan[i].height);
-            mScanButtonValue.fill(0);
+            mDefectJudgmentValue.fill(0);
         }
         // 保存缺陷记录
         ORM_Model::ScanRecord::storage(mSavePath).insert_range(mScanRecordCache.begin(), mScanRecordCache.end());
@@ -1253,6 +1280,5 @@ void GroupScanWnd::StopScan(bool changeFlag) {
         mReviewData.clear();
         mRecordCount = 0;
         mScanRecordCache.clear();
-        KillTimer(CSCAN_UPDATE);
     }
 }

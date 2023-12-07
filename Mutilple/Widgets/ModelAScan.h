@@ -36,17 +36,7 @@ public:
     const size_t GetViewChanel() const {
         return mChannelIndex;
     }
-    template <class T>
-    T getMesh(size_t index) {
-        return static_cast<T>(m_pMesh[index]);
-    }
-
-    template <>
-    Mesh* getMesh(size_t index) {
-        return getMesh<Mesh*>(index);
-    }
 
 public:
-    std::map<size_t, Mesh*> m_pMesh;
-    int                     m_iBuffer;
+    int m_iBuffer;
 };

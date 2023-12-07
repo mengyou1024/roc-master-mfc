@@ -229,7 +229,7 @@ void MeshAscan::UpdateAmpMemoryData() {
     
 }
 
-void MeshAscan::hootAmpMemoryData(int index, const std::shared_ptr<std::vector<uint8_t>> data) {
+void MeshAscan::hookAmpMemoryData(int index, const std::shared_ptr<std::vector<uint8_t>> data) {
     std::lock_guard lock(mGMutex);
     mAmpMemoryData[index] = data;
 }

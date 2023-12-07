@@ -81,8 +81,8 @@ public:
 
     template <class T>
     T getModel() {
-        static_assert(std::is_pointer_v<T>, "type must be a pointer");
-        static_assert(std::is_base_of_v<Model, std::remove_pointer_t<T>>, "type must be Model");
+        static_assert(std::is_pointer_v<T>, "类型必须是指针");
+        static_assert(std::is_base_of_v<Model, std::remove_pointer_t<T>>, "类型必须是Model或其子类");
         return dynamic_cast<T>(m_pModel.at(0));
     }
 

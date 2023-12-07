@@ -50,8 +50,8 @@ private:
 
     string mSavePath = {}; ///< 保存路径
 
-    /// 扫查按钮值
-    inline static std::array<uint8_t, HDBridge::CHANNEL_NUMBER> mScanButtonValue = {};
+    /// 缺陷判决值
+    std::array<uint8_t, HDBridge::CHANNEL_NUMBER> mDefectJudgmentValue = {};
 
     enum class WidgetMode { MODE_SCAN = 0, MODE_REVIEW };
 
@@ -121,27 +121,36 @@ private:
      * @note 并不是表示实际的通道值, 而是表示第几个选项，例如`CHANNEL_1`表示第一个通道选项
      * 实际的通道号可能是 1,5,9 中的一个
      */
-    ChannelSel                                mChannelSel        = ChannelSel::CHANNEL_1;
-    CWindowUI*                                m_pWndOpenGL_ASCAN = nullptr;                 ///< A扫Duilib的窗口指针
-    CWindowUI*                                m_pWndOpenGL_CSCAN = nullptr;                 ///< C扫Duilib的窗口指针
-    OpenGL                                    m_OpenGL_ASCAN     = {};                      ///< A扫OpenGL窗口
-    OpenGL                                    m_OpenGL_CSCAN     = {};                      ///< C扫OpenGL窗口
-    long                                      mCurrentGroup      = 0;                       ///< 当前分组
-    ConfigType                                mConfigType        = ConfigType::DetectRange; ///< 当前选中设置类型
-    GateType                                  mGateType          = GateType::GATE_A;        ///< 当前选中的波门类型
-    std::unique_ptr<HD_Utils>                 mUtils             = nullptr;                 ///< 硬件接口
-    WidgetMode                                mWidgetMode        = {WidgetMode::MODE_SCAN}; ///< 当前窗口的模式
-    std::vector<HD_Utils>                     mReviewData        = {};                      ///< 扫查缺陷数据
-    int                                       mSamplesPerSecond  = 33;                      ///< C扫图每秒钟采点个数
-    bool                                      mEnableAmpMemory   = false;                   ///< 峰值记忆
-    std::array<int, HDBridge::CHANNEL_NUMBER> mIDDefectRecord    = {};                      ///< 缺陷记录的索引ID
-    ORM_Model::DetectInfo                     mDetectInfo        = {};                      ///< 探伤信息
-    int                                       mRecordCount       = {};                      ///< 扫查数据计数
-    std::vector<ORM_Model::ScanRecord>        mScanRecordCache   = {};                      ///< 扫查记录缓存(缺陷)
-    DetectionStateMachine                     mDetectionSM       = {};                      ///< 探伤的状态机
-    std::vector<ORM_Model::DefectInfo>        mDefectInfo        = {};                      ///< 探伤缺陷
-    bool                                      mScanningFlag      = false;                   ///< 判断当前是否正在扫查
-    std::string                               mReviewPathEntry   = {};                      ///< 回放路径入口
+    ChannelSel                                mChannelSel         = ChannelSel::CHANNEL_1;
+    CWindowUI*                                m_pWndOpenGL_ASCAN  = nullptr;                 ///< A扫Duilib的窗口指针
+    CWindowUI*                                m_pWndOpenGL_CSCAN  = nullptr;                 ///< C扫Duilib的窗口指针
+    OpenGL                                    m_OpenGL_ASCAN      = {};                      ///< A扫OpenGL窗口
+    OpenGL                                    m_OpenGL_CSCAN      = {};                      ///< C扫OpenGL窗口
+    long                                      mCurrentGroup       = 0;                       ///< 当前分组
+    ConfigType                                mConfigType         = ConfigType::DetectRange; ///< 当前选中设置类型
+    GateType                                  mGateType           = GateType::GATE_A;        ///< 当前选中的波门类型
+    std::unique_ptr<HD_Utils>                 mUtils              = nullptr;                 ///< 硬件接口
+    WidgetMode                                mWidgetMode         = {WidgetMode::MODE_SCAN}; ///< 当前窗口的模式
+    std::vector<HD_Utils>                     mReviewData         = {};                      ///< 扫查缺陷数据
+    int                                       mSamplesPerSecond   = 33;                      ///< C扫图每秒钟采点个数
+    bool                                      mEnableAmpMemory    = false;                   ///< 峰值记忆
+    std::array<int, HDBridge::CHANNEL_NUMBER> mIDDefectRecord     = {};                      ///< 缺陷记录的索引ID
+    ORM_Model::DetectInfo                     mDetectInfo         = {};                      ///< 探伤信息
+    int                                       mRecordCount        = {};                      ///< 扫查数据计数
+    std::vector<ORM_Model::ScanRecord>        mScanRecordCache    = {};                      ///< 扫查记录缓存(缺陷)
+    DetectionStateMachine                     mDetectionSM        = {};                      ///< 探伤的状态机
+    std::vector<ORM_Model::DefectInfo>        mDefectInfo         = {};                      ///< 探伤缺陷
+    bool                                      mScanningFlag       = false;                   ///< 判断当前是否正在扫查
+    std::string                               mReviewPathEntry    = {};                      ///< 回放路径入口
+    std::thread                               mCScanThread        = {};                      ///< C扫线程
+    std::condition_variable                   mCScanNotify        = {};                      ///< C扫线程更新数据通知
+    std::mutex                                mCScanMutex         = {};                      ///< C扫线程互斥量
+    bool                                      mCScanThreadRunning = {};                      ///< C扫线程运行
+
+    /**
+     * @brief C扫线程
+     */
+    void ThreadCScan(void);
 
     // 参数备份
     ORM_Model::DetectInfo mDetectInfoBak   = {};

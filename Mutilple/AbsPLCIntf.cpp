@@ -45,7 +45,7 @@ static bool reconnect() {
             _RuitiePLCInfo::getInstance()->m_slot      = slot;
             _RuitiePLCInfo::getInstance()->m_connected = true;
         } else {
-            spdlog::warn("reconnect to :{} {} {} error: {%d}}\n", ip, rack, slot, err);
+            spdlog::warn("reconnect to :{} {} {} error: {}\n", ip, rack, slot, err);
             return false;
         }
     }

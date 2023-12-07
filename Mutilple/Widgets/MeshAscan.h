@@ -26,7 +26,7 @@ public:
     void UpdateGate(int iGate, bool bEnable, float fPos, float fWidth, float fHeight);
     void UpdateAScanData();
     void UpdateAmpMemoryData();
-    void hootAmpMemoryData(int index, const std::shared_ptr<std::vector<uint8_t>> data);
+    void hookAmpMemoryData(int index, const std::shared_ptr<std::vector<uint8_t>> data);
     void hookAScanData(const std::shared_ptr<std::vector<uint8_t>> data);
     const std::vector<uint8_t> getAmpMemoryData(int index) const; 
     void                       ClearAmpMemoryData(int index);

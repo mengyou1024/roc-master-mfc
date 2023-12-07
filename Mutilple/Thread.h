@@ -48,11 +48,11 @@ public:
     void AddTask(std::function<void(void)> func, std::string id = 0, bool rm_same_id = false);
 
 private:
-    std::condition_variable mCVNotify       = {};
-    std::condition_variable mQueueReady     = {};
-    bool                    mRunning        = {};
-    std::mutex              mTaskQueueMutex = {};
-    FUNC_QUEUE              mTaskQueue      = {};
-    std::thread             mThread         = {};
-    void                    run(void);
+    std::condition_variable_any mCVNotify       = {};
+    std::condition_variable_any mQueueReady     = {};
+    bool                        mRunning        = {};
+    std::recursive_mutex        mTaskQueueMutex = {};
+    FUNC_QUEUE                  mTaskQueue      = {};
+    std::thread                 mThread         = {};
+    void                        run(void);
 };
