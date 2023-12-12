@@ -18,6 +18,8 @@ void SettingWnd::InitWindow() {
     opt->Selected(systemConfig.checkUpdate);
     opt = static_cast<COptionUI*>(m_PaintManager.FindControl(L"OptSystemProxy"));
     opt->Selected(systemConfig.enableProxy);
+    opt = static_cast<COptionUI*>(m_PaintManager.FindControl(L"OptMeasureThickness"));
+    opt->Selected(systemConfig.enableMeasureThickness);
     auto edit = static_cast<CEditUI*>(m_PaintManager.FindControl(L"EditSystemProxy"));
     edit->SetText(systemConfig.httpProxy.c_str());
 }
@@ -31,6 +33,10 @@ void SettingWnd::Notify(TNotifyUI& msg) {
         } else if (msg.pSender->GetName() == L"OptSystemProxy") {
             auto systemConfig        = GetSystemConfig();
             systemConfig.enableProxy = static_cast<COptionUI*>(msg.pSender)->IsSelected();
+            UpdateSystemConfig(systemConfig);
+        } else if (msg.pSender->GetName() == L"OptMeasureThickness") {
+            auto systemConfig        = GetSystemConfig();
+            systemConfig.enableMeasureThickness = static_cast<COptionUI*>(msg.pSender)->IsSelected();
             UpdateSystemConfig(systemConfig);
         }
     } else if (msg.sType == DUI_MSGTYPE_TEXTCHANGED) {

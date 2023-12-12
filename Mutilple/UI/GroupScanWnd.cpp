@@ -181,13 +181,11 @@ void GroupScanWnd::InitWindow() {
     InitOpenGL();
     // 初始化
     AddTaskToQueue(std::bind(&GroupScanWnd::InitOnThread, this));
-
     UpdateSliderAndEditValue(mCurrentGroup, mConfigType, mGateType, mChannelSel, true);
 }
 
 void GroupScanWnd::InitOnThread() {
     // 延迟最大化窗口
-    // Sleep(100);
     SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE, 0);
 
     Sleep(100);
@@ -204,6 +202,7 @@ void GroupScanWnd::InitOnThread() {
             spdlog::warn("载入文件: {} 出错!", mReviewPathEntry);
         }
     }
+    SelectMeasureThickness(GetSystemConfig().enableMeasureThickness);
     CheckAndUpdate();
 }
 
@@ -582,6 +581,9 @@ void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
         wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
         wnd.CenterWindow();
         wnd.ShowModal();
+        if (mWidgetMode == WidgetMode::MODE_SCAN) {
+            SelectMeasureThickness(GetSystemConfig().enableMeasureThickness);
+        }
     } else if (name == _T("AutoScan")) {
         if (mScanningFlag == true) {
             BusyWnd wnd([this]() { StopScan(); });
@@ -698,6 +700,7 @@ void GroupScanWnd::Notify(TNotifyUI &msg) {
 
         if (std::regex_match(str, match, matchReg)) {
             _currentGroup = _wtol(match[1].str().data());
+            UpdateSliderAndEditValue(_currentGroup, _configType, _gateType, _channelSel);
         }
 
         matchReg = _T(R"(OptConfigType)");
@@ -705,17 +708,20 @@ void GroupScanWnd::Notify(TNotifyUI &msg) {
         if (std::regex_match(str, matchReg)) {
             ConfigType type = static_cast<ConfigType>(_wtol(opt->GetUserData().GetData()));
             _configType     = type;
+            UpdateSliderAndEditValue(_currentGroup, _configType, _gateType, _channelSel);
         }
 
         matchReg = _T(R"(OptGateType)");
         if (std::regex_match(str, matchReg)) {
             GateType type = static_cast<GateType>(_wtol(opt->GetUserData().GetData()));
             _gateType     = type;
+            UpdateSliderAndEditValue(_currentGroup, _configType, _gateType, _channelSel);
         }
         matchReg = _T(R"(OptChannel\d)");
         if (std::regex_match(str, matchReg)) {
             ChannelSel type = static_cast<ChannelSel>(_wtol(opt->GetUserData().GetData()));
             _channelSel     = type;
+            UpdateSliderAndEditValue(_currentGroup, _configType, _gateType, _channelSel);
         }
 
         matchReg = _T(R"(BtnUI(.+))");
@@ -770,8 +776,6 @@ void GroupScanWnd::Notify(TNotifyUI &msg) {
                 UpdateSystemConfig(mSystemConfig);
             }
         }
-
-        UpdateSliderAndEditValue(_currentGroup, _configType, _gateType, _channelSel);
 
     } else if (msg.sType == DUI_MSGTYPE_VALUECHANGED) {
         if (msg.pSender->GetName() == _T("SliderConfig")) {
@@ -1294,6 +1298,7 @@ bool GroupScanWnd::EnterReviewMode(std::string name) {
         systemConfig.groupName = ORM_Model::JobGroup::storage(name).get<ORM_Model::JobGroup>(1).groupName;
         mReviewData            = HD_Utils::storage(name).get_all<HD_Utils>();
         mDefectInfo            = ORM_Model::DefectInfo::storage(name).get_all<ORM_Model::DefectInfo>();
+        SelectMeasureThickness(mDetectInfo.enableMeasureThickness);
         UpdateSystemConfig(systemConfig);
         spdlog::info("load:{}, frame:{}", name, mReviewData.size());
         // 删除所有通道的C扫数据
@@ -1410,7 +1415,28 @@ void GroupScanWnd::ExitReviewMode() {
     auto systemConfig      = GetSystemConfig();
     systemConfig.groupName = mJobGroupNameBak;
     UpdateSystemConfig(systemConfig);
+    SelectMeasureThickness(GetSystemConfig().enableMeasureThickness);
     mWidgetMode = WidgetMode::MODE_SCAN;
+}
+
+void GroupScanWnd::SelectMeasureThickness(bool enableMeasure) {
+    if (enableMeasure) {
+        auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(L"BtnSelectGroup0"));
+        btn->SetVisible(false);
+        btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(L"BtnSelectGroup3"));
+        btn->SetVisible(true);
+        if (mCurrentGroup == 0) {
+            UpdateSliderAndEditValue(3, mConfigType, mGateType, mChannelSel, true);
+        }
+    } else {
+        auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(L"BtnSelectGroup0"));
+        btn->SetVisible(true);
+        btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(L"BtnSelectGroup3"));
+        btn->SetVisible(false);
+        if (mCurrentGroup == 3) {
+            UpdateSliderAndEditValue(0, mConfigType, mGateType, mChannelSel, true);
+        }
+    }
 }
 
 void GroupScanWnd::StartScan(bool changeFlag) {
@@ -1430,7 +1456,8 @@ void GroupScanWnd::StartScan(bool changeFlag) {
         std::chrono::system_clock::time_point t      = std::chrono::system_clock::now();
         time_t                                tm     = std::chrono::system_clock::to_time_t(t);
         buffer << std::put_time(localtime(&tm), "%Y-%m-%d__%H-%M-%S");
-        mDetectInfo.time = buffer.str();
+        mDetectInfo.time                   = buffer.str();
+        mDetectInfo.enableMeasureThickness = GetSystemConfig().enableMeasureThickness;
 
         mDefectJudgmentValue.fill(0);
         std::regex  reg(R"((\d+)-(\d+)-(\d+)__(.+))");

@@ -254,6 +254,12 @@ private:
     void ExitReviewMode();
 
     /**
+     * @brief 选择测厚功能
+     * @param enableMeasure 开启测厚功能
+     */
+    void SelectMeasureThickness(bool enableMeasure = true);
+
+    /**
      * @brief 开始扫查
      * @param changeFlag 是否改变标志位
      */

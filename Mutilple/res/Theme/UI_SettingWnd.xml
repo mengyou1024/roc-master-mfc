@@ -47,6 +47,12 @@
 			</HorizontalLayout>
 			<HorizontalLayout inset="10,10,10,10">
 				<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
+					<HorizontalLayout>
+						<Label text="测厚" width="60"/>
+						<HorizontalLayout width="20" />
+						<Option name="OptMeasureThickness" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+						<Label />
+					</HorizontalLayout>
 				</VerticalLayout>
 				<Label text="检测方式" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="60" height="20" />
 			</HorizontalLayout>
