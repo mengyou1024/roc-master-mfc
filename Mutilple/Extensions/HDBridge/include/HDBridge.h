@@ -315,7 +315,10 @@ public:
         try {
             double start = (double)info.pos;
             if (std::abs(start - 1.0) < 0.00001) {
-                throw "info.pos max than 1.0";
+                throw "info.pos large than 1.0";
+            }
+            if (info.pos < 0.0) {
+                throw "info.pos small than 1.0";
             }
             double end   = (double)(info.pos + info.width);
             if (end > 1.0) {
