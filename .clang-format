@@ -214,3 +214,6 @@ BreakConstructorInitializers: AfterColon
 BreakInheritanceList: AfterColon
 PackConstructorInitializers: CurrentLine
 ConstructorInitializerIndentWidth: 0
+
+# 属性结尾的换行符不变
+BreakAfterAttributes: Always 

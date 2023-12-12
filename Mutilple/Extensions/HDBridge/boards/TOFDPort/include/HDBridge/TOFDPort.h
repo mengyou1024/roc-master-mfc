@@ -55,7 +55,6 @@ public:
     virtual bool close() override;
     virtual bool isDeviceExist() override;
 
-    virtual bool setSoundVelocity(float velocity) override;
     virtual bool setFrequency(int freq) override;
     virtual bool setVoltage(HB_Voltage voltage) override;
     virtual bool setChannelFlag(uint32_t flag) override;
@@ -63,6 +62,7 @@ public:
     virtual bool setLED(int ledStatus) override;
     virtual bool setDamperFlag(int damperFlag) override;
     virtual bool setEncoderPulse(int encoderPulse) override;
+    virtual bool setSoundVelocity(int channel, float velocity) override;
     virtual bool setZeroBias(int channel, float zero_us);
     virtual bool setPulseWidth(int channel, float pulseWidth) override;
     virtual bool setDelay(int channel, float delay_us) override;

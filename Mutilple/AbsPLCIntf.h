@@ -14,9 +14,6 @@ using std::pair;
 using std::string;
 using std::vector;
 
-/// 交换float类型变量的字节序
-#define PLC_SWAP_FLOAT 1
-
 namespace AbsPLCIntf {
 
     /**
@@ -25,7 +22,7 @@ namespace AbsPLCIntf {
      * @param sval
      * @return uint16_t
      */
-    uint16_t swaps(uint16_t sval);
+    uint16_t swap(uint16_t sval);
 
     /**
      * @brief swap 32bit
@@ -33,7 +30,7 @@ namespace AbsPLCIntf {
      * @param val
      * @return uint32_t
      */
-    uint32_t swapl(uint32_t lval);
+    uint32_t swap(uint32_t lval);
 
     /**
      * @brief swap float
@@ -41,7 +38,7 @@ namespace AbsPLCIntf {
      * @param fval
      * @return float
      */
-    float swapf(float fval);
+    float swap(float fval);
 
     /**
      * @brief is PLC connected
@@ -75,51 +72,39 @@ namespace AbsPLCIntf {
      */
     void getConnectedInfo(std::string* addr = nullptr, int* rack = nullptr, int* slot = nullptr);
 
-    /**
-     * @brief 获取int类型的变量 第二个参数填0
-     *
-     * @param name 变量名 如 I00、Q00、M00
-     * @return
-     */
-    int getVariable(string name, int);
+    // getter
 
-    /**
-     * @brief 获取float类型的变量 第二个参数填0.0f
-     *
-     * @param name 变量名 如 `V1000`
-     * @return
-     */
-    float getVariable(string name, float);
+    bool getVariable(string id, bool& val);
+    bool getVariable(string id, uint8_t& val);
+    bool getVariable(string id, uint16_t& val);
+    bool getVariable(string id, uint32_t& val);
+    bool getVariable(string id, float& val);
+    bool getVariable(string id, int sz, std::vector<uint8_t>& data);
+    bool getVariable(string id, int sz, std::vector<float>& data);
 
-    /**
-     * @brief 设置float类型(V区)的变量
-     *
-     * @param s 变量名 如 `V1000`
-     * @param var
-     * @return true
-     * @return false
-     */
-    bool setVariable(string s, float var);
+    // setter
 
-    /**
-     * @brief 批量设置float类型(V区)的变量
-     *
-     * @param s 起始变量名 如 `V1000`
-     * @param var float类型数组地址
-     * @param size float类型数组的个数
-     * @return true
-     * @return false
-     */
-    bool setVariable(string s, float* var, int count);
+    bool setVariable(string id, bool val);
+    bool setVariable(string id, uint8_t val);
+    bool setVariable(string id, uint16_t val);
+    bool setVariable(string id, uint32_t val);
+    bool setVariable(string id, float val);
+    bool setVariable(string id, int sz, const std::vector<uint8_t>& data);
+    bool setVariable(string id, int sz, const std::vector<float>& data);
 
-    /**
-     * @brief 设置bool类型的变量
-     *
-     * @param s 变量名 如 `M00`、`I00`、`Q00`
-     * @param b
-     * @return true
-     * @return false
-     */
-    bool setVariable(string s, bool b);
+    template <class T>
+    std::pair<bool, T> getVariable(string id) {
+        T    ret{};
+        bool res = getVariable(id, ret);
+        return std::make_pair(res, ret);
+    }
+
+    template <class T>
+    std::pair<bool, std::vector<T>> getVariable(string id, int sz) {
+        bool           res = {};
+        std::vector<T> ret = {};
+        res                = getVariable(id, sz, ret);
+        return std::make_pair(res, ret);
+    }
 
 }; // namespace AbsPLCIntf

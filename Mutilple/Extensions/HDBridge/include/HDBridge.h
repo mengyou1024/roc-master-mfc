@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <memory>
 #include <vector>
+#include <algorithm>
 
 using std::make_shared;
 using std::make_unique;
@@ -55,16 +56,15 @@ public:
 
     struct NM_DATA {
 #pragma pack(1)
-        int32_t                iChannel     = {}; ///< 通道号
-        int32_t                iPackage     = {}; ///< 包序列
-        int32_t                iAScanSize   = {}; ///< A扫长度
-        std::array<int32_t, 2> pCoder       = {}; ///< 编码器值
-        std::array<int32_t, 2> pGatePos     = {}; ///< 波门位置
-        std::array<int32_t, 2> pAlarm       = {}; ///< 波门报警
-        std::array<uint8_t, 2> pGateAmp     = {}; ///< 波门波幅
-        uint16_t               reserved     = {}; ///< 保留
-        HB_ScanGateInfo        scanGateInfo = {}; ///< 扫查波门
-        std::array<float, 2>   aScanLimits  = {}; ///< A扫图的坐标范围
+        int32_t                iChannel       = {}; ///< 通道号
+        int32_t                iPackage       = {}; ///< 包序列
+        int32_t                iAScanSize     = {}; ///< A扫长度
+        std::array<int32_t, 2> pCoder         = {}; ///< 编码器值
+        std::array<int32_t, 2> pGatePos       = {}; ///< 波门位置
+        std::array<int32_t, 2> pAlarm         = {}; ///< 波门报警
+        std::array<uint8_t, 2> pGateAmp       = {}; ///< 波门波幅
+        uint16_t               reserved       = {}; ///< 保留
+        std::array<float, 2>   aScanLimits    = {}; ///< A扫图的坐标范围
 #pragma pack()
         vector<uint8_t> pAscan = {}; // A扫数据
     };
@@ -74,7 +74,6 @@ public:
 #pragma pack(1)
     struct cache_t {
         // cache
-        float                                    soundVelocity = {}; ///< 声速
         int                                      frequency     = {}; ///< 重复频率
         HB_Voltage                               voltage       = {}; ///< 发射电压
         uint32_t                                 channelFlag   = {}; ///< 通道标志
@@ -82,6 +81,7 @@ public:
         int                                      ledStatus     = {}; ///< LED状态
         int                                      damperFlag    = {}; ///< 阻尼标志
         int                                      encoderPulse  = {}; ///< 编码器脉冲
+        std::array<float, CHANNEL_NUMBER>        soundVelocity = {}; ///< 声速
         std::array<float, CHANNEL_NUMBER>        zeroBias      = {}; ///< 零点偏移
         std::array<float, CHANNEL_NUMBER>        pulseWidth    = {}; ///< 脉冲宽度
         std::array<float, CHANNEL_NUMBER>        delay         = {}; ///< 延时
@@ -94,18 +94,21 @@ public:
         std::array<HB_GateInfo, CHANNEL_NUMBER>  gateInfo      = {}; ///< 波门信息
         std::array<HB_GateInfo, CHANNEL_NUMBER>  gate2Info     = {}; ///< 波门2信息
         std::array<HB_Gate2Type, CHANNEL_NUMBER> gate2Type     = {}; ///< 波门2类型
+
+        std::array<HB_ScanGateInfo, CHANNEL_NUMBER + 4> scanGateInfo = {}; ///< 扫查波门
     };
 #pragma pack()
 
 public:
     cache_t mCache = {};
 
+
 public:
     HDBridge() {
         for (auto &g : mCache.gate2Info) {
             g.gate = 1;
         }
-        mCache.soundVelocity = 5920.0f;
+        mCache.soundVelocity.fill(5920.0f);
     }
 
     virtual ~HDBridge() = default;
@@ -114,11 +117,6 @@ public:
     virtual bool isOpen()        = 0;
     virtual bool close()         = 0;
     virtual bool isDeviceExist() = 0;
-
-    virtual bool        setSoundVelocity(float velocity) = 0;
-    virtual const float getSoundVelocity() const final {
-        return mCache.soundVelocity;
-    }
 
     virtual bool      setFrequency(int freq) = 0;
     virtual const int getFrequency() const final {
@@ -155,92 +153,60 @@ public:
         return mCache.encoderPulse;
     }
 
+    virtual bool        setSoundVelocity(int channel, float velocity) = 0;
+    virtual const float getSoundVelocity(int channel) const final {
+        return mCache.soundVelocity[channel % CHANNEL_NUMBER];
+    }
+
     virtual bool        setZeroBias(int channel, float zero_us) = 0;
-    virtual std::array<float, CHANNEL_NUMBER> getZeroBias() const final {
-        return mCache.zeroBias;
-    }
     virtual const float getZeroBias(int channel) const final {
-        return mCache.zeroBias[channel];
+        return mCache.zeroBias[channel % CHANNEL_NUMBER];
     }
 
-    virtual bool                                    setPulseWidth(int channel, float pulseWidth) = 0;
-    virtual const std::array<float, CHANNEL_NUMBER> getPulseWidth() const final {
-        return mCache.pulseWidth;
-    }
-    virtual const float getPulseWidt(int channel) const final {
-        return mCache.pulseWidth[channel];
+    virtual bool        setPulseWidth(int channel, float pulseWidth) = 0;
+    virtual const float getPulseWidth(int channel) const final {
+        return mCache.pulseWidth[channel % CHANNEL_NUMBER];
     }
 
-    virtual bool                                    setDelay(int channel, float delay_us) = 0;
-    virtual const std::array<float, CHANNEL_NUMBER> getDelay() const final {
-        return mCache.delay;
-    }
+    virtual bool        setDelay(int channel, float delay_us) = 0;
     virtual const float getDelay(int channel) const final {
-        return mCache.delay[channel];
+        return mCache.delay[channel % CHANNEL_NUMBER];
     }
-    virtual bool                                    setSampleDepth(int channel, float sampleDepth) = 0;
-    virtual const std::array<float, CHANNEL_NUMBER> getSampleDepth() const final {
-        return mCache.sampleDepth;
-    }
+    virtual bool        setSampleDepth(int channel, float sampleDepth) = 0;
     virtual const float getSampleDepth(int channel) const final {
-        return mCache.sampleDepth[channel];
+        return mCache.sampleDepth[channel % CHANNEL_NUMBER];
     }
-    virtual bool                                  setSampleFactor(int channel, int sampleFactor) = 0;
-    virtual const std::array<int, CHANNEL_NUMBER> getSampleFactor() const final {
-        return mCache.sampleFactor;
-    }
+    virtual bool      setSampleFactor(int channel, int sampleFactor) = 0;
     virtual const int getSampleFactor(int channel) const final {
-        return mCache.sampleFactor[channel];
+        return mCache.sampleFactor[channel % CHANNEL_NUMBER];
     }
-    virtual bool                                    setGain(int channel, float gain) = 0;
-    virtual const std::array<float, CHANNEL_NUMBER> getGain() const final {
-        return mCache.gain;
-    }
+    virtual bool        setGain(int channel, float gain) = 0;
     virtual const float getGain(int channel) const final {
-        return mCache.gain[channel];
+        return mCache.gain[channel % CHANNEL_NUMBER];
     }
-    virtual bool                                  setFilter(int channel, HB_Filter filter) = 0;
-    virtual std::array<HB_Filter, CHANNEL_NUMBER> getFilter() const final {
-        return mCache.filter;
-    }
+    virtual bool            setFilter(int channel, HB_Filter filter) = 0;
     virtual const HB_Filter getFilter(int channel) const final {
-        return mCache.filter[channel];
+        return mCache.filter[channel % CHANNEL_NUMBER];
     }
-    virtual bool                                        setDemodu(int channel, HB_Demodu demodu) = 0;
-    virtual const std::array<HB_Demodu, CHANNEL_NUMBER> getDemodu() const final {
-        return mCache.demodu;
-    }
+    virtual bool            setDemodu(int channel, HB_Demodu demodu) = 0;
     virtual const HB_Demodu getDemodu(int channel) const final {
-        return mCache.demodu[channel];
+        return mCache.demodu[channel % CHANNEL_NUMBER];
     }
-    virtual bool                            setPhaseReverse(int channel, int reverse) = 0;
-    virtual std::array<int, CHANNEL_NUMBER> getPhaseReverse() const final {
-        return mCache.phaseReverse;
-    }
+    virtual bool      setPhaseReverse(int channel, int reverse) = 0;
     virtual const int getPhaseReverse(int channel) const final {
-        return mCache.phaseReverse[channel];
+        return mCache.phaseReverse[channel % CHANNEL_NUMBER];
     }
-    virtual bool                                          setGateInfo(int channel, const HB_GateInfo &info) = 0;
-    virtual const std::array<HB_GateInfo, CHANNEL_NUMBER> getGateInfo(int index) const final {
-        if (index == 0) {
-            return mCache.gateInfo;
-        } else {
-            return mCache.gate2Info;
-        }
-    }
+    virtual bool              setGateInfo(int channel, const HB_GateInfo &info) = 0;
     virtual const HB_GateInfo getGateInfo(int index, int channel) const final {
         if (index == 0) {
-            return mCache.gateInfo[channel];
+            return mCache.gateInfo[channel % CHANNEL_NUMBER];
         } else {
-            return mCache.gate2Info[channel];
+            return mCache.gate2Info[channel % CHANNEL_NUMBER];
         }
     }
-    virtual bool                                           setGate2Type(int channel, HB_Gate2Type type) = 0;
-    virtual const std::array<HB_Gate2Type, CHANNEL_NUMBER> getGate2Type() const final {
-        return mCache.gate2Type;
-    }
+    virtual bool               setGate2Type(int channel, HB_Gate2Type type) = 0;
     virtual const HB_Gate2Type getGate2Type(int channel) const final {
-        return mCache.gate2Type[channel];
+        return mCache.gate2Type[channel % CHANNEL_NUMBER];
     }
     virtual bool resetCoder(int coder) = 0;
     virtual bool flushSetting()        = 0;
@@ -253,7 +219,6 @@ public:
     virtual unique_ptr<NM_DATA> readDatas() = 0;
 
     virtual void syncCache2Board() final {
-        setSoundVelocity(mCache.soundVelocity);
         setFrequency(mCache.frequency);
         setVoltage(mCache.voltage);
         setChannelFlag(mCache.channelFlag);
@@ -262,6 +227,7 @@ public:
         setDamperFlag(mCache.damperFlag);
         setEncoderPulse(mCache.encoderPulse);
         for (int i = 0; i < CHANNEL_NUMBER; ++i) {
+            setSoundVelocity(i, mCache.soundVelocity[i]);
             setZeroBias(i, mCache.zeroBias[i]);
             setPulseWidth(i, mCache.pulseWidth[i]);
             setDelay(i, mCache.delay[i]);
@@ -288,9 +254,9 @@ public:
         setEncoderPulse(1);
         for (int i = 0; i < CHANNEL_NUMBER; ++i) {
             setPulseWidth(i, 210.f);
-            setZeroBias(i, static_cast<float>(distance2time(0.0)));
-            setDelay(i, static_cast<float>(distance2time(0.0)));
-            setSampleDepth(i, static_cast<float>(distance2time(200.0)));
+            setZeroBias(i, static_cast<float>(distance2time(0.0, i)));
+            setDelay(i, static_cast<float>(distance2time(0.0, i)));
+            setSampleDepth(i, static_cast<float>(distance2time(200.0, i)));
             setSampleFactor(i, 13);
             setGain(i, 30.f);
             setFilter(i, static_cast<HB_Filter>(3));
@@ -331,12 +297,37 @@ public:
         }
     }
 
-    virtual double time2distance(double time_us) final {
-        return time2distance(time_us, (double)mCache.soundVelocity);
+    virtual double time2distance(double time_us, int channel) final {
+        return time2distance(time_us, (double)mCache.soundVelocity[channel % CHANNEL_NUMBER]);
     }
 
-    virtual double distance2time(double distance_mm) final {
-        return distance2time(distance_mm, (double)mCache.soundVelocity);
+    virtual double distance2time(double distance_mm, int channel) final {
+        return distance2time(distance_mm, (double)mCache.soundVelocity[channel % CHANNEL_NUMBER]);
+    }
+
+    /**
+     * @brief 计算波门信息
+     * @param data 扫查数据
+     * @param info 波门信息
+     * @return [波门内最高波的位置, 最高波的值, false if err]
+    */
+    static std::tuple<float, uint8_t, bool> computeGateInfo(const std::vector<uint8_t> &data, const HB_ScanGateInfo &info) {
+        try {
+            double start = (double)info.pos;
+            if (std::abs(start - 1.0) < 0.00001) {
+                throw "info.pos max than 1.0";
+            }
+            double end   = (double)(info.pos + info.width);
+            if (end > 1.0) {
+                end = 1.0;
+            }
+            auto left  = data.begin() + static_cast<int64_t>((double)data.size() * (double)info.pos);
+            auto right = data.begin() + static_cast<int64_t>((double)data.size() * (double)(info.pos + info.width));
+            auto max   = std::max_element(left, right);
+            return std::make_tuple((float)((double)std::distance(data.begin(), max) / (double)data.size()), *max, true);
+        } catch (std::exception &) {
+            return std::make_tuple(0.0f, 0, false);
+        }
     }
 
     /*
@@ -348,18 +339,18 @@ public:
         if (src >= static_cast<size_t>(CHANNEL_NUMBER)) {
             return;
         }
-        auto zeroBias     = mCache.zeroBias[src];
-        auto pluseWidth   = mCache.pulseWidth[src];
-        auto delay        = mCache.delay[src];
-        auto sampleDepth  = mCache.sampleDepth[src];
-        auto sampleFactor = mCache.sampleFactor[src];
-        auto gain         = mCache.gain[src];
-        auto filter       = mCache.filter[src];
-        auto demodu       = mCache.demodu[src];
-        auto phaseReverse = mCache.phaseReverse[src];
-        auto gateInfo     = mCache.gateInfo[src];
-        auto gate2Info    = mCache.gate2Info[src];
-        auto gate2Type    = mCache.gate2Type[src];
+        auto         zeroBias     = mCache.zeroBias[src];
+        auto         pluseWidth   = mCache.pulseWidth[src];
+        auto         delay        = mCache.delay[src];
+        auto         sampleDepth  = mCache.sampleDepth[src];
+        auto         sampleFactor = mCache.sampleFactor[src];
+        auto         gain         = mCache.gain[src];
+        auto         filter       = mCache.filter[src];
+        auto         demodu       = mCache.demodu[src];
+        auto         phaseReverse = mCache.phaseReverse[src];
+        HB_GateInfo  gateInfo     = mCache.gateInfo[src];
+        HB_GateInfo  gate2Info    = mCache.gate2Info[src];
+        HB_Gate2Type gate2Type    = mCache.gate2Type[src];
         for (auto i : dist) {
             mCache.zeroBias[i]     = zeroBias;
             mCache.pulseWidth[i]   = pluseWidth;

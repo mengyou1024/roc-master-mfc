@@ -43,11 +43,6 @@ bool TOFDUSBPort::isDeviceExist() {
     return TOFD_PORT_IsDeviceExist();
 }
 
-bool TOFDUSBPort::setSoundVelocity(float velocity) {
-    mCache.soundVelocity = velocity;
-    return true;
-}
-
 bool TOFDUSBPort::setFrequency(int freq) {
     if (freq < 50) {
         freq = 50;
@@ -113,12 +108,14 @@ bool TOFDUSBPort::setEncoderPulse(int encoderPulse) {
     return false;
 }
 
+bool TOFDUSBPort::setSoundVelocity(int channel, float velocity) {
+    mCache.soundVelocity[channel % CHANNEL_NUMBER] = velocity;
+    return false;
+}
+
 bool TOFDUSBPort::setZeroBias(int channel, float zero_us) {
-    if (channel >= CHANNEL_NUMBER) {
-        return false;
-    }
-    mCache.zeroBias[channel] = zero_us;
-    if (TOFD_PORT_SetDelay(channel, zero_us + mCache.delay[channel])) {
+    mCache.zeroBias[channel % CHANNEL_NUMBER] = zero_us;
+    if (TOFD_PORT_SetDelay(channel % CHANNEL_NUMBER, zero_us + mCache.delay[channel % CHANNEL_NUMBER])) {
         return true;
     }
     return false;
@@ -128,22 +125,16 @@ bool TOFDUSBPort::setPulseWidth(int channel, float pulseWidth) {
     if (pulseWidth < 30) {
         pulseWidth = 30;
     }
-    if (channel >= CHANNEL_NUMBER) {
-        return false;
-    }
-    this->mCache.pulseWidth[channel] = pulseWidth;
-    if (TOFD_PORT_SetPulseWidth(channel, pulseWidth)) {
+    this->mCache.pulseWidth[channel % CHANNEL_NUMBER] = pulseWidth;
+    if (TOFD_PORT_SetPulseWidth(channel % CHANNEL_NUMBER, pulseWidth)) {
         return true;
     }
     return false;
 }
 
 bool TOFDUSBPort::setDelay(int channel, float delay_us) {
-    if (channel >= CHANNEL_NUMBER) {
-        return false;
-    }
-    this->mCache.delay[channel] = delay_us;
-    if (TOFD_PORT_SetDelay(channel, delay_us + mCache.zeroBias[channel])) {
+    this->mCache.delay[channel % CHANNEL_NUMBER] = delay_us;
+    if (TOFD_PORT_SetDelay(channel % CHANNEL_NUMBER, delay_us + mCache.zeroBias[channel % CHANNEL_NUMBER])) {
         return true;
     }
     return false;
@@ -155,81 +146,60 @@ bool TOFDUSBPort::setSampleFactor(int channel, int sampleFactor) {
     } else if (sampleFactor > 255) {
         sampleFactor = 255;
     }
-    if (channel >= CHANNEL_NUMBER) {
-        return false;
-    }
-    this->mCache.sampleFactor[channel] = sampleFactor;
-    if (TOFD_PORT_SetSampleFactor(channel, sampleFactor)) {
+    this->mCache.sampleFactor[channel % CHANNEL_NUMBER] = sampleFactor;
+    if (TOFD_PORT_SetSampleFactor(channel % CHANNEL_NUMBER, sampleFactor)) {
         return true;
     }
     return false;
 }
 
 bool TOFDUSBPort::setSampleDepth(int channel, float sampleDepth) {
-    if (channel >= CHANNEL_NUMBER) {
-        return false;
-    }
-    this->mCache.sampleDepth[channel] = sampleDepth;
-    if (TOFD_PORT_SetSampleDepth(channel, sampleDepth + mCache.zeroBias[channel])) {
+    this->mCache.sampleDepth[channel % CHANNEL_NUMBER] = sampleDepth;
+    if (TOFD_PORT_SetSampleDepth(channel % CHANNEL_NUMBER, sampleDepth + mCache.zeroBias[channel % CHANNEL_NUMBER])) {
         return true;
     }
     return false;
 }
 
 bool TOFDUSBPort::setGain(int channel, float gain) {
-    if (channel >= CHANNEL_NUMBER) {
-        return false;
-    }
-    this->mCache.gain[channel] = gain;
-    if (TOFD_PORT_SetGain(channel, gain)) {
+    this->mCache.gain[channel % CHANNEL_NUMBER] = gain;
+    if (TOFD_PORT_SetGain(channel % CHANNEL_NUMBER, gain)) {
         return true;
     }
     return false;
 }
 
 bool TOFDUSBPort::setFilter(int channel, HB_Filter filter) {
-    if (channel >= CHANNEL_NUMBER) {
-        return false;
-    }
-    this->mCache.filter[channel] = filter;
-    if (TOFD_PORT_SetFilter(channel, static_cast<int>(filter))) {
+    this->mCache.filter[channel % CHANNEL_NUMBER] = filter;
+    if (TOFD_PORT_SetFilter(channel % CHANNEL_NUMBER, static_cast<int>(filter))) {
         return true;
     }
     return false;
 }
 
 bool TOFDUSBPort::setDemodu(int channel, HB_Demodu demodu) {
-    if (channel >= CHANNEL_NUMBER) {
-        return false;
-    }
-    this->mCache.demodu[channel] = demodu;
-    if (TOFD_PORT_SetDemodu(channel, static_cast<int>(demodu))) {
+    this->mCache.demodu[channel % CHANNEL_NUMBER] = demodu;
+    if (TOFD_PORT_SetDemodu(channel % CHANNEL_NUMBER, static_cast<int>(demodu))) {
         return true;
     }
     return false;
 }
 
 bool TOFDUSBPort::setPhaseReverse(int channel, int reverse) {
-    if (channel >= CHANNEL_NUMBER) {
-        return false;
-    }
-    this->mCache.phaseReverse[channel] = reverse;
-    if (TOFD_PORT_SetPhaseReverse(channel, reverse)) {
+    this->mCache.phaseReverse[channel % CHANNEL_NUMBER] = reverse;
+    if (TOFD_PORT_SetPhaseReverse(channel % CHANNEL_NUMBER, reverse)) {
         return true;
     }
     return false;
 }
 
 bool TOFDUSBPort::setGateInfo(int channel, const HB_GateInfo &info) {
-    if (channel >= CHANNEL_NUMBER) {
-        return false;
-    }
     if (info.gate == 0) {
-        this->mCache.gateInfo[channel] = info;
+        this->mCache.gateInfo[channel % CHANNEL_NUMBER] = info;
     } else {
-        this->mCache.gate2Info[channel] = info;
+        this->mCache.gate2Info[channel % CHANNEL_NUMBER] = info;
     }
-    if (TOFD_PORT_SetGateInfo(channel, info.gate, info.active, info.alarmType, info.pos, info.width, info.height)) {
+    if (TOFD_PORT_SetGateInfo(channel % CHANNEL_NUMBER, info.gate, info.active, info.alarmType, info.pos, info.width, info.height)) {
 
         return true;
     }
@@ -237,11 +207,8 @@ bool TOFDUSBPort::setGateInfo(int channel, const HB_GateInfo &info) {
 }
 
 bool TOFDUSBPort::setGate2Type(int channel, HB_Gate2Type type) {
-    if (channel >= CHANNEL_NUMBER) {
-        return false;
-    }
-    this->mCache.gate2Type[channel] = type;
-    if (TOFD_PORT_SetGate2Type(channel, static_cast<int>(type))) {
+    this->mCache.gate2Type[channel % CHANNEL_NUMBER] = type;
+    if (TOFD_PORT_SetGate2Type(channel % CHANNEL_NUMBER, static_cast<int>(type))) {
         return true;
     }
     return false;

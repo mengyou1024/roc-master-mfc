@@ -37,12 +37,6 @@ private:
     constexpr static int SCAN_RECORD_CACHE_MAX_ITEMS = 1000; ///< 扫查数据最大缓存数量
 
     struct {
-        float pos    = {};
-        float width  = {};
-        float height = {};
-    } mGateScan[HD_CHANNEL_NUM]; ///< 扫查波门
-
-    struct {
         string yearMonth = {};
         string day       = {};
         string time      = {};
@@ -114,7 +108,7 @@ private:
         {ConfigType::GateHeight,  0.1},
     };
 
-    constexpr static auto BTN_SELECT_GROUP_MAX = 3;
+    constexpr static auto BTN_SELECT_GROUP_MAX = 4;
 
     /**
      * @brief 当前选中的通道
@@ -133,7 +127,6 @@ private:
     WidgetMode                                mWidgetMode         = {WidgetMode::MODE_SCAN}; ///< 当前窗口的模式
     std::vector<HD_Utils>                     mReviewData         = {};                      ///< 扫查缺陷数据
     int                                       mSamplesPerSecond   = 33;                      ///< C扫图每秒钟采点个数
-    bool                                      mEnableAmpMemory    = false;                   ///< 峰值记忆
     std::array<int, HDBridge::CHANNEL_NUMBER> mIDDefectRecord     = {};                      ///< 缺陷记录的索引ID
     ORM_Model::DetectInfo                     mDetectInfo         = {};                      ///< 探伤信息
     int                                       mRecordCount        = {};                      ///< 扫查数据计数
@@ -147,14 +140,14 @@ private:
     std::mutex                                mCScanMutex         = {};                      ///< C扫线程互斥量
     bool                                      mCScanThreadRunning = {};                      ///< C扫线程运行
 
+    // 参数备份
+    ORM_Model::DetectInfo mDetectInfoBak   = {};
+    std::wstring          mJobGroupNameBak = {};
+
     /**
      * @brief C扫线程
      */
     void ThreadCScan(void);
-
-    // 参数备份
-    ORM_Model::DetectInfo mDetectInfoBak   = {};
-    std::wstring          mJobGroupNameBak = {};
 
     /**
      * @brief 选组按钮单击回调函数
@@ -204,6 +197,22 @@ private:
     void UpdateAScanCallback(const HDBridge::NM_DATA& data, const HD_Utils& caller);
 
     /**
+     * @brief 波门追踪回调函数
+     * @param data A扫数据
+     * @param caller 调用类
+     * @param traceList 追踪的通道列表
+     */
+    void AmpTraceCallback(const HDBridge::NM_DATA& data, const HD_Utils& caller, std::vector<int> traceList = {});
+
+    /**
+     * @brief 峰值记忆
+     * @param data A扫数据
+     * @param caller 调用类
+     * @param traceList 追踪的通道列表
+     */
+    void AmpMemeryCallback(const HDBridge::NM_DATA& data, const HD_Utils& caller);
+
+    /**
      * @brief 定时器中更新C扫图像
      */
     void UpdateCScanOnTimer();
@@ -234,8 +243,10 @@ private:
     /**
      * @brief 进入回放模式
      * @param name 缺陷记录的名称
+     * @return true 成功
      */
-    void EnterReviewMode(std::string name);
+    [[nodiscard]]
+    bool EnterReviewMode(std::string name);
 
     /**
      * @brief 退出回放模式

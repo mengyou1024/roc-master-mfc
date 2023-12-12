@@ -46,7 +46,7 @@ class RTTR_API metadata
         metadata() { }
         metadata(variant key, variant value) : m_key(std::move(key)), m_value(std::move(value)) { }
         metadata(const metadata& other) : m_key(other.m_key), m_value(other.m_value) {}
-        metadata(metadata&& other) : m_key(std::move(other.m_key)), m_value(std::move(other.m_value)) {}
+        metadata(metadata&& other) noexcept : m_key(std::move(other.m_key)), m_value(std::move(other.m_value)) {}
         metadata& operator=(const metadata& other) { m_key = other.m_key; m_value = other.m_value; return *this; }
 
         variant get_key() const      { return m_key; }

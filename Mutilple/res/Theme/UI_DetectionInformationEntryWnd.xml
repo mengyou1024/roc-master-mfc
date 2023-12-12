@@ -83,6 +83,17 @@
 											<Edit name="EditsurveyedArea" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
 										</HorizontalLayout>
 									</HorizontalLayout>
+									<HorizontalLayout>
+										<HorizontalLayout height="32">
+											<Label text="厚度" width="90" />
+											<Edit name="Editthickness" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+										</HorizontalLayout>
+										<HorizontalLayout width="20" />
+										<HorizontalLayout height="32">
+											<Label text="保留" width="90" />
+											<Edit name="" width="120" height="32" bordersize="1" bordercolor="0x7F7F7F7F" />
+										</HorizontalLayout>
+									</HorizontalLayout>
 								</VerticalLayout>
 							</VerticalLayout>
 							<Label text="工件" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="30" height="20" />

@@ -94,7 +94,7 @@ void ModelGroupCScan::Init() {
     Release();
 
     // `VIEW_CSCAN_NUM`个A扫
-    for (size_t view = 0; view < (size_t)(HD_CHANNEL_NUM); view++) {
+    for (size_t view = 0; view < (size_t)(HD_CHANNEL_NUM + 4ull); view++) {
         if (m_pMesh.count(view) == 0) {
             m_pMesh.insert(std::pair<size_t, Mesh *>(view, new MeshGroupCScan(m_pOpenGL)));
         }
@@ -133,7 +133,7 @@ void ModelGroupCScan::SetSize(int left, int top, int right, int bottom) {
         }
 
         // OpenGL视图坐标0点在左下角
-        for (int offset = 0; offset < 3; offset++) {
+        for (int offset = 0; offset < 4; offset++) {
             size_t iView = offset * 4 + static_cast<size_t>(VIEW_TYPE::VIEW_CSCAN_0) +
                            (static_cast<size_t>((VIEW_CSCAN_NUM / VIEW_CSCAN_COLUMNS - 1)) - i / VIEW_CSCAN_COLUMNS) * VIEW_CSCAN_COLUMNS +
                            (i % VIEW_CSCAN_COLUMNS);
@@ -226,7 +226,7 @@ void ModelGroupCScan::RenderFore() {
         if (ptr && (index >= mGroupIndex * 4 && index < (static_cast<size_t>(mGroupIndex * 4) + VIEW_CSCAN_NUM))) {
             glTranslatef((float)ptr->m_rcItem.left + 3, (float)ptr->m_rcItem.top + 10, 0.0F);
             CString strInfo;
-            strInfo.Format(_T("%lld"), index + 1);
+            strInfo.Format(_T("%lld"), (index % 12) + 1);
             m_pOpenGL->m_Font.RightText(static_cast<float>(mCurrentViewPort.right - 15), static_cast<float>(ptr->m_rcItem.Height() - 50),
                                         strInfo, color, 2.F);
         }

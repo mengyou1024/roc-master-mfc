@@ -29,16 +29,20 @@ void HardWareWnd::Notify(TNotifyUI& msg) {
             opt->Selected(ret);
         } else if (msg.pSender->GetName() == _T("BtnBitRead")) {
             auto edit  = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditBit")));
-            int  ret   = getVariable(StringFromWString(std::wstring(edit->GetText())).c_str(), 0);
-            auto value = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditBitValue")));
-            value->SetText(std::to_wstring(ret).c_str());
+            auto  [res,ret]   = getVariable<bool>(StringFromWString(std::wstring(edit->GetText())).c_str());
+            if (res) {
+                auto value = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditBitValue")));
+                value->SetText(std::to_wstring(ret ? 1 : 0).c_str());
+            }
         } else if (msg.pSender->GetName() == _T("BtnFloatRead")) {
-            auto    edit  = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditFloat")));
-            auto    ret   = getVariable(StringFromWString(std::wstring(edit->GetText())).c_str(), 0.0f);
-            auto    value = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditFloatValue")));
-            CString str;
-            str.Format(L"%.2f", ret);
-            value->SetText(str);
+            auto edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditFloat")));
+            auto    [res, ret] = getVariable<float>(StringFromWString(std::wstring(edit->GetText())).c_str());
+            if (res) {
+                auto    value = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditFloatValue")));
+                CString str;
+                str.Format(L"%.2f", ret);
+                value->SetText(str);
+            }
         } else if (msg.pSender->GetName() == _T("BtnBitWrite")) {
             auto edit  = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditBit")));
             auto value = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditBitValue")));

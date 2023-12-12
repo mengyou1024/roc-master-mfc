@@ -35,7 +35,7 @@ void ChannelSettingWnd::InitWindow() {
 void ChannelSettingWnd::Notify(TNotifyUI& msg) {
     if (msg.sType == DUI_MSGTYPE_RETURN) {
         if (msg.pSender->GetName() == _T("EditSoundVelocity")) {
-            mUtils->getBridge()->setSoundVelocity((float)_wtof(msg.pSender->GetText().GetData()));
+            mUtils->getBridge()->setSoundVelocity(mChannel, (float)_wtof(msg.pSender->GetText().GetData()));
         } else if (msg.pSender->GetName() == _T("EditFrequency")) {
             mUtils->getBridge()->setFrequency(_wtol(msg.pSender->GetText().GetData()));
         } else if (msg.pSender->GetName() == _T("EditChannelFlag")) {
@@ -43,14 +43,23 @@ void ChannelSettingWnd::Notify(TNotifyUI& msg) {
         } else if (msg.pSender->GetName() == _T("EditScanIncrement")) {
             mUtils->getBridge()->setScanIncrement(_wtol(msg.pSender->GetText().GetData()));
         } else if (msg.pSender->GetName() == _T("EditZeroBias")) {
-            mUtils->getBridge()->setZeroBias(mChannel, (float)mUtils->getBridge()->distance2time(_wtof(msg.pSender->GetText().GetData())));
+            mUtils->getBridge()->setZeroBias(mChannel,
+                                             (float)mUtils->getBridge()->distance2time(_wtof(msg.pSender->GetText().GetData()), mChannel));
         } else if (msg.pSender->GetName() == _T("EditPulseWidth")) {
             mUtils->getBridge()->setPulseWidth(mChannel, (float)_wtof(msg.pSender->GetText().GetData()));
         } else if (msg.pSender->GetName() == _T("EditDelay")) {
-            mUtils->getBridge()->setDelay(mChannel, (float)mUtils->getBridge()->distance2time(_wtof(msg.pSender->GetText().GetData())));
+            mUtils->getBridge()->setDelay(mChannel,
+                                          (float)mUtils->getBridge()->distance2time(_wtof(msg.pSender->GetText().GetData()), mChannel));
         } else if (msg.pSender->GetName() == _T("EditSampleDepth")) {
-            mUtils->getBridge()->setSampleDepth(mChannel,
-                                                (float)mUtils->getBridge()->distance2time(_wtof(msg.pSender->GetText().GetData())));
+            mUtils->getBridge()->setSampleDepth(
+                mChannel, (float)mUtils->getBridge()->distance2time(_wtof(msg.pSender->GetText().GetData()), mChannel));
+            auto depth       = mUtils->getBridge()->getSampleDepth(mChannel);
+            auto sampleFactor = static_cast<int>(std::round(depth * 100.0 / 1024.0));
+            mUtils->getBridge()->setSampleFactor(mChannel, sampleFactor);
+            auto edit = static_cast<CEditUI*>(m_PaintManager.FindControl(L"EditSampleFactor"));
+            CString str;
+            str.Format(L"%d", sampleFactor);
+            edit->SetText(str);
         } else if (msg.pSender->GetName() == _T("EditSampleFactor")) {
             mUtils->getBridge()->setSampleFactor(mChannel, _wtol(msg.pSender->GetText().GetData()));
         } else if (msg.pSender->GetName() == _T("EditGain")) {
@@ -104,7 +113,7 @@ void ChannelSettingWnd::ReadValue2UI() {
     auto edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditSoundVelocity")));
     if (edit) {
         CString str;
-        str.Format(_T("%.2f"), mUtils->getBridge()->getSoundVelocity());
+        str.Format(_T("%.2f"), mUtils->getBridge()->getSoundVelocity(mChannel));
         edit->SetText(str);
     }
     edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditFrequency")));
@@ -128,37 +137,37 @@ void ChannelSettingWnd::ReadValue2UI() {
     edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditZeroBias")));
     if (edit) {
         CString str;
-        str.Format(_T("%.2f"), mUtils->getBridge()->time2distance(mUtils->getBridge()->getZeroBias(mChannel)));
+        str.Format(_T("%.2f"), mUtils->getBridge()->time2distance(mUtils->getBridge()->getZeroBias(mChannel), mChannel));
         edit->SetText(str);
     }
     edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditPulseWidth")));
     if (edit) {
         CString str;
-        str.Format(_T("%.2f"), mUtils->getBridge()->getPulseWidth()[mChannel]);
+        str.Format(_T("%.2f"), mUtils->getBridge()->getPulseWidth(mChannel));
         edit->SetText(str);
     }
     edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditDelay")));
     if (edit) {
         CString str;
-        str.Format(_T("%.2f"), mUtils->getBridge()->time2distance(mUtils->getBridge()->getDelay()[mChannel]));
+        str.Format(_T("%.2f"), mUtils->getBridge()->time2distance(mUtils->getBridge()->getDelay(mChannel), mChannel));
         edit->SetText(str);
     }
     edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditSampleDepth")));
     if (edit) {
         CString str;
-        str.Format(_T("%.2f"), mUtils->getBridge()->time2distance(mUtils->getBridge()->getSampleDepth()[mChannel]));
+        str.Format(_T("%.2f"), mUtils->getBridge()->time2distance(mUtils->getBridge()->getSampleDepth(mChannel), mChannel));
         edit->SetText(str);
     }
     edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditSampleFactor")));
     if (edit) {
         CString str;
-        str.Format(_T("%d"), mUtils->getBridge()->getSampleFactor()[mChannel]);
+        str.Format(_T("%d"), mUtils->getBridge()->getSampleFactor(mChannel));
         edit->SetText(str);
     }
     edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditGain")));
     if (edit) {
         CString str;
-        str.Format(_T("%.2f"), mUtils->getBridge()->getGain()[mChannel]);
+        str.Format(_T("%.2f"), mUtils->getBridge()->getGain(mChannel));
         edit->SetText(str);
     }
 }
@@ -173,11 +182,11 @@ void ChannelSettingWnd::UpdateAScanCallback(const HDBridge::NM_DATA& data, const
             return;
         }
         mesh->hookAScanData(hdata);
-        float delay  = bridge->getDelay()[data.iChannel];
-        float deepth = bridge->getSampleDepth()[data.iChannel];
-        mesh->SetLimits((float)(bridge->time2distance(delay)), (float)(bridge->time2distance(deepth)));
+        float delay  = bridge->getDelay(data.iChannel);
+        float depth = bridge->getSampleDepth(data.iChannel) + delay;
+        mesh->SetLimits((float)(bridge->time2distance(delay, data.iChannel)), (float)(bridge->time2distance(depth, data.iChannel)));
         for (int i = 0; i < 2; i++) {
-            HDBridge::HB_GateInfo g = bridge->getGateInfo(i)[data.iChannel];
+            HDBridge::HB_GateInfo g = bridge->getGateInfo(i, data.iChannel);
             mesh->UpdateGate(g.gate, g.active, g.pos, g.width, g.height);
         }
     }

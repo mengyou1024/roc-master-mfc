@@ -13,10 +13,19 @@
 
 #ifdef USE_SQLITE_ORM
     #include <sqlite_orm/sqlite_orm.h>
+
+
 struct HD_ScanORM {
-    std::array<float, 2>                                                mCScanLimits = {};
-    std::array<shared_ptr<HDBridge::NM_DATA>, HDBridge::CHANNEL_NUMBER> mScanData    = {};
+    #pragma pack(1)
+    std::array<float, 4>                                                mThickness     = {};
+    std::array<float, 2>                                                mCScanLimits   = {};
+    std::array<HDBridge::HB_ScanGateInfo, HDBridge::CHANNEL_NUMBER + 4> mScanGateInfo  = {};
+    std::array<HDBridge::HB_ScanGateInfo, HDBridge::CHANNEL_NUMBER>     mScanGateAInfo = {};
+    std::array<HDBridge::HB_ScanGateInfo, HDBridge::CHANNEL_NUMBER>     mScanGateBInfo = {};
+    #pragma pack()
+    std::array<shared_ptr<HDBridge::NM_DATA>, HDBridge::CHANNEL_NUMBER> mScanData = {};
 };
+
 namespace sqlite_orm {
     template <>
     struct type_printer<HD_ScanORM> : public blob_printer {};
@@ -24,8 +33,8 @@ namespace sqlite_orm {
     struct statement_binder<HD_ScanORM> {
         int bind(sqlite3_stmt* stmt, int index, const HD_ScanORM& value) {
             std::vector<char> blobValue = {};
-            blobValue.resize(blobValue.size() + sizeof(HD_ScanORM::mCScanLimits));
-            memcpy(blobValue.data(), value.mCScanLimits.data(), sizeof(HD_ScanORM::mCScanLimits));
+            blobValue.resize(blobValue.size() + (sizeof(HD_ScanORM) - sizeof(HD_ScanORM::mScanData)));
+            memcpy(blobValue.data(), &value, (sizeof(HD_ScanORM) - sizeof(HD_ScanORM::mScanData)));
             for (auto i = 0; i < HDBridge::CHANNEL_NUMBER; i++) {
                 std::shared_ptr<HDBridge::NM_DATA> temp = value.mScanData[i];
                 if (temp == nullptr) {
@@ -55,8 +64,8 @@ namespace sqlite_orm {
         HD_ScanORM extract(sqlite3_stmt* stmt, int index) {
             char*      blobPointer = (char*)sqlite3_column_blob(stmt, index);
             HD_ScanORM value;
-            memcpy(value.mCScanLimits.data(), blobPointer, sizeof(HD_ScanORM::mCScanLimits));
-            size_t pointerOffset = sizeof(HD_ScanORM::mCScanLimits);
+            memcpy(&value, blobPointer, (sizeof(HD_ScanORM) - sizeof(HD_ScanORM::mScanData)));
+            size_t pointerOffset = (sizeof(HD_ScanORM) - sizeof(HD_ScanORM::mScanData));
 
             for (auto i = 0; i < HDBridge::CHANNEL_NUMBER; i++) {
                 value.mScanData[i] = std::make_shared<HDBridge::NM_DATA>();
@@ -149,8 +158,24 @@ public:
     void stop();
     void waitExit();
 
-    void addReadCallback(const std::function<void(const HDBridge::NM_DATA&, const HD_Utils&)> callback);
-    void removeReadCallback();
+    void addReadCallback(const std::function<void(const HDBridge::NM_DATA&, const HD_Utils&)> callback, std::string name = {});
+    void removeReadCallback(std::string name = {});
+
+    /**
+     * @brief 包装回调函数
+     * @param func 类方法
+     * @param th 类指针
+     * @param ...args 除了`const HDBridge::NM_DATA& data, const HD_Utils& caller`以外的参数
+     * @return 可调用对象
+    */
+    template <class Fn,class Th, class... Args>
+    static auto WrapReadCallback(Fn func, Th th, Args... args) {
+        return [=](const HDBridge::NM_DATA& data, const HD_Utils& caller) {
+            auto callable = std::bind(func, th, std::placeholders::_1, std::placeholders::_2, args...);
+            callable(data, caller);
+        };
+    }
+
 
     /**
      * @brief 将回调函数列表压入栈,
@@ -194,7 +219,7 @@ public:
 
 private:
     using HDUtilsCallback       = std::function<void(const HDBridge::NM_DATA&, const HD_Utils&)>;
-    using HDUtilsCallbackVector = std::vector<HDUtilsCallback>;
+    using HDUtilsCallbackVector = std::map<std::string, HDUtilsCallback>;
     using HDUtilsCallbackStack  = std::stack<HDUtilsCallbackVector>;
 
     std::mutex                mScanDataMutex     = {};

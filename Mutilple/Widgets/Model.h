@@ -32,9 +32,25 @@ public:
         return dynamic_cast<T>(m_pMesh[index]);
     }
 
+    template<class T>
+    std::map<size_t, T> getMesh() {
+        static_assert(std::is_pointer_v<T>, "类型必须是指针");
+        static_assert(std::is_base_of_v<Mesh, std::remove_pointer_t<T>>, "类型必须是Mesh或其子类");
+        std::map<size_t, T> ret_map = {};
+        for (auto& [index, mesh] : m_pMesh) {
+            ret_map.insert(std::make_pair(index, dynamic_cast<T>(mesh)));
+        }
+        return ret_map;
+    }
+
     template <>
     Mesh* getMesh(size_t index) {
         return getMesh<Mesh*>(index);
+    }
+
+    template <>
+    std::map<size_t, Mesh*> getMesh() {
+        return getMesh<Mesh*>();
     }
 
 public:

@@ -28,6 +28,7 @@
 					<Button name="BtnSelectGroup0" width="120" height="33" text="第1组" bkcolor="0xFF339933" />
 					<Button name="BtnSelectGroup1" width="120" height="33" text="第2组" />
 					<Button name="BtnSelectGroup2" width="120" height="33" text="第3组" />
+					<Button name="BtnSelectGroup3" width="120" height="33" text="测厚" />
 					<HorizontalLayout width="50" />
 					<Button name="BtnScanMode" width="120" height="33" text="扫查模式" bkcolor="0xFF339933" />
 					<Button name="BtnReviewMode" width="120" height="33" text="回放模式" />
@@ -59,7 +60,7 @@
 				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png" />
 				<Button name="BtnUIFreeze" text="波形冻结" width="100" font="5" />
 				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png" />
-				<Button name="BtnUITrack" text="追踪使能" width="100" font="5" />
+				<Button name="BtnUIAmpTrace" text="追踪使能" width="100" font="5" />
 				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png" />
 				<Button name="BtnUIAutoGain" text="自动增益" width="100" font="5" />
 				<VerticalLayout width="1" bkimage="Theme\list\list_header_sep.png" />
@@ -93,7 +94,9 @@
 							<HorizontalLayout width="20" />
 							<Option name="OptGateType" group="gate" text="波门B" width="60" userdata="1" />
 							<HorizontalLayout width="20" />
-							<Option name="OptGateType" width="90" group="gate" text="扫查波门" userdata="2" />
+							<HorizontalLayout name="LayoutGateType" >
+								<Option name="OptGateType" width="90" group="gate" text="扫查波门" userdata="2" />
+							</HorizontalLayout>
 							<HorizontalLayout width="20" />
 						</HorizontalLayout>
 						<HorizontalLayout width="20" />

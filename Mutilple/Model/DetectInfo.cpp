@@ -15,6 +15,7 @@ RTTR_REGISTRATION {
         .property("materialStandards", &DetectInfo::materialStandards)
         .property("surfaceStates", &DetectInfo::surfaceStates)
         .property("surveyedArea", &DetectInfo::surveyedArea)
+        .property("thickness", &DetectInfo::thickness)
         .property("unitType", &DetectInfo::unitType)
         .property("probeType", &DetectInfo::probeType)
         .property("referenceBlock", &DetectInfo::referenceBlock)

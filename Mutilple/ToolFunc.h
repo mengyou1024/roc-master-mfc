@@ -2,6 +2,8 @@
 
 #include "duckx.hpp"
 #include <Model/SystemConfig.h>
+#include <HDBridge/Utils.h>
+#include <HDBridge.h>
 
 // 点到线段距离
 float PointToSegDist(float x, float y, float x1, float y1, float x2, float y2);
@@ -114,8 +116,8 @@ public:
     DetectionStateMachine() {
         mRes.fill(DetectionStatus::LowLevel);
     }
-    using DET_RES_TYPE = std::array<DetectionStatus, 12>;
-    using DET_IN_TYPE  = std::array<uint8_t, 12>;
+    using DET_RES_TYPE = std::array<DetectionStatus, HDBridge::CHANNEL_NUMBER>;
+    using DET_IN_TYPE  = std::array<uint8_t, HDBridge::CHANNEL_NUMBER>;
 
     DET_RES_TYPE UpdateData(DET_IN_TYPE& ampMax);
 

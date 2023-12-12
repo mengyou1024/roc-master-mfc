@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <memory>
 #include <mutex>
+#include <regex>
 
 using std::lock_guard;
 using std::make_unique;
@@ -26,6 +27,100 @@ public:
         return &inst;
     }
 };
+
+/**
+ * @brief 获取变量映射
+ * @param id 变量id
+ * @return [area, start, isBit, bitSel, valid]
+ */
+static std::tuple<uint8_t, int, bool, int, bool> getMapping(std::string id) {
+    static std::regex reg(R"(^([IQMV])(\d+)\.?([07])?$)");
+    std::smatch       match;
+    if (std::regex_match(id, match, reg)) {
+        uint8_t area = 0;
+        if (match[1].str() == "I") {
+            area = S7AreaPE;
+        } else if (match[1].str() == "Q") {
+            area = S7AreaPA;
+        } else if (match[1].str() == "M") {
+            area = S7AreaMK;
+        } else if (match[1].str() == "V") {
+            area = S7AreaDB;
+        }
+        int  start  = atol(match[2].str().c_str());
+        bool isBit  = match[3].matched;
+        int  bitSel = 0;
+        if (isBit) {
+            bitSel = atol(match[3].str().c_str());
+        }
+        return std::make_tuple(area, start, isBit, bitSel, true);
+    }
+    return std::make_tuple(0, 0, 0, 0, false);
+}
+
+template <class T>
+static bool __getVariable(std::string id, T& ret, int type) {
+    if (!AbsPLCIntf::isConnected()) {
+        return false;
+    }
+    auto [area, start, isBit, bitSel, valid] = getMapping(id);
+    if (!valid) {
+        return false;
+    }
+    auto _ret = doWithReconnect([area, start, type, &ret]() -> bool {
+        auto client = _RuitiePLCInfo::getInstance()->m_client;
+        return client->ReadArea(area, 1, start, 1, type, &ret) == 0;
+    });
+    return _ret;
+}
+
+template <class T>
+static bool __getVariable(std::string id, int sz, std::vector<T>& data, int type) {
+    if (!AbsPLCIntf::isConnected()) {
+        return false;
+    }
+    auto [area, start, isBit, bitSel, valid] = getMapping(id);
+    if (!valid) {
+        return false;
+    }
+    auto _ret = doWithReconnect([area, start, sz, type, &data]() -> bool {
+        auto client = _RuitiePLCInfo::getInstance()->m_client;
+        return client->ReadArea(area, 1, start, sz, type, (void*)data.data()) == 0;
+    });
+    return _ret;
+}
+
+template <class T>
+static bool __setVariable(std::string id, T ret, int type) {
+    if (!AbsPLCIntf::isConnected()) {
+        return false;
+    }
+    auto [area, start, isBit, bitSel, valid] = getMapping(id);
+    if (!valid) {
+        return false;
+    }
+    auto _ret = doWithReconnect([area, start, type, &ret]() -> bool {
+        auto client = _RuitiePLCInfo::getInstance()->m_client;
+        return client->WriteArea(area, 1, start, 1, type, &ret) == 0;
+    });
+    return _ret;
+}
+
+template <class T>
+static bool __setVariable(std::string id, int sz, const std::vector<T>& data, int type) {
+    if (!AbsPLCIntf::isConnected()) {
+        return false;
+    }
+    auto [area, start, isBit, bitSel, valid] = getMapping(id);
+    if (!valid) {
+        return false;
+    }
+    auto _ret = doWithReconnect([area, start, sz, type, &data]() -> bool {
+        auto client = _RuitiePLCInfo::getInstance()->m_client;
+        return client->WriteArea(area, 1, start, sz, type, (void*)data.data()) == 0;
+    });
+    return _ret;
+}
 
 static bool reconnect() {
     string ip   = "";
@@ -79,17 +174,17 @@ static bool doWithReconnect(function<bool(void)> func) {
     return true;
 }
 
-static uint16_t AbsPLCIntf::swaps(uint16_t sval) {
+static uint16_t AbsPLCIntf::swap(uint16_t sval) {
     return ((sval & 0xFF) << 8) | ((sval & 0xFF00) >> 8);
 }
 
-static uint32_t AbsPLCIntf::swapl(uint32_t lval) {
+static uint32_t AbsPLCIntf::swap(uint32_t lval) {
     return ((lval & 0xFF000000) >> 24) | ((lval & 0xFF0000) >> 8) | ((lval & 0xFF00) << 8) | ((lval & 0xFF) << 24);
 }
 
-static float AbsPLCIntf::swapf(float fval) {
+static float AbsPLCIntf::swap(float fval) {
     uint32_t temp = *(uint32_t*)&fval;
-    temp          = swapl(temp);
+    temp          = swap(temp);
     float ret     = *(float*)&temp;
     return ret;
 }
@@ -146,192 +241,110 @@ void AbsPLCIntf::getConnectedInfo(std::string* addr, int* rack, int* slot) {
     }
 }
 
-static unique_ptr<uint8_t[]> bitExpand(uint8_t* bytes, int bits) {
-    auto ret = unique_ptr<uint8_t[]>(new uint8_t[bits]);
-    for (int i = 0; i < bits; i++) {
-        ret[i] = bytes[i / 8] & (1 << (i % 8)) ? 1 : 0;
+bool AbsPLCIntf::getVariable(string id, bool& val) {
+    auto [area, start, isBit, bitSel, valid] = getMapping(id);
+    if (!valid) {
+        return false;
+    }
+    if (!isBit) {
+        return false;
+    }
+    uint8_t data = {};
+    auto    _ret = __getVariable<uint8_t>(id, data, S7WLByte);
+    val          = (data & (1 << bitSel)) ? true : false;
+    return _ret;
+}
+
+bool AbsPLCIntf::getVariable(string id, uint8_t& val) {
+    return __getVariable<uint8_t>(id, val, S7WLByte);
+}
+
+bool AbsPLCIntf::getVariable(string id, uint16_t& val) {
+    auto ret = __getVariable<uint16_t>(id, val, S7WLWord);
+    if (ret) {
+        val = swap(val);
     }
     return ret;
 }
 
-static bool readRegion(int Area, int start, int size, const char* format, function<void(string, uint8_t)> func) {
-    if (!AbsPLCIntf::isConnected()) {
-        return false;
+bool AbsPLCIntf::getVariable(string id, uint32_t& val) {
+    auto ret = __getVariable<uint32_t>(id, val, S7WLDWord);
+    if (ret) {
+        val = swap(val);
     }
-
-    auto data = shared_ptr<uint8_t[]>(new uint8_t[(size + 7) / 8]);
-
-    auto ret = doWithReconnect([Area, start, size, &data]() -> bool {
-        return _RuitiePLCInfo::getInstance()->m_client->ReadArea(Area, 0, start, (size + 7) / 8, S7WLByte, data.get()) == 0;
-    });
-
-    if (!ret) {
-        _RuitiePLCInfo::getInstance()->m_connected = false;
-        return false;
-    }
-
-    auto expand = bitExpand(data.get(), size);
-
-    for (int i = start * 8; i < (start * 8 + size); i++) {
-        char temp[10];
-        snprintf(temp, sizeof(temp), format, i / 8, i % 8);
-        func(temp, expand[i - static_cast<size_t>(start) * 8]);
-    }
-    return true;
-}
-
-int AbsPLCIntf::getVariable(string name, int) {
-    if (!isConnected()) {
-        return -1;
-    }
-    int  iStart = 0, iBit = 0, iArea = 0;
-    char cArea = 0, cStart = 0, cBit = 0;
-    if (sscanf(name.c_str(), "%c%c%c", &cArea, &cStart, &cBit) < 3) {
-        return -1;
-    }
-    iStart = cStart - '0';
-    iBit   = cBit - '0';
-
-    switch (cArea) {
-        case 'M': iArea = S7AreaMK; break;
-        case 'I': iArea = S7AreaPE; break;
-        case 'Q': iArea = S7AreaPA; break;
-        default: return -1;
-    }
-
-    uint8_t temp = 0;
-    auto    ret  = doWithReconnect([iArea, iStart, &temp]() -> bool {
-        return _RuitiePLCInfo::getInstance()->m_client->ReadArea(iArea, 0, iStart, 1, S7WLByte, &temp) == 0;
-    });
-    if (!ret) {
-        _RuitiePLCInfo::getInstance()->m_connected = false;
-        return -1;
-    }
-    return (temp & (1 << iBit)) ? 1 : 0;
-}
-
-float AbsPLCIntf::getVariable(string name, float) {
-    if (!isConnected()) {
-        return -INFINITY;
-    }
-    char cArea = 0;
-    int  iAddr = 0;
-    if (sscanf(name.c_str(), "%c%d", &cArea, &iAddr) != 2) {
-        return -INFINITY;
-    }
-    if (cArea != 'V') {
-        return -INFINITY;
-    }
-    float ret = -INFINITY;
-    if (!doWithReconnect([iAddr, &ret]() -> bool {
-            return _RuitiePLCInfo::getInstance()->m_client->ReadArea(S7AreaDB, 1, iAddr, 1, S7WLReal, &ret) == 0;
-        })) {
-        return -INFINITY;
-    }
-#if PLC_SWAP_FLOAT
-    ret = swapf(ret);
-#endif
     return ret;
 }
 
-bool AbsPLCIntf::setVariable(string s, float var) {
-    if (!isConnected()) {
-        return false;
+bool AbsPLCIntf::getVariable(string id, float& val) {
+    auto _ret = __getVariable<float>(id, val, S7WLReal);
+    if (_ret) {
+        val = swap(val);
     }
-
-    int  iAddr = 0, iArea = 0;
-    char cArea = 0;
-    if (sscanf(s.c_str(), "%c%d", &cArea, &iAddr) < 2) {
-        return false;
-    }
-
-    if (cArea != 'V') {
-        return false;
-    }
-
-#if PLC_SWAP_FLOAT
-    var = swapf(var);
-#endif
-    auto ret = doWithReconnect(
-        [iAddr, &var]() -> bool { return _RuitiePLCInfo::getInstance()->m_client->WriteArea(S7AreaDB, 1, iAddr, 1, S7WLReal, &var) == 0; });
-    if (!ret) {
-        _RuitiePLCInfo::getInstance()->m_connected = false;
-        return false;
-    }
-    return true;
+    return _ret;
 }
 
-bool AbsPLCIntf::setVariable(string s, float* var, int count) {
-    if (!isConnected()) {
-        return false;
-    }
-
-    int  iAddr = 0, iArea = 0;
-    char cArea = 0;
-    if (sscanf(s.c_str(), "%c%d", &cArea, &iAddr) < 2) {
-        return false;
-    }
-
-#if PLC_SWAP_FLOAT
-    auto temp = shared_ptr<float[]>(new float[count]);
-    for (int i = 0; i < count; i++) {
-        temp[i] = swapf(var[i]);
-    }
-    auto ret = doWithReconnect([iAddr, count, &temp]() -> bool {
-        return _RuitiePLCInfo::getInstance()->m_client->WriteArea(S7AreaDB, 1, iAddr, count, S7WLReal, temp.get()) == 0;
-    });
-#else
-    auto ret = doWithReconnect([iAddr, count, var]() -> bool {
-        return _RuitiePLCInfo::getInstance()->m_client->WriteArea(S7AreaDB, 1, iAddr, count, S7WLReal, var) == 0;
-    });
-#endif
-    if (!ret) {
-        _RuitiePLCInfo::getInstance()->m_connected = false;
-        return false;
-    }
-    return true;
+bool AbsPLCIntf::getVariable(string id, int sz, std::vector<uint8_t>& data) {
+    return __getVariable(id, sz, data, S7WLByte);
 }
 
-bool AbsPLCIntf::setVariable(string s, bool b) {
-    if (!isConnected()) {
-        return false;
+bool AbsPLCIntf::getVariable(string id, int sz, std::vector<float>& data) {
+    auto _ret = __getVariable(id, sz, data, S7WLReal);
+    if (_ret) {
+        for (auto& it : data) {
+            it = swap(it);
+        }
     }
+    return _ret;
+}
 
-    int  iStart = 0, iBit = 0, iArea = 0;
-    char cArea = 0, cStart = 0, cBit = 0;
-    if (sscanf(s.c_str(), "%c%c%c", &cArea, &cStart, &cBit) < 3) {
+bool AbsPLCIntf::setVariable(string id, bool val) {
+    auto [area, start, isBit, bitSel, valid] = getMapping(id);
+    if (!valid) {
         return false;
     }
-    iStart = cStart - '0';
-    iBit   = cBit - '0';
+    if (!isBit) {
+        return false;
+    }
+    uint8_t data = {};
+    auto    ret  = __getVariable(id, data, S7WLByte);
+    if (ret) {
+        if (val) {
+            data |= 1 << bitSel;
+        } else {
+            data &= ~(1 << bitSel);
+        }
+        ret = __setVariable(id, data, S7WLByte);
+    }
+    return ret;
+}
 
-    switch (cArea) {
-        case 'M': iArea = S7AreaMK; break;
-        case 'I': iArea = S7AreaPE; break;
-        case 'Q': iArea = S7AreaPA; break;
-        default: return false;
-    }
+bool AbsPLCIntf::setVariable(string id, uint8_t val) {
+    return __setVariable(id, val, S7WLByte);
+}
 
-    uint8_t temp = 0;
-    auto    ret  = doWithReconnect([iArea, iStart, &temp]() -> bool {
-        return _RuitiePLCInfo::getInstance()->m_client->ReadArea(iArea, 0, iStart, 1, S7WLByte, &temp) == 0;
-    });
-    ;
-    if (!ret) {
-        _RuitiePLCInfo::getInstance()->m_connected = false;
-        return false;
+bool AbsPLCIntf::setVariable(string id, uint16_t val) {
+    val = swap(val);
+    return __setVariable(id, val, S7WLWord);
+}
+
+bool AbsPLCIntf::setVariable(string id, uint32_t val) {
+    val = swap(val);
+    return __setVariable(id, val, S7WLDWord);
+}
+
+bool AbsPLCIntf::setVariable(string id, float val) {
+    val = swap(val);
+    return __setVariable(id, val, S7WLReal);
+}
+
+bool AbsPLCIntf::setVariable(string id, int sz, const std::vector<uint8_t>& data) {
+    return __setVariable(id, sz, data, S7WLByte);
+}
+
+bool AbsPLCIntf::setVariable(string id, int sz, const std::vector<float>& data) {
+    std::vector<float> copy = data;
+    for (auto& it : copy) {
+        it = swap(it);
     }
-    if (b) {
-        temp |= 1 << iBit;
-    } else {
-        temp &= ~(1 << iBit);
-    }
-    ret = doWithReconnect([iArea, iStart, &temp]() -> bool {
-        return _RuitiePLCInfo::getInstance()->m_client->WriteArea(iArea, 0, iStart, 1, S7WLByte, &temp) == 0;
-    });
-    if (!ret) {
-        _RuitiePLCInfo::getInstance()->m_connected = false;
-        return false;
-    }
-    return true;
+    return __setVariable(id, sz, data, S7WLReal);
 }
