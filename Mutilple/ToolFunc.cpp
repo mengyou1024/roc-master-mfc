@@ -160,7 +160,7 @@ void GenFBO(GLuint& FBO, GLuint& FBOTEX, GLuint& RBO, GLuint& PBO, GLuint& OUTTE
 
     glGenBuffers(1, &PBO);
     glBindBuffer(GL_PIXEL_PACK_BUFFER, PBO);
-    glBufferData(GL_PIXEL_PACK_BUFFER, width * height * sizeof(DWORD), NULL, GL_DYNAMIC_COPY);
+    glBufferData(GL_PIXEL_PACK_BUFFER, static_cast<unsigned long long>(width) * height * sizeof(DWORD), NULL, GL_DYNAMIC_COPY);
     glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
 
     glGenTextures(1, &OUTTEX);

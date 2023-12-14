@@ -489,7 +489,7 @@ void GroupScanWnd::AmpTraceCallback(const HDBridge::NM_DATA &data, const HD_Util
     auto bridge = caller.getBridge();
     if (std::find(traceList.begin(), traceList.end(), data.iChannel) != traceList.end()) {
         // 调整硬件波门的位置
-        for (int i = 0; i < 2; i++) {
+        for (int i = 1; i < 2; i++) {
             auto info = caller.getBridge()->getGateInfo(i, data.iChannel);
             if (info.width > EPS && std::abs(info.width - 100.0f) > EPS && info.width > EPS) {
                 auto [pos, max, res] = HDBridge::computeGateInfo(data.pAscan, {info.pos, info.width, info.height});
@@ -507,21 +507,21 @@ void GroupScanWnd::AmpTraceCallback(const HDBridge::NM_DATA &data, const HD_Util
         }
         //AddTaskToQueue([bridge]() { bridge->flushSetting(); }, "flushSetting", true);
         // 调整扫查波门的位置
-        auto &info = bridge->mCache.scanGateInfo[data.iChannel];
-        if (info.width > EPS && std::abs(info.width - 100.0f) > EPS && info.width > EPS) {
-            auto [pos, max, res] = HDBridge::computeGateInfo(data.pAscan, {info.pos, info.width, info.height});
-            if (res) {
-                float newPos = pos - info.width / 2.0f;
-                if (newPos < EPS) {
-                    newPos = 0.0f;
-                } else if (newPos + info.width > 100.0f) {
-                    newPos = 100.f - info.width;
-                }
-                info.pos  = newPos;
-                auto mesh = m_OpenGL_ASCAN.getMesh<MeshAscan *>(data.iChannel);
-                mesh->UpdateGate(2, 1, info.pos, info.width, info.height);
-            }
-        }
+        //auto &info = bridge->mCache.scanGateInfo[data.iChannel];
+        //if (info.width > EPS && std::abs(info.width - 100.0f) > EPS && info.width > EPS) {
+        //    auto [pos, max, res] = HDBridge::computeGateInfo(data.pAscan, {info.pos, info.width, info.height});
+        //    if (res) {
+        //        float newPos = pos - info.width / 2.0f;
+        //        if (newPos < EPS) {
+        //            newPos = 0.0f;
+        //        } else if (newPos + info.width > 100.0f) {
+        //            newPos = 100.f - info.width;
+        //        }
+        //        info.pos  = newPos;
+        //        auto mesh = m_OpenGL_ASCAN.getMesh<MeshAscan *>(data.iChannel);
+        //        mesh->UpdateGate(2, 1, info.pos, info.width, info.height);
+        //    }
+        //}
         if (data.iChannel < 4) {
             // 测厚波门
             auto &info = bridge->mCache.scanGateInfo[(size_t)data.iChannel + HDBridge::CHANNEL_NUMBER];
@@ -676,9 +676,12 @@ void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
     } else if (name == _T("AmpTrace")) {
         auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnUIAmpTrace")));
         if (btn->GetBkColor() == 0xFFEEEEEE) {
-            std::vector<int> args = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
-            auto             wrap = HD_Utils::WrapReadCallback(&GroupScanWnd::AmpTraceCallback, this, args);
-            mUtils->addReadCallback(wrap, "AmpTrace");
+            std::vector<int> args = {0, 1, 2, 3};
+            auto             config = GetSystemConfig();
+            if (config.enableMeasureThickness) {
+                auto wrap = HD_Utils::WrapReadCallback(&GroupScanWnd::AmpTraceCallback, this, args);
+                mUtils->addReadCallback(wrap, "AmpTrace");
+            }
             btn->SetBkColor(0xFF339933);
         } else {
             mUtils->removeReadCallback("AmpTrace");
