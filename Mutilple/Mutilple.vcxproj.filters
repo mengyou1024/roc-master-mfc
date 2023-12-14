@@ -237,6 +237,12 @@
     <ClInclude Include="Model\DefectInfo.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
+    <ClInclude Include="Extensions\HDBridge\boards\NetworkMulti\include\NetworkMulti.h">
+      <Filter>Header Files\HDBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="Extensions\HDBridge\boards\NetworkMulti\include\HDBridge\NetworkMulti.h">
+      <Filter>Header Files\HDBridge\HDBridge</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Mutilple.cpp">
@@ -370,6 +376,9 @@
     </ClCompile>
     <ClCompile Include="Extensions\Duckx\src\minidocx.cpp">
       <Filter>Source Files\Duckx</Filter>
+    </ClCompile>
+    <ClCompile Include="Extensions\HDBridge\boards\NetworkMulti\NetWorkMulti.cpp">
+      <Filter>Source Files\HDBridge</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

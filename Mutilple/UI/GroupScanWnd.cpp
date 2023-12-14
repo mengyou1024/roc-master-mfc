@@ -60,25 +60,51 @@ GroupScanWnd::GroupScanWnd() {
     try {
         mCScanThreadRunning = true;
         mCScanThread        = std::thread(&GroupScanWnd::ThreadCScan, this);
-        auto config         = TOFDUSBPort::storage().get_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == std::wstring(SCAN_CONFIG_LAST)));
+        auto config         = ORM_HDBridge::storage().get_all<HDBridge>(where(c(&HDBridge::name) == std::wstring(SCAN_CONFIG_LAST)));
         if (config.size() == 1) {
             if (config[0].isValid) {
-                mUtils = std::make_unique<HD_Utils>(std::make_unique<TOFDUSBPort>(config[0]));
+                auto systemConfig = GetSystemConfig();
+                unique_ptr<HDBridge> bridge = nullptr;
+                if (systemConfig.enableNetwork) {
+                    auto &ipFPGA   = systemConfig.ipFPGA;
+                    auto  portFPGA = systemConfig.portFPGA;
+                    auto &ipPC     = systemConfig.ipPC;
+                    auto  portPC   = systemConfig.portPC;
+                    bridge         = GenerateHDBridge<NetworkMulti>(config[0], ipFPGA, portFPGA, ipPC, portPC);
+                } else {
+                    bridge = GenerateHDBridge<TOFDUSBPort>(config[0]);
+                }
+                
+                mUtils      = std::make_unique<HD_Utils>(bridge);
                 mUtils->getBridge()->syncCache2Board();
                 config[0].isValid = false;
-                TOFDUSBPort::storage().update(config[0]);
+                ORM_HDBridge::storage().update(config[0]);
             } else {
-                mUtils = std::make_unique<HD_Utils>(std::make_unique<TOFDUSBPort>());
-                mUtils->getBridge()->defaultInit();
+                throw std::runtime_error("上一次配置验证失败，可能由于软件运行中异常退出.");
             }
         } else {
-            mUtils = std::make_unique<HD_Utils>(std::make_unique<TOFDUSBPort>());
-            mUtils->getBridge()->defaultInit();
+            throw std::runtime_error("未获取到上一次配置.");
         }
         auto detectInfos = ORM_Model::DetectInfo::storage().get_all<ORM_Model::DetectInfo>();
         if (detectInfos.size() == 1) {
             mDetectInfo = detectInfos[0];
         }
+    } catch (std::runtime_error &e) {
+        spdlog::warn(e.what());
+        spdlog::warn("将使用默认配置初始化.");
+        auto                 systemConfig = GetSystemConfig();
+        unique_ptr<HDBridge> bridge       = nullptr;
+        if (systemConfig.enableNetwork) {
+            auto &ipFPGA   = systemConfig.ipFPGA;
+            auto  portFPGA = systemConfig.portFPGA;
+            auto &ipPC     = systemConfig.ipPC;
+            auto  portPC   = systemConfig.portPC;
+            bridge         = GenerateHDBridge<NetworkMulti>({}, ipFPGA, portFPGA, ipPC, portPC);
+        } else {
+            bridge = GenerateHDBridge<TOFDUSBPort>({});
+        }
+        mUtils      = std::make_unique<HD_Utils>(bridge);
+        mUtils->getBridge()->defaultInit();
     } catch (std::exception &e) { spdlog::error(GB2312ToUtf8(e.what())); }
 }
 
@@ -93,15 +119,15 @@ GroupScanWnd::~GroupScanWnd() {
             ExitReviewMode();
         }
         auto tick    = GetTickCount64();
-        auto bridges = TOFDUSBPort::storage().get_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == std::wstring(SCAN_CONFIG_LAST)));
+        auto bridges = ORM_HDBridge::storage().get_all<HDBridge>(where(c(&HDBridge::name) == std::wstring(SCAN_CONFIG_LAST)));
         if (bridges.size() == 1) {
             bridges[0].isValid = true;
-            bridges[0].mCache  = mUtils->getBridge<TOFDUSBPort *>()->mCache;
-            TOFDUSBPort::storage().update(bridges[0]);
+            bridges[0].mCache  = mUtils->getBridge()->mCache;
+            ORM_HDBridge::storage().update(bridges[0]);
         } else {
-            mUtils->getBridge<TOFDUSBPort *>()->name    = std::wstring(SCAN_CONFIG_LAST);
-            mUtils->getBridge<TOFDUSBPort *>()->isValid = true;
-            TOFDUSBPort::storage().insert(*(mUtils->getBridge<TOFDUSBPort *>()));
+            mUtils->getBridge()->name    = std::wstring(SCAN_CONFIG_LAST);
+            mUtils->getBridge()->isValid = true;
+            ORM_HDBridge::storage().insert(*(mUtils->getBridge()));
         }
         auto detectInfos = ORM_Model::DetectInfo::storage().get_all<ORM_Model::DetectInfo>();
         if (detectInfos.size() == 1) {
@@ -195,7 +221,7 @@ void GroupScanWnd::InitOnThread() {
     // 设置板卡参数
     Sleep(100);
     mUtils->start();
-    auto model = static_cast<ModelGroupAScan *>(m_OpenGL_ASCAN.m_pModel[0]);
+    auto model = m_OpenGL_ASCAN.getModel<ModelGroupAScan *>();
     mUtils->addReadCallback(std::bind(&GroupScanWnd::UpdateAScanCallback, this, std::placeholders::_1, std::placeholders::_2));
     if (!mReviewPathEntry.empty()) {
         if (!EnterReviewMode(mReviewPathEntry)) {
@@ -433,12 +459,12 @@ void GroupScanWnd::SetConfigValue(float val, bool sync) {
 }
 
 void GroupScanWnd::UpdateAScanCallback(const HDBridge::NM_DATA &data, const HD_Utils &caller) {
-    auto model = static_cast<ModelGroupAScan *>(m_OpenGL_ASCAN.m_pModel[0]);
+    auto model = m_OpenGL_ASCAN.getModel<ModelGroupAScan *>();
     if (model == nullptr || model->m_pMesh.at(data.iChannel) == nullptr) {
         return;
     }
     auto                                  bridge = caller.getBridge();
-    auto                                  mesh   = static_cast<MeshAscan *>(model->m_pMesh[data.iChannel]);
+    auto                                  mesh   = model->getMesh<MeshAscan *>(data.iChannel);
     std::shared_ptr<std::vector<uint8_t>> hdata  = std::make_shared<std::vector<uint8_t>>(data.pAscan);
     if (bridge == nullptr || mesh == nullptr || hdata == nullptr) {
         return;
@@ -527,12 +553,12 @@ void GroupScanWnd::AmpTraceCallback(const HDBridge::NM_DATA &data, const HD_Util
 }
 
 void GroupScanWnd::AmpMemeryCallback(const HDBridge::NM_DATA &data, const HD_Utils &caller) {
-    auto model = static_cast<ModelGroupAScan *>(m_OpenGL_ASCAN.m_pModel[0]);
+    auto model = m_OpenGL_ASCAN.getModel<ModelGroupAScan *>();
     if (model == nullptr || model->m_pMesh.at(data.iChannel) == nullptr) {
         return;
     }
     auto                                  bridge = caller.getBridge();
-    auto                                  mesh   = static_cast<MeshAscan *>(model->m_pMesh[data.iChannel]);
+    auto                                  mesh   = model->getMesh<MeshAscan *>(data.iChannel);
     std::shared_ptr<std::vector<uint8_t>> hdata  = std::make_shared<std::vector<uint8_t>>(data.pAscan);
     if (bridge == nullptr || mesh == nullptr || hdata == nullptr) {
         return;
@@ -542,9 +568,11 @@ void GroupScanWnd::AmpMemeryCallback(const HDBridge::NM_DATA &data, const HD_Uti
         const auto ampData = mesh->getAmpMemoryData(i);
         auto       g       = bridge->getGateInfo(i, data.iChannel);
         // 获取波门内的数据
-        auto l = data.pAscan.begin() + static_cast<int64_t>(std::round(static_cast<float>(data.pAscan.size()) * g.pos));
-        auto r = data.pAscan.begin() + static_cast<int64_t>(std::round(static_cast<float>(data.pAscan.size()) * (g.pos + g.width)));
-        std::vector<uint8_t> newAmpData(l, r);
+        auto left  = data.pAscan.begin() + static_cast<int64_t>((double)data.pAscan.size() * (double)g.pos);
+        auto right = data.pAscan.begin() + static_cast<int64_t>((double)data.pAscan.size() * (double)(g.pos + g.width));
+
+        std::vector<uint8_t> newAmpData(left, right);
+
         if (ampData.size() == newAmpData.size()) {
             for (auto i = 0; i < ampData.size(); i++) {
                 if (newAmpData[i] < ampData[i]) {
@@ -577,13 +605,46 @@ void GroupScanWnd::UpdateCScanOnTimer() {
 
 void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
     if (name == _T("Setting")) {
+        auto       config                 = GetSystemConfig();
+        auto       enableNetwork          = config.enableNetwork;
+        auto      &ip_FPGA                = config.ipFPGA;
+        auto       enableMeasureThickness = config.enableMeasureThickness;
         SettingWnd wnd;
         wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
         wnd.CenterWindow();
         wnd.ShowModal();
-        if (mWidgetMode == WidgetMode::MODE_SCAN) {
+        auto  newConfig                 = GetSystemConfig();
+        auto  newEnableNetwork          = newConfig.enableNetwork;
+        auto &newIP_FPGA                = newConfig.ipFPGA;
+        auto  newEnableMeasureThickness = newConfig.enableMeasureThickness;
+        if (mWidgetMode == WidgetMode::MODE_SCAN && newEnableMeasureThickness != enableMeasureThickness) {
             SelectMeasureThickness(GetSystemConfig().enableMeasureThickness);
         }
+        if (enableNetwork != newEnableNetwork) {
+            if (newEnableNetwork) {
+                if (newIP_FPGA == ip_FPGA) {
+                    mUtils->pushCallback();
+                    ReconnectBoard(newConfig.ipFPGA, newConfig.portFPGA, newConfig.ipPC, newConfig.portPC);
+                    mUtils->popCallback();
+                } else {
+                    auto index = mUtils->getBridge<NetworkMulti *>()->getIndex();
+                    if (index > 0) {
+                        auto ipInfo = UNION_PORT_GetIP(index);
+                        auto ip     = inet_addr(newIP_FPGA.c_str());
+                        if (ip != INADDR_NONE) {
+                            *((uint32_t *)ipInfo->pIpFPGA) = ip;
+                            UNION_PORT_SetIP(index, *ipInfo);
+                        }
+                    }
+                }
+
+            } else {
+                mUtils->pushCallback();
+                ReconnectBoard();
+                mUtils->popCallback();
+            }
+        }
+
     } else if (name == _T("AutoScan")) {
         if (mScanningFlag == true) {
             BusyWnd wnd([this]() { StopScan(); });
@@ -638,7 +699,7 @@ void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
     } else if (name == _T("AmpTrace")) {
         auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnUIAmpTrace")));
         if (btn->GetBkColor() == 0xFFEEEEEE) {
-            std::vector<int> args = {0};
+            std::vector<int> args = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
             auto             wrap = HD_Utils::WrapReadCallback(&GroupScanWnd::AmpTraceCallback, this, args);
             mUtils->addReadCallback(wrap, "AmpTrace");
             btn->SetBkColor(0xFF339933);
@@ -925,9 +986,8 @@ void GroupScanWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
 
         // 扫查通道
         for (int i = 0; i < HDBridge::CHANNEL_NUMBER; i++) {
-            auto model = static_cast<ModelGroupAScan *>(m_OpenGL_ASCAN.m_pModel[0]);
-            auto mesh  = static_cast<MeshAscan *>(model->m_pMesh[i]);
-            auto cMesh = static_cast<MeshGroupCScan *>(((ModelGroupCScan *)m_OpenGL_CSCAN.m_pModel[0])->m_pMesh[i]);
+            auto mesh  = m_OpenGL_ASCAN.getModel<ModelGroupAScan *>()->getMesh<MeshAscan *>(i);
+            auto cMesh = m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->getMesh<MeshGroupCScan *>(i);
             // 绘制当前点击的线条
             cMesh->AppendLine(temp.x);
             // 绘制A扫图
@@ -942,10 +1002,8 @@ void GroupScanWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
         }
         // 测厚通道
         for (size_t i = 0; i < 4; i++) {
-            auto model = static_cast<ModelGroupAScan *>(m_OpenGL_ASCAN.m_pModel[0]);
-            auto mesh  = static_cast<MeshAscan *>(model->m_pMesh[i + HDBridge::CHANNEL_NUMBER]);
-            auto cMesh =
-                static_cast<MeshGroupCScan *>(((ModelGroupCScan *)m_OpenGL_CSCAN.m_pModel[0])->m_pMesh[i + HDBridge::CHANNEL_NUMBER]);
+            auto mesh  = m_OpenGL_ASCAN.getModel<ModelGroupAScan *>()->getMesh<MeshAscan *>(i);
+            auto cMesh = m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->getMesh<MeshGroupCScan *>(i);
             // 绘制当前点击的线条
             cMesh->AppendLine(temp.x);
             // 绘制A扫图
@@ -1026,6 +1084,26 @@ void GroupScanWnd::OnTimer(int iIdEvent) {
 
 void GroupScanWnd::EnterReview(std::string path) {
     mReviewPathEntry = path;
+}
+
+void GroupScanWnd::ReconnectBoard() {
+    auto bridge    = mUtils->getBridge();
+    auto newBridge = GenerateHDBridge<TOFDUSBPort>(*bridge);
+    bridge->close();
+    mUtils->setBridge(newBridge);
+    bridge = mUtils->getBridge();
+    bridge->open();
+    bridge->syncCache2Board();
+}
+
+void GroupScanWnd::ReconnectBoard(std::string ip_FPGA, uint16_t port_FPGA, std::string ip_PC, uint16_t port_PC) {
+    auto bridge    = mUtils->getBridge();
+    auto newBridge = GenerateHDBridge<NetworkMulti>(*bridge, ip_FPGA, port_FPGA, ip_PC, port_PC);
+    bridge->close();
+    mUtils->setBridge(newBridge);
+    bridge = mUtils->getBridge();
+    bridge->open();
+    bridge->syncCache2Board();
 }
 
 void GroupScanWnd::ThreadCScan(void) {
@@ -1303,22 +1381,21 @@ bool GroupScanWnd::EnterReviewMode(std::string name) {
         spdlog::info("load:{}, frame:{}", name, mReviewData.size());
         // 删除所有通道的C扫数据
         for (int index = 0; index < HDBridge::CHANNEL_NUMBER + 4; index++) {
-            auto mesh = static_cast<MeshGroupCScan *>(((ModelGroupCScan *)m_OpenGL_CSCAN.m_pModel[0])->m_pMesh[index]);
+            auto mesh = m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->getMesh<MeshGroupCScan *>(index);
             mesh->RemoveDot();
             mesh->RemoveLine();
         }
         for (const auto &data : mReviewData) {
             for (int index = 0; index < HDBridge::CHANNEL_NUMBER; index++) {
-                auto mesh = static_cast<MeshGroupCScan *>(((ModelGroupCScan *)m_OpenGL_CSCAN.m_pModel[0])->m_pMesh[index]);
+                auto mesh = m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->getMesh<MeshGroupCScan *>(index);
                 if (data.mScanOrm.mScanGateInfo[index].width != 0.0f) {
-                    auto l = static_cast<size_t>(
-                        std::round(data.mScanOrm.mScanGateInfo[index].pos * data.mScanOrm.mScanData[index]->pAscan.size()));
-                    auto r =
-                        static_cast<size_t>(std::round((data.mScanOrm.mScanGateInfo[index].pos + data.mScanOrm.mScanGateInfo[index].width) *
-                                                       data.mScanOrm.mScanData[index]->pAscan.size()));
-                    auto      max   = std::max_element(std::begin(data.mScanOrm.mScanData[index]->pAscan) + l,
-                                                       std::begin(data.mScanOrm.mScanData[index]->pAscan) + r);
-                    glm::vec4 color = {};
+                    auto &[pos, width, _] = data.mScanOrm.mScanGateInfo[index];
+                    auto      size        = data.mScanOrm.mScanData[index]->pAscan.size();
+                    auto      begin       = std::begin(data.mScanOrm.mScanData[index]->pAscan);
+                    auto      left        = begin + (size_t)((double)pos * (double)size);
+                    auto      right       = begin + (size_t)((double)(pos + width) * (double)size);
+                    auto      max         = std::max_element(left, right);
+                    glm::vec4 color       = {};
                     if (*max > data.mScanOrm.mScanData[index]->pGateAmp[1]) {
                         color = {1.0f, 0.f, 0.f, 1.0f};
                     } else {
@@ -1524,8 +1601,8 @@ void GroupScanWnd::StopScan(bool changeFlag) {
         KillTimer(CSCAN_UPDATE);
         Sleep(10);
         for (int i = 0; i < HDBridge::CHANNEL_NUMBER + 4; i++) {
-            auto meshAScan = static_cast<MeshAscan *>(((ModelGroupAScan *)m_OpenGL_ASCAN.m_pModel[0])->m_pMesh[i]);
-            auto meshCScan = static_cast<MeshGroupCScan *>(((ModelGroupCScan *)m_OpenGL_CSCAN.m_pModel[0])->m_pMesh[i]);
+            auto meshAScan = m_OpenGL_ASCAN.getModel<ModelGroupAScan *>()->getMesh<MeshAscan *>(i);
+            auto meshCScan = m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->getMesh<MeshGroupCScan *>(i);
             meshCScan->RemoveLine();
             meshCScan->RemoveDot();
         }

@@ -21,14 +21,22 @@ namespace ORM_Model {
         bool         enableProxy            = {};    ///< 代理
         std::wstring httpProxy              = {};    ///< http代理
         bool         enableMeasureThickness = false; ///< 使能测厚功能
+        bool         enableNetwork          = false; ///< 使用网络
+        std::string  ipFPGA                 = {};    ///< FPGA的IP地址
+        std::string  ipPC                   = {};    ///< PC的IP地址
+        uint16_t     portFPGA               = {};    ///< FPGA的端口
+        uint16_t     portPC                 = {};    ///< PC的端口
         static auto  storage(void) {
-            return make_storage(ORM_DB_NAME, make_table("SystemConfig", make_column("ID", &SystemConfig::id, primary_key().autoincrement()),
-                                                         make_column("CHECK_UPDATE", &SystemConfig::checkUpdate),
-                                                         make_column("GROUP_NAME", &SystemConfig::userName),
-                                                         make_column("USER_NAME", &SystemConfig::groupName),
-                                                         make_column("ENABLE_PROXY", &SystemConfig::enableProxy),
-                                                         make_column("HTTP_PROXY", &SystemConfig::httpProxy),
-                                                         make_column("ENABLE_MEASURE_THICKNESS", &SystemConfig::enableMeasureThickness)));
+            return make_storage(
+                ORM_DB_NAME,
+                make_table("SystemConfig", make_column("ID", &SystemConfig::id, primary_key().autoincrement()),
+                            make_column("CHECK_UPDATE", &SystemConfig::checkUpdate), make_column("GROUP_NAME", &SystemConfig::userName),
+                            make_column("USER_NAME", &SystemConfig::groupName), make_column("ENABLE_PROXY", &SystemConfig::enableProxy),
+                            make_column("HTTP_PROXY", &SystemConfig::httpProxy),
+                            make_column("ENABLE_MEASURE_THICKNESS", &SystemConfig::enableMeasureThickness),
+                            make_column("ENABLE_NETWORK", &SystemConfig::enableNetwork), make_column("IP_FPGA", &SystemConfig::ipFPGA),
+                            make_column("IP_PC", &SystemConfig::ipPC), make_column("PORT_FPGA", &SystemConfig::portFPGA),
+                            make_column("PORT_PC", &SystemConfig::portPC)));
         }
     };
 } // namespace ORM_Model

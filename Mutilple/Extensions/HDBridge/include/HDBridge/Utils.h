@@ -100,7 +100,7 @@ public:
     [[deprecated("use `HD_Utils(std::unique_ptr<HDBridge> bridge)` insetead")]] explicit HD_Utils(HDBridge* bridge)
         : HD_Utils(std::unique_ptr<HDBridge>(bridge)) {}
 
-    explicit HD_Utils(std::unique_ptr<HDBridge> bridge)
+    explicit HD_Utils(std::unique_ptr<HDBridge>& bridge)
         : mBridge(std::move(bridge)) {
         if (mBridge) {
             if (!mBridge->open()) {
@@ -141,8 +141,8 @@ public:
 
     std::thread::id start();
 
-    void setBridge(HDBridge* bridge) {
-        mBridge = std::unique_ptr<HDBridge>(bridge);
+    void setBridge(std::unique_ptr<HDBridge>& bridge) {
+        mBridge = std::move(bridge);
     }
 
     template <class T>

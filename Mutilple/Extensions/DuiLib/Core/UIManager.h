@@ -320,6 +320,11 @@ public:
     CControlUI* GetRoot() const;
     CControlUI* FindControl(POINT pt) const;
     CControlUI* FindControl(LPCTSTR pstrName) const;
+    template <class T>
+    T FindControl(LPCTSTR pstrName) const {
+        static_assert(std::is_pointer_v<T> && std::is_base_of_v<CControlUI, std::remove_pointer_t<T>>, "类型必须是CControlUI的派生类指针");
+        return dynamic_cast<T>(FindControl(pstrName));
+    }
     CControlUI* FindSubControlByPoint(CControlUI* pParent, POINT pt) const;
     CControlUI* FindSubControlByName(CControlUI* pParent, LPCTSTR pstrName) const;
     CControlUI* FindSubControlByClass(CControlUI* pParent, LPCTSTR pstrClass, int iIndex = 0);

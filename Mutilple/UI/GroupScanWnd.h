@@ -3,6 +3,7 @@
 #include "DuiWindowBase.h"
 #include "OpenGL.h"
 #include <HDBridge.h>
+#include <HDBridge/NetworkMulti.h>
 #include <HDBridge/TOFDPort.h>
 #include <HDBridge/Utils.h>
 #include <Model/DefectInfo.h>
@@ -143,6 +144,35 @@ private:
     // 参数备份
     ORM_Model::DetectInfo mDetectInfoBak   = {};
     std::wstring          mJobGroupNameBak = {};
+
+    /**
+     * @brief 通过USB重新连接超声板
+     */
+    void ReconnectBoard();
+
+    /**
+     * @brief 通过网络重新连接超声板
+     * @param ip_FPGA
+     * @param port_FPGA
+     * @param ip_PC
+     * @param port_PC
+     */
+    void ReconnectBoard(std::string ip_FPGA, uint16_t port_FPGA, std::string ip_PC, uint16_t port_PC);
+
+    /**
+     * @brief 生成一个HDBridge
+     * @tparam BR HDBridge的派生类
+     * @tparam ...Args 构造函数参数
+     * @param config 配置文件
+     * @param ...args 构造函数参数
+     * @return HDBridge的独占指针
+     */
+    template <class BR, class... Args>
+    static std::unique_ptr<HDBridge> GenerateHDBridge(const HDBridge& config, Args... args) {
+        auto ret = std::unique_ptr<HDBridge>(new BR(args...));
+        *ret     = config;
+        return ret;
+    }
 
     /**
      * @brief C扫线程

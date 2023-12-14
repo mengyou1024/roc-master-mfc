@@ -35,9 +35,9 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
             auto& [res, str] = wnd.GetResult();
             if (res) {
                 try {
-                    TOFDUSBPort port;
+                    HDBridge port = {};
                     port.name  = str;
-                    auto id    = TOFDUSBPort::storage().insert(port);
+                    auto id    = ORM_HDBridge::storage().insert(port);
                     auto pList = static_cast<DuiLib::CListUI*>(m_PaintManager.FindControl(_T("ListParamName")));
                     auto pLine = new CListTextElementUI;
                     pLine->SetTag(id);
@@ -56,7 +56,7 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
                 auto         it   = static_cast<CListTextElementUI*>(pList->GetItemAt(cursel));
                 std::wstring name = it->GetText(1);
                 try {
-                    TOFDUSBPort::storage().remove_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == name));
+                    ORM_HDBridge::storage().remove_all<HDBridge>(where(c(&HDBridge::name) == name));
                 } catch (std::exception& e) {
                     spdlog::error("file:{} line:{}", __FILE__, __LINE__);
                     spdlog::error(GB2312ToUtf8(e.what()));
@@ -69,9 +69,9 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
             auto         it     = static_cast<CListTextElementUI*>(pList->GetItemAt(cursel));
             std::wstring name   = it->GetText(1);
             try {
-                auto data = TOFDUSBPort::storage().get_all<TOFDUSBPort>(where(c(&TOFDUSBPort::name) == name));
+                auto data = ORM_HDBridge::storage().get_all<HDBridge>(where(c(&HDBridge::name) == name));
                 if (data.size() == 1) {
-                    auto bridge    = static_cast<TOFDUSBPort*>(mBridge);
+                    auto bridge    = mBridge;
                     bridge->id     = data[0].id;
                     bridge->name   = data[0].name;
                     bridge->mCache = data[0].mCache;
@@ -88,9 +88,9 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
             auto it     = static_cast<CListTextElementUI*>(pList->GetItemAt(cursel));
             long id     = _wtol(it->GetText(0));
             try {
-                auto port   = TOFDUSBPort::storage().get<TOFDUSBPort>(id);
+                auto port   = ORM_HDBridge::storage().get<HDBridge>(id);
                 port.mCache = mBridge->mCache;
-                TOFDUSBPort::storage().update(port);
+                ORM_HDBridge::storage().update(port);
                 DMessageBox(L"写入成功!");
             } catch (std::exception& e) { spdlog::error(GB2312ToUtf8(e.what())); }
         }
@@ -99,7 +99,7 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
 }
 
 void ParamManagementWnd::LoadParam() {
-    auto list  = TOFDUSBPort::storage().get_all<TOFDUSBPort>();
+    auto list  = ORM_HDBridge::storage().get_all<HDBridge>();
     auto pList = static_cast<DuiLib::CListUI*>(m_PaintManager.FindControl(_T("ListParamName")));
     pList->RemoveAll();
     for (auto& it : list) {
