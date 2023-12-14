@@ -23,7 +23,7 @@ void SettingWnd::InitWindow() {
     auto edit = static_cast<CEditUI*>(m_PaintManager.FindControl(L"EditSystemProxy"));
     edit->SetText(systemConfig.httpProxy.c_str());
     opt = static_cast<COptionUI*>(m_PaintManager.FindControl(L"OptUseNetwork"));
-    opt->Selected(systemConfig.enableNetwork);
+    opt->Selected(systemConfig.enableNetworkTOFD);
     edit = static_cast<CEditUI*>(m_PaintManager.FindControl(L"EditUseNetwork"));
     edit->SetText(WStringFromString(systemConfig.ipFPGA).c_str());
 }
@@ -43,8 +43,8 @@ void SettingWnd::Notify(TNotifyUI& msg) {
             systemConfig.enableMeasureThickness = static_cast<COptionUI*>(msg.pSender)->IsSelected();
             UpdateSystemConfig(systemConfig);
         } else if (msg.pSender->GetName() == L"OptUseNetwork") {
-            auto systemConfig          = GetSystemConfig();
-            systemConfig.enableNetwork = static_cast<COptionUI*>(msg.pSender)->IsSelected();
+            auto systemConfig              = GetSystemConfig();
+            systemConfig.enableNetworkTOFD = static_cast<COptionUI*>(msg.pSender)->IsSelected();
             UpdateSystemConfig(systemConfig);
         }
     } else if (msg.sType == DUI_MSGTYPE_TEXTCHANGED) {

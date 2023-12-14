@@ -27,23 +27,27 @@ namespace spdlog {
 
 using namespace TOFDPort;
 
-bool TOFDUSBPort::open() {
-    return TOFD_PORT_OpenDevice();
+TOFDMultiPort::TOFDMultiPort(int type) noexcept
+    : m_type(type) {
 }
 
-bool TOFDUSBPort::isOpen() {
+bool TOFDMultiPort::open() {
+    return TOFD_PORT_OpenDevice(m_type);
+}
+
+bool TOFDMultiPort::isOpen() {
     return TOFD_PORT_IsOpen();
 }
 
-bool TOFDUSBPort::close() {
+bool TOFDMultiPort::close() {
     return TOFD_PORT_CloseDevice();
 }
 
-bool TOFDUSBPort::isDeviceExist() {
+bool TOFDMultiPort::isDeviceExist() {
     return TOFD_PORT_IsDeviceExist();
 }
 
-bool TOFDUSBPort::setFrequency(int freq) {
+bool TOFDMultiPort::setFrequency(int freq) {
     if (freq < 50) {
         freq = 50;
     }
@@ -54,12 +58,12 @@ bool TOFDUSBPort::setFrequency(int freq) {
     return TOFD_PORT_SetFrequency(freq);
 }
 
-bool TOFDUSBPort::setVoltage(HB_Voltage voltage) {
+bool TOFDMultiPort::setVoltage(HB_Voltage voltage) {
     this->mCache.voltage = voltage;
     return TOFD_PORT_SetVoltage(static_cast<int>(voltage));
 }
 
-bool TOFDUSBPort::setChannelFlag(uint32_t flag) {
+bool TOFDMultiPort::setChannelFlag(uint32_t flag) {
     if (flag == 0) {
         flag = 0xFFF0FFF;
     }
@@ -67,37 +71,37 @@ bool TOFDUSBPort::setChannelFlag(uint32_t flag) {
     return TOFD_PORT_SetChannelFlag(static_cast<int>(flag));
 }
 
-bool TOFDUSBPort::setScanIncrement(int scanIncrement) {
+bool TOFDMultiPort::setScanIncrement(int scanIncrement) {
     this->mCache.scanIncrement = scanIncrement;
     return TOFD_PORT_SetScanIncrement(scanIncrement);
 }
 
-bool TOFDUSBPort::setLED(int ledStatus) {
+bool TOFDMultiPort::setLED(int ledStatus) {
     this->mCache.ledStatus = ledStatus;
     return TOFD_PORT_SetLED(ledStatus);
 }
 
-bool TOFDUSBPort::setDamperFlag(int damperFlag) {
+bool TOFDMultiPort::setDamperFlag(int damperFlag) {
     this->mCache.damperFlag = damperFlag;
     return TOFD_PORT_SetDamperFlag(damperFlag);
 }
 
-bool TOFDUSBPort::setEncoderPulse(int encoderPulse) {
+bool TOFDMultiPort::setEncoderPulse(int encoderPulse) {
     this->mCache.encoderPulse = encoderPulse;
     return TOFD_PORT_SetEncoderPulse(encoderPulse);
 }
 
-bool TOFDUSBPort::setSoundVelocity(int channel, float velocity) {
+bool TOFDMultiPort::setSoundVelocity(int channel, float velocity) {
     mCache.soundVelocity[channel % CHANNEL_NUMBER] = velocity;
     return true;
 }
 
-bool TOFDUSBPort::setZeroBias(int channel, float zero_us) {
+bool TOFDMultiPort::setZeroBias(int channel, float zero_us) {
     mCache.zeroBias[channel % CHANNEL_NUMBER] = zero_us;
     return TOFD_PORT_SetDelay(channel % CHANNEL_NUMBER, zero_us + mCache.delay[channel % CHANNEL_NUMBER]);
 }
 
-bool TOFDUSBPort::setPulseWidth(int channel, float pulseWidth) {
+bool TOFDMultiPort::setPulseWidth(int channel, float pulseWidth) {
     if (pulseWidth < 30) {
         pulseWidth = 30;
     }
@@ -105,12 +109,12 @@ bool TOFDUSBPort::setPulseWidth(int channel, float pulseWidth) {
     return TOFD_PORT_SetPulseWidth(channel % CHANNEL_NUMBER, pulseWidth);
 }
 
-bool TOFDUSBPort::setDelay(int channel, float delay_us) {
+bool TOFDMultiPort::setDelay(int channel, float delay_us) {
     this->mCache.delay[channel % CHANNEL_NUMBER] = delay_us;
     return TOFD_PORT_SetDelay(channel % CHANNEL_NUMBER, delay_us + mCache.zeroBias[channel % CHANNEL_NUMBER]);
 }
 
-bool TOFDUSBPort::setSampleFactor(int channel, int sampleFactor) {
+bool TOFDMultiPort::setSampleFactor(int channel, int sampleFactor) {
     if (sampleFactor < 1) {
         sampleFactor = 1;
     } else if (sampleFactor > 255) {
@@ -120,32 +124,32 @@ bool TOFDUSBPort::setSampleFactor(int channel, int sampleFactor) {
     return TOFD_PORT_SetSampleFactor(channel % CHANNEL_NUMBER, sampleFactor);
 }
 
-bool TOFDUSBPort::setSampleDepth(int channel, float sampleDepth) {
+bool TOFDMultiPort::setSampleDepth(int channel, float sampleDepth) {
     this->mCache.sampleDepth[channel % CHANNEL_NUMBER] = sampleDepth;
     return TOFD_PORT_SetSampleDepth(channel % CHANNEL_NUMBER, sampleDepth + mCache.zeroBias[channel % CHANNEL_NUMBER]);
 }
 
-bool TOFDUSBPort::setGain(int channel, float gain) {
+bool TOFDMultiPort::setGain(int channel, float gain) {
     this->mCache.gain[channel % CHANNEL_NUMBER] = gain;
     return TOFD_PORT_SetGain(channel % CHANNEL_NUMBER, gain);
 }
 
-bool TOFDUSBPort::setFilter(int channel, HB_Filter filter) {
+bool TOFDMultiPort::setFilter(int channel, HB_Filter filter) {
     this->mCache.filter[channel % CHANNEL_NUMBER] = filter;
     return TOFD_PORT_SetFilter(channel % CHANNEL_NUMBER, static_cast<int>(filter));
 }
 
-bool TOFDUSBPort::setDemodu(int channel, HB_Demodu demodu) {
+bool TOFDMultiPort::setDemodu(int channel, HB_Demodu demodu) {
     this->mCache.demodu[channel % CHANNEL_NUMBER] = demodu;
     return TOFD_PORT_SetDemodu(channel % CHANNEL_NUMBER, static_cast<int>(demodu));
 }
 
-bool TOFDUSBPort::setPhaseReverse(int channel, int reverse) {
+bool TOFDMultiPort::setPhaseReverse(int channel, int reverse) {
     this->mCache.phaseReverse[channel % CHANNEL_NUMBER] = reverse;
     return TOFD_PORT_SetPhaseReverse(channel % CHANNEL_NUMBER, reverse);
 }
 
-bool TOFDUSBPort::setGateInfo(int channel, const HB_GateInfo &info) {
+bool TOFDMultiPort::setGateInfo(int channel, const HB_GateInfo &info) {
     if (info.gate == 0) {
         this->mCache.gateInfo[channel % CHANNEL_NUMBER] = info;
     } else {
@@ -154,20 +158,20 @@ bool TOFDUSBPort::setGateInfo(int channel, const HB_GateInfo &info) {
     return TOFD_PORT_SetGateInfo(channel % CHANNEL_NUMBER, info.gate, info.active, info.alarmType, info.pos, info.width, info.height);
 }
 
-bool TOFDUSBPort::setGate2Type(int channel, HB_Gate2Type type) {
+bool TOFDMultiPort::setGate2Type(int channel, HB_Gate2Type type) {
     this->mCache.gate2Type[channel % CHANNEL_NUMBER] = type;
     return TOFD_PORT_SetGate2Type(channel % CHANNEL_NUMBER, static_cast<int>(type));
 }
 
-bool TOFDUSBPort::resetCoder([[maybe_unused]] int coder) {
+bool TOFDMultiPort::resetCoder([[maybe_unused]] int coder) {
     return TOFD_PORT_ResetCoder_Immediate();
 }
 
-bool TOFDUSBPort::flushSetting() {
+bool TOFDMultiPort::flushSetting() {
     return TOFD_PORT_FlushSetting();
 }
 
-unique_ptr<HDBridge::NM_DATA> TOFDUSBPort::readDatas() {
+unique_ptr<HDBridge::NM_DATA> TOFDMultiPort::readDatas() {
     auto data = readRawDatas();
     if (!data) {
         return nullptr;
@@ -188,18 +192,18 @@ unique_ptr<HDBridge::NM_DATA> TOFDUSBPort::readDatas() {
     return ret;
 }
 
-TOFDPort::NM_DATA *TOFDUSBPort::readRawDatas() {
+TOFDPort::NM_DATA *TOFDMultiPort::readRawDatas() {
     return TOFD_PORT_ReadDatasFormat();
 }
 
-void TOFDUSBPort::freeRawDatas(TOFDPort::NM_DATA *data) {
+void TOFDMultiPort::freeRawDatas(TOFDPort::NM_DATA *data) {
     TOFD_PORT_Free_NM_DATA(data);
 }
 
-bool TOFDUSBPort::getCoderValue(int &coder0, int &coder1) {
+bool TOFDMultiPort::getCoderValue(int &coder0, int &coder1) {
     return TOFD_PORT_GetCoderValue(&coder0, &coder1);
 }
 
-bool TOFDUSBPort::getCoderValueZ(int &coderZ0, int &coderZ1, int &coderF0, int &coderF1, int &coderC0, int &coderC1) {
+bool TOFDMultiPort::getCoderValueZ(int &coderZ0, int &coderZ1, int &coderF0, int &coderF1, int &coderC0, int &coderC1) {
     return TOFD_PORT_GetCoderValueZ(&coderZ0, &coderZ1, &coderF0, &coderF1, &coderC0, &coderC1);
 }

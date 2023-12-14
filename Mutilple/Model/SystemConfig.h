@@ -21,7 +21,8 @@ namespace ORM_Model {
         bool         enableProxy            = {};    ///< 代理
         std::wstring httpProxy              = {};    ///< http代理
         bool         enableMeasureThickness = false; ///< 使能测厚功能
-        bool         enableNetwork          = false; ///< 使用网络
+        bool         enableNetworkMulti     = false; ///< 使用多通道网络(原10通道)
+        bool         enableNetworkTOFD      = false; ///< 使用TOFD版网络
         std::string  ipFPGA                 = {};    ///< FPGA的IP地址
         std::string  ipPC                   = {};    ///< PC的IP地址
         uint16_t     portFPGA               = {};    ///< FPGA的端口
@@ -34,9 +35,10 @@ namespace ORM_Model {
                             make_column("USER_NAME", &SystemConfig::groupName), make_column("ENABLE_PROXY", &SystemConfig::enableProxy),
                             make_column("HTTP_PROXY", &SystemConfig::httpProxy),
                             make_column("ENABLE_MEASURE_THICKNESS", &SystemConfig::enableMeasureThickness),
-                            make_column("ENABLE_NETWORK", &SystemConfig::enableNetwork), make_column("IP_FPGA", &SystemConfig::ipFPGA),
-                            make_column("IP_PC", &SystemConfig::ipPC), make_column("PORT_FPGA", &SystemConfig::portFPGA),
-                            make_column("PORT_PC", &SystemConfig::portPC)));
+                            make_column("ENABLE_NETWORK_MULTI", &SystemConfig::enableNetworkMulti),
+                            make_column("ENABLE_NETWORK_TOFD", &SystemConfig::enableNetworkTOFD),
+                            make_column("IP_FPGA", &SystemConfig::ipFPGA), make_column("IP_PC", &SystemConfig::ipPC),
+                            make_column("PORT_FPGA", &SystemConfig::portFPGA), make_column("PORT_PC", &SystemConfig::portPC)));
         }
     };
 } // namespace ORM_Model

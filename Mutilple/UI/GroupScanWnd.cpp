@@ -63,19 +63,15 @@ GroupScanWnd::GroupScanWnd() {
         auto config         = ORM_HDBridge::storage().get_all<HDBridge>(where(c(&HDBridge::name) == std::wstring(SCAN_CONFIG_LAST)));
         if (config.size() == 1) {
             if (config[0].isValid) {
-                auto systemConfig = GetSystemConfig();
-                unique_ptr<HDBridge> bridge = nullptr;
-                if (systemConfig.enableNetwork) {
-                    auto &ipFPGA   = systemConfig.ipFPGA;
-                    auto  portFPGA = systemConfig.portFPGA;
-                    auto &ipPC     = systemConfig.ipPC;
-                    auto  portPC   = systemConfig.portPC;
-                    bridge         = GenerateHDBridge<NetworkMulti>(config[0], ipFPGA, portFPGA, ipPC, portPC);
+                auto                 systemConfig = GetSystemConfig();
+                unique_ptr<HDBridge> bridge       = nullptr;
+                if (systemConfig.enableNetworkTOFD) {
+                    bridge = GenerateHDBridge<TOFDMultiPort>(config[0], 2);
                 } else {
-                    bridge = GenerateHDBridge<TOFDUSBPort>(config[0]);
+                    bridge = GenerateHDBridge<TOFDMultiPort>(config[0], 0);
                 }
-                
-                mUtils      = std::make_unique<HD_Utils>(bridge);
+
+                mUtils = std::make_unique<HD_Utils>(bridge);
                 mUtils->getBridge()->syncCache2Board();
                 config[0].isValid = false;
                 ORM_HDBridge::storage().update(config[0]);
@@ -94,16 +90,12 @@ GroupScanWnd::GroupScanWnd() {
         spdlog::warn("将使用默认配置初始化.");
         auto                 systemConfig = GetSystemConfig();
         unique_ptr<HDBridge> bridge       = nullptr;
-        if (systemConfig.enableNetwork) {
-            auto &ipFPGA   = systemConfig.ipFPGA;
-            auto  portFPGA = systemConfig.portFPGA;
-            auto &ipPC     = systemConfig.ipPC;
-            auto  portPC   = systemConfig.portPC;
-            bridge         = GenerateHDBridge<NetworkMulti>({}, ipFPGA, portFPGA, ipPC, portPC);
+        if (systemConfig.enableNetworkTOFD) {
+            bridge = GenerateHDBridge<TOFDMultiPort>({}, 2);
         } else {
-            bridge = GenerateHDBridge<TOFDUSBPort>({});
+            bridge = GenerateHDBridge<TOFDMultiPort>({}, 0);
         }
-        mUtils      = std::make_unique<HD_Utils>(bridge);
+        mUtils = std::make_unique<HD_Utils>(bridge);
         mUtils->getBridge()->defaultInit();
     } catch (std::exception &e) { spdlog::error(GB2312ToUtf8(e.what())); }
 }
@@ -486,7 +478,7 @@ void GroupScanWnd::UpdateAScanCallback(const HDBridge::NM_DATA &data, const HD_U
 
     // 测厚的波门
     if (data.iChannel < 4) {
-        auto  mesh   = m_OpenGL_ASCAN.getModel<ModelGroupAScan *>()->getMesh<MeshAscan *>((size_t)data.iChannel + HDBridge::CHANNEL_NUMBER);
+        auto  mesh   = m_OpenGL_ASCAN.getMesh<MeshAscan *>((size_t)data.iChannel + HDBridge::CHANNEL_NUMBER);
         auto  bridge = mUtils->getBridge();
         auto &info   = bridge->mCache.scanGateInfo[(size_t)data.iChannel + HDBridge::CHANNEL_NUMBER];
         mesh->UpdateGate(2, 1, info.pos, info.width, info.height);
@@ -526,7 +518,7 @@ void GroupScanWnd::AmpTraceCallback(const HDBridge::NM_DATA &data, const HD_Util
                     newPos = 100.f - info.width;
                 }
                 info.pos  = newPos;
-                auto mesh = m_OpenGL_ASCAN.getModel<ModelGroupAScan *>()->getMesh<MeshAscan *>(data.iChannel);
+                auto mesh = m_OpenGL_ASCAN.getMesh<MeshAscan *>(data.iChannel);
                 mesh->UpdateGate(2, 1, info.pos, info.width, info.height);
             }
         }
@@ -544,7 +536,7 @@ void GroupScanWnd::AmpTraceCallback(const HDBridge::NM_DATA &data, const HD_Util
                     }
                     info.pos      = newPos;
                     auto iChannel = (size_t)data.iChannel + HDBridge::CHANNEL_NUMBER;
-                    auto mesh     = m_OpenGL_ASCAN.getModel<ModelGroupAScan *>()->getMesh<MeshAscan *>(iChannel);
+                    auto mesh     = m_OpenGL_ASCAN.getMesh<MeshAscan *>(iChannel);
                     mesh->UpdateGate(2, 1, info.pos, info.width, info.height);
                 }
             }
@@ -606,41 +598,26 @@ void GroupScanWnd::UpdateCScanOnTimer() {
 void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
     if (name == _T("Setting")) {
         auto       config                 = GetSystemConfig();
-        auto       enableNetwork          = config.enableNetwork;
-        auto      &ip_FPGA                = config.ipFPGA;
+        auto       enableNetwork          = config.enableNetworkTOFD;
         auto       enableMeasureThickness = config.enableMeasureThickness;
         SettingWnd wnd;
         wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
         wnd.CenterWindow();
         wnd.ShowModal();
-        auto  newConfig                 = GetSystemConfig();
-        auto  newEnableNetwork          = newConfig.enableNetwork;
-        auto &newIP_FPGA                = newConfig.ipFPGA;
-        auto  newEnableMeasureThickness = newConfig.enableMeasureThickness;
+        auto newConfig                 = GetSystemConfig();
+        auto newEnableNetwork          = newConfig.enableNetworkTOFD;
+        auto newEnableMeasureThickness = newConfig.enableMeasureThickness;
         if (mWidgetMode == WidgetMode::MODE_SCAN && newEnableMeasureThickness != enableMeasureThickness) {
             SelectMeasureThickness(GetSystemConfig().enableMeasureThickness);
         }
         if (enableNetwork != newEnableNetwork) {
             if (newEnableNetwork) {
-                if (newIP_FPGA == ip_FPGA) {
-                    mUtils->pushCallback();
-                    ReconnectBoard(newConfig.ipFPGA, newConfig.portFPGA, newConfig.ipPC, newConfig.portPC);
-                    mUtils->popCallback();
-                } else {
-                    auto index = mUtils->getBridge<NetworkMulti *>()->getIndex();
-                    if (index > 0) {
-                        auto ipInfo = UNION_PORT_GetIP(index);
-                        auto ip     = inet_addr(newIP_FPGA.c_str());
-                        if (ip != INADDR_NONE) {
-                            *((uint32_t *)ipInfo->pIpFPGA) = ip;
-                            UNION_PORT_SetIP(index, *ipInfo);
-                        }
-                    }
-                }
-
+                mUtils->pushCallback();
+                ReconnectBoard(2);
+                mUtils->popCallback();
             } else {
                 mUtils->pushCallback();
-                ReconnectBoard();
+                ReconnectBoard(0);
                 mUtils->popCallback();
             }
         }
@@ -688,7 +665,7 @@ void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
             btn->SetBkColor(0xFF339933);
         } else {
             mUtils->removeReadCallback("AmpMemory");
-            for (auto &[index, mesh] : m_OpenGL_ASCAN.getModel<ModelGroupAScan *>()->getMesh<MeshAscan *>()) {
+            for (auto &[index, mesh] : m_OpenGL_ASCAN.getMesh<MeshAscan *>()) {
                 for (int i = 0; i < 3; i++) {
                     mesh->hookAmpMemoryData(i, nullptr);
                     mesh->ClearAmpMemoryData(i);
@@ -986,8 +963,8 @@ void GroupScanWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
 
         // 扫查通道
         for (int i = 0; i < HDBridge::CHANNEL_NUMBER; i++) {
-            auto mesh  = m_OpenGL_ASCAN.getModel<ModelGroupAScan *>()->getMesh<MeshAscan *>(i);
-            auto cMesh = m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->getMesh<MeshGroupCScan *>(i);
+            auto mesh  = m_OpenGL_ASCAN.getMesh<MeshAscan *>(i);
+            auto cMesh = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>(i);
             // 绘制当前点击的线条
             cMesh->AppendLine(temp.x);
             // 绘制A扫图
@@ -1002,8 +979,8 @@ void GroupScanWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
         }
         // 测厚通道
         for (size_t i = 0; i < 4; i++) {
-            auto mesh  = m_OpenGL_ASCAN.getModel<ModelGroupAScan *>()->getMesh<MeshAscan *>(i);
-            auto cMesh = m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->getMesh<MeshGroupCScan *>(i);
+            auto mesh  = m_OpenGL_ASCAN.getMesh<MeshAscan *>(i);
+            auto cMesh = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>(i);
             // 绘制当前点击的线条
             cMesh->AppendLine(temp.x);
             // 绘制A扫图
@@ -1086,9 +1063,9 @@ void GroupScanWnd::EnterReview(std::string path) {
     mReviewPathEntry = path;
 }
 
-void GroupScanWnd::ReconnectBoard() {
+void GroupScanWnd::ReconnectBoard(int type) {
     auto bridge    = mUtils->getBridge();
-    auto newBridge = GenerateHDBridge<TOFDUSBPort>(*bridge);
+    auto newBridge = GenerateHDBridge<TOFDMultiPort>(*bridge, type);
     bridge->close();
     mUtils->setBridge(newBridge);
     bridge = mUtils->getBridge();
@@ -1118,7 +1095,7 @@ void GroupScanWnd::ThreadCScan(void) {
         std::array<std::shared_ptr<HDBridge::NM_DATA>, HDBridge::CHANNEL_NUMBER> scanData = mUtils->mScanOrm.mScanData;
         for (auto &it : scanData) {
             if (it != nullptr && it->pAscan.size() > 0) {
-                auto mesh = m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->getMesh<MeshGroupCScan *>(it->iChannel);
+                auto mesh = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>(it->iChannel);
                 if (mUtils->getBridge()->mCache.scanGateInfo[it->iChannel].width != 0.0f) {
                     auto     &sacnGateInfo = mUtils->getBridge()->mCache.scanGateInfo[it->iChannel];
                     auto      start        = (double)sacnGateInfo.pos;
@@ -1163,8 +1140,8 @@ void GroupScanWnd::ThreadCScan(void) {
                 auto  thickness    = percent * allDist;
                 // DONE: 测厚结果处理
                 mUtils->mScanOrm.mThickness[i] = (float)thickness;
-                auto   mesh = m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->getMesh<MeshGroupCScan *>((size_t)HDBridge::CHANNEL_NUMBER + i);
-                double baseTickness = _wtof(mDetectInfo.thickness.c_str());
+                auto   mesh                    = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>((size_t)HDBridge::CHANNEL_NUMBER + i);
+                double baseTickness            = _wtof(mDetectInfo.thickness.c_str());
                 if (baseTickness != 0.0f && baseTickness != -HUGE_VAL && baseTickness != HUGE_VAL) {
                     constexpr uint8_t base           = 0xFF >> 1;
                     auto              relative_error = (thickness - baseTickness) / baseTickness;
@@ -1381,13 +1358,13 @@ bool GroupScanWnd::EnterReviewMode(std::string name) {
         spdlog::info("load:{}, frame:{}", name, mReviewData.size());
         // 删除所有通道的C扫数据
         for (int index = 0; index < HDBridge::CHANNEL_NUMBER + 4; index++) {
-            auto mesh = m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->getMesh<MeshGroupCScan *>(index);
+            auto mesh = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>(index);
             mesh->RemoveDot();
             mesh->RemoveLine();
         }
         for (const auto &data : mReviewData) {
             for (int index = 0; index < HDBridge::CHANNEL_NUMBER; index++) {
-                auto mesh = m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->getMesh<MeshGroupCScan *>(index);
+                auto mesh = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>(index);
                 if (data.mScanOrm.mScanGateInfo[index].width != 0.0f) {
                     auto &[pos, width, _] = data.mScanOrm.mScanGateInfo[index];
                     auto      size        = data.mScanOrm.mScanData[index]->pAscan.size();
@@ -1407,7 +1384,7 @@ bool GroupScanWnd::EnterReviewMode(std::string name) {
                 }
             }
             for (size_t index = 0; index < 4ull; index++) {
-                auto   mesh = m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->getMesh<MeshGroupCScan *>(HDBridge::CHANNEL_NUMBER + index);
+                auto   mesh         = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>(HDBridge::CHANNEL_NUMBER + index);
                 auto   thickness    = data.mScanOrm.mThickness[index];
                 double baseTickness = _wtof(mDetectInfo.thickness.c_str());
                 if (baseTickness != 0.0f && baseTickness != -HUGE_VAL && baseTickness != HUGE_VAL) {
@@ -1473,16 +1450,16 @@ void GroupScanWnd::ExitReviewMode() {
     layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutReviewExt")));
     layout->SetVisible(false);
     for (int i = 0; i < HDBridge::CHANNEL_NUMBER; i++) {
-        auto mesh  = m_OpenGL_ASCAN.getModel<ModelGroupAScan *>()->getMesh<MeshAscan *>(i);
-        auto cMesh = m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->getMesh<MeshGroupCScan *>(i);
+        auto mesh  = m_OpenGL_ASCAN.getMesh<MeshAscan *>(i);
+        auto cMesh = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>(i);
         cMesh->RemoveLine();
         cMesh->RemoveDot();
         const auto &[pos, width, height] = mUtils->getBridge()->mCache.scanGateInfo[i];
         mesh->UpdateGate(2, 1, pos, width, height);
     }
     for (int i = 0; i < 4; i++) {
-        auto mesh  = m_OpenGL_ASCAN.getModel<ModelGroupAScan *>()->getMesh<MeshAscan *>((size_t)HDBridge::CHANNEL_NUMBER + i);
-        auto cMesh = m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->getMesh<MeshGroupCScan *>((size_t)HDBridge::CHANNEL_NUMBER + i);
+        auto mesh  = m_OpenGL_ASCAN.getMesh<MeshAscan *>((size_t)HDBridge::CHANNEL_NUMBER + i);
+        auto cMesh = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>((size_t)HDBridge::CHANNEL_NUMBER + i);
         cMesh->RemoveLine();
         cMesh->RemoveDot();
         const auto &[pos, width, height] = mUtils->getBridge()->mCache.scanGateInfo[(size_t)HDBridge::CHANNEL_NUMBER + i];
@@ -1601,8 +1578,8 @@ void GroupScanWnd::StopScan(bool changeFlag) {
         KillTimer(CSCAN_UPDATE);
         Sleep(10);
         for (int i = 0; i < HDBridge::CHANNEL_NUMBER + 4; i++) {
-            auto meshAScan = m_OpenGL_ASCAN.getModel<ModelGroupAScan *>()->getMesh<MeshAscan *>(i);
-            auto meshCScan = m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->getMesh<MeshGroupCScan *>(i);
+            auto meshAScan = m_OpenGL_ASCAN.getMesh<MeshAscan *>(i);
+            auto meshCScan = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>(i);
             meshCScan->RemoveLine();
             meshCScan->RemoveDot();
         }

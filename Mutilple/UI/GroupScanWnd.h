@@ -146,9 +146,9 @@ private:
     std::wstring          mJobGroupNameBak = {};
 
     /**
-     * @brief 通过USB重新连接超声板
+     * @brief 通过重新连接TOFD超声板
      */
-    void ReconnectBoard();
+    void ReconnectBoard(int type);
 
     /**
      * @brief 通过网络重新连接超声板
@@ -169,6 +169,7 @@ private:
      */
     template <class BR, class... Args>
     static std::unique_ptr<HDBridge> GenerateHDBridge(const HDBridge& config, Args... args) {
+        static_assert(std::is_base_of_v<HDBridge, BR> && !std::is_same_v<BR, HDBridge>);
         auto ret = std::unique_ptr<HDBridge>(new BR(args...));
         *ret     = config;
         return ret;

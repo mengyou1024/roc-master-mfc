@@ -5,11 +5,18 @@
 #include <cstdint>
 #include <string>
 
-class TOFDUSBPort : public HDBridge {
-public:
-    TOFDUSBPort() = default;
+class TOFDMultiPort : public HDBridge {
+private:
+    int m_type = 0;
 
-    virtual ~TOFDUSBPort() = default;
+public:
+    /**
+     * @brief 
+     * @param type 0-1 USB 2 网口
+    */
+    explicit TOFDMultiPort(int type) noexcept;
+
+    virtual ~TOFDMultiPort() = default;
 
     virtual bool open() override;
     virtual bool isOpen() override;

@@ -2,8 +2,9 @@
 
 // 字体库
 #include "FreeFont.h"
-#include <type_traits>
+#include <Mesh.h>
 #include <assert.h>
+#include <type_traits>
 
 const int FRONT_MAX = 3;
 
@@ -90,6 +91,19 @@ public:
         return m_pModel[0];
     }
 
+    template <class T>
+    T getMesh(size_t index) {
+        static_assert(std::is_pointer_v<T>, "类型必须是指针");
+        static_assert(std::is_base_of_v<Mesh, std::remove_pointer_t<T>>, "类型必须是Mesh或其子类");
+        return getModel()->getMesh<T>(index);
+    }
+
+    template <class T>
+    std::map<size_t, T> getMesh() {
+        static_assert(std::is_pointer_v<T>, "类型必须是指针");
+        static_assert(std::is_base_of_v<Mesh, std::remove_pointer_t<T>>, "类型必须是Mesh或其子类");
+        return getModel()->getMesh<T>();
+    }
 
 public:
     HWND  m_hWnd{};
