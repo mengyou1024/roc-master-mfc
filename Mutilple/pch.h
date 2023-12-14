@@ -10,30 +10,40 @@
 // add headers that you want to pre-compile here
 #include "framework.h"
 
+#include <algorithm>
+#include <array>
 #include <bitset>
+#include <chrono>
 #include <cmath>
+#include <cstdint>
+#include <filesystem>
 #include <functional>
+#include <future>
+#include <iomanip>
+#include <iostream>
+#include <map>
 #include <memory>
+#include <regex>
+#include <sstream>
 #include <stack>
 #include <tuple>
 #include <vector>
-#include <map>
 
 using std::bitset;
 using std::invoke;
 using std::make_shared;
 using std::make_unique;
+using std::map;
 using std::max;
 using std::min;
 using std::pair;
 using std::shared_ptr;
 using std::stack;
 using std::string;
-using std::wstring;
-using std::map;
 using std::tuple;
 using std::unique_ptr;
 using std::vector;
+using std::wstring;
 
 // OpenEW
 #define GLEW_STATIC
@@ -63,7 +73,6 @@ using ::CSize;
 #include <spdlog/spdlog.h>
 #include <sqlite_orm.h>
 
-
 #ifndef DB_UNNAMED_GROUP
     #define DB_UNNAMED_GROUP "未命名"
 #endif
@@ -79,12 +88,12 @@ using ::CSize;
 // 是否检查程序更新
 #ifndef APP_CHECK_UPDATE
     #define APP_CHECK_UPDATE 0
-#endif 
+#endif
 
 // 扫查数据保存的后缀
 #ifndef APP_SCAN_DATA_SUFFIX
     #define APP_SCAN_DATA_SUFFIX ".usddb"
-#endif 
+#endif
 
 #include "MainProcess.h"
 extern MainProcess g_MainProcess;

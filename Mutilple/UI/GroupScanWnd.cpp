@@ -68,7 +68,7 @@ GroupScanWnd::GroupScanWnd() {
                 if (systemConfig.enableNetworkTOFD) {
                     bridge = GenerateHDBridge<TOFDMultiPort>(config[0], 2);
                 } else {
-                    bridge = GenerateHDBridge<TOFDMultiPort>(config[0], 0);
+                    bridge = GenerateHDBridge<TOFDMultiPort>(config[0], 1);
                 }
 
                 mUtils = std::make_unique<HD_Utils>(bridge);
@@ -93,7 +93,7 @@ GroupScanWnd::GroupScanWnd() {
         if (systemConfig.enableNetworkTOFD) {
             bridge = GenerateHDBridge<TOFDMultiPort>({}, 2);
         } else {
-            bridge = GenerateHDBridge<TOFDMultiPort>({}, 0);
+            bridge = GenerateHDBridge<TOFDMultiPort>({}, 1);
         }
         mUtils = std::make_unique<HD_Utils>(bridge);
         mUtils->getBridge()->defaultInit();
@@ -495,9 +495,9 @@ void GroupScanWnd::AmpTraceCallback(const HDBridge::NM_DATA &data, const HD_Util
                 auto [pos, max, res] = HDBridge::computeGateInfo(data.pAscan, {info.pos, info.width, info.height});
                 if (res) {
                     float newPos = pos - info.width / 2.0f;
-                    if (pos < EPS) {
+                    if (newPos < EPS) {
                         newPos = 0.0f;
-                    } else if (pos + info.width > 100.0f) {
+                    } else if (newPos + info.width > 100.0f) {
                         newPos = 100.f - info.width;
                     }
                     info.pos = newPos;
@@ -505,16 +505,16 @@ void GroupScanWnd::AmpTraceCallback(const HDBridge::NM_DATA &data, const HD_Util
                 }
             }
         }
-        bridge->flushSetting();
+        //AddTaskToQueue([bridge]() { bridge->flushSetting(); }, "flushSetting", true);
         // 调整扫查波门的位置
         auto &info = bridge->mCache.scanGateInfo[data.iChannel];
         if (info.width > EPS && std::abs(info.width - 100.0f) > EPS && info.width > EPS) {
             auto [pos, max, res] = HDBridge::computeGateInfo(data.pAscan, {info.pos, info.width, info.height});
             if (res) {
                 float newPos = pos - info.width / 2.0f;
-                if (pos < EPS) {
+                if (newPos < EPS) {
                     newPos = 0.0f;
-                } else if (pos + info.width > 100.0f) {
+                } else if (newPos + info.width > 100.0f) {
                     newPos = 100.f - info.width;
                 }
                 info.pos  = newPos;
@@ -529,9 +529,9 @@ void GroupScanWnd::AmpTraceCallback(const HDBridge::NM_DATA &data, const HD_Util
                 auto [pos, max, res] = HDBridge::computeGateInfo(data.pAscan, {info.pos, info.width, info.height});
                 if (res) {
                     float newPos = pos - info.width / 2.0f;
-                    if (pos < EPS) {
+                    if (newPos < EPS) {
                         newPos = 0.0f;
-                    } else if (pos + info.width > 100.0f) {
+                    } else if (newPos + info.width > 100.0f) {
                         newPos = 100.f - info.width;
                     }
                     info.pos      = newPos;
@@ -617,7 +617,7 @@ void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
                 mUtils->popCallback();
             } else {
                 mUtils->pushCallback();
-                ReconnectBoard(0);
+                ReconnectBoard(1);
                 mUtils->popCallback();
             }
         }
@@ -979,8 +979,8 @@ void GroupScanWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
         }
         // 测厚通道
         for (size_t i = 0; i < 4; i++) {
-            auto mesh  = m_OpenGL_ASCAN.getMesh<MeshAscan *>(i);
-            auto cMesh = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>(i);
+            auto mesh  = m_OpenGL_ASCAN.getMesh<MeshAscan *>(HDBridge::CHANNEL_NUMBER + i);
+            auto cMesh = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>(HDBridge::CHANNEL_NUMBER + i);
             // 绘制当前点击的线条
             cMesh->AppendLine(temp.x);
             // 绘制A扫图
@@ -1143,22 +1143,24 @@ void GroupScanWnd::ThreadCScan(void) {
                 auto   mesh                    = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>((size_t)HDBridge::CHANNEL_NUMBER + i);
                 double baseTickness            = _wtof(mDetectInfo.thickness.c_str());
                 if (baseTickness != 0.0f && baseTickness != -HUGE_VAL && baseTickness != HUGE_VAL) {
-                    constexpr uint8_t base           = 0xFF >> 1;
-                    auto              relative_error = (thickness - baseTickness) / baseTickness;
-                    if (relative_error > 1.0) {
-                        relative_error = 1.0;
-                    } else if (relative_error < -1.0) {
-                        relative_error = -1.0;
+                    constexpr uint8_t base                     = 0xFF >> 1;
+                    constexpr double  max_relative_error       = 1.0;
+                    constexpr double  threshold_relative_error = 0.1;
+                    auto              relative_error           = (thickness - baseTickness) / baseTickness;
+                    if (relative_error > max_relative_error) {
+                        relative_error = max_relative_error;
+                    } else if (relative_error < -max_relative_error) {
+                        relative_error = -max_relative_error;
                     }
                     glm::vec4 color = {};
-                    if (relative_error > 0.01) {
+                    if (relative_error > threshold_relative_error) {
                         color = {.0f, 0.f, 1.f, 1.0f};
-                    } else if (relative_error < -0.01) {
+                    } else if (relative_error < -threshold_relative_error) {
                         color = {1.0f, 0.f, 0.f, 1.0f};
                     } else {
                         color = {.0f, 1.f, 0.f, 1.0f};
                     }
-                    uint8_t value = (((uint8_t)std::round((double)base * std::abs(relative_error))) & base);
+                    uint8_t value = (((uint8_t)std::round((double)base * std::abs(relative_error / max_relative_error))) & base);
                     if (relative_error >= 0) {
                         value += base;
                     } else {

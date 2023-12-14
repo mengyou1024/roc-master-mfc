@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <spdlog/spdlog.h>
 
 using std::make_shared;
 using std::make_unique;
@@ -382,10 +383,10 @@ public:
         try {
             double start = (double)info.pos;
             if (std::abs(start - 1.0) < 0.00001) {
-                throw "info.pos large than 1.0";
+                throw std::exception("info.pos large than 1.0");
             }
             if (info.pos < 0.0) {
-                throw "info.pos small than 1.0";
+                throw std::exception("info.pos small than 0.0");
             }
             double end = (double)(info.pos + info.width);
             if (end > 1.0) {
@@ -394,8 +395,14 @@ public:
             auto left  = data.begin() + static_cast<int64_t>((double)data.size() * (double)info.pos);
             auto right = data.begin() + static_cast<int64_t>((double)data.size() * (double)(info.pos + info.width));
             auto max   = std::max_element(left, right);
-            return std::make_tuple((float)((double)std::distance(data.begin(), max) / (double)data.size()), *max, true);
-        } catch (std::exception &) {
+
+            auto pos = (float)((double)std::distance(data.begin(), max) / (double)data.size());
+            if (pos < 0.0f) {
+                throw std::exception("compulate info.pos small than 0.0");
+            }
+            return std::make_tuple(pos, *max, true);
+        } catch (std::exception &e) {
+            spdlog::warn(e.what());
             return std::make_tuple(0.0f, 0, false);
         }
     }

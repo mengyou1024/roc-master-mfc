@@ -112,6 +112,9 @@ bool NetworkMulti::setPhaseReverse(int channel, int reverse) {
 }
 
 bool NetworkMulti::setGateInfo(int channel, const HB_GateInfo &info) {
+    if (info.pos < 0.0f || info.width < 0.0f) {
+        throw std::runtime_error("波门位置或宽度小于0");
+    }
     if (info.gate == 0) {
         this->mCache.gateInfo[channel % CHANNEL_NUMBER] = info;
     } else {

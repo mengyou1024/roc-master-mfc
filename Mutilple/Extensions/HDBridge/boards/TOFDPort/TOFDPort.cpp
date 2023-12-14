@@ -150,6 +150,9 @@ bool TOFDMultiPort::setPhaseReverse(int channel, int reverse) {
 }
 
 bool TOFDMultiPort::setGateInfo(int channel, const HB_GateInfo &info) {
+    if (info.pos < 0.0f || info.width < 0.0f) {
+        return false;
+    }
     if (info.gate == 0) {
         this->mCache.gateInfo[channel % CHANNEL_NUMBER] = info;
     } else {
