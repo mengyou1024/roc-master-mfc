@@ -91,8 +91,10 @@ void RecordSelectWnd::OnNotifyUnique(TNotifyUI& msg) {
                     }
                 }
             } catch (std::exception& e) {
-                spdlog::warn(GB2312ToUtf8(e.what()));
-                DMessageBox(WStringFromString(string(e.what())).data());
+                try {
+                    spdlog::warn(GB2312ToUtf8(e.what()));
+                    DMessageBox(WStringFromString(string(e.what())).data());
+                } catch (...) {}
             }
 
             auto YearMonth = static_cast<CComboUI*>(m_PaintManager.FindControl(L"ComboYearMonth"));

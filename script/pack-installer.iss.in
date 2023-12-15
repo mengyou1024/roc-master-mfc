@@ -54,7 +54,7 @@ Source: "@CMAKE_SOURCE_DIR@/x64/Release/Mutilple.exe"; DestDir: "{app}"; Flags: 
 Source: "@CMAKE_SOURCE_DIR@/x64/Release/snap7.dll"; DestDir: "{app}"
 Source: "@CMAKE_SOURCE_DIR@/x64/Release/sqlite3.dll"; DestDir: "{app}"
 Source: "@CMAKE_SOURCE_DIR@/x64/Release/TOFDPort.dll"; DestDir: "{app}"
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/NetworkMulti.lib"; DestDir: "{app}"
+Source: "@CMAKE_SOURCE_DIR@/x64/Release/NetworkMulti.dll"; DestDir: "{app}"
 Source: "@CMAKE_SOURCE_DIR@/x64/Release/libcurl.dll"; DestDir: "{app}"
 Source: "@CMAKE_SOURCE_DIR@/x64/Release/rttr_core_s.dll"; DestDir: "{app}"
 Source: "@CMAKE_SOURCE_DIR@/x64/Release/template/*"; DestDir: "{app}/template"

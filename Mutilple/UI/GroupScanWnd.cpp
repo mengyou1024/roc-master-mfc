@@ -1357,7 +1357,11 @@ bool GroupScanWnd::EnterReviewMode(std::string name) {
         mDetectInfo            = ORM_Model::DetectInfo::storage(name).get<ORM_Model::DetectInfo>(1);
         systemConfig.groupName = ORM_Model::JobGroup::storage(name).get<ORM_Model::JobGroup>(1).groupName;
         mReviewData            = HD_Utils::storage(name).get_all<HD_Utils>();
-        mDefectInfo            = ORM_Model::DefectInfo::storage(name).get_all<ORM_Model::DefectInfo>();
+        try {
+            mDefectInfo = ORM_Model::DefectInfo::storage(name).get_all<ORM_Model::DefectInfo>();
+        } catch (std::exception &) { 
+            spdlog::warn("文件中没有探伤信息");
+        }
         SelectMeasureThickness(mDetectInfo.enableMeasureThickness);
         UpdateSystemConfig(systemConfig);
         spdlog::info("load:{}, frame:{}", name, mReviewData.size());
