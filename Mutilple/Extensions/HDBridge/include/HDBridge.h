@@ -14,6 +14,10 @@ using std::shared_ptr;
 using std::unique_ptr;
 using std::vector;
 
+#ifdef USE_SQLITE_ORM
+    #include <sqlite_orm/sqlite_orm.h>
+#endif
+
 class HDBridge {
 public:
     enum class HB_Voltage : uint32_t {
@@ -101,10 +105,10 @@ public:
     };
 #pragma pack()
 
-public:
-    int          id      = {};
-    std::wstring name    = {};
-    bool         isValid = {};
+protected:
+    int          mId      = {};
+    std::wstring mName    = {};
+    bool         mIsValid = {};
     cache_t      mCache  = {};
 
 public:
@@ -118,11 +122,43 @@ public:
     virtual ~HDBridge() = default;
 
     HDBridge &operator=(const HDBridge &other) {
-        id      = other.id;
-        name    = other.name;
-        isValid = other.isValid;
+        mId     = other.mId;
+        mName   = other.mName;
+        mIsValid = other.mIsValid;
         mCache  = other.mCache;
         return *this;
+    }
+
+    virtual const int getId() const noexcept final {
+        return mId;
+    }
+
+    virtual void setId(int id = 1) noexcept final {
+        mId = id;
+    }
+
+    virtual const std::wstring getName() const noexcept final {
+        return mName;
+    }
+
+    virtual void setName(std::wstring &name) noexcept final {
+        mName = name;
+    }
+
+    virtual const bool isValid() const noexcept final {
+        return mIsValid;
+    }
+
+    virtual void setValid(bool valid = true) noexcept final{
+        mIsValid = valid;
+    }
+
+    virtual cache_t& getCache() noexcept final {
+        return mCache;
+    }
+
+    virtual void setCache(const cache_t &cache) noexcept final {
+        mCache = cache;
     }
 
     virtual bool open() {
@@ -444,10 +480,28 @@ public:
         }
         syncCache2Board();
     }
+#ifdef USE_SQLITE_ORM
+    #ifndef ORM_DB_NAME
+    static constexpr std::string_view ORM_DB_NAME = "HDBridge.db";
+    #endif // !ORM_DB_NAME
+
+    static auto storage(std::string fileName) {
+        using namespace sqlite_orm;
+        return make_storage(fileName,
+                            make_table("HDBridge",
+                                       make_column("ID", &HDBridge::mId, primary_key()),
+                                       make_column("NAME", &HDBridge::mName, unique()),
+                                       make_column("VALID", &HDBridge::mIsValid),
+                                       make_column("CACHE", &HDBridge::mCache)));
+    }
+
+    static auto storage() {
+        return storage(ORM_DB_NAME);
+    }
+#endif
 };
 
 #ifdef USE_SQLITE_ORM
-    #include <sqlite_orm/sqlite_orm.h>
 namespace sqlite_orm {
     template <>
     struct type_printer<HDBridge::cache_t> : public blob_printer {};
@@ -478,19 +532,4 @@ namespace sqlite_orm {
     };
 } // namespace sqlite_orm
 
-    #ifndef ORM_DB_NAME
-static constexpr std::string_view ORM_DB_NAME = "HDBridge.db";
-    #endif // !ORM_DB_NAME
-
-namespace ORM_HDBridge {
-    static auto storage() {
-        using namespace sqlite_orm;
-        return make_storage(std::string(ORM_DB_NAME),
-                            make_table("HDBridge",
-                                       make_column("ID", &HDBridge::id, primary_key()),
-                                       make_column("NAME", &HDBridge::name, unique()),
-                                       make_column("VALID", &HDBridge::isValid),
-                                       make_column("CACHE", &HDBridge::mCache)));
-    }
-} // namespace ORM_HDBridge
 #endif

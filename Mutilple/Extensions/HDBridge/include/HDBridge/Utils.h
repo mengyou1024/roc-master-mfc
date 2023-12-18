@@ -155,6 +155,10 @@ public:
         return mBridge.get();
     }
 
+    HDBridge::cache_t& getCache() const {
+        return mBridge->getCache();
+    }
+
     void stop();
     void waitExit();
 

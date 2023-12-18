@@ -59,7 +59,7 @@ MainProcess::~MainProcess() {
 #endif
     spdlog::drop_all();
     // 退出前压缩数据表
-    ORM_HDBridge::storage().vacuum();
+    HDBridge::storage().vacuum();
     ORM_Model::User::storage().vacuum();
     ORM_Model::SystemConfig::storage().vacuum();
     ORM_Model::ScanRecord::storage().vacuum();
@@ -72,7 +72,7 @@ MainProcess::~MainProcess() {
 
 void MainProcess::InitStroage() {
     try {
-        ORM_HDBridge::storage().sync_schema();
+        HDBridge::storage().sync_schema();
         ORM_Model::User::storage().sync_schema();
         ORM_Model::SystemConfig::storage().sync_schema();
         ORM_Model::ScanRecord::storage().sync_schema();

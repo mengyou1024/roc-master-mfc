@@ -36,8 +36,8 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
             if (res) {
                 try {
                     HDBridge port = {};
-                    port.name  = str;
-                    auto id    = ORM_HDBridge::storage().insert(port);
+                    port.setName(str);
+                    auto id    = HDBridge::storage().insert(port);
                     auto pList = static_cast<DuiLib::CListUI*>(m_PaintManager.FindControl(_T("ListParamName")));
                     auto pLine = new CListTextElementUI;
                     pLine->SetTag(id);
@@ -56,7 +56,7 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
                 auto         it   = static_cast<CListTextElementUI*>(pList->GetItemAt(cursel));
                 std::wstring name = it->GetText(1);
                 try {
-                    ORM_HDBridge::storage().remove_all<HDBridge>(where(c(&HDBridge::name) == name));
+                    HDBridge::storage().remove_all<HDBridge>(where(c(&HDBridge::getName) == name));
                 } catch (std::exception& e) {
                     spdlog::error("file:{} line:{}", __FILE__, __LINE__);
                     spdlog::error(GB2312ToUtf8(e.what()));
@@ -69,12 +69,10 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
             auto         it     = static_cast<CListTextElementUI*>(pList->GetItemAt(cursel));
             std::wstring name   = it->GetText(1);
             try {
-                auto data = ORM_HDBridge::storage().get_all<HDBridge>(where(c(&HDBridge::name) == name));
+                auto data = HDBridge::storage().get_all<HDBridge>(where(c(&HDBridge::getName) == name));
                 if (data.size() == 1) {
-                    auto bridge    = mBridge;
-                    bridge->id     = data[0].id;
-                    bridge->name   = data[0].name;
-                    bridge->mCache = data[0].mCache;
+                    auto bridge = mBridge;
+                    *bridge     = data[0];
                     bridge->syncCache2Board();
                     DMessageBox(L"读取成功!");
                 }
@@ -88,9 +86,9 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
             auto it     = static_cast<CListTextElementUI*>(pList->GetItemAt(cursel));
             long id     = _wtol(it->GetText(0));
             try {
-                auto port   = ORM_HDBridge::storage().get<HDBridge>(id);
-                port.mCache = mBridge->mCache;
-                ORM_HDBridge::storage().update(port);
+                auto port = HDBridge::storage().get<HDBridge>(id);
+                port      = *mBridge;
+                HDBridge::storage().update(port);
                 DMessageBox(L"写入成功!");
             } catch (std::exception& e) { spdlog::error(GB2312ToUtf8(e.what())); }
         }
@@ -99,14 +97,14 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
 }
 
 void ParamManagementWnd::LoadParam() {
-    auto list  = ORM_HDBridge::storage().get_all<HDBridge>();
+    auto list  = HDBridge::storage().get_all<HDBridge>();
     auto pList = static_cast<DuiLib::CListUI*>(m_PaintManager.FindControl(_T("ListParamName")));
     pList->RemoveAll();
     for (auto& it : list) {
         auto pLine = new CListTextElementUI;
-        pLine->SetTag(it.id);
+        pLine->SetTag(it.getId());
         pList->Add(pLine);
-        pLine->SetText(0, std::to_wstring(it.id).data());
-        pLine->SetText(1, it.name.data());
+        pLine->SetText(0, std::to_wstring(it.getId()).data());
+        pLine->SetText(1, it.getName().data());
     }
 }
