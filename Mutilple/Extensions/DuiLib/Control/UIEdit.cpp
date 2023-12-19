@@ -125,9 +125,11 @@ namespace DuiLib
 			}
 		}
 		else if( uMsg == WM_KEYDOWN && TCHAR(wParam) == VK_RETURN ){
-
+            if (m_pOwner->m_attrNumberExt == true) {
+                auto val = _wtof(m_pOwner->m_sText.GetData());
+                m_pOwner->SetText(std::to_wstring(val).c_str());
+            }
 			m_pOwner->GetManager()->SendNotify(m_pOwner, DUI_MSGTYPE_RETURN);
-
 		}
 		else if( uMsg == OCM__BASE + WM_CTLCOLOREDIT  || uMsg == OCM__BASE + WM_CTLCOLORSTATIC ) {
 			if( m_pOwner->GetNativeEditBkColor() == 0xFFFFFFFF ) return NULL;
@@ -238,6 +240,15 @@ namespace DuiLib
 		}
 		if( event.Type == UIEVENT_SCROLLWHEEL )
 		{
+            if (m_attrNumberExt == true) {
+                auto val = _wtof(m_sText.GetData());
+                if (event.wParam) {
+                    val -= m_numberWheelStep;
+                } else {
+                    val += m_numberWheelStep;
+				}
+                SetText(std::to_wstring(val).c_str());
+            }
 			if( IsEnabled() ) 
 				m_pManager->SendNotify(this, DUI_MSGTYPE_MOUSEWHELL, event.wParam, event.lParam );
 		}
@@ -333,10 +344,22 @@ namespace DuiLib
 	void CEditUI::SetText(LPCTSTR pstrText)
 	{
         auto& [bl, reg] = m_textValitor;
+        std::wstring inputStr;
+		if (m_attrNumberExt == true) {
+            auto val = _wtof(pstrText);
+			if (val < m_numterLimits.first) {
+                val = m_numterLimits.first;
+            } else if (val > m_numterLimits.second) {
+                val = m_numterLimits.second;
+			}
+            inputStr = std::to_wstring(val);
+            pstrText = inputStr.c_str();
+        } else {
+            inputStr = pstrText;
+		}
 		if (bl) {
             std::wsmatch match;
-            std::wstring str = pstrText;
-            if (std::regex_search(str, match, reg)) {
+            if (std::regex_search(inputStr, match, reg)) {
                 m_sText = match[0].str().data();
                 if (m_pWindow != NULL) {
                     Edit_SetText(*m_pWindow, m_sText);
@@ -345,7 +368,7 @@ namespace DuiLib
                 return;
             }
 		}
-		m_sText = pstrText;
+        m_sText = inputStr.c_str();
 		if( m_pWindow != NULL ) Edit_SetText(*m_pWindow, m_sText);
 		Invalidate();
 	}
@@ -541,6 +564,25 @@ namespace DuiLib
 			LPTSTR pstr = NULL;
 			DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
 			SetNativeEditBkColor(clrColor);
+        } else if (_tcscmp(pstrName, _T("textvalitor")) == 0) {
+            SetTextValitor(pstrValue);
+		} else if (_tcscmp(pstrName, _T("modenumber")) == 0) {
+            std::wstring pwstrValue = pstrValue;
+            bool         value = {};
+            std::wistringstream(pwstrValue.data()) >> std::boolalpha >> value;
+            SetNumberModeEnable(value);
+		} else if (_tcscmp(pstrName, _T("numberminmax")) == 0) {
+            std::wregex regex(LR"((\d+)[, ;|]+(\d+))");
+            std::wsmatch match;
+            std::wstring str = pstrValue;
+			if (std::regex_search(str, match, regex)) {
+                const auto min = _wtof(match[1].str().c_str());
+                const auto max = _wtof(match[2].str().c_str());
+                SetNumberLimits(min, max);
+			}
+        } else if (_tcscmp(pstrName, _T("wheelstep")) == 0) {
+            const auto step = _wtof(pstrValue);
+            SetWheelStep(step);
 		}
 		else CLabelUI::SetAttribute(pstrName, pstrValue);
 	}
@@ -626,9 +668,26 @@ namespace DuiLib
         m_textValitor = std::make_pair(enable, reg);
     }
 
+    void CEditUI::SetNumberModeEnable(bool enable) noexcept {
+        m_attrNumberExt = enable;
+    }
+
+    void CEditUI::SetNumberLimits(double min, double max) noexcept {
+        auto& [_min, _max] = m_numterLimits;
+		if (min > max) {
+            std::swap(min, max);
+		}
+        _min = min;
+        _max = max;
+	}
+
+    void CEditUI::SetWheelStep(double step) noexcept {
+        m_numberWheelStep = step;
+	}
+
     void CEditUI::SetTextValitor(const std::wstring_view& reg_str, bool enable) {
         std::wregex regex(reg_str.data());
-        m_textValitor = std::make_pair(enable, regex);
+        SetTextValitor(regex, enable);
     }
 
     void CEditUI::DisableTextValitor() noexcept {

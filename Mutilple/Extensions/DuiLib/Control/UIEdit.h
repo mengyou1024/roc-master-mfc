@@ -6,6 +6,8 @@
 #include <regex>
 #include <string>
 #include <utility>
+#include <iostream>
+#include <sstream>
 
 namespace DuiLib
 {
@@ -65,6 +67,10 @@ namespace DuiLib
         void SetTextValitor(const std::wstring_view& reg_str, bool enable = true);
         void DisableTextValitor() noexcept;
 
+		void SetNumberModeEnable(bool enable = true) noexcept;
+        void SetWheelStep(double step) noexcept;
+        void SetNumberLimits(double min, double max) noexcept;
+
 	protected:
 		CEditWnd* m_pWindow;
 
@@ -79,7 +85,10 @@ namespace DuiLib
 		DWORD m_dwEditTextColor;
 		int m_iWindowStyls;
 		CDuiString m_sTextExt;
-        std::pair<bool, std::wregex> m_textValitor = {false, {}};
+        double                       m_numberWheelStep = 1.0;
+        bool                         m_attrNumberExt   = false;
+        std::pair<double, double>    m_numterLimits    = {-HUGE_VAL, HUGE_VAL};
+        std::pair<bool, std::wregex> m_textValitor     = {false, {}};
 	};
 }
 #endif // __UIEDIT_H__
