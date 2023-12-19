@@ -39,7 +39,7 @@
 						<HorizontalLayout width="20" />
 						<Option name="OptSystemProxy"  width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
 						<HorizontalLayout width="20" />
-						<Edit name="EditSystemProxy" width="240" bordersize="1" bordercolor="0x7F7F7F7F" height="28" />
+						<Edit name="EditSystemProxy" textvalitor="h?t{0,2}p?:?/{0,2}\d{0,3}(\.\d{0,3}){0,3}:?\d{0,5}" width="240" bordersize="1" bordercolor="0x7F7F7F7F" height="28" />
 						<Label />
 					</HorizontalLayout>
 					<HorizontalLayout height="32">
@@ -47,7 +47,7 @@
 						<HorizontalLayout width="20" />
 						<Option name="OptUseNetwork"  width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
 						<HorizontalLayout width="20" />
-						<Edit name="EditUseNetwork" width="240" bordersize="1" bordercolor="0x7F7F7F7F" height="28" />
+						<Edit name="EditUseNetwork" textvalitor="\d{0,3}(\.\d{0,3}){0,3}" width="240" bordersize="1" bordercolor="0x7F7F7F7F" height="28" />
 						<Label />
 					</HorizontalLayout>
 				</VerticalLayout>

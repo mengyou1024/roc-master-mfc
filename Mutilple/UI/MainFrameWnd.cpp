@@ -243,6 +243,7 @@ void MainFrameWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
 
     // 设置Edit单位
     auto edit = static_cast<CEditUI *>(m_PaintManager.FindControl(_T("EditConfig")));
+    edit->SetTextValitor(mConfigRegex.at(mConfigType));
     if (edit) {
         edit->SetEnabled(true);
         edit->SetTextExt(mConfigTextext.at(mConfigType));
@@ -364,18 +365,9 @@ void MainFrameWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
     }
     reloadValue = std::round(reloadValue * 100.f) / 100.f;
 
-    if (slider) {
-        slider->SetValue(static_cast<int>(std::round(reloadValue)));
-    }
-
-    if (edit) {
-        std::wstring limit = std::to_wstring(reloadValue);
-        std::wregex  reg(mConfigRegex.at(mConfigType));
-        std::wsmatch match;
-        if ((std::regex_search(limit, match, reg))) {
-            edit->SetText(match[0].str().data());
-        }
-    }
+    slider->SetValue(static_cast<int>(std::round(reloadValue)));
+    std::wstring limit = std::to_wstring(reloadValue);
+    edit->SetText(limit.c_str());
 }
 
 void MainFrameWnd::SetConfigValue(float val, bool sync) {
@@ -849,22 +841,6 @@ void MainFrameWnd::Notify(TNotifyUI &msg) {
                 SetConfigValue(static_cast<float>(sliderValue), false);
             }
         }
-    } else if (msg.sType == DUI_MSGTYPE_TEXTCHANGED) {
-        if (msg.pSender->GetName() == _T("EditConfig")) {
-            // 限制输入的字符
-            auto         edit = static_cast<CEditUI *>(msg.pSender);
-            std::wstring text = edit->GetText();
-            if (text.length() > 0) {
-                auto [sel, _] = edit->GetSel();
-                std::wregex  reg(mConfigRegex.at(mConfigType));
-                std::wsmatch match;
-                if ((!std::regex_match(text, match, reg)) && sel > 0) {
-                    text.erase(sel - 1ull, 1);
-                    edit->SetText(text.data());
-                    edit->SetSel(sel, sel);
-                }
-            }
-        }
     } else if (msg.sType == DUI_MSGTYPE_RETURN) {
         if (msg.pSender->GetName() == _T("EditConfig")) {
             // 限制Edit的输入范围
@@ -874,21 +850,11 @@ void MainFrameWnd::Notify(TNotifyUI &msg) {
             if (currentValue < mConfigLimits.at(mConfigType).first) {
                 currentValue       = mConfigLimits.at(mConfigType).first;
                 std::wstring limit = std::to_wstring(currentValue);
-                std::wregex  reg(mConfigRegex.at(mConfigType));
-                std::wsmatch match;
-                if ((std::regex_search(limit, match, reg))) {
-                    edit->SetText(match[0].str().data());
-                    edit->SetSel(static_cast<long>(match[0].str().length()), static_cast<long>(match[1].str().length()));
-                }
+                edit->SetText(limit.c_str());
             } else if (currentValue > mConfigLimits.at(mConfigType).second) {
                 currentValue       = mConfigLimits.at(mConfigType).second;
                 std::wstring limit = std::to_wstring(currentValue);
-                std::wregex  reg(mConfigRegex.at(mConfigType));
-                std::wsmatch match;
-                if ((std::regex_search(limit, match, reg))) {
-                    edit->SetText(match[0].str().data());
-                    edit->SetSel(static_cast<long>(match[0].str().length()), static_cast<long>(match[1].str().length()));
-                }
+                edit->SetText(limit.c_str());
             }
             // 重新获取值
             text         = edit->GetText();
@@ -920,12 +886,7 @@ void MainFrameWnd::Notify(TNotifyUI &msg) {
                 currentValue = mConfigLimits.at(mConfigType).second;
             }
             text = std::to_wstring(currentValue);
-            std::wregex  reg(mConfigRegex.at(mConfigType));
-            std::wsmatch match;
-            if (std::regex_search(text, match, reg)) {
-                edit->SetText(match[0].str().data());
-            }
-
+            edit->SetText(text.c_str());
             // 设置slider 值
             auto slider = static_cast<CSliderUI *>(m_PaintManager.FindControl(_T("SliderConfig")));
             if (slider) {

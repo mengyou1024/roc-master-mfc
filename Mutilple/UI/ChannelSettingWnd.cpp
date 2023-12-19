@@ -33,7 +33,7 @@ void ChannelSettingWnd::InitWindow() {
 }
 
 void ChannelSettingWnd::Notify(TNotifyUI& msg) {
-    if (msg.sType == DUI_MSGTYPE_RETURN) {
+    if (msg.sType == DUI_MSGTYPE_RETURN || msg.sType == DUI_MSGTYPE_MOUSEWHELL) {
         if (msg.pSender->GetName() == _T("EditSoundVelocity")) {
             mUtils->getBridge()->setSoundVelocity(mChannel, (float)_wtof(msg.pSender->GetText().GetData()));
         } else if (msg.pSender->GetName() == _T("EditFrequency")) {
@@ -65,7 +65,6 @@ void ChannelSettingWnd::Notify(TNotifyUI& msg) {
         } else if (msg.pSender->GetName() == _T("EditGain")) {
             mUtils->getBridge()->setGain(mChannel, (float)_wtof(msg.pSender->GetText().GetData()));
         }
-    } else if (msg.sType == DUI_MSGTYPE_TEXTCHANGED) {
     } else if (msg.sType == DUI_MSGTYPE_ITEMSELECT) {
         if (msg.pSender->GetName() == _T("ComboVolatage")) {
             auto voltage = static_cast<CComboUI*>(msg.pSender);

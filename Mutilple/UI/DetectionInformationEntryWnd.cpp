@@ -29,6 +29,11 @@ void DetectionInformationEntryWnd::InitWindow() {
     CDuiWindowBase::InitWindow();
     auto list     = static_cast<CListUI*>(m_PaintManager.FindControl(L"ListUserList"));
     auto userList = ORM_Model::User::storage().get_all<ORM_Model::User>();
+    CEditUI* text     = nullptr;
+    for (auto &[id, valitor] : mInputValitor) {
+        text = m_PaintManager.FindControl<CEditUI*>(id.data());
+        text->SetTextValitor(valitor, true);
+    }
 }
 
 void DetectionInformationEntryWnd::Notify(TNotifyUI& msg) {

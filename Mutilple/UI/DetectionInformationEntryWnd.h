@@ -22,6 +22,11 @@ public:
     void                         LoadDetectInfo(const ORM_Model::DetectInfo &info, std::wstring userName = {}, std::wstring groupName = {});
 
 private:
+    inline static const std::map<std::wstring_view, std::wstring_view> mInputValitor = {
+        {L"Editthickness",  LR"(\d+\.?\d{0,2})"       },
+        {L"EditUserAdd",    LR"([\u4e00-\u9fa5\w\d]+)"},
+        {L"EditJobGroupAdd", LR"([\u4e00-\u9fa5\w\d]+)"},
+    };
     void LoadUserGroupInfo();
     bool                  mResult     = false;
     ORM_Model::JobGroup   mJobGroup   = {};
