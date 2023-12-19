@@ -20,7 +20,7 @@ jobs:
     # 创建changelog
     - name: Create changelog text
       id: changelog
-      uses: mengyou1024/action-changelog@v0.1.0
+      uses: mengyou1024/action-changelog@v0.1.2
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         exclude_types: other,doc,chore
@@ -60,5 +60,5 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./output/Roc-MasterInstaller.exe
-        asset_name: Roc-MasterInstaller.exe
+        asset_name: Roc-MasterInstaller-${{steps.changelog.outputs.version}}.exe
         asset_content_type: application/octet-stream
