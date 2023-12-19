@@ -31,7 +31,7 @@ data.db
 /pack-installer.iss
 /output
 
-Mutilple/Version.h
+Mutilple/ProjectConfig.h
 /Mutilple/res/Theme.zip
 /x64/*/DB/*
 /.vscode/settings.json
