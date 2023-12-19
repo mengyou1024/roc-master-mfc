@@ -332,6 +332,19 @@ namespace DuiLib
 
 	void CEditUI::SetText(LPCTSTR pstrText)
 	{
+        auto& [bl, reg] = m_textValitor;
+		if (bl) {
+            std::wsmatch match;
+            std::wstring str = pstrText;
+            if (std::regex_search(str, match, reg)) {
+                m_sText = match[0].str().data();
+                if (m_pWindow != NULL) {
+                    Edit_SetText(*m_pWindow, m_sText);
+                }
+                Invalidate();
+                return;
+            }
+		}
 		m_sText = pstrText;
 		if( m_pWindow != NULL ) Edit_SetText(*m_pWindow, m_sText);
 		Invalidate();
@@ -608,15 +621,18 @@ namespace DuiLib
 				m_iFont, DT_SINGLELINE | m_uTextStyle);
 		}
     }
+
     void CEditUI::SetTextValitor(const std::wregex& reg, bool enable) {
         m_textValitor = std::make_pair(enable, reg);
-	}
-    void CEditUI::SetTextValitor(const std::wstring_view& reg_str, bool enable) {
-        std::wregex regex(reg_str.data()); 
-		m_textValitor = std::make_pair(enable, regex);
     }
-    void CEditUI::SetTextValitor(bool enable) noexcept {
+
+    void CEditUI::SetTextValitor(const std::wstring_view& reg_str, bool enable) {
+        std::wregex regex(reg_str.data());
+        m_textValitor = std::make_pair(enable, regex);
+    }
+
+    void CEditUI::DisableTextValitor() noexcept {
         auto& [en, _] = m_textValitor;
-        en            = enable;
+        en            = false;
     }
 }

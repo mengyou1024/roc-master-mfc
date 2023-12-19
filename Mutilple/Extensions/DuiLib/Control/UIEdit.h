@@ -61,9 +61,9 @@ namespace DuiLib
 		void PaintStatusImage(HDC hDC);
 		void PaintText(HDC hDC);
 
-		void SetTextValitor(const std::wregex& reg, bool enable=true);
+		void SetTextValitor(const std::wregex& reg, bool enable = true);
         void SetTextValitor(const std::wstring_view& reg_str, bool enable = true);
-        void SetTextValitor(bool enable) noexcept;
+        void DisableTextValitor() noexcept;
 
 	protected:
 		CEditWnd* m_pWindow;
