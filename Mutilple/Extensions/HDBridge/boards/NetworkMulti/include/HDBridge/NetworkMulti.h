@@ -56,8 +56,7 @@ public:
     /**
      * @brief 复位编码器
      * @param coder
-     * @return
-     * @note param coder is not used
+     * @return true success
      */
     virtual bool resetCoder(int coder) override;
     virtual bool flushSetting() override;

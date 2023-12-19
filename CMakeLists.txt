@@ -69,8 +69,8 @@ configure_file(
 )
 
 configure_file(
-    Version.h.in
-    ${CMAKE_SOURCE_DIR}/Mutilple/Version.h
+    ProjectConfig.h.in
+    ${CMAKE_SOURCE_DIR}/Mutilple/ProjectConfig.h
     @ONLY
 )
 

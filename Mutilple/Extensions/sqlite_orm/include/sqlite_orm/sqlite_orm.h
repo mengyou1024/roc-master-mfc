@@ -11012,8 +11012,7 @@ namespace sqlite_orm {
                 this->holder.retain();
             }
 
-            connection_ref(connection_ref&& other) noexcept :
-            holder(other.holder) {
+            connection_ref(connection_ref&& other) : holder(other.holder) {
                 this->holder.retain();
             }
 
@@ -13717,7 +13716,7 @@ namespace sqlite_orm {
                 connection(std::move(connection_)),
                 commit_func(std::move(commit_func_)), rollback_func(std::move(rollback_func_)) {}
 
-            transaction_guard_t(transaction_guard_t&& other) noexcept :
+            transaction_guard_t(transaction_guard_t&& other) :
                 commit_on_destroy(other.commit_on_destroy), connection(std::move(other.connection)),
                 commit_func(std::move(other.commit_func)), rollback_func(std::move(other.rollback_func)),
                 gotta_fire(other.gotta_fire) {
@@ -13804,11 +13803,9 @@ namespace sqlite_orm {
                 }
             }
 
-            backup_t(backup_t&& other) noexcept :
-            handle(std::exchange(other.handle, nullptr)),
-            holder(std::move(other.holder)),
-            to(other.to),
-            from(other.from) {}
+            backup_t(backup_t&& other) :
+                handle(std::exchange(other.handle, nullptr)), holder(std::move(other.holder)), to(other.to),
+                from(other.from) {}
 
             ~backup_t() {
                 if(this->handle) {

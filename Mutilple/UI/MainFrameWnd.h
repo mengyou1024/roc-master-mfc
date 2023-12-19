@@ -20,10 +20,10 @@
 #undef GATE_A
 #undef GATE_B
 
-class GroupScanWnd : public CDuiWindowBase {
+class MainFrameWnd : public CDuiWindowBase {
 public:
-    GroupScanWnd();
-    virtual ~GroupScanWnd();
+    MainFrameWnd();
+    virtual ~MainFrameWnd();
     virtual LPCTSTR    GetWindowClassName() const override;
     virtual CDuiString GetSkinFile() noexcept override;
     virtual void       InitWindow() override;
@@ -48,7 +48,10 @@ private:
     /// 缺陷判决值
     std::array<uint8_t, HDBridge::CHANNEL_NUMBER> mDefectJudgmentValue = {};
 
-    enum class WidgetMode { MODE_SCAN = 0, MODE_REVIEW };
+    enum class WidgetMode {
+        MODE_SCAN = 0,
+        MODE_REVIEW,
+    };
 
     /// 配置类型
     enum class ConfigType {
@@ -168,9 +171,9 @@ private:
      * @return HDBridge的独占指针
      */
     template <class BR, class... Args>
-    static std::unique_ptr<HDBridge> GenerateHDBridge(const HDBridge& config, Args... args) {
+    static std::unique_ptr<HDBridge> GenerateHDBridge(const HDBridge& config, Args&&... args) {
         static_assert(std::is_base_of_v<HDBridge, BR> && !std::is_same_v<BR, HDBridge>);
-        auto ret = std::unique_ptr<HDBridge>(new BR(args...));
+        auto ret = std::unique_ptr<HDBridge>(new BR(std::forward<Args>(args)...));
         *ret     = config;
         return ret;
     }

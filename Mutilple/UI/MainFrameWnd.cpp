@@ -1,9 +1,8 @@
 #include "pch.h"
 
-#include "GroupScanWnd.h"
+#include "MainFrameWnd.h"
 
 #include "Mutilple.h"
-#include "Version.h"
 #include <BusyWnd.h>
 #include <ChannelSettingWnd.h>
 #include <DefectsListWnd.h>
@@ -56,10 +55,10 @@ static constexpr int swapAScanIndex(int x) {
     return result * 4 + remain;
 }
 
-GroupScanWnd::GroupScanWnd() {
+MainFrameWnd::MainFrameWnd() {
     try {
         mCScanThreadRunning = true;
-        mCScanThread        = std::thread(&GroupScanWnd::ThreadCScan, this);
+        mCScanThread        = std::thread(&MainFrameWnd::ThreadCScan, this);
         auto config         = HDBridge::storage().get_all<HDBridge>(where(c(&HDBridge::getName) == std::wstring(SCAN_CONFIG_LAST)));
         if (config.size() == 1) {
             if (config[0].isValid()) {
@@ -76,6 +75,7 @@ GroupScanWnd::GroupScanWnd() {
                 config[0].setValid(false);
                 HDBridge::storage().update(config[0]);
             } else {
+                HDBridge::storage().remove<HDBridge>(where(c(&HDBridge::getName) == std::wstring(SCAN_CONFIG_LAST)));
                 throw std::runtime_error("上一次配置验证失败，可能由于软件运行中异常退出.");
             }
         } else {
@@ -100,7 +100,7 @@ GroupScanWnd::GroupScanWnd() {
     } catch (std::exception &e) { spdlog::error(GB2312ToUtf8(e.what())); }
 }
 
-GroupScanWnd::~GroupScanWnd() {
+MainFrameWnd::~MainFrameWnd() {
     try {
         mCScanThreadRunning = false;
         mCScanNotify.notify_all();
@@ -130,10 +130,12 @@ GroupScanWnd::~GroupScanWnd() {
             ORM_Model::DetectInfo::storage().insert(mDetectInfo);
         }
         spdlog::debug("take time: {}", GetTickCount64() - tick);
-    } catch (std::exception &e) { spdlog::error(GB2312ToUtf8(e.what())); }
+    } catch (std::exception &e) { 
+        spdlog::error(GB2312ToUtf8(e.what())); 
+    }
 }
 
-void GroupScanWnd::OnBtnModelClicked(std::wstring name) {
+void MainFrameWnd::OnBtnModelClicked(std::wstring name) {
     auto btnScanMode   = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnScanMode")));
     auto btnReviewMode = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnReviewMode")));
     if (name == _T("BtnScanMode")) {
@@ -174,7 +176,7 @@ void GroupScanWnd::OnBtnModelClicked(std::wstring name) {
     }
 }
 
-void GroupScanWnd::InitOpenGL() {
+void MainFrameWnd::InitOpenGL() {
     // 初始化OpenGL窗口
     // A扫窗口
     m_pWndOpenGL_ASCAN = static_cast<CWindowUI *>(m_PaintManager.FindControl(_T("WndOpenGL_ASCAN")));
@@ -186,24 +188,24 @@ void GroupScanWnd::InitOpenGL() {
     m_OpenGL_CSCAN.Attach(m_pWndOpenGL_CSCAN);
 }
 
-LPCTSTR GroupScanWnd::GetWindowClassName() const {
-    return _T("GroupScanWnd");
+LPCTSTR MainFrameWnd::GetWindowClassName() const {
+    return _T("MainFrameWnd");
 }
 
-CDuiString GroupScanWnd::GetSkinFile() noexcept {
+CDuiString MainFrameWnd::GetSkinFile() noexcept {
     return _T("Theme\\UI_GroupScanWnd.xml");
 }
 
-void GroupScanWnd::InitWindow() {
+void MainFrameWnd::InitWindow() {
     CDuiWindowBase::InitWindow();
 
     InitOpenGL();
     // 初始化
-    AddTaskToQueue(std::bind(&GroupScanWnd::InitOnThread, this));
+    AddTaskToQueue(std::bind(&MainFrameWnd::InitOnThread, this));
     UpdateSliderAndEditValue(mCurrentGroup, mConfigType, mGateType, mChannelSel, true);
 }
 
-void GroupScanWnd::InitOnThread() {
+void MainFrameWnd::InitOnThread() {
     // 延迟最大化窗口
     SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE, 0);
 
@@ -215,7 +217,7 @@ void GroupScanWnd::InitOnThread() {
     Sleep(100);
     mUtils->start();
     auto model = m_OpenGL_ASCAN.getModel<ModelGroupAScan *>();
-    mUtils->addReadCallback(std::bind(&GroupScanWnd::UpdateAScanCallback, this, std::placeholders::_1, std::placeholders::_2));
+    mUtils->addReadCallback(std::bind(&MainFrameWnd::UpdateAScanCallback, this, std::placeholders::_1, std::placeholders::_2));
     if (!mReviewPathEntry.empty()) {
         if (!EnterReviewMode(mReviewPathEntry)) {
             spdlog::warn("载入文件: {} 出错!", mReviewPathEntry);
@@ -225,7 +227,7 @@ void GroupScanWnd::InitOnThread() {
     CheckAndUpdate();
 }
 
-void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig, GateType newGate, ChannelSel newChannelSel,
+void MainFrameWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig, GateType newGate, ChannelSel newChannelSel,
                                             bool bypassCheck) {
     if (!bypassCheck && (mCurrentGroup == newGroup && mConfigType == newConfig && mGateType == newGate && mChannelSel == newChannelSel)) {
         return;
@@ -254,7 +256,7 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
         int    gate    = static_cast<int>(mGateType);
         size_t chIndex = static_cast<size_t>(mChannelSel) + static_cast<size_t>(mCurrentGroup) * 4ull;
         switch (mConfigType) {
-            case GroupScanWnd::ConfigType::GateStart: {
+            case MainFrameWnd::ConfigType::GateStart: {
                 if (gate == static_cast<int>(GateType::GATE_SCAN)) {
                     auto &[_, maxLimits] = mConfigLimits[mConfigType];
                     maxLimits            = static_cast<float>((1.0 - mUtils->getCache().scanGateInfo[chIndex].width) * 100.0);
@@ -279,7 +281,7 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
                 }
                 break;
             }
-            case GroupScanWnd::ConfigType::GateWidth: {
+            case MainFrameWnd::ConfigType::GateWidth: {
                 if (gate == static_cast<int>(GateType::GATE_SCAN)) {
                     auto &[_, maxLimits] = mConfigLimits[mConfigType];
                     maxLimits            = static_cast<float>((1.0 - mUtils->getCache().scanGateInfo[chIndex].pos) * 100.0);
@@ -304,7 +306,7 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
                 }
                 break;
             }
-            case GroupScanWnd::ConfigType::DetectRange: {
+            case MainFrameWnd::ConfigType::DetectRange: {
                 auto &[minLimits, maxLimits] = mConfigLimits[mConfigType];
                 minLimits                    = 50.0f;
                 maxLimits                    = 1000.f;
@@ -324,15 +326,15 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
     int    gate        = static_cast<int>(mGateType);
     auto   bridge      = mUtils->getBridge();
     switch (mConfigType) {
-        case GroupScanWnd::ConfigType::DetectRange: {
+        case MainFrameWnd::ConfigType::DetectRange: {
             reloadValue = bridge->time2distance(bridge->getSampleDepth(_channelSel), _channelSel);
             break;
         }
-        case GroupScanWnd::ConfigType::Gain: {
+        case MainFrameWnd::ConfigType::Gain: {
             reloadValue = bridge->getGain(_channelSel);
             break;
         }
-        case GroupScanWnd::ConfigType::GateStart: {
+        case MainFrameWnd::ConfigType::GateStart: {
             if (gate == static_cast<int>(GateType::GATE_SCAN)) {
                 reloadValue = mUtils->getCache().scanGateInfo[_channelSel].pos * 100.0;
                 break;
@@ -340,7 +342,7 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
             reloadValue = bridge->getGateInfo(gate, _channelSel).pos * 100.0;
             break;
         }
-        case GroupScanWnd::ConfigType::GateWidth: {
+        case MainFrameWnd::ConfigType::GateWidth: {
             if (gate == static_cast<int>(GateType::GATE_SCAN)) {
                 reloadValue = mUtils->getCache().scanGateInfo[_channelSel].width * 100.0;
                 break;
@@ -348,7 +350,7 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
             reloadValue = bridge->getGateInfo(gate, _channelSel).width * 100.0;
             break;
         }
-        case GroupScanWnd::ConfigType::GateHeight: {
+        case MainFrameWnd::ConfigType::GateHeight: {
             if (gate == static_cast<int>(GateType::GATE_SCAN)) {
                 reloadValue = mUtils->getCache().scanGateInfo[_channelSel].height * 100.0;
                 break;
@@ -376,13 +378,13 @@ void GroupScanWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
     }
 }
 
-void GroupScanWnd::SetConfigValue(float val, bool sync) {
+void MainFrameWnd::SetConfigValue(float val, bool sync) {
     auto tick        = GetTickCount64();
     int  _channelSel = static_cast<int>(mChannelSel) + mCurrentGroup * 4;
     int  gate        = static_cast<int>(mGateType);
     auto bridge      = mUtils->getBridge();
     switch (mConfigType) {
-        case GroupScanWnd::ConfigType::DetectRange: {
+        case MainFrameWnd::ConfigType::DetectRange: {
             bridge->setSampleDepth(_channelSel, (float)(bridge->distance2time((double)val, _channelSel)));
             // 重新计算采样因子
             auto depth        = bridge->getSampleDepth(_channelSel);
@@ -390,17 +392,16 @@ void GroupScanWnd::SetConfigValue(float val, bool sync) {
             bridge->setSampleFactor(_channelSel, sampleFactor);
             break;
         }
-        case GroupScanWnd::ConfigType::Gain: {
+        case MainFrameWnd::ConfigType::Gain: {
             bridge->setGain(_channelSel, val);
             break;
         }
-        case GroupScanWnd::ConfigType::GateStart: {
+        case MainFrameWnd::ConfigType::GateStart: {
             if (gate == static_cast<int>(GateType::GATE_SCAN)) {
                 mUtils->getCache().scanGateInfo[_channelSel].pos = static_cast<float>(val / 100.0);
                 auto m = static_cast<MeshAscan *>(m_OpenGL_ASCAN.getModel<ModelGroupAScan *>()->m_pMesh[_channelSel]);
                 m->UpdateGate(gate, true, mUtils->getCache().scanGateInfo[_channelSel].pos,
-                              mUtils->getCache().scanGateInfo[_channelSel].width,
-                              mUtils->getCache().scanGateInfo[_channelSel].height);
+                              mUtils->getCache().scanGateInfo[_channelSel].width, mUtils->getCache().scanGateInfo[_channelSel].height);
                 break;
             }
             HDBridge::HB_GateInfo g = bridge->getGateInfo(gate, _channelSel);
@@ -410,13 +411,12 @@ void GroupScanWnd::SetConfigValue(float val, bool sync) {
             spdlog::debug("set gate info {}, gate: {}", bridge->setGateInfo(_channelSel, g), gate);
             break;
         }
-        case GroupScanWnd::ConfigType::GateWidth: {
+        case MainFrameWnd::ConfigType::GateWidth: {
             if (gate == static_cast<int>(GateType::GATE_SCAN)) {
                 mUtils->getCache().scanGateInfo[_channelSel].width = static_cast<float>(val / 100.0);
                 auto m = static_cast<MeshAscan *>(m_OpenGL_ASCAN.getModel<ModelGroupAScan *>()->m_pMesh[_channelSel]);
                 m->UpdateGate(gate, true, mUtils->getCache().scanGateInfo[_channelSel].pos,
-                              mUtils->getCache().scanGateInfo[_channelSel].width,
-                              mUtils->getCache().scanGateInfo[_channelSel].height);
+                              mUtils->getCache().scanGateInfo[_channelSel].width, mUtils->getCache().scanGateInfo[_channelSel].height);
                 break;
             }
             HDBridge::HB_GateInfo g = bridge->getGateInfo(gate, _channelSel);
@@ -426,13 +426,12 @@ void GroupScanWnd::SetConfigValue(float val, bool sync) {
             spdlog::debug("set gate info {}, gate: {}", bridge->setGateInfo(_channelSel, g), gate);
             break;
         }
-        case GroupScanWnd::ConfigType::GateHeight: {
+        case MainFrameWnd::ConfigType::GateHeight: {
             if (gate == static_cast<int>(GateType::GATE_SCAN)) {
                 mUtils->getCache().scanGateInfo[_channelSel].height = static_cast<float>(val / 100.0);
                 auto m = static_cast<MeshAscan *>(m_OpenGL_ASCAN.getModel<ModelGroupAScan *>()->m_pMesh[_channelSel]);
                 m->UpdateGate(gate, true, mUtils->getCache().scanGateInfo[_channelSel].pos,
-                              mUtils->getCache().scanGateInfo[_channelSel].width,
-                              mUtils->getCache().scanGateInfo[_channelSel].height);
+                              mUtils->getCache().scanGateInfo[_channelSel].width, mUtils->getCache().scanGateInfo[_channelSel].height);
                 break;
             }
             HDBridge::HB_GateInfo g = bridge->getGateInfo(gate, _channelSel);
@@ -451,7 +450,7 @@ void GroupScanWnd::SetConfigValue(float val, bool sync) {
     }
 }
 
-void GroupScanWnd::UpdateAScanCallback(const HDBridge::NM_DATA &data, const HD_Utils &caller) {
+void MainFrameWnd::UpdateAScanCallback(const HDBridge::NM_DATA &data, const HD_Utils &caller) {
     auto model = m_OpenGL_ASCAN.getModel<ModelGroupAScan *>();
     if (model == nullptr || model->m_pMesh.at(data.iChannel) == nullptr) {
         return;
@@ -486,7 +485,7 @@ void GroupScanWnd::UpdateAScanCallback(const HDBridge::NM_DATA &data, const HD_U
     }
 }
 
-void GroupScanWnd::AmpTraceCallback(const HDBridge::NM_DATA &data, const HD_Utils &caller, std::vector<int> traceList) {
+void MainFrameWnd::AmpTraceCallback(const HDBridge::NM_DATA &data, const HD_Utils &caller, std::vector<int> traceList) {
     auto bridge = caller.getBridge();
     if (std::find(traceList.begin(), traceList.end(), data.iChannel) != traceList.end()) {
         // 调整硬件波门的位置
@@ -506,26 +505,26 @@ void GroupScanWnd::AmpTraceCallback(const HDBridge::NM_DATA &data, const HD_Util
                 }
             }
         }
-        //AddTaskToQueue([bridge]() { bridge->flushSetting(); }, "flushSetting", true);
-        // 调整扫查波门的位置
-        //auto &info = bridge->mCache.scanGateInfo[data.iChannel];
-        //if (info.width > EPS && std::abs(info.width - 100.0f) > EPS && info.width > EPS) {
-        //    auto [pos, max, res] = HDBridge::computeGateInfo(data.pAscan, {info.pos, info.width, info.height});
-        //    if (res) {
-        //        float newPos = pos - info.width / 2.0f;
-        //        if (newPos < EPS) {
-        //            newPos = 0.0f;
-        //        } else if (newPos + info.width > 100.0f) {
-        //            newPos = 100.f - info.width;
-        //        }
-        //        info.pos  = newPos;
-        //        auto mesh = m_OpenGL_ASCAN.getMesh<MeshAscan *>(data.iChannel);
-        //        mesh->UpdateGate(2, 1, info.pos, info.width, info.height);
-        //    }
-        //}
+        // AddTaskToQueue([bridge]() { bridge->flushSetting(); }, "flushSetting", true);
+        //  调整扫查波门的位置
+        // auto &info = bridge->mCache.scanGateInfo[data.iChannel];
+        // if (info.width > EPS && std::abs(info.width - 100.0f) > EPS && info.width > EPS) {
+        //     auto [pos, max, res] = HDBridge::computeGateInfo(data.pAscan, {info.pos, info.width, info.height});
+        //     if (res) {
+        //         float newPos = pos - info.width / 2.0f;
+        //         if (newPos < EPS) {
+        //             newPos = 0.0f;
+        //         } else if (newPos + info.width > 100.0f) {
+        //             newPos = 100.f - info.width;
+        //         }
+        //         info.pos  = newPos;
+        //         auto mesh = m_OpenGL_ASCAN.getMesh<MeshAscan *>(data.iChannel);
+        //         mesh->UpdateGate(2, 1, info.pos, info.width, info.height);
+        //     }
+        // }
         if (data.iChannel < 4) {
             // 测厚波门
-            auto &info = bridge->getCache().scanGateInfo[(size_t)data.iChannel + HDBridge::CHANNEL_NUMBER];
+            auto &info = bridge->getCache_ref().scanGateInfo[(size_t)data.iChannel + HDBridge::CHANNEL_NUMBER];
             if (info.width > EPS && std::abs(info.width - 100.0f) > EPS) {
                 auto [pos, max, res] = HDBridge::computeGateInfo(data.pAscan, {info.pos, info.width, info.height});
                 if (res) {
@@ -545,7 +544,7 @@ void GroupScanWnd::AmpTraceCallback(const HDBridge::NM_DATA &data, const HD_Util
     }
 }
 
-void GroupScanWnd::AmpMemeryCallback(const HDBridge::NM_DATA &data, const HD_Utils &caller) {
+void MainFrameWnd::AmpMemeryCallback(const HDBridge::NM_DATA &data, const HD_Utils &caller) {
     auto model = m_OpenGL_ASCAN.getModel<ModelGroupAScan *>();
     if (model == nullptr || model->m_pMesh.at(data.iChannel) == nullptr) {
         return;
@@ -592,11 +591,11 @@ void GroupScanWnd::AmpMemeryCallback(const HDBridge::NM_DATA &data, const HD_Uti
     mesh->hookAmpMemoryData(2, std::make_shared<std::vector<uint8_t>>(newAmpData));
 }
 
-void GroupScanWnd::UpdateCScanOnTimer() {
+void MainFrameWnd::UpdateCScanOnTimer() {
     mCScanNotify.notify_one();
 }
 
-void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
+void MainFrameWnd::OnBtnUIClicked(std::wstring &name) {
     if (name == _T("Setting")) {
         auto       config                 = GetSystemConfig();
         auto       enableNetwork          = config.enableNetworkTOFD;
@@ -646,7 +645,7 @@ void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
         wnd.ShowModal();
         UpdateSliderAndEditValue(mCurrentGroup, mConfigType, mGateType, mChannelSel, true);
     } else if (name == _T("About")) {
-        DMessageBox(APP_VERSIONW, L"软件版本");
+        DMessageBox(_T(APP_VERSION), L"软件版本");
     } else if (name == _T("Freeze")) {
         auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnUIFreeze")));
         if (btn->GetBkColor() == 0xFFEEEEEE) {
@@ -661,7 +660,7 @@ void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
     } else if (name == _T("AmpMemory")) {
         auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnUIAmpMemory")));
         if (btn->GetBkColor() == 0xFFEEEEEE) {
-            mUtils->addReadCallback(std::bind(&GroupScanWnd::AmpMemeryCallback, this, std::placeholders::_1, std::placeholders::_2),
+            mUtils->addReadCallback(std::bind(&MainFrameWnd::AmpMemeryCallback, this, std::placeholders::_1, std::placeholders::_2),
                                     "AmpMemory");
             btn->SetBkColor(0xFF339933);
         } else {
@@ -677,10 +676,9 @@ void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
     } else if (name == _T("AmpTrace")) {
         auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnUIAmpTrace")));
         if (btn->GetBkColor() == 0xFFEEEEEE) {
-            std::vector<int> args = {0, 1, 2, 3};
             auto             config = GetSystemConfig();
             if (config.enableMeasureThickness) {
-                auto wrap = HD_Utils::WrapReadCallback(&GroupScanWnd::AmpTraceCallback, this, args);
+                auto wrap = HD_Utils::WrapReadCallback(&MainFrameWnd::AmpTraceCallback, this, std::vector<int>{0, 1, 2, 3});
                 mUtils->addReadCallback(wrap, "AmpTrace");
             }
             btn->SetBkColor(0xFF339933);
@@ -718,17 +716,17 @@ void GroupScanWnd::OnBtnUIClicked(std::wstring &name) {
     }
 }
 
-void GroupScanWnd::KillUITimer(void) {
+void MainFrameWnd::KillUITimer(void) {
     ::KillTimer(m_OpenGL_ASCAN.m_hWnd, 0);
     ::KillTimer(m_OpenGL_CSCAN.m_hWnd, 0);
 }
 
-void GroupScanWnd::ResumeUITimer(void) {
+void MainFrameWnd::ResumeUITimer(void) {
     ::SetTimer(m_OpenGL_ASCAN.m_hWnd, 0, 15, NULL);
     ::SetTimer(m_OpenGL_CSCAN.m_hWnd, 0, 15, NULL);
 }
 
-void GroupScanWnd::Notify(TNotifyUI &msg) {
+void MainFrameWnd::Notify(TNotifyUI &msg) {
     if (msg.sType == DUI_MSGTYPE_CLICK) {
         CDuiString   strName = msg.pSender->GetName();
         std::wregex  matchReg(_T(R"(BtnSelectGroup(\d))"));
@@ -944,7 +942,7 @@ void GroupScanWnd::Notify(TNotifyUI &msg) {
     CDuiWindowBase::Notify(msg);
 }
 
-void GroupScanWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
+void MainFrameWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
     POINT point{pt.x, pt.y};
     auto  wnd = dynamic_cast<CWindowUI *>(m_PaintManager.FindControl(point));
     if (wnd) {
@@ -1001,7 +999,7 @@ void GroupScanWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
     }
 }
 
-void GroupScanWnd::OnLButtonDClick(UINT nFlags, ::CPoint pt) {
+void MainFrameWnd::OnLButtonDClick(UINT nFlags, ::CPoint pt) {
     if (PointInRect(m_pWndOpenGL_ASCAN->GetPos(), pt)) {
         auto temp = pt;
         temp.x -= m_pWndOpenGL_ASCAN->GetX();
@@ -1053,7 +1051,7 @@ void GroupScanWnd::OnLButtonDClick(UINT nFlags, ::CPoint pt) {
     }
 }
 
-void GroupScanWnd::OnTimer(int iIdEvent) {
+void MainFrameWnd::OnTimer(int iIdEvent) {
     switch (iIdEvent) {
         case CSCAN_UPDATE: {
             UpdateCScanOnTimer();
@@ -1063,11 +1061,11 @@ void GroupScanWnd::OnTimer(int iIdEvent) {
     }
 }
 
-void GroupScanWnd::EnterReview(std::string path) {
+void MainFrameWnd::EnterReview(std::string path) {
     mReviewPathEntry = path;
 }
 
-void GroupScanWnd::ReconnectBoard(int type) {
+void MainFrameWnd::ReconnectBoard(int type) {
     auto bridge    = mUtils->getBridge();
     auto newBridge = GenerateHDBridge<TOFDMultiPort>(*bridge, type);
     bridge->close();
@@ -1077,7 +1075,7 @@ void GroupScanWnd::ReconnectBoard(int type) {
     bridge->syncCache2Board();
 }
 
-void GroupScanWnd::ReconnectBoard(std::string ip_FPGA, uint16_t port_FPGA, std::string ip_PC, uint16_t port_PC) {
+void MainFrameWnd::ReconnectBoard(std::string ip_FPGA, uint16_t port_FPGA, std::string ip_PC, uint16_t port_PC) {
     auto bridge    = mUtils->getBridge();
     auto newBridge = GenerateHDBridge<NetworkMulti>(*bridge, ip_FPGA, port_FPGA, ip_PC, port_PC);
     bridge->close();
@@ -1087,7 +1085,7 @@ void GroupScanWnd::ReconnectBoard(std::string ip_FPGA, uint16_t port_FPGA, std::
     bridge->syncCache2Board();
 }
 
-void GroupScanWnd::ThreadCScan(void) {
+void MainFrameWnd::ThreadCScan(void) {
     while (1) {
         std::unique_lock lock(mCScanMutex);
         mCScanNotify.wait(lock);
@@ -1178,7 +1176,7 @@ void GroupScanWnd::ThreadCScan(void) {
     }
 }
 
-void GroupScanWnd::OnBtnSelectGroupClicked(long index) {
+void MainFrameWnd::OnBtnSelectGroupClicked(long index) {
     if (index == mCurrentGroup) {
         return;
     }
@@ -1223,7 +1221,7 @@ void GroupScanWnd::OnBtnSelectGroupClicked(long index) {
     m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->SetViewGroup(mCurrentGroup);
 }
 
-void GroupScanWnd::SaveDefectStartID(int channel) {
+void MainFrameWnd::SaveDefectStartID(int channel) {
     ORM_Model::ScanRecord scanRecord = {};
     scanRecord.startID               = mRecordCount + (int)mReviewData.size();
     scanRecord.channel               = channel;
@@ -1231,7 +1229,7 @@ void GroupScanWnd::SaveDefectStartID(int channel) {
     mIDDefectRecord[channel] = (int)mScanRecordCache.size() - 1;
 }
 
-void GroupScanWnd::SaveDefectEndID(int channel) {
+void MainFrameWnd::SaveDefectEndID(int channel) {
     if (mScanRecordCache.size() == 0) {
         return;
     }
@@ -1242,7 +1240,7 @@ void GroupScanWnd::SaveDefectEndID(int channel) {
     scanRecord.endID = mRecordCount + (int)mReviewData.size();
 }
 
-void GroupScanWnd::CheckAndUpdate(bool showNoUpdate) {
+void MainFrameWnd::CheckAndUpdate(bool showNoUpdate) {
 #if !defined(_DEBUG) && APP_CHECK_UPDATE
     if (!GetSystemConfig().checkUpdate) {
         return;
@@ -1251,7 +1249,7 @@ void GroupScanWnd::CheckAndUpdate(bool showNoUpdate) {
     if (Check4Update(APP_VERSION, tag)) {
         std::wstring wBody   = WStringFromString(body);
         std::wstring wTitle  = std::wstring(L"更新可用:") + WStringFromString(tag);
-        std::wstring message = std::wstring(APP_VERSIONW) + L"--->" + WStringFromString(tag) + L"\n\n是:立即下载\n否:不更新";
+        std::wstring message = std::wstring(_T(APP_VERSION)) + L"--->" + WStringFromString(tag) + L"\n\n是:立即下载\n否:不更新";
         auto         ret     = DMessageBox(message.data(), wTitle.data(), MB_YESNO);
         spdlog::info("更新可用:\ntag: {}\n body: {} \n url: {}", tag, body, url);
         if (ret == 0x6) {
@@ -1307,7 +1305,7 @@ void GroupScanWnd::CheckAndUpdate(bool showNoUpdate) {
 #endif
 }
 
-void GroupScanWnd::SaveScanData() {
+void MainFrameWnd::SaveScanData() {
     // 保存当前波门的位置信息
     mUtils->mScanOrm.mScanGateInfo = mUtils->getCache().scanGateInfo;
     for (size_t i = 0; i < HDBridge::CHANNEL_NUMBER; i++) {
@@ -1343,7 +1341,7 @@ void GroupScanWnd::SaveScanData() {
     }
 }
 
-bool GroupScanWnd::EnterReviewMode(std::string name) {
+bool MainFrameWnd::EnterReviewMode(std::string name) {
     try {
         auto tick = GetTickCount64();
         // 存放回调函数
@@ -1360,9 +1358,7 @@ bool GroupScanWnd::EnterReviewMode(std::string name) {
         mReviewData            = HD_Utils::storage(name).get_all<HD_Utils>();
         try {
             mDefectInfo = ORM_Model::DefectInfo::storage(name).get_all<ORM_Model::DefectInfo>();
-        } catch (std::exception &) { 
-            spdlog::warn("文件中没有探伤信息");
-        }
+        } catch (std::exception &) { spdlog::warn("文件中没有探伤信息"); }
         SelectMeasureThickness(mDetectInfo.enableMeasureThickness);
         UpdateSystemConfig(systemConfig);
         spdlog::info("load:{}, frame:{}", name, mReviewData.size());
@@ -1397,7 +1393,7 @@ bool GroupScanWnd::EnterReviewMode(std::string name) {
                 auto   mesh         = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>(HDBridge::CHANNEL_NUMBER + index);
                 auto   thickness    = data.mScanOrm.mThickness[index];
                 double baseTickness = _wtof(mDetectInfo.thickness.c_str());
-                if (baseTickness != 0.0f && baseTickness != -HUGE_VAL && baseTickness != HUGE_VAL) {
+                if (baseTickness != 0.0 && baseTickness != -HUGE_VAL && baseTickness != HUGE_VAL) {
                     constexpr uint8_t base           = 0xFF >> 1;
                     auto              relative_error = (thickness - baseTickness) / baseTickness;
                     if (relative_error > 1.0) {
@@ -1448,7 +1444,7 @@ bool GroupScanWnd::EnterReviewMode(std::string name) {
     }
 }
 
-void GroupScanWnd::ExitReviewMode() {
+void MainFrameWnd::ExitReviewMode() {
     if (mWidgetMode == WidgetMode::MODE_REVIEW) {
         mUtils->popCallback();
     }
@@ -1483,7 +1479,7 @@ void GroupScanWnd::ExitReviewMode() {
     mWidgetMode = WidgetMode::MODE_SCAN;
 }
 
-void GroupScanWnd::SelectMeasureThickness(bool enableMeasure) {
+void MainFrameWnd::SelectMeasureThickness(bool enableMeasure) {
     if (enableMeasure) {
         auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(L"BtnSelectGroup0"));
         btn->SetVisible(false);
@@ -1503,7 +1499,7 @@ void GroupScanWnd::SelectMeasureThickness(bool enableMeasure) {
     }
 }
 
-void GroupScanWnd::StartScan(bool changeFlag) {
+void MainFrameWnd::StartScan(bool changeFlag) {
     if (mWidgetMode != WidgetMode::MODE_SCAN) {
         return;
     }
@@ -1573,7 +1569,7 @@ void GroupScanWnd::StartScan(bool changeFlag) {
     }
 }
 
-void GroupScanWnd::StopScan(bool changeFlag) {
+void MainFrameWnd::StopScan(bool changeFlag) {
     if (mWidgetMode != WidgetMode::MODE_SCAN) {
         return;
     }

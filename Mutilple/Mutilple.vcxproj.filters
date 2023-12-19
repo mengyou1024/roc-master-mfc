@@ -31,9 +31,6 @@
     <Filter Include="Source Files\图像处理">
       <UniqueIdentifier>{63a836e9-2f95-46f0-b9fe-e290d173a752}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\接口">
-      <UniqueIdentifier>{a469bc82-60fd-43b8-b21e-ec91d6d8bee6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\功能函数">
       <UniqueIdentifier>{aab9556a-c301-470f-b211-243e2bd56e5d}</UniqueIdentifier>
     </Filter>
@@ -79,6 +76,9 @@
     <Filter Include="Source Files\Duckx">
       <UniqueIdentifier>{6c1ca592-30c1-4293-9413-6979238cf956}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\配置">
+      <UniqueIdentifier>{d1b3947d-4efd-463f-8ff5-375f0e3f3fa7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Define.h">
@@ -99,9 +99,6 @@
     <ClInclude Include="Mutilple.h">
       <Filter>Header Files\App</Filter>
     </ClInclude>
-    <ClInclude Include="ICheckCarrier.h">
-      <Filter>Header Files\接口</Filter>
-    </ClInclude>
     <ClInclude Include="Thread.h">
       <Filter>Header Files\功能函数</Filter>
     </ClInclude>
@@ -110,9 +107,6 @@
     </ClInclude>
     <ClInclude Include="MainProcess.h">
       <Filter>Header Files\主进程</Filter>
-    </ClInclude>
-    <ClInclude Include="ICoder.h">
-      <Filter>Header Files\接口</Filter>
     </ClInclude>
     <ClInclude Include="snap7.h">
       <Filter>Header Files\PLC</Filter>
@@ -169,9 +163,6 @@
       <Filter>Header Files\UI</Filter>
     </ClInclude>
     <ClInclude Include="UI\DuiWindowBase.h">
-      <Filter>Header Files\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\GroupScanWnd.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
     <ClInclude Include="Widgets\ModelAScan.h">
@@ -243,6 +234,12 @@
     <ClInclude Include="Extensions\HDBridge\boards\NetworkMulti\include\HDBridge\NetworkMulti.h">
       <Filter>Header Files\HDBridge\HDBridge</Filter>
     </ClInclude>
+    <ClInclude Include="UI\MainFrameWnd.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectConfig.h">
+      <Filter>Header Files\配置</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Mutilple.cpp">
@@ -306,9 +303,6 @@
       <Filter>Source Files\UI</Filter>
     </ClCompile>
     <ClCompile Include="UI\DuiWindowBase.cpp">
-      <Filter>Source Files\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\GroupScanWnd.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
     <ClCompile Include="Thread.cpp">
@@ -379,6 +373,9 @@
     </ClCompile>
     <ClCompile Include="Extensions\HDBridge\boards\NetworkMulti\NetWorkMulti.cpp">
       <Filter>Source Files\HDBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\MainFrameWnd.cpp">
+      <Filter>Source Files\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

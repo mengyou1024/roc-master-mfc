@@ -4,9 +4,9 @@
 #include <array>
 #include <cstdint>
 #include <memory>
+#include <spdlog/spdlog.h>
 #include <string>
 #include <vector>
-#include <spdlog/spdlog.h>
 
 using std::make_shared;
 using std::make_unique;
@@ -109,7 +109,7 @@ protected:
     int          mId      = {};
     std::wstring mName    = {};
     bool         mIsValid = {};
-    cache_t      mCache  = {};
+    cache_t      mCache   = {};
 
 public:
     HDBridge() {
@@ -122,10 +122,10 @@ public:
     virtual ~HDBridge() = default;
 
     HDBridge &operator=(const HDBridge &other) {
-        mId     = other.mId;
-        mName   = other.mName;
+        mId      = other.mId;
+        mName    = other.mName;
         mIsValid = other.mIsValid;
-        mCache  = other.mCache;
+        mCache   = other.mCache;
         return *this;
     }
 
@@ -133,31 +133,35 @@ public:
         return mId;
     }
 
-    virtual void setId(int id = 1) noexcept final {
+    virtual void setId(int id) final {
         mId = id;
     }
 
-    virtual const std::wstring getName() const noexcept final {
+    virtual const std::wstring& getName() const final {
         return mName;
     }
 
-    virtual void setName(std::wstring &name) noexcept final {
+    virtual void setName(std::wstring name) final {
         mName = name;
     }
 
-    virtual const bool isValid() const noexcept final {
+    virtual const bool& isValid() const final {
         return mIsValid;
     }
 
-    virtual void setValid(bool valid = true) noexcept final{
+    virtual void setValid(bool valid) final {
         mIsValid = valid;
     }
 
-    virtual cache_t& getCache() noexcept final {
+    virtual const cache_t& getCache() const final {
         return mCache;
     }
 
-    virtual void setCache(const cache_t &cache) noexcept final {
+    virtual cache_t& getCache_ref() final {
+        return mCache;
+    }
+
+    virtual void setCache(cache_t cache) final {
         mCache = cache;
     }
 
@@ -489,10 +493,10 @@ public:
         using namespace sqlite_orm;
         return make_storage(fileName,
                             make_table("HDBridge",
-                                       make_column("ID", &HDBridge::mId, primary_key()),
-                                       make_column("NAME", &HDBridge::mName, unique()),
-                                       make_column("VALID", &HDBridge::mIsValid),
-                                       make_column("CACHE", &HDBridge::mCache)));
+                                       make_column("ID", &HDBridge::getId, &HDBridge::setId, primary_key()),
+                                       make_column("NAME", &HDBridge::getName, &HDBridge::setName, unique()),
+                                       make_column("VALID", &HDBridge::isValid, &HDBridge::setValid),
+                                       make_column("CACHE", &HDBridge::getCache, &HDBridge::setCache)));
     }
 
     static auto storage() {

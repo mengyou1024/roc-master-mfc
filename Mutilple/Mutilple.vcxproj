@@ -356,8 +356,6 @@ del $(SolutionDir)Mutilple\res\Theme.zip
     <ClInclude Include="Extensions\HDBridge\include\HDBridge\Utils.h" />
     <ClInclude Include="Extensions\sqlite_orm\include\sqlite_orm\sqlite_orm.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="ICheckCarrier.h" />
-    <ClInclude Include="ICoder.h" />
     <ClInclude Include="MainProcess.h" />
     <ClInclude Include="Model\DefectInfo.h" />
     <ClInclude Include="Model\DetectInfo.h" />
@@ -366,6 +364,7 @@ del $(SolutionDir)Mutilple\res\Theme.zip
     <ClInclude Include="Model\UserModel.h" />
     <ClInclude Include="Mutilple.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="ProjectConfig.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="snap7.h" />
     <ClInclude Include="targetver.h" />
@@ -377,9 +376,9 @@ del $(SolutionDir)Mutilple\res\Theme.zip
     <ClInclude Include="UI\DetectionInformationEntryWnd.h" />
     <ClInclude Include="UI\DMessageBox.h" />
     <ClInclude Include="UI\DuiWindowBase.h" />
-    <ClInclude Include="UI\GroupScanWnd.h" />
     <ClInclude Include="UI\HardWareWnd.h" />
     <ClInclude Include="UI\InputDialogWnd.h" />
+    <ClInclude Include="UI\MainFrameWnd.h" />
     <ClInclude Include="UI\ParamManagementWnd.h" />
     <ClInclude Include="UI\RecordSelectWnd.h" />
     <ClInclude Include="UI\SettingWnd.h" />
@@ -523,16 +522,6 @@ del $(SolutionDir)Mutilple\res\Theme.zip
     </ClCompile>
     <ClCompile Include="UI\DMessageBox.cpp" />
     <ClCompile Include="UI\DuiWindowBase.cpp" />
-    <ClCompile Include="UI\GroupScanWnd.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/bigobj %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">/bigobj %(AdditionalOptions)</AdditionalOptions>
-    </ClCompile>
     <ClCompile Include="UI\HardWareWnd.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -544,6 +533,10 @@ del $(SolutionDir)Mutilple\res\Theme.zip
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="UI\MainFrameWnd.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Include="UI\ParamManagementWnd.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>

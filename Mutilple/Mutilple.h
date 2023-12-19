@@ -10,7 +10,7 @@
 
 #include "resource.h"		// main symbols
 #include "MainProcess.h"
-#include "GroupScanWnd.h"
+#include "MainFrameWnd.h"
 
 // CMutilpleApp:
 // See Mutilple.cpp for the implementation of this class
@@ -30,7 +30,7 @@ public:
 	DECLARE_MESSAGE_MAP()
 
 public:
-    GroupScanWnd*  m_pMainFrame;
+    MainFrameWnd*  m_pMainFrame;
     TCHAR m_pExePath[_MAX_FNAME];
     CShellManager* m_pShellManager;
 };

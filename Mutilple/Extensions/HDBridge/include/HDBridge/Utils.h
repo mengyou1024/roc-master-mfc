@@ -97,9 +97,6 @@ public:
 
     HD_ScanORM mScanOrm = {};
 
-    [[deprecated("use `HD_Utils(std::unique_ptr<HDBridge> bridge)` insetead")]] explicit HD_Utils(HDBridge* bridge)
-        : HD_Utils(std::unique_ptr<HDBridge>(bridge)) {}
-
     explicit HD_Utils(std::unique_ptr<HDBridge>& bridge)
         : mBridge(std::move(bridge)) {
         if (mBridge) {
@@ -156,7 +153,7 @@ public:
     }
 
     HDBridge::cache_t& getCache() const {
-        return mBridge->getCache();
+        return mBridge->getCache_ref();
     }
 
     void stop();
@@ -173,9 +170,9 @@ public:
      * @return 可调用对象
     */
     template <class Fn,class Th, class... Args>
-    static auto WrapReadCallback(Fn func, Th th, Args... args) {
-        return [=](const HDBridge::NM_DATA& data, const HD_Utils& caller) {
-            auto callable = std::bind(func, th, std::placeholders::_1, std::placeholders::_2, args...);
+    static auto WrapReadCallback(Fn&& func, Th&& th, Args&&... args) {
+        return [&](const HDBridge::NM_DATA& data, const HD_Utils& caller) {
+            auto callable = std::bind(func, th, std::placeholders::_1, std::placeholders::_2, std::forward<Args>(args)...);
             callable(data, caller);
         };
     }

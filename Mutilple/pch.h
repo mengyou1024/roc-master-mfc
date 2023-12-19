@@ -67,33 +67,11 @@ using std::wstring;
 using ::CPoint;
 using ::CSize;
 
-#include <Version.h>
+#include "ProjectConfig.h"
 #include <curl/curl.h>
 #include <json/json.h>
 #include <spdlog/spdlog.h>
 #include <sqlite_orm.h>
-
-#ifndef DB_UNNAMED_GROUP
-    #define DB_UNNAMED_GROUP "未命名"
-#endif
-
-#ifndef DB_UNNAMED_USER
-    #define DB_UNNAMED_USER "未命名"
-#endif
-
-#ifndef SCAN_DATA_DIR_NAME
-    #define SCAN_DATA_DIR_NAME "Data/"
-#endif // !SCAN_DATA_DIR_NAME
-
-// 是否检查程序更新
-#ifndef APP_CHECK_UPDATE
-    #define APP_CHECK_UPDATE 0
-#endif
-
-// 扫查数据保存的后缀
-#ifndef APP_SCAN_DATA_SUFFIX
-    #define APP_SCAN_DATA_SUFFIX ".usddb"
-#endif
 
 #include "MainProcess.h"
 extern MainProcess g_MainProcess;

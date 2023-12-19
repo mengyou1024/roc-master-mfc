@@ -93,7 +93,7 @@ BOOL CMutilpleApp::InitInstance() {
     CPaintManagerUI::SetInstance(AfxGetInstanceHandle()); // 设置渲染实例
 
     // 主窗口
-    m_pMainFrame = new GroupScanWnd;
+    m_pMainFrame = new MainFrameWnd;
     m_pMainFrame->Create(NULL, m_pMainFrame->GetWindowClassName(), UI_WNDSTYLE_FRAME, UI_WNDSTYLE_EX_FRAME);
     m_pMainFrame->CenterWindow();
     string filePath = {};
