@@ -193,7 +193,7 @@ LPCTSTR MainFrameWnd::GetWindowClassName() const {
 }
 
 CDuiString MainFrameWnd::GetSkinFile() noexcept {
-    return _T("Theme\\UI_GroupScanWnd.xml");
+    return _T("Theme\\UI_MainFrameWnd.xml");
 }
 
 void MainFrameWnd::InitWindow() {
