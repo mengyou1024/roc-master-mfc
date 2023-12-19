@@ -145,6 +145,20 @@ namespace DuiLib
 				m_hBkBrush = ::CreateSolidBrush(RGB(GetBValue(clrColor), GetGValue(clrColor), GetRValue(clrColor)));
 			}
 			return (LRESULT)m_hBkBrush;
+        } else if (uMsg == WM_CHAR) {
+            auto text = m_pOwner->GetText();
+            text += static_cast<wchar_t>(wParam);
+            auto& [enable, valitor] = m_pOwner->m_textValitor;
+            auto isSpecital         = [wParam]() -> bool { 
+				return wParam == VK_BACK || wParam == VK_ESCAPE || wParam == VK_RETURN;
+            };
+            if (enable && !isSpecital()) {
+                if (std::regex_match(std::wstring(text.GetData()), valitor)) {
+                    bHandled = FALSE;
+                }
+            } else {
+                bHandled = FALSE;
+			}
 		}
 		else bHandled = FALSE;
 
@@ -593,5 +607,16 @@ namespace DuiLib
 			CRenderEngine::DrawText(hDC, m_pManager, rc, sText, m_dwDisabledTextColor, \
 				m_iFont, DT_SINGLELINE | m_uTextStyle);
 		}
+    }
+    void CEditUI::SetTextValitor(const std::wregex& reg, bool enable) {
+        m_textValitor = std::make_pair(enable, reg);
 	}
+    void CEditUI::SetTextValitor(const std::wstring_view& reg_str, bool enable) {
+        std::wregex regex(reg_str.data()); 
+		m_textValitor = std::make_pair(enable, regex);
+    }
+    void CEditUI::SetTextValitor(bool enable) noexcept {
+        auto& [en, _] = m_textValitor;
+        en            = enable;
+    }
 }

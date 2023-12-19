@@ -3,6 +3,10 @@
 
 #pragma once
 
+#include <regex>
+#include <string>
+#include <utility>
+
 namespace DuiLib
 {
 	class CEditWnd;
@@ -38,7 +42,7 @@ namespace DuiLib
 		DWORD GetNativeEditTextColor() const;
 
 		void SetSel(long nStartChar, long nEndChar);
-        std::pair<uint16_t, uint16_t> CEditUI::GetSel();
+        std::pair<uint16_t, uint16_t> GetSel();
 		void SetSelAll();
 		void SetReplaceSel(LPCTSTR lpszReplace);
 
@@ -57,6 +61,10 @@ namespace DuiLib
 		void PaintStatusImage(HDC hDC);
 		void PaintText(HDC hDC);
 
+		void SetTextValitor(const std::wregex& reg, bool enable=true);
+        void SetTextValitor(const std::wstring_view& reg_str, bool enable = true);
+        void SetTextValitor(bool enable) noexcept;
+
 	protected:
 		CEditWnd* m_pWindow;
 
@@ -71,6 +79,7 @@ namespace DuiLib
 		DWORD m_dwEditTextColor;
 		int m_iWindowStyls;
 		CDuiString m_sTextExt;
+        std::pair<bool, std::wregex> m_textValitor = {false, {}};
 	};
 }
 #endif // __UIEDIT_H__
