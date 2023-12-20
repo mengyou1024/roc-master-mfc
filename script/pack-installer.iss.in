@@ -49,18 +49,8 @@ Name: "ChineseSimplified"; MessagesFile: "@CMAKE_SOURCE_DIR@/Language/ChineseSim
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checkablealone
 
 [Files]
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/ftd2xx.dll"; DestDir: "{app}"
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/msvcp140.dll"; DestDir: "{app}"
 Source: "@CMAKE_SOURCE_DIR@/x64/Release/Mutilple.exe"; DestDir: "{app}"; Flags: comparetimestamp
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/snap7.dll"; DestDir: "{app}"
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/sqlite3.dll"; DestDir: "{app}"
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/TOFDPort.dll"; DestDir: "{app}"
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/NetworkMulti.dll"; DestDir: "{app}"
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/libcurl.dll"; DestDir: "{app}"
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/rttr_core_s.dll"; DestDir: "{app}"
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/template/*"; DestDir: "{app}/template"
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/vcruntime140.dll"; DestDir: "{app}"
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/vcruntime140_1.dll"; DestDir: "{app}"
+@PACK_DLL_LIST@
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]

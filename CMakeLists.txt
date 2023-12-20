@@ -62,6 +62,12 @@ else(ISCC_PATH)
     message(WARNING "no ISCC path found, please install inno setup and add it to path\n see: https://jrsoftware.org/isinfo.php")
 endif(ISCC_PATH)
 
+file(GLOB _PACK_DLL_LIST ${CMAKE_SOURCE_DIR}/x64/Release/*.dll)
+set(PACK_DLL_LIST)
+foreach(PACK_DLL ${_PACK_DLL_LIST})
+    set(PACK_DLL_LIST "${PACK_DLL_LIST}Source: \"${PACK_DLL}\"; DestDir: \"{app}\"\n")
+endforeach(PACK_DLL ${_PACK_DLL_LIST})
+
 configure_file(
     script/pack-installer.iss.in
     ${CMAKE_SOURCE_DIR}/pack-installer.iss
