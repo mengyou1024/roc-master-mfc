@@ -38,3 +38,7 @@ Mutilple/ProjectConfig.h
 /x64/**/*.db
 /x64/*/template
 newVersion.exe
+Roc-Master.exe
+Roc-Master.pdb
+Roc-Master.lib
+Roc-Master.exp

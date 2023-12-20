@@ -39,7 +39,7 @@ MainProcess::MainProcess() {
     spdlog::set_level(spdlog::level::debug);
     mFile = freopen("CONOUT$", "w", stdout);
 #else
-    spdlog::set_default_logger(spdlog::rotating_logger_st("Mutilple", "log/log.txt", static_cast<size_t>(1024 * 1024 * 5), 5));
+    spdlog::set_default_logger(spdlog::rotating_logger_st("Roc-Master", "log/log.txt", static_cast<size_t>(1024 * 1024 * 5), 5));
     spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%L] %v");
     spdlog::flush_on(spdlog::level::info);
     spdlog::set_level(spdlog::level::info);

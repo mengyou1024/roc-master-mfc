@@ -81,7 +81,7 @@ BOOL CMutilpleApp::InitInstance() {
     // Change the registry key under which our settings are stored
     // TODO: You should modify this string to be something appropriate
     // such as the name of your company or organization
-    SetRegistryKey(_T("Mutilple"));
+    SetRegistryKey(_T("Roc-Master"));
 
     //_CrtSetBreakAlloc(2816);
     // 版本

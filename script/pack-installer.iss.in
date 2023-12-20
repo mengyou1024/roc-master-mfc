@@ -5,7 +5,7 @@
 #define MyAppVersion "@APP_VERSION@"
 #define MyAppPublisher "@GIT_USER_NAME@"
 #define MyAppURL "@GIT_REPOSITORY_URL@"
-#define MyAppExeName "Mutilple.exe"
+#define MyAppExeName "@PROJECT_NAME@.exe"
 #define MoroseInstallDir "@CMAKE_SOURCE_DIR@/output"
 #define MoroseIcon  "@CMAKE_SOURCE_DIR@/Mutilple/res/Mutilple.ico"
 #define MoroseInstallerName "@PROJECT_NAME@Installer"
@@ -49,7 +49,7 @@ Name: "ChineseSimplified"; MessagesFile: "@CMAKE_SOURCE_DIR@/Language/ChineseSim
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checkablealone
 
 [Files]
-Source: "@CMAKE_SOURCE_DIR@/x64/Release/Mutilple.exe"; DestDir: "{app}"; Flags: comparetimestamp
+Source: "@CMAKE_SOURCE_DIR@/x64/Release/{#MyAppExeName}"; DestDir: "{app}"; Flags: comparetimestamp
 @PACK_DLL_LIST@
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
@@ -58,7 +58,7 @@ Root: HKA; Subkey: "Software\Classes\{#MyAppAssocExt}\OpenWithProgids"; ValueTyp
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}"; ValueType: string; ValueName: ""; ValueData: "{#MyAppAssocName}"; Flags: uninsdeletekey
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"; Flags: uninsdeletekey
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".usddb"; ValueData: ""; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: "{#MyAppAssocExt}"; ValueData: ""; Flags: uninsdeletekey
 
 [UninstallDelete]
 Type: files; Name: "{app}/data.db"
