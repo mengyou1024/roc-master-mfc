@@ -3,7 +3,7 @@
 
 #define MyAppName "Roc-Master"
 #define MyAppVersion "@APP_VERSION@"
-#define MyAppPublisher "@GIT_USER_NAME@
+#define MyAppPublisher "@GIT_USER_NAME@"
 #define MyAppURL "@GIT_REPOSITORY_URL@"
 #define MyAppExeName "Mutilple.exe"
 #define MoroseInstallDir "@CMAKE_SOURCE_DIR@/output"
