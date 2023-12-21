@@ -14,7 +14,6 @@
 #ifdef USE_SQLITE_ORM
     #include <sqlite_orm/sqlite_orm.h>
 
-
 struct HD_ScanORM {
     #pragma pack(1)
     std::array<float, 4>                                                mThickness     = {};
@@ -168,15 +167,11 @@ public:
      * @param th 类指针
      * @param ...args 除了`const HDBridge::NM_DATA& data, const HD_Utils& caller`以外的参数
      * @return 可调用对象
-    */
-    template <class Fn,class Th, class... Args>
-    static auto WrapReadCallback(Fn&& func, Th&& th, Args&&... args) {
-        return [&](const HDBridge::NM_DATA& data, const HD_Utils& caller) {
-            auto callable = std::bind(func, th, std::placeholders::_1, std::placeholders::_2, std::forward<Args>(args)...);
-            callable(data, caller);
-        };
+     */
+    template <class Fn, class Th>
+    static auto WrapReadCallback(Fn func, Th th) {
+        return std::bind(func, th, std::placeholders::_1, std::placeholders::_2);
     }
-
 
     /**
      * @brief 将回调函数列表压入栈,
@@ -220,7 +215,7 @@ public:
 
 private:
     using HDUtilsCallback       = std::function<void(const HDBridge::NM_DATA&, const HD_Utils&)>;
-    using HDUtilsCallbackVector = std::map<std::string, HDUtilsCallback>;
+    using HDUtilsCallbackVector = std::multimap<std::string, HDUtilsCallback>;
     using HDUtilsCallbackStack  = std::stack<HDUtilsCallbackVector>;
 
     std::mutex                mScanDataMutex     = {};

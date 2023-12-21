@@ -225,8 +225,6 @@ void MeshAscan::UpdateAmpMemoryData() {
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(PT_V2F_C4F) * m_pAmpMemoryLineVertices[i].size(), m_pAmpMemoryLineVertices[i].data());
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
-
-    
 }
 
 void MeshAscan::hookAmpMemoryData(int index, const std::shared_ptr<std::vector<uint8_t>> data) {
@@ -239,7 +237,28 @@ void MeshAscan::hookAScanData(const std::shared_ptr<std::vector<uint8_t>> data) 
     mRawAScanData = data;
 }
 
-const std::vector<uint8_t> MeshAscan::getAmpMemoryData(int index) const{
+void MeshAscan::SetGateData(const std::pair<float, float>& data, int index) {
+    CString str;
+    str.Format(L"%c-pos:%.1f, %c-max:%.1f", 'A' + index, data.first, 'A' + index, data.second);
+    m_sGateDataShow[index] = str;
+}
+
+void MeshAscan::SetGateData(int index) {
+    CString str;
+    str.Format(L"%c-pos:Nan, %c-max:Nan", 'A' + index, 'A' + index);
+    m_sGateDataShow[index] = str;
+}
+
+void MeshAscan::SetTickness(float thickness) {
+    EnableTickness(true);
+    m_Tickness = thickness;
+}
+
+void MeshAscan::EnableTickness(bool en) {
+    m_EnableThickness = en;
+}
+
+const std::vector<uint8_t> MeshAscan::GetAmpMemoryData(int index) const {
     if (mAmpMemoryData[index] == nullptr) {
         return {};
     }
@@ -254,7 +273,7 @@ void MeshAscan::UpdateGate(int iGate, bool bEnable, float fPos, float fWidth, fl
     if (iGate >= MAX_GATE_NUM) {
         return;
     }
-    //std::lock_guard lock(mGMutex);
+    // std::lock_guard lock(mGMutex);
     m_Gate[iGate].bEnable = bEnable;
     m_Gate[iGate].fPos    = fPos;
     m_Gate[iGate].fWidth  = fWidth;
@@ -263,14 +282,14 @@ void MeshAscan::UpdateGate(int iGate, bool bEnable, float fPos, float fWidth, fl
 
 void MeshAscan::DrawGate() {
     std::lock_guard lock(mGMutex);
-    glm::vec4 color;
-    float     fLineWidth = 2.0f;
+    glm::vec4       color;
+    float           fLineWidth = 2.0f;
     for (int iGate = 0; iGate < MAX_GATE_NUM; iGate++) {
         if (iGate == 0)
             color = glm::vec4(1.0f, 0, 0, 1.0f);
         else if (iGate == 2)
             color = glm::vec4(0, 1.0f, 0.0f, 1.0f);
-        else 
+        else
             color = glm::vec4(0, 0, 1.0f, 1.0f);
 
         if (m_Gate[iGate].bEnable) {
@@ -328,6 +347,47 @@ void MeshAscan::DrawAixsText() {
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
 
+    glDisable(GL_SCISSOR_TEST);
+
+    ShowGateData();
+    ShowTickness();
+}
+
+void MeshAscan::ShowGateData() {
+    glEnable(GL_SCISSOR_TEST);
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glScissor(m_rcItem.vleft, m_rcItem.vtop, m_rcItem.vWidth(), m_rcItem.vHeight());
+    glPushMatrix();
+    auto           index = 2;
+    constexpr auto step  = 25;
+    for (auto& s : m_sGateDataShow) {
+        m_pOpenGL->m_Font.Text((float)(m_rcItem.vleft + 5), (float)(m_rcItem.vtop + (index--) * step + m_rcItem.vHeight() - 70), s,
+                               glm::vec4(1.0f, 1.0f, 0, 1.0f), 1.f);
+    }
+
+    glPopMatrix();
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND);
+    glDisable(GL_SCISSOR_TEST);
+}
+
+void MeshAscan::ShowTickness() {
+    if (!m_EnableThickness) {
+        return;
+    }
+    glEnable(GL_SCISSOR_TEST);
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glScissor(m_rcItem.vleft, m_rcItem.vtop, m_rcItem.vWidth(), m_rcItem.vHeight());
+    glPushMatrix();
+    CString str;
+    str.Format(L"T: %.1fmm", m_Tickness);
+    m_pOpenGL->m_Font.Text((float)(m_rcItem.vleft + 240), (float)(m_rcItem.vtop + m_rcItem.vHeight() - 20), str,
+                           glm::vec4(1.0f, 1.0f, 0, 1.0f), 1.f);
+    glPopMatrix();
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND);
     glDisable(GL_SCISSOR_TEST);
 }
 

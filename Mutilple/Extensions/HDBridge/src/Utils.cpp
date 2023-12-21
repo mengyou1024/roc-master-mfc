@@ -1,4 +1,5 @@
 #include "HDBridge/Utils.h"
+#include <bitset>
 #include <chrono>
 #include <future>
 
@@ -22,7 +23,7 @@ void HD_Utils::waitExit() {
 void HD_Utils::addReadCallback(const std::function<void(const HDBridge::NM_DATA&, const HD_Utils&)> callback, std::string name) {
     std::lock_guard<std::mutex> lock(mReadCallbackMutex);
     if (callback) {
-        mReadCallback.insert(std::make_pair(name,callback));
+        mReadCallback.insert(std::make_pair(name, callback));
     }
 }
 
@@ -36,7 +37,6 @@ void HD_Utils::removeReadCallback(std::string name) {
         }
     }
 }
-
 
 void HD_Utils::pushCallback() {
     mCallbackStack.push(mReadCallback);
@@ -56,7 +56,7 @@ void HD_Utils::autoGain(int channel, int gateIndex, float goal, float gainStep) 
         return;
     }
 
-    auto  ret = std::async(std::launch::deferred, [this, channel, gateIndex, goal, gainStep]() {
+    auto ret = std::async(std::launch::deferred, [this, channel, gateIndex, goal, gainStep]() {
         volatile bool                                                             getGoal  = false;
         float                                                                     lastGain = getBridge()->getGain(channel);
         std::function<void(const HDBridge::NM_DATA& data, const HD_Utils& utils)> f        = [&getGoal, lastGain, channel, gateIndex, goal, gainStep](const HDBridge::NM_DATA& data, const HD_Utils& utils) -> void {
@@ -123,18 +123,18 @@ void HD_Utils::readThread() {
         }
         auto data = mBridge->readDatas();
         if (data) {
-            std::lock_guard<std::mutex> readLock(mReadCallbackMutex);
-            for (const auto& [key, callback] : mReadCallback) {
-                callback(*data.get(), *this);
-                if (data->iChannel < 4) {
-                    auto channel = data->iChannel;
-                    data->iChannel += 12;
-                    callback(*data.get(), *this);
-                    data->iChannel = channel;
-                }
-            }
-            std::lock_guard<std::mutex> dataLock(mScanDataMutex);
             if (data->iChannel >= 0 && data->iChannel < HDBridge::CHANNEL_NUMBER) {
+                std::lock_guard<std::mutex> readLock(mReadCallbackMutex);
+                for (const auto& [key, callback] : mReadCallback) {
+                    callback(*data.get(), *this);
+                    if (data->iChannel < 4) {
+                        auto channel = data->iChannel;
+                        data->iChannel += 12;
+                        callback(*data.get(), *this);
+                        data->iChannel = channel;
+                    }
+                }
+                std::lock_guard<std::mutex> dataLock(mScanDataMutex);
                 mScanOrm.mScanData[data->iChannel] = std::move(data);
             }
         } else {

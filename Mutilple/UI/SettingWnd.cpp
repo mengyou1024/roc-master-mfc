@@ -13,19 +13,33 @@ CDuiString SettingWnd::GetSkinFile() {
 
 void SettingWnd::InitWindow() {
     CDuiWindowBase::InitWindow();
-    auto opt          = static_cast<COptionUI*>(m_PaintManager.FindControl(L"OptAutoUpgrade"));
+    auto opt          = m_PaintManager.FindControl<COptionUI*>(L"OptAutoUpgrade");
     auto systemConfig = GetSystemConfig();
-    opt->Selected(systemConfig.checkUpdate);
+    if (opt) {
+        opt->Selected(systemConfig.checkUpdate);
+    }
     opt = static_cast<COptionUI*>(m_PaintManager.FindControl(L"OptSystemProxy"));
-    opt->Selected(systemConfig.enableProxy);
+    if (opt) {
+        opt->Selected(systemConfig.enableProxy);
+    }
     opt = static_cast<COptionUI*>(m_PaintManager.FindControl(L"OptMeasureThickness"));
-    opt->Selected(systemConfig.enableMeasureThickness);
+    if (opt) {
+        opt->Selected(systemConfig.enableMeasureThickness);
+    }
     auto edit = static_cast<CEditUI*>(m_PaintManager.FindControl(L"EditSystemProxy"));
-    edit->SetText(systemConfig.httpProxy.c_str());
+    if (edit) {
+        edit->SetText(systemConfig.httpProxy.c_str());
+    }
+
     opt = static_cast<COptionUI*>(m_PaintManager.FindControl(L"OptUseNetwork"));
-    opt->Selected(systemConfig.enableNetworkTOFD);
+    if (opt) {
+        opt->Selected(systemConfig.enableNetworkTOFD);
+    }
+
     edit = static_cast<CEditUI*>(m_PaintManager.FindControl(L"EditUseNetwork"));
-    edit->SetText(WStringFromString(systemConfig.ipFPGA).c_str());
+    if (edit) {
+        edit->SetText(WStringFromString(systemConfig.ipFPGA).c_str());
+    }
 }
 
 void SettingWnd::Notify(TNotifyUI& msg) {

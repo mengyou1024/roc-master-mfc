@@ -105,7 +105,7 @@
 						<Label />
 						<Label text="采样深度" width="60" />
 						<HorizontalLayout width="20" />
-						<Edit name="EditSampleDepth" textvalitor="\d+\.?\d{0,2}" modenumber="true" numberminmax="0,1000" wheelstep="0.5" width="120" bordersize="1" textext="mm" bordercolor="0x7F7F7F7F" height="28" />
+						<Edit name="EditSampleDepth" textvalitor="\d+\.?\d{0,2}" modenumber="true" numberminmax="0,5000" wheelstep="0.5" width="120" bordersize="1" textext="mm" bordercolor="0x7F7F7F7F" height="28" />
 						<Label />
 					</HorizontalLayout>
 					<HorizontalLayout height="5" />

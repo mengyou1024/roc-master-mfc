@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window size="1280,900" caption="5,5,5,52" sizebox="10,10,10,10">
+<Window size="240,240" caption="5,5,5,52" sizebox="10,10,10,10">
 	<Font name="楷体" size="14" default="true" />
 	<Font name="楷体" size="18" />
 	<Font name="楷体" size="24" />
@@ -26,9 +26,9 @@
 		</HorizontalLayout>
 		<VerticalLayout bkimage="Theme\Line\v_line.png" height="1" />
 		<VerticalLayout inset="10,15,10,10">
-			<HorizontalLayout height="180" inset="10,10,10,10">
+			<HorizontalLayout inset="10,10,10,10">
 				<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
-					<HorizontalLayout height="32" >
+					<!-- <HorizontalLayout height="32" >
 						<Label text="自动更新" width="60"/>
 						<HorizontalLayout width="20" />
 						<Option name="OptAutoUpgrade" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
@@ -41,19 +41,19 @@
 						<HorizontalLayout width="20" />
 						<Edit name="EditSystemProxy" textvalitor="h?t{0,2}p?:?/{0,2}\d{0,3}(\.\d{0,3}){0,3}:?\d{0,5}" width="240" bordersize="1" bordercolor="0x7F7F7F7F" height="28" />
 						<Label />
-					</HorizontalLayout>
+					</HorizontalLayout> -->
 					<HorizontalLayout height="32">
 						<Label text="使用网口" width="60"/>
 						<HorizontalLayout width="20" />
 						<Option name="OptUseNetwork"  width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
-						<HorizontalLayout width="20" />
-						<Edit name="EditUseNetwork" textvalitor="\d{0,3}(\.\d{0,3}){0,3}" width="240" bordersize="1" bordercolor="0x7F7F7F7F" height="28" />
+						<!-- <HorizontalLayout width="20" />
+						<Edit name="EditUseNetwork" textvalitor="\d{0,3}(\.\d{0,3}){0,3}" width="240" bordersize="1" bordercolor="0x7F7F7F7F" height="28" /> -->
 						<Label />
 					</HorizontalLayout>
 				</VerticalLayout>
 				<Label text="系统设置" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="60" height="20" />
 			</HorizontalLayout>
-			<HorizontalLayout height="80" inset="10,10,10,10">
+			<HorizontalLayout inset="10,10,10,10">
 				<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
 					<HorizontalLayout height="32">
 						<Label text="测厚" width="60"/>
@@ -64,7 +64,7 @@
 				</VerticalLayout>
 				<Label text="检测方式" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="60" height="20" />
 			</HorizontalLayout>
-			<HorizontalLayout inset="10,10,10,10">
+			<!-- <HorizontalLayout inset="10,10,10,10">
 				<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
 				</VerticalLayout>
 				<Label text="保存探伤记录" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="90" height="20" />
@@ -88,7 +88,7 @@
 				<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10" childalign="center" childvalign="center">
 				</VerticalLayout>
 				<Label text="带状图显示模式" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="105" height="20" />
-			</HorizontalLayout>
+			</HorizontalLayout> -->
 		</VerticalLayout>
 	</VerticalLayout>
 </Window>

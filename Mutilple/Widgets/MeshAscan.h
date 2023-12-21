@@ -8,7 +8,7 @@ class Channel;
 class MeshAscan : public Mesh {
 public:
     constexpr static int MAX_DAC_LINES_NUM = 2;
-    MeshAscan(OpenGL* pOpenGL);
+    MeshAscan(OpenGL *pOpenGL);
     virtual ~MeshAscan();
 
     virtual void SetLimits(float fMin, float fMax) override;
@@ -28,17 +28,32 @@ public:
     void UpdateAmpMemoryData();
     void hookAmpMemoryData(int index, const std::shared_ptr<std::vector<uint8_t>> data);
     void hookAScanData(const std::shared_ptr<std::vector<uint8_t>> data);
-    const std::vector<uint8_t> getAmpMemoryData(int index) const; 
-    void                       ClearAmpMemoryData(int index);
+    void SetGateData(const std::pair<float, float> &data, int index);
+    void SetGateData(int index);
+    void SetTickness(float thickness);
+    void EnableTickness(bool en = true);
+
+    const std::vector<uint8_t> GetAmpMemoryData(int index) const;
+
+    void ClearAmpMemoryData(int index);
 
 private:
-    void    DrawGate();
-    void    DrawAixsText();
+    void DrawGate();
+    void DrawAixsText();
+    void ShowGateData();
+    void ShowTickness();
+
+    std::array<CString, 3> m_sGateDataShow = {
+        L"A-pos:NaN, A-max:NaN",
+        L"B-pos:NaN, B-max:NaN",
+        L"C-pos:NaN, C-max:NaN",
+    };
+
     FLOAT   m_fScanMin;
     FLOAT   m_fScanMax;
     GLsizei m_iAScanSize;
-    GLsizei m_iDACSize;                        // 母线DAC
-    GLsizei m_iDACLineSize[MAX_DAC_LINES_NUM]; // RL SL
+    GLsizei m_iDACSize;                         // 母线DAC
+    GLsizei m_iDACLineSize[MAX_DAC_LINES_NUM];  // RL SL
     GLsizei m_iAmpMemoryLineSize[MAX_GATE_NUM]; ///< 峰值记忆的大小
     struct _gate_info {
         bool  bEnable;
@@ -46,6 +61,9 @@ private:
         float fWidth;
         float fHeight;
     } m_Gate[MAX_GATE_NUM];
+
+    bool  m_EnableThickness = false;
+    float m_Tickness        = 0.0f;
 
     GLuint                  m_iAscanVAO, m_iAscanVBO;
     std::vector<PT_V2F_C4F> m_pAscanVertices;
@@ -60,7 +78,7 @@ private:
     GLuint                  m_iAmpMemoryLineVBO[MAX_GATE_NUM]      = {};
     std::vector<PT_V2F_C4F> m_pAmpMemoryLineVertices[MAX_GATE_NUM] = {};
 
-    std::mutex                            mGMutex       = {};
-    std::shared_ptr<std::vector<uint8_t>> mRawAScanData = nullptr;
+    std::mutex                            mGMutex                      = {};
+    std::shared_ptr<std::vector<uint8_t>> mRawAScanData                = nullptr;
     std::shared_ptr<std::vector<uint8_t>> mAmpMemoryData[MAX_GATE_NUM] = {};
 };

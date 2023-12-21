@@ -40,6 +40,12 @@ public:
         Demodu_Negative,  ///< 负半波
     };
 
+    struct HB_ScanGateInfo {
+        float pos    = {};
+        float width  = {};
+        float height = {};
+    };
+
     struct HB_GateInfo {
         int   gate      = {};
         int   active    = {};
@@ -47,17 +53,19 @@ public:
         float pos       = {};
         float width     = {};
         float height    = {};
+
+        operator HB_ScanGateInfo() {
+            HB_ScanGateInfo ret = {};
+            ret.pos             = pos;
+            ret.width           = width;
+            ret.height          = height;
+            return ret;
+        }
     };
 
     enum class HB_Gate2Type : uint32_t {
         Fixed = 0, ///< 固定
         Follow,    ///< 跟随以波门1最高回波为零点
-    };
-
-    struct HB_ScanGateInfo {
-        float pos    = {};
-        float width  = {};
-        float height = {};
     };
 
     struct NM_DATA {
@@ -137,7 +145,7 @@ public:
         mId = id;
     }
 
-    virtual const std::wstring& getName() const final {
+    virtual const std::wstring &getName() const final {
         return mName;
     }
 
@@ -145,7 +153,7 @@ public:
         mName = name;
     }
 
-    virtual const bool& isValid() const final {
+    virtual const bool &isValid() const final {
         return mIsValid;
     }
 
@@ -153,11 +161,11 @@ public:
         mIsValid = valid;
     }
 
-    virtual const cache_t& getCache() const final {
+    virtual const cache_t &getCache() const final {
         return mCache;
     }
 
-    virtual cache_t& getCache_ref() final {
+    virtual cache_t &getCache_ref() final {
         return mCache;
     }
 
@@ -293,11 +301,22 @@ public:
     virtual bool setGateInfo(int channel, const HB_GateInfo &info) {
         return false;
     }
+    virtual bool setScanGateInfo(int channel, const HB_ScanGateInfo &info) final {
+        mCache.scanGateInfo[channel % (CHANNEL_NUMBER + 4)] = info;
+        return true;
+    }
     virtual const HB_GateInfo getGateInfo(int index, int channel) const final {
         if (index == 0) {
             return mCache.gateInfo[channel % CHANNEL_NUMBER];
         } else {
             return mCache.gate2Info[channel % CHANNEL_NUMBER];
+        }
+    }
+    virtual const HB_ScanGateInfo getScanGateInfo(int channel, int index = 2) const final {
+        if (index == 2) {
+            return mCache.scanGateInfo[channel % (CHANNEL_NUMBER + 4)];
+        } else {
+            return static_cast<HB_GateInfo>(getGateInfo(index, channel));
         }
     }
     virtual bool setGate2Type(int channel, HB_Gate2Type type) {
@@ -422,11 +441,14 @@ public:
     static std::tuple<float, uint8_t, bool> computeGateInfo(const std::vector<uint8_t> &data, const HB_ScanGateInfo &info) {
         try {
             double start = (double)info.pos;
+            if (info.width <= 0.001) {
+                throw std::runtime_error("info.wdith is 0");
+            }
             if (std::abs(start - 1.0) < 0.00001) {
-                throw std::exception("info.pos large than 1.0");
+                throw std::runtime_error("info.pos large than 1");
             }
             if (info.pos < 0.0) {
-                throw std::exception("info.pos small than 0.0");
+                throw std::runtime_error("info.pos small than 0");
             }
             double end = (double)(info.pos + info.width);
             if (end > 1.0) {
@@ -438,11 +460,10 @@ public:
 
             auto pos = (float)((double)std::distance(data.begin(), max) / (double)data.size());
             if (pos < 0.0f) {
-                throw std::exception("compulate info.pos small than 0.0");
+                throw std::runtime_error("compulate info.pos small than 0.0");
             }
             return std::make_tuple(pos, *max, true);
-        } catch (std::exception &e) {
-            spdlog::warn(e.what());
+        } catch (...) {
             return std::make_tuple(0.0f, 0, false);
         }
     }

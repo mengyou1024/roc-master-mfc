@@ -28,6 +28,7 @@
 #include <stack>
 #include <tuple>
 #include <vector>
+#include <sstream>
 
 using std::bitset;
 using std::invoke;

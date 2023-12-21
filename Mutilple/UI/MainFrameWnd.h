@@ -96,11 +96,11 @@ private:
 
     /// Slider的极限范围
     static inline std::map<ConfigType, std::pair<float, float>> mConfigLimits = {
-        {ConfigType::DetectRange, {0.f, 100.f}},
-        {ConfigType::Gain,        {0.f, 110.f}},
-        {ConfigType::GateStart,   {0.f, 100.f}},
-        {ConfigType::GateWidth,   {0.f, 100.f}},
-        {ConfigType::GateHeight,  {0.f, 100.f}},
+        {ConfigType::DetectRange, {0.f, 5000.f}},
+        {ConfigType::Gain,        {0.f, 110.f} },
+        {ConfigType::GateStart,   {0.f, 100.f} },
+        {ConfigType::GateWidth,   {0.f, 100.f} },
+        {ConfigType::GateHeight,  {0.f, 100.f} },
     };
 
     /// Edit控件鼠标滚轮事件的步进
@@ -111,6 +111,19 @@ private:
         {ConfigType::GateWidth,   0.1},
         {ConfigType::GateHeight,  0.1},
     };
+
+    struct GateResult {
+        bool result = false;
+        operator bool() {
+            return result;
+        }
+        float pos = 0.0f;
+        float max = 0.0f;
+    };
+
+    using ASCanGateResult    = std::array<GateResult, 3>;
+    using AllGateResult      = std::array<ASCanGateResult, HDBridge::CHANNEL_NUMBER + 4>;
+    using GateResultTimeNote = std::array<uint64_t, HDBridge::CHANNEL_NUMBER>;
 
     constexpr static auto BTN_SELECT_GROUP_MAX = 4;
 
@@ -143,7 +156,8 @@ private:
     std::condition_variable                   mCScanNotify        = {};                      ///< C扫线程更新数据通知
     std::mutex                                mCScanMutex         = {};                      ///< C扫线程互斥量
     bool                                      mCScanThreadRunning = {};                      ///< C扫线程运行
-
+    AllGateResult                             mAllGateResult      = {};                      ///< 所有波门的计算结果
+    GateResultTimeNote                        mLastGateResUpdate  = {};                      ///< 上一次波门结果更新的时间
     // 参数备份
     ORM_Model::DetectInfo mDetectInfoBak   = {};
     std::wstring          mJobGroupNameBak = {};
@@ -231,18 +245,24 @@ private:
     void UpdateAScanCallback(const HDBridge::NM_DATA& data, const HD_Utils& caller);
 
     /**
+     * @brief 更新所有波门的计算结果
+     * @param data A扫数据
+     * @param caller 调用类
+     * @param result 结果
+     */
+    void UpdateAllGateResult(const HDBridge::NM_DATA& data, const HD_Utils& caller);
+
+    /**
      * @brief 波门追踪回调函数
      * @param data A扫数据
      * @param caller 调用类
-     * @param traceList 追踪的通道列表
      */
-    void AmpTraceCallback(const HDBridge::NM_DATA& data, const HD_Utils& caller, std::vector<int> traceList = {});
+    void AmpTraceCallback(const HDBridge::NM_DATA& data, const HD_Utils& caller);
 
     /**
      * @brief 峰值记忆
      * @param data A扫数据
      * @param caller 调用类
-     * @param traceList 追踪的通道列表
      */
     void AmpMemeryCallback(const HDBridge::NM_DATA& data, const HD_Utils& caller);
 
