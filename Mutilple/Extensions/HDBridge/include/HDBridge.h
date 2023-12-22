@@ -477,31 +477,36 @@ public:
         if (src >= static_cast<size_t>(CHANNEL_NUMBER)) {
             return;
         }
-        auto         zeroBias     = mCache.zeroBias[src];
-        auto         pluseWidth   = mCache.pulseWidth[src];
-        auto         delay        = mCache.delay[src];
-        auto         sampleDepth  = mCache.sampleDepth[src];
-        auto         sampleFactor = mCache.sampleFactor[src];
-        auto         gain         = mCache.gain[src];
-        auto         filter       = mCache.filter[src];
-        auto         demodu       = mCache.demodu[src];
-        auto         phaseReverse = mCache.phaseReverse[src];
-        HB_GateInfo  gateInfo     = mCache.gateInfo[src];
-        HB_GateInfo  gate2Info    = mCache.gate2Info[src];
-        HB_Gate2Type gate2Type    = mCache.gate2Type[src];
+        auto         soundVelocity = mCache.soundVelocity[src];
+        auto         zeroBias      = mCache.zeroBias[src];
+        auto         pluseWidth    = mCache.pulseWidth[src];
+        auto         delay         = mCache.delay[src];
+        auto         sampleDepth   = mCache.sampleDepth[src];
+        auto         sampleFactor  = mCache.sampleFactor[src];
+        auto         gain          = mCache.gain[src];
+        auto         filter        = mCache.filter[src];
+        auto         demodu        = mCache.demodu[src];
+        auto         phaseReverse  = mCache.phaseReverse[src];
+        HB_GateInfo  gateInfo      = mCache.gateInfo[src];
+        HB_GateInfo  gate2Info     = mCache.gate2Info[src];
+        HB_Gate2Type gate2Type     = mCache.gate2Type[src];
         for (auto i : dist) {
-            mCache.zeroBias[i]     = zeroBias;
-            mCache.pulseWidth[i]   = pluseWidth;
-            mCache.delay[i]        = delay;
-            mCache.sampleDepth[i]  = sampleDepth;
-            mCache.sampleFactor[i] = sampleFactor;
-            mCache.gain[i]         = gain;
-            mCache.filter[i]       = filter;
-            mCache.demodu[i]       = demodu;
-            mCache.phaseReverse[i] = phaseReverse;
-            mCache.gateInfo[i]     = gateInfo;
-            mCache.gate2Info[i]    = gate2Info;
-            mCache.gate2Type[i]    = gate2Type;
+            if (i == src) {
+                continue;
+            }
+            mCache.soundVelocity[i] = soundVelocity;
+            mCache.zeroBias[i]      = zeroBias;
+            mCache.pulseWidth[i]    = pluseWidth;
+            mCache.delay[i]         = delay;
+            mCache.sampleDepth[i]   = sampleDepth;
+            mCache.sampleFactor[i]  = sampleFactor;
+            mCache.gain[i]          = gain;
+            mCache.filter[i]        = filter;
+            mCache.demodu[i]        = demodu;
+            mCache.phaseReverse[i]  = phaseReverse;
+            mCache.gateInfo[i]      = gateInfo;
+            mCache.gate2Info[i]     = gate2Info;
+            mCache.gate2Type[i]     = gate2Type;
         }
         syncCache2Board();
     }

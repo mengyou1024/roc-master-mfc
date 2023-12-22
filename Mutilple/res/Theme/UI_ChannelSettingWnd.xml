@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window size="1280,720" caption="5,5,5,52" sizebox="10,10,10,10">
+<Window size="1280,790" caption="5,5,5,52" sizebox="10,10,10,10">
 	<Font name="楷体" size="14" default="true" />
 	<Font name="楷体" size="18" />
 	<Font name="楷体" size="24" />
@@ -28,165 +28,175 @@
 		<HorizontalLayout inset="10,15,10,10">
 			<WindowUI name="WndOpenGL" bkcolor="0xFF000000" />
 			<VerticalLayout width="10" />
-			<VerticalLayout width="320">
+			<VerticalLayout width="340">
 				<VerticalLayout />
-				<VerticalLayout width="320" height="640" bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10">
-					<HorizontalLayout height="5" />
-					<HorizontalLayout height="32">
-						<Label />
-						<Label text="声速" width="60" />
-						<HorizontalLayout width="20" />
-						<Edit name="EditSoundVelocity" textvalitor="\d+\.?\d{0,2}" modenumber="true" numberminmax="1000,10000" wheelstep="100" width="120" textext="m/s" bordersize="1" bordercolor="0x7F7F7F7F" height="28" />
-						<Label />
-					</HorizontalLayout>
-					<HorizontalLayout height="5" />
-					<HorizontalLayout height="32">
-						<Label />
-						<Label text="重复频率" width="60" />
-						<HorizontalLayout width="20" />
-						<Edit name="EditFrequency" textvalitor="\d+\.?\d{0,2}" modenumber="true" numberminmax="50,10000" wheelstep="10" width="120" bordersize="1" bordercolor="0x7F7F7F7F" height="28" />
-						<Label />
-					</HorizontalLayout>
-					<HorizontalLayout height="5" />
-					<HorizontalLayout height="32">
-						<Label />
-						<Label text="发射电压" width="60" />
-						<HorizontalLayout width="20" />
-						<Combo name="ComboVoltage" width="120" textpadding="4,1,1,1" normalimage="file='Theme\Combo\combo.png' source='0,0,100,22' corner='2,2,20,18'" hotimage="file='Theme\Combo\combo.png' source='0,22,100,44' corner='2,2,22,18'" pushedimage="file='Theme\Combo\combo.png' source='0,44,100,66' corner='2,2,22,18'" dropboxsize="0, 400">
-							<ListLabelElement text="50V" selected="true" height="32" />
-							<ListLabelElement text="100V" height="32" />
-							<ListLabelElement text="200V" height="32" />
-							<ListLabelElement text="260V" height="32" />
-						</Combo>
-						<Label />
-					</HorizontalLayout>
-					<HorizontalLayout height="5" />
-					<HorizontalLayout height="32">
-						<Label />
-						<Label text="通道标志" width="60" />
-						<HorizontalLayout width="20" />
-						<Edit name="EditChannelFlag" textvalitor="(?:\d|[A-F]|[a-f]){0,8}" width="120" bordersize="1" bordercolor="0x7F7F7F7F" height="28" />
-						<Label />
-					</HorizontalLayout>
-					<HorizontalLayout height="5" />
-					<HorizontalLayout height="32">
-						<Label />
-						<Label text="扫查增量" width="60" />
-						<HorizontalLayout width="20" />
-						<Edit name="EditScanIncrement" textvalitor="[0-4]" modenumber="true" numberminmax="0,4" wheelstep="1" width="120" bordersize="1" bordercolor="0x7F7F7F7F" height="28" />
-						<Label />
-					</HorizontalLayout>
-					<HorizontalLayout height="5" />
-					<HorizontalLayout height="32">
-						<Label />
-						<Label text="零点偏移" width="60" />
-						<HorizontalLayout width="20" />
-						<Edit name="EditZeroBias" textvalitor="\d+\.?\d{0,2}" modenumber="true" numberminmax="0,1000" wheelstep="0.5" width="120" bordersize="1" textext="mm" bordercolor="0x7F7F7F7F" height="28" />
-						<Label />
-					</HorizontalLayout>
-					<HorizontalLayout height="5" />
-					<HorizontalLayout height="32">
-						<Label />
-						<Label text="脉冲宽度" width="60" />
-						<HorizontalLayout width="20" />
-						<Edit name="EditPulseWidth" textvalitor="\d+\.?\d{0,2}" modenumber="true" numberminmax="0,1000" wheelstep="0.5" width="120" bordersize="1" bordercolor="0x7F7F7F7F" height="28" />
-						<Label />
-					</HorizontalLayout>
-					<HorizontalLayout height="5" />
-					<HorizontalLayout height="32">
-						<Label />
-						<Label text="延时" width="60" />
-						<HorizontalLayout width="20" />
-						<Edit name="EditDelay" textvalitor="\d+\.?\d{0,2}" modenumber="true" numberminmax="0,1000" wheelstep="0.5" width="120" bordersize="1" textext="mm" bordercolor="0x7F7F7F7F" height="28" />
-						<Label />
-					</HorizontalLayout>
-					<HorizontalLayout height="5" />
-					<HorizontalLayout height="32">
-						<Label />
-						<Label text="采样深度" width="60" />
-						<HorizontalLayout width="20" />
-						<Edit name="EditSampleDepth" textvalitor="\d+\.?\d{0,2}" modenumber="true" numberminmax="0,5000" wheelstep="0.5" width="120" bordersize="1" textext="mm" bordercolor="0x7F7F7F7F" height="28" />
-						<Label />
-					</HorizontalLayout>
-					<HorizontalLayout height="5" />
-					<HorizontalLayout height="32">
-						<Label />
-						<Label text="采样因子" width="60" />
-						<HorizontalLayout width="20" />
-						<Edit name="EditSampleFactor" textvalitor="\d{0,2}" modenumber="true" numberminmax="0,255" wheelstep="1" width="120" bordersize="1" bordercolor="0x7F7F7F7F" height="28" />
-						<Label />
-					</HorizontalLayout>
-					<HorizontalLayout height="5" />
-					<HorizontalLayout height="32">
-						<Label />
-						<Label text="增益" width="60" />
-						<HorizontalLayout width="20" />
-						<Edit name="EditGain" textvalitor="\d+\.?\d{0,2}" modenumber="true" numberminmax="0,110" wheelstep="0.2" width="120" bordersize="1" bordercolor="0x7F7F7F7F" height="28" />
-						<Label />
-					</HorizontalLayout>
-					<HorizontalLayout height="5" />
-					<HorizontalLayout height="32">
-						<Label />
-						<Label text="滤波" width="60" />
-						<HorizontalLayout width="20" />
-						<Combo name="ComboFilter" width="120" textpadding="4,1,1,1" normalimage="file='Theme\Combo\combo.png' source='0,0,100,22' corner='2,2,20,18'" hotimage="file='Theme\Combo\combo.png' source='0,22,100,44' corner='2,2,22,18'" pushedimage="file='Theme\Combo\combo.png' source='0,44,100,66' corner='2,2,22,18'" dropboxsize="0, 400">
-							<ListLabelElement text="不滤波" selected="true" height="32" />
-							<ListLabelElement text="2.5MHz" height="32" />
-							<ListLabelElement text="5.0MHz" height="32" />
-						</Combo>
-						<Label />
-					</HorizontalLayout>
-					<HorizontalLayout height="5" />
-					<HorizontalLayout height="32">
-						<Label />
-						<Label text="检波方式" width="60" />
-						<HorizontalLayout width="20" />
-						<Combo name="CombotDemodu" width="120" textpadding="4,1,1,1" normalimage="file='Theme\Combo\combo.png' source='0,0,100,22' corner='2,2,20,18'" hotimage="file='Theme\Combo\combo.png' source='0,22,100,44' corner='2,2,22,18'" pushedimage="file='Theme\Combo\combo.png' source='0,44,100,66' corner='2,2,22,18'" dropboxsize="0, 400">
-							<ListLabelElement text="射频" selected="true" height="32" />
-							<ListLabelElement text="全波" height="32" />
-							<ListLabelElement text="正半波" height="32" />
-							<ListLabelElement text="负半波" height="32" />
-						</Combo>
-						<Label />
-					</HorizontalLayout>
-					<HorizontalLayout height="32">
-						<Label />
-						<Label text="B门类型" width="60" />
-						<HorizontalLayout width="20" />
-						<Combo name="ComboGateBType" width="120" textpadding="4,1,1,1" normalimage="file='Theme\Combo\combo.png' source='0,0,100,22' corner='2,2,20,18'" hotimage="file='Theme\Combo\combo.png' source='0,22,100,44' corner='2,2,22,18'" pushedimage="file='Theme\Combo\combo.png' source='0,44,100,66' corner='2,2,22,18'" dropboxsize="0, 400">
-							<ListLabelElement text="固定" selected="true" height="32" />
-							<ListLabelElement text="跟随" height="32" />
-						</Combo>
-						<Label />
-					</HorizontalLayout>
-					<HorizontalLayout height="5" />
-					<HorizontalLayout>
-						<Label />
-						<Option name="OptCH1" text="1" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
-						<Option name="OptCH2" text="2" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
-						<Option name="OptCH3" text="3" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
-						<Option name="OptCH4" text="4" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
-						<Option name="OptCH5" text="5" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
-						<Option name="OptCH6" text="6" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
-						<Label />
-					</HorizontalLayout>
-					<HorizontalLayout height="2" />
-					<HorizontalLayout>
-						<Label />
-						<Option name="OptCH7" text="7" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
-						<Option name="OptCH8" text="8" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
-						<Option name="OptCH9" text="9" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
-						<Option name="OptCH10" text="10" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
-						<Option name="OptCH11" text="11" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
-						<Option name="OptCH12" text="12" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
-						<Label />
-					</HorizontalLayout>
-					<HorizontalLayout height="5" />
-					<HorizontalLayout>
-						<Label />
-						<Button name="BtnCopy" width="80" height="32" text="通道拷贝" />
-						<Label />
-					</HorizontalLayout>
+				<VerticalLayout width="340" height="200" inset="10,10,10,10">
+					<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10">
+						<HorizontalLayout height="5" />
+						<HorizontalLayout height="32">
+							<Label />
+							<Label text="重复频率" width="60" />
+							<HorizontalLayout width="20" />
+							<Edit name="EditFrequency" textvalitor="\d+\.?\d{0,2}" modenumber="true" numberminmax="50,10000" wheelstep="10" width="120" bordersize="1" bordercolor="0x7F7F7F7F" height="28" />
+							<Label />
+						</HorizontalLayout>
+						<HorizontalLayout height="5" />
+						<HorizontalLayout height="32">
+							<Label />
+							<Label text="发射电压" width="60" />
+							<HorizontalLayout width="20" />
+							<Combo name="ComboVoltage" width="120" textpadding="4,1,1,1" normalimage="file='Theme\Combo\combo.png' source='0,0,100,22' corner='2,2,20,18'" hotimage="file='Theme\Combo\combo.png' source='0,22,100,44' corner='2,2,22,18'" pushedimage="file='Theme\Combo\combo.png' source='0,44,100,66' corner='2,2,22,18'" dropboxsize="0, 400">
+								<ListLabelElement text="50V" selected="true" height="32" />
+								<ListLabelElement text="100V" height="32" />
+								<ListLabelElement text="200V" height="32" />
+								<ListLabelElement text="260V" height="32" />
+							</Combo>
+							<Label />
+						</HorizontalLayout>
+						<HorizontalLayout height="5" />
+						<HorizontalLayout height="32">
+							<Label />
+							<Label text="通道标志" width="60" />
+							<HorizontalLayout width="20" />
+							<Edit name="EditChannelFlag" textvalitor="(?:\d|[A-F]|[a-f]){0,8}" width="120" bordersize="1" bordercolor="0x7F7F7F7F" height="28" />
+							<Label />
+						</HorizontalLayout>
+						<HorizontalLayout height="5" />
+						<HorizontalLayout height="32">
+							<Label />
+							<Label text="扫查增量" width="60" />
+							<HorizontalLayout width="20" />
+							<Edit name="EditScanIncrement" textvalitor="[0-4]" modenumber="true" numberminmax="0,4" wheelstep="1" width="120" bordersize="1" bordercolor="0x7F7F7F7F" height="28" />
+							<Label />
+						</HorizontalLayout>
+					</VerticalLayout>
+					<Label text="板卡参数" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="60" height="20" />
+				</VerticalLayout>
+				<VerticalLayout height="5" />
+				<VerticalLayout width="340" height="520" inset="10,10,10,10">
+					<VerticalLayout bkimage="file='Theme\Button\bkimage.png' corner='3,3,3,3'" inset="10,15,10,10">
+						<HorizontalLayout height="5" />
+						<HorizontalLayout height="32">
+							<Label />
+							<Label text="声速" width="60" />
+							<HorizontalLayout width="20" />
+							<Edit name="EditSoundVelocity" textvalitor="\d+\.?\d{0,2}" modenumber="true" numberminmax="1000,10000" wheelstep="100" width="120" textext="m/s" bordersize="1" bordercolor="0x7F7F7F7F" height="28" />
+							<Label />
+						</HorizontalLayout>
+						<HorizontalLayout height="5" />
+						<HorizontalLayout height="32">
+							<Label />
+							<Label text="零点偏移" width="60" />
+							<HorizontalLayout width="20" />
+							<Edit name="EditZeroBias" textvalitor="\d+\.?\d{0,2}" modenumber="true" numberminmax="0,1000" wheelstep="0.5" width="120" bordersize="1" textext="mm" bordercolor="0x7F7F7F7F" height="28" />
+							<Label />
+						</HorizontalLayout>
+						<HorizontalLayout height="5" />
+						<HorizontalLayout height="32">
+							<Label />
+							<Label text="脉冲宽度" width="60" />
+							<HorizontalLayout width="20" />
+							<Edit name="EditPulseWidth" textvalitor="\d+\.?\d{0,2}" modenumber="true" numberminmax="0,1000" wheelstep="0.5" width="120" bordersize="1" bordercolor="0x7F7F7F7F" height="28" />
+							<Label />
+						</HorizontalLayout>
+						<HorizontalLayout height="5" />
+						<HorizontalLayout height="32">
+							<Label />
+							<Label text="延时" width="60" />
+							<HorizontalLayout width="20" />
+							<Edit name="EditDelay" textvalitor="\d+\.?\d{0,2}" modenumber="true" numberminmax="0,1000" wheelstep="0.5" width="120" bordersize="1" textext="mm" bordercolor="0x7F7F7F7F" height="28" />
+							<Label />
+						</HorizontalLayout>
+						<HorizontalLayout height="5" />
+						<HorizontalLayout height="32">
+							<Label />
+							<Label text="采样深度" width="60" />
+							<HorizontalLayout width="20" />
+							<Edit name="EditSampleDepth" textvalitor="\d+\.?\d{0,2}" modenumber="true" numberminmax="0,5000" wheelstep="0.5" width="120" bordersize="1" textext="mm" bordercolor="0x7F7F7F7F" height="28" />
+							<Label />
+						</HorizontalLayout>
+						<HorizontalLayout height="5" />
+						<HorizontalLayout height="32">
+							<Label />
+							<Label text="采样因子" width="60" />
+							<HorizontalLayout width="20" />
+							<Edit name="EditSampleFactor" textvalitor="\d{0,3}" modenumber="true" numberminmax="0,255" wheelstep="1" width="120" bordersize="1" bordercolor="0x7F7F7F7F" height="28" />
+							<Label />
+						</HorizontalLayout>
+						<HorizontalLayout height="5" />
+						<HorizontalLayout height="32">
+							<Label />
+							<Label text="增益" width="60" />
+							<HorizontalLayout width="20" />
+							<Edit name="EditGain" textvalitor="\d+\.?\d{0,3}" modenumber="true" numberminmax="0,110" wheelstep="0.2" width="120" bordersize="1" bordercolor="0x7F7F7F7F" height="28" />
+							<Label />
+						</HorizontalLayout>
+						<HorizontalLayout height="5" />
+						<HorizontalLayout height="32">
+							<Label />
+							<Label text="滤波" width="60" />
+							<HorizontalLayout width="20" />
+							<Combo name="ComboFilter" width="120" textpadding="4,1,1,1" normalimage="file='Theme\Combo\combo.png' source='0,0,100,22' corner='2,2,20,18'" hotimage="file='Theme\Combo\combo.png' source='0,22,100,44' corner='2,2,22,18'" pushedimage="file='Theme\Combo\combo.png' source='0,44,100,66' corner='2,2,22,18'" dropboxsize="0, 400">
+								<ListLabelElement text="不滤波" selected="true" height="32" />
+								<ListLabelElement text="2.5MHz" height="32" />
+								<ListLabelElement text="5.0MHz" height="32" />
+							</Combo>
+							<Label />
+						</HorizontalLayout>
+						<HorizontalLayout height="5" />
+						<HorizontalLayout height="32">
+							<Label />
+							<Label text="检波方式" width="60" />
+							<HorizontalLayout width="20" />
+							<Combo name="CombotDemodu" width="120" textpadding="4,1,1,1" normalimage="file='Theme\Combo\combo.png' source='0,0,100,22' corner='2,2,20,18'" hotimage="file='Theme\Combo\combo.png' source='0,22,100,44' corner='2,2,22,18'" pushedimage="file='Theme\Combo\combo.png' source='0,44,100,66' corner='2,2,22,18'" dropboxsize="0, 400">
+								<ListLabelElement text="射频" selected="true" height="32" />
+								<ListLabelElement text="全波" height="32" />
+								<ListLabelElement text="正半波" height="32" />
+								<ListLabelElement text="负半波" height="32" />
+							</Combo>
+							<Label />
+						</HorizontalLayout>
+						<HorizontalLayout height="5" />
+						<HorizontalLayout height="32">
+							<Label />
+							<Label text="B门类型" width="60" />
+							<HorizontalLayout width="20" />
+							<Combo name="ComboGateBType" width="120" textpadding="4,1,1,1" normalimage="file='Theme\Combo\combo.png' source='0,0,100,22' corner='2,2,20,18'" hotimage="file='Theme\Combo\combo.png' source='0,22,100,44' corner='2,2,22,18'" pushedimage="file='Theme\Combo\combo.png' source='0,44,100,66' corner='2,2,22,18'" dropboxsize="0, 400">
+								<ListLabelElement text="固定" selected="true" height="32" />
+								<ListLabelElement text="跟随" height="32" />
+							</Combo>
+							<Label />
+						</HorizontalLayout>
+						<HorizontalLayout height="5" />
+						<HorizontalLayout>
+							<Label />
+							<Option name="OptCH1" text="1" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+							<Option name="OptCH2" text="2" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+							<Option name="OptCH3" text="3" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+							<Option name="OptCH4" text="4" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+							<Option name="OptCH5" text="5" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+							<Option name="OptCH6" text="6" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+							<Label />
+						</HorizontalLayout>
+						<HorizontalLayout height="2" />
+						<HorizontalLayout>
+							<Label />
+							<Option name="OptCH7" text="7" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+							<Option name="OptCH8" text="8" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+							<Option name="OptCH9" text="9" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+							<Option name="OptCH10" text="10" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+							<Option name="OptCH11" text="11" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+							<Option name="OptCH12" text="12" width="50" valign="center" textpadding="28,8,0,0" align="left" selectedimage="file='Theme\Check\checked.png' dest='10,8,26,24'" normalimage="file='Theme\Check\unchecked.png' dest='10,8,26,24'" hotimage="" pushedimage="" />
+							<Label />
+						</HorizontalLayout>
+						<HorizontalLayout height="5" />
+						<HorizontalLayout>
+							<Label />
+							<Button name="BtnCopy" width="80" height="32" text="通道拷贝" />
+							<Label />
+						</HorizontalLayout>
+					</VerticalLayout>
+					<Label text="通道参数" float="true" pos="20,0,0,0" bkcolor="0xFFFEFEFE" width="60" height="20" />
 				</VerticalLayout>
 				<VerticalLayout />
 			</VerticalLayout>

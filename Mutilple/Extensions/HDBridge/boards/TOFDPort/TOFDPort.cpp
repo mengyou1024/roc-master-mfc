@@ -117,8 +117,8 @@ bool TOFDMultiPort::setDelay(int channel, float delay_us) {
 bool TOFDMultiPort::setSampleFactor(int channel, int sampleFactor) {
     if (sampleFactor < 1) {
         sampleFactor = 1;
-    } else if (sampleFactor > 255) {
-        sampleFactor = 255;
+    } else if (sampleFactor > 127) {
+        sampleFactor = 127;
     }
     this->mCache.sampleFactor[channel % CHANNEL_NUMBER] = sampleFactor;
     return TOFD_PORT_SetSampleFactor(channel % CHANNEL_NUMBER, sampleFactor);
