@@ -148,22 +148,31 @@ namespace DuiLib
 			}
 			return (LRESULT)m_hBkBrush;
         } else if (uMsg == WM_CHAR) {
-            auto text = m_pOwner->GetText();
-            text += static_cast<wchar_t>(wParam);
-            auto& [enable, valitor] = m_pOwner->m_textValitor;
-            auto isSpecital         = [wParam]() -> bool { 
-				return wParam == VK_BACK || wParam == VK_ESCAPE || wParam == VK_RETURN;
-            };
-            if (enable && !isSpecital()) {
-                if (std::regex_match(std::wstring(text.GetData()), valitor)) {
+            auto [start, end] = m_pOwner->GetSel();
+			if (start == 0 && end == m_pOwner->GetText().GetLength()) {
+                bHandled = FALSE;
+            } else {
+                auto& [enable, valitor] = m_pOwner->m_textValitor;
+                const auto isSpecital   = [](WPARAM wParam) -> bool {
+                    return wParam == VK_BACK || wParam == VK_ESCAPE || wParam == VK_RETURN;
+                };
+                if (enable && !isSpecital(wParam)) {
+                    auto text = m_pOwner->GetText();
+                    if (start == end && start != text.GetLength()) {
+                        text = CDuiString(text, start) + CDuiString(wParam) + CDuiString(text.GetData() + start, text.GetLength() - start);
+                    } else {
+                        text += CDuiString(wParam);
+                    }
+                    if (std::regex_match(std::wstring(text.GetData()), valitor)) {
+                        bHandled = FALSE;
+                    }
+                } else {
                     bHandled = FALSE;
                 }
-            } else {
-                bHandled = FALSE;
 			}
 		}
 		else bHandled = FALSE;
-
+__HandleMessage:
 		if( !bHandled ) return CWindowWnd::HandleMessage(uMsg, wParam, lParam);
 		return lRes;
 	}
