@@ -363,7 +363,7 @@ void MeshAscan::ShowGateData() {
     constexpr auto step  = 25;
     for (auto& s : m_sGateDataShow) {
         m_pOpenGL->m_Font.Text((float)(m_rcItem.vleft + 5), (float)(m_rcItem.vtop + (index--) * step + m_rcItem.vHeight() - 70), s,
-                               glm::vec4(1.0f, 1.0f, 0, 1.0f), 1.f);
+                               glm::vec4(0.6, 0.8f, 0.8f, 1.f), 1.f);
     }
 
     glPopMatrix();
@@ -384,7 +384,7 @@ void MeshAscan::ShowTickness() {
     CString str;
     str.Format(L"T: %.1fmm", m_Tickness);
     m_pOpenGL->m_Font.Text((float)(m_rcItem.vleft + 240), (float)(m_rcItem.vtop + m_rcItem.vHeight() - 20), str,
-                           glm::vec4(1.0f, 1.0f, 0, 1.0f), 1.f);
+                           glm::vec4(0.8f, 0.8f, 1.0f, 1.0f), 1.f);
     glPopMatrix();
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);

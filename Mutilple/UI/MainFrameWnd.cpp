@@ -69,10 +69,11 @@ MainFrameWnd::MainFrameWnd() {
                 } else {
                     bridge = GenerateHDBridge<TOFDMultiPort>(config[0], 1);
                 }
-
                 mUtils = std::make_unique<HD_Utils>(bridge);
                 mUtils->getBridge()->syncCache2Board();
+#ifndef _DEBUG
                 config[0].setValid(false);
+#endif // ! _DEBUG
                 HDBridge::storage().update(config[0]);
             } else {
                 throw std::runtime_error("上一次配置验证失败，可能由于软件运行中异常退出.");
@@ -527,23 +528,10 @@ void MainFrameWnd::UpdateAllGateResult(const HDBridge::NM_DATA &data, const HD_U
             }
         }
 
-        auto &sacnGateInfo = mUtils->getCache().scanGateInfo[(size_t)HDBridge::CHANNEL_NUMBER + data.iChannel];
-        auto  start        = (double)sacnGateInfo.pos;
-        auto  end          = (double)sacnGateInfo.pos + (double)sacnGateInfo.width;
-        auto  left         = static_cast<size_t>(start * (double)data.pAscan.size());
-        auto  right        = static_cast<size_t>(end * (double)data.pAscan.size());
-        auto  gateInfo     = mUtils->getBridge()->getGateInfo(1, data.iChannel);
-        auto  gateBL       = static_cast<size_t>((double)gateInfo.pos * (double)data.pAscan.size());
-        auto  gateBR       = static_cast<size_t>((double)(gateInfo.pos + gateInfo.width) * (double)data.pAscan.size());
-        auto  maxRight     = std::max_element(std::begin(data.pAscan) + left, std::begin(data.pAscan) + right);
-        auto  maxLeft      = std::max_element(std::begin(data.pAscan) + gateBL, std::begin(data.pAscan) + gateBR);
-        auto  distance     = std::distance(maxLeft, maxRight);
-        auto  delay        = mUtils->getBridge()->getDelay(data.iChannel);
-        auto  depth        = mUtils->getBridge()->getSampleDepth(data.iChannel) + delay;
-        auto  bridge       = mUtils->getBridge();
-        auto  percent      = (double)distance / (double)(data.pAscan.size());
-        auto  allDist      = bridge->time2distance(depth, (int)data.iChannel) - bridge->time2distance(delay, (int)data.iChannel);
-        auto  thickness    = percent * allDist;
+        auto gateLeft      = bridge->getScanGateInfo(data.iChannel + HDBridge::CHANNEL_NUMBER, 1);
+        auto gateRigth     = bridge->getScanGateInfo(data.iChannel + HDBridge::CHANNEL_NUMBER, 2);
+        auto [bias, depth] = bridge->gateRangeOfAcousticPath(data.iChannel);
+        auto thickness     = HDBridge::compoteDistance(data.pAscan, depth, gateLeft, gateRigth);
         mUtils->mScanOrm.mThickness[(size_t)channel - HDBridge::CHANNEL_NUMBER] = (float)thickness;
         mesh->SetTickness((float)thickness);
     }
@@ -553,57 +541,21 @@ void MainFrameWnd::AmpTraceCallback(const HDBridge::NM_DATA &data, const HD_Util
     std::vector<int> traceList = {0, 1, 2, 3};
     auto             bridge    = caller.getBridge();
     if (std::find(traceList.begin(), traceList.end(), data.iChannel) != traceList.end()) {
-        // 调整硬件波门的位置
-        for (int i = 1; i < 2; i++) {
-            auto info = caller.getBridge()->getGateInfo(i, data.iChannel);
-            if (info.width > EPS && std::abs(info.width - 100.0f) > EPS && info.width > EPS) {
-                auto [pos, max, res] = HDBridge::computeGateInfo(data.pAscan, {info.pos, info.width, info.height});
-                if (res) {
-                    float newPos = pos - info.width / 2.0f;
-                    if (newPos < EPS) {
-                        newPos = 0.0f;
-                    } else if (newPos + info.width > 100.0f) {
-                        newPos = 100.f - info.width;
-                    }
-                    info.pos = newPos;
-                    bridge->setGateInfo(data.iChannel, info);
-                }
+        // 计算A波门需要调整的偏移
+        auto gateInfo        = caller.getBridge()->getScanGateInfo(data.iChannel, 0);
+        auto [pos, max, res] = HDBridge::computeGateInfo(data.pAscan, gateInfo);
+        if (res) {
+            float bias = pos - (gateInfo.pos + gateInfo.width / 2.0f);
+            // 调整波门位置
+            for (int i = 0; i < 3; i++) {
+                auto info = caller.getBridge()->getScanGateInfo(data.iChannel, i);
+                info.pos += bias;
+                caller.getBridge()->setScanGateInfo(data.iChannel, info, i);
             }
-        }
-        // AddTaskToQueue([bridge]() { bridge->flushSetting(); }, "flushSetting", true);
-        //  调整扫查波门的位置
-        // auto &info = bridge->mCache.scanGateInfo[data.iChannel];
-        // if (info.width > EPS && std::abs(info.width - 100.0f) > EPS && info.width > EPS) {
-        //     auto [pos, max, res] = HDBridge::computeGateInfo(data.pAscan, {info.pos, info.width, info.height});
-        //     if (res) {
-        //         float newPos = pos - info.width / 2.0f;
-        //         if (newPos < EPS) {
-        //             newPos = 0.0f;
-        //         } else if (newPos + info.width > 100.0f) {
-        //             newPos = 100.f - info.width;
-        //         }
-        //         info.pos  = newPos;
-        //         auto mesh = m_OpenGL_ASCAN.getMesh<MeshAscan *>(data.iChannel);
-        //         mesh->UpdateGate(2, 1, info.pos, info.width, info.height);
-        //     }
-        // }
-        if (data.iChannel < 4) {
-            // 测厚波门
-            auto &info = bridge->getCache_ref().scanGateInfo[(size_t)data.iChannel + HDBridge::CHANNEL_NUMBER];
-            if (info.width > EPS && std::abs(info.width - 100.0f) > EPS) {
-                auto [pos, max, res] = HDBridge::computeGateInfo(data.pAscan, {info.pos, info.width, info.height});
-                if (res) {
-                    float newPos = pos - info.width / 2.0f;
-                    if (newPos < EPS) {
-                        newPos = 0.0f;
-                    } else if (newPos + info.width > 100.0f) {
-                        newPos = 100.f - info.width;
-                    }
-                    info.pos      = newPos;
-                    auto iChannel = (size_t)data.iChannel + HDBridge::CHANNEL_NUMBER;
-                    auto mesh     = m_OpenGL_ASCAN.getMesh<MeshAscan *>(iChannel);
-                    mesh->UpdateGate(2, 1, info.pos, info.width, info.height);
-                }
+            if (data.iChannel < 4) {
+                auto info = caller.getBridge()->getScanGateInfo(data.iChannel + HDBridge::CHANNEL_NUMBER);
+                info.pos += bias;
+                caller.getBridge()->setScanGateInfo(data.iChannel + HDBridge::CHANNEL_NUMBER, info);
             }
         }
     }
@@ -741,11 +693,8 @@ void MainFrameWnd::OnBtnUIClicked(std::wstring &name) {
     } else if (name == _T("AmpTrace")) {
         auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnUIAmpTrace")));
         if (btn->GetBkColor() == 0xFFEEEEEE) {
-            auto config = GetSystemConfig();
-            if (config.enableMeasureThickness) {
-                auto wrap = HD_Utils::WrapReadCallback(&MainFrameWnd::AmpTraceCallback, this);
-                mUtils->addReadCallback(wrap, "AmpTrace");
-            }
+            auto wrap = HD_Utils::WrapReadCallback(&MainFrameWnd::AmpTraceCallback, this);
+            mUtils->addReadCallback(wrap, "AmpTrace");
             btn->SetBkColor(0xFF339933);
         } else {
             mUtils->removeReadCallback("AmpTrace");
@@ -1012,6 +961,21 @@ void MainFrameWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
                              bridge.mScanOrm.mScanGateBInfo[i].height);
             mesh->UpdateGate(2, 1, bridge.mScanOrm.mScanGateInfo[i].pos, bridge.mScanOrm.mScanGateInfo[i].width,
                              bridge.mScanOrm.mScanGateInfo[i].height);
+
+            std::array<HDBridge::HB_ScanGateInfo, 3> scanGate = {
+                bridge.mScanOrm.mScanGateAInfo[i],
+                bridge.mScanOrm.mScanGateBInfo[i],
+                bridge.mScanOrm.mScanGateInfo[i],
+            };
+
+            for (int j = 0; j < 3; j++) {
+                auto [pos, max, res] = HDBridge::computeGateInfo(bridge.mScanOrm.mScanData[i]->pAscan, scanGate[j]);
+                if (res) {
+                    mesh->SetGateData(std::make_pair(pos, max/2.55f), j);
+                } else {
+                    mesh->SetGateData(j);
+                }
+            }
         }
         // 测厚通道
         for (size_t i = 0; i < 4; i++) {
@@ -1029,6 +993,21 @@ void MainFrameWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
             mesh->UpdateGate(2, 1, bridge.mScanOrm.mScanGateInfo[i + HDBridge::CHANNEL_NUMBER].pos,
                              bridge.mScanOrm.mScanGateInfo[i + HDBridge::CHANNEL_NUMBER].width,
                              bridge.mScanOrm.mScanGateInfo[i + HDBridge::CHANNEL_NUMBER].height);
+
+            std::array<HDBridge::HB_ScanGateInfo, 3> scanGate = {
+                bridge.mScanOrm.mScanGateAInfo[i],
+                bridge.mScanOrm.mScanGateBInfo[i],
+                bridge.mScanOrm.mScanGateInfo[i + HDBridge::CHANNEL_NUMBER],
+            };
+            for (int j = 0; j < 3; j++) {
+                auto [pos, max, res] = HDBridge::computeGateInfo(bridge.mScanOrm.mScanData[i]->pAscan, scanGate[j]);
+                if (res) {
+                    mesh->SetGateData(std::make_pair(pos, max/2.55f), j);
+                } else {
+                    mesh->SetGateData(j);
+                }
+            }
+            mesh->SetTickness(bridge.mScanOrm.mThickness[i]);
         }
     }
 }
@@ -1160,10 +1139,7 @@ void MainFrameWnd::ThreadCScan(void) {
                 auto   mesh         = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>((size_t)HDBridge::CHANNEL_NUMBER + i);
                 double baseTickness = _wtof(mDetectInfo.thickness.c_str());
                 if (baseTickness != 0.0f && baseTickness != -HUGE_VAL && baseTickness != HUGE_VAL) {
-                    constexpr uint8_t base                     = 0xFF >> 1;
-                    constexpr double  max_relative_error       = 1.0;
-                    constexpr double  threshold_relative_error = 0.1;
-                    auto              relative_error           = (mUtils->mScanOrm.mThickness[i] - baseTickness) / baseTickness;
+                    auto relative_error = (mUtils->mScanOrm.mThickness[i] - baseTickness) / baseTickness;
                     if (relative_error > max_relative_error) {
                         relative_error = max_relative_error;
                     } else if (relative_error < -max_relative_error) {
@@ -1405,32 +1381,33 @@ bool MainFrameWnd::EnterReviewMode(std::string name) {
                 }
             }
             for (size_t index = 0; index < 4ull; index++) {
-                auto   mesh         = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>(HDBridge::CHANNEL_NUMBER + index);
-                auto   thickness    = data.mScanOrm.mThickness[index];
-                double baseTickness = _wtof(mDetectInfo.thickness.c_str());
+                auto mesh         = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>(HDBridge::CHANNEL_NUMBER + index);
+                auto thickness    = data.mScanOrm.mThickness[index];
+                auto baseTickness = _wtof(mDetectInfo.thickness.c_str());
                 if (baseTickness != 0.0 && baseTickness != -HUGE_VAL && baseTickness != HUGE_VAL) {
-                    constexpr uint8_t base           = 0xFF >> 1;
-                    auto              relative_error = (thickness - baseTickness) / baseTickness;
-                    if (relative_error > 1.0) {
-                        relative_error = 1.0;
-                    } else if (relative_error < -1.0) {
-                        relative_error = -1.0;
+                    auto relative_error = (thickness - baseTickness) / baseTickness;
+                    if (relative_error > max_relative_error) {
+                        relative_error = max_relative_error;
+                    } else if (relative_error < -max_relative_error) {
+                        relative_error = -max_relative_error;
                     }
                     glm::vec4 color = {};
-                    if (relative_error > 0.01) {
+                    if (relative_error > threshold_relative_error) {
                         color = {.0f, 0.f, 1.f, 1.0f};
-                    } else if (relative_error < -0.01) {
+                    } else if (relative_error < -threshold_relative_error) {
                         color = {1.0f, 0.f, 0.f, 1.0f};
                     } else {
                         color = {.0f, 1.f, 0.f, 1.0f};
                     }
-                    uint8_t value = (((uint8_t)std::round((double)base * std::abs(relative_error))) & base);
+                    uint8_t value = (((uint8_t)std::round((double)base * std::abs(relative_error / max_relative_error))) & base);
                     if (relative_error >= 0) {
                         value += base;
                     } else {
                         value = base - value;
                     }
-                    mesh->AppendDot(value, color);
+                    mesh->AppendDot(value, color, MAXSIZE_T);
+                } else {
+                    mesh->AppendDot(0, {1.0f, 1.0f, 1.0f, 1.0f}, MAXSIZE_T);
                 }
             }
         }

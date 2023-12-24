@@ -36,6 +36,7 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
             if (res) {
                 try {
                     HDBridge port = {};
+                    port          = *mBridge;
                     port.setName(str);
                     auto id    = HDBridge::storage().insert(port);
                     auto pList = static_cast<DuiLib::CListUI*>(m_PaintManager.FindControl(_T("ListParamName")));

@@ -125,7 +125,10 @@ private:
     using AllGateResult      = std::array<ASCanGateResult, HDBridge::CHANNEL_NUMBER + 4>;
     using GateResultTimeNote = std::array<uint64_t, HDBridge::CHANNEL_NUMBER>;
 
-    constexpr static auto BTN_SELECT_GROUP_MAX = 4;
+    constexpr static auto    BTN_SELECT_GROUP_MAX     = 4;
+    constexpr static uint8_t base                     = 0xFF >> 1;
+    constexpr static double  max_relative_error       = 0.08;
+    constexpr static double  threshold_relative_error = 0.02;
 
     /**
      * @brief 当前选中的通道

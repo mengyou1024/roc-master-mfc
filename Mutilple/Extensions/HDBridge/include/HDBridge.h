@@ -61,6 +61,13 @@ public:
             ret.height          = height;
             return ret;
         }
+
+        HB_GateInfo &operator=(const HDBridge::HB_ScanGateInfo &val) {
+            pos    = val.pos;
+            width  = val.width;
+            height = val.height;
+            return *this;
+        }
     };
 
     enum class HB_Gate2Type : uint32_t {
@@ -301,8 +308,14 @@ public:
     virtual bool setGateInfo(int channel, const HB_GateInfo &info) {
         return false;
     }
-    virtual bool setScanGateInfo(int channel, const HB_ScanGateInfo &info) final {
-        mCache.scanGateInfo[channel % (CHANNEL_NUMBER + 4)] = info;
+    virtual bool setScanGateInfo(int channel, const HB_ScanGateInfo &info, int index = 2) final {
+        if (index == 2) {
+            mCache.scanGateInfo[channel % (CHANNEL_NUMBER + 4)] = info;
+        } else if (index == 1) {
+            mCache.gate2Info[channel % CHANNEL_NUMBER] = info;
+        } else if (index == 0) {
+            mCache.gateInfo[channel % CHANNEL_NUMBER] = info;
+        }
         return true;
     }
     virtual const HB_GateInfo getGateInfo(int index, int channel) const final {
@@ -441,14 +454,17 @@ public:
     static std::tuple<float, uint8_t, bool> computeGateInfo(const std::vector<uint8_t> &data, const HB_ScanGateInfo &info) {
         try {
             double start = (double)info.pos;
+            if (data.size() < 100) {
+                return std::make_tuple(0.0f, 0, false);
+            }
             if (info.width <= 0.001) {
-                throw std::runtime_error("info.wdith is 0");
+                return std::make_tuple(0.0f, 0, false);
             }
             if (std::abs(start - 1.0) < 0.00001) {
-                throw std::runtime_error("info.pos large than 1");
+                return std::make_tuple(0.0f, 0, false);
             }
             if (info.pos < 0.0) {
-                throw std::runtime_error("info.pos small than 0");
+                return std::make_tuple(0.0f, 0, false);
             }
             double end = (double)(info.pos + info.width);
             if (end > 1.0) {
@@ -457,15 +473,56 @@ public:
             auto left  = data.begin() + static_cast<int64_t>((double)data.size() * (double)info.pos);
             auto right = data.begin() + static_cast<int64_t>((double)data.size() * (double)(info.pos + info.width));
             auto max   = std::max_element(left, right);
-
+            if (*max == 255) {
+                std::vector<decltype(left)> minMaxVec = {};
+                for (auto &_left = left, &_right = right; _left != _right; _left++) {
+                    if (*_left == 255) {
+                        minMaxVec.push_back(_left);
+                    }
+                }
+                auto minMax = std::minmax_element(minMaxVec.begin(), minMaxVec.end());
+                max         = minMaxVec[0] + minMaxVec.size() / 2;
+            }
             auto pos = (float)((double)std::distance(data.begin(), max) / (double)data.size());
             if (pos < 0.0f) {
-                throw std::runtime_error("compulate info.pos small than 0.0");
+                return std::make_tuple(0.0f, 0, false);
             }
             return std::make_tuple(pos, *max, true);
         } catch (...) {
             return std::make_tuple(0.0f, 0, false);
         }
+    }
+
+    /**
+     * @brief 计算两个最高波间的距离
+     * @param data 波形数组
+     * @param range 声程范围
+     * @param gateA 第一个波门
+     * @param gateB 第二个波门
+     * @param abs 计算结果取绝对值
+     * @return 距离
+     */
+    static double compoteDistance(const std::vector<uint8_t> &data, double range,
+                                  const HB_ScanGateInfo &gateA, const HB_ScanGateInfo &gateB,
+                                  bool abs = false) {
+        auto [posA, maxA, resA] = computeGateInfo(data, gateA);
+        auto [posB, maxB, resB] = computeGateInfo(data, gateB);
+        if (resA && resB) {
+            if (abs && posA > posB) {
+                std::swap(posA, posB);
+            }
+            return range * (posB - posA);
+        }
+        return 0.0;
+    }
+
+    /**
+     * @brief 获取声程范围
+     * @param channel 通道号
+     * @return [bias, depth] (mm)
+     */
+    std::pair<double, double> gateRangeOfAcousticPath(int channel) {
+        return std::make_pair((double)time2distance(getDelay(channel), channel), (double)time2distance(getSampleDepth(channel), channel));
     }
 
     /*
@@ -477,36 +534,32 @@ public:
         if (src >= static_cast<size_t>(CHANNEL_NUMBER)) {
             return;
         }
-        auto         soundVelocity = mCache.soundVelocity[src];
-        auto         zeroBias      = mCache.zeroBias[src];
-        auto         pluseWidth    = mCache.pulseWidth[src];
-        auto         delay         = mCache.delay[src];
-        auto         sampleDepth   = mCache.sampleDepth[src];
-        auto         sampleFactor  = mCache.sampleFactor[src];
-        auto         gain          = mCache.gain[src];
-        auto         filter        = mCache.filter[src];
-        auto         demodu        = mCache.demodu[src];
-        auto         phaseReverse  = mCache.phaseReverse[src];
-        HB_GateInfo  gateInfo      = mCache.gateInfo[src];
-        HB_GateInfo  gate2Info     = mCache.gate2Info[src];
-        HB_Gate2Type gate2Type     = mCache.gate2Type[src];
+        auto soundVelocity = mCache.soundVelocity[src];
+        auto zeroBias      = mCache.zeroBias[src];
+        auto pluseWidth    = mCache.pulseWidth[src];
+        auto delay         = mCache.delay[src];
+        auto sampleDepth   = mCache.sampleDepth[src];
+        auto sampleFactor  = mCache.sampleFactor[src];
+        auto gain          = mCache.gain[src];
+        auto filter        = mCache.filter[src];
+        auto demodu        = mCache.demodu[src];
+        auto phaseReverse  = mCache.phaseReverse[src];
         for (auto i : dist) {
             if (i == src) {
                 continue;
             }
-            mCache.soundVelocity[i] = soundVelocity;
-            mCache.zeroBias[i]      = zeroBias;
-            mCache.pulseWidth[i]    = pluseWidth;
-            mCache.delay[i]         = delay;
-            mCache.sampleDepth[i]   = sampleDepth;
-            mCache.sampleFactor[i]  = sampleFactor;
-            mCache.gain[i]          = gain;
-            mCache.filter[i]        = filter;
-            mCache.demodu[i]        = demodu;
-            mCache.phaseReverse[i]  = phaseReverse;
-            mCache.gateInfo[i]      = gateInfo;
-            mCache.gate2Info[i]     = gate2Info;
-            mCache.gate2Type[i]     = gate2Type;
+            if (i > 0 && i < HDBridge::CHANNEL_NUMBER) {
+                mCache.soundVelocity[i] = soundVelocity;
+                mCache.zeroBias[i]      = zeroBias;
+                mCache.pulseWidth[i]    = pluseWidth;
+                mCache.delay[i]         = delay;
+                mCache.sampleDepth[i]   = sampleDepth;
+                mCache.sampleFactor[i]  = sampleFactor;
+                mCache.gain[i]          = gain;
+                mCache.filter[i]        = filter;
+                mCache.demodu[i]        = demodu;
+                mCache.phaseReverse[i]  = phaseReverse;
+            }
         }
         syncCache2Board();
     }
