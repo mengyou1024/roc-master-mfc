@@ -70,7 +70,7 @@ jobs:
       run: |
         git checkout master
         if((Test-Path "CHANGELOG.md") -ne "True") { echo "" > CHANGELOG.md }
-        $CHANGELOG_FILE = Get-Content -Path CHANGELOG.md
+        $CHANGELOG_FILE = Get-Content -Encoding utf8 -Raw -Path CHANGELOG.md
         Clear-Content -Path CHANGELOG.md
         echo "${{steps.changelog.outputs.changelog}}" > CHANGELOG.md
         Add-Content -Path CHANGELOG.md -Value "$CHANGELOG_FILE" -NoNewline
