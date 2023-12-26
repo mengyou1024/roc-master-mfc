@@ -239,13 +239,13 @@ void MeshAscan::hookAScanData(const std::shared_ptr<std::vector<uint8_t>> data) 
 
 void MeshAscan::SetGateData(const std::pair<float, float>& data, int index) {
     CString str;
-    str.Format(L"%c-pos:%.1f, %c-max:%.1f", 'A' + index, data.first, 'A' + index, data.second);
+    str.Format(L"%c深度:%.1f, %c波幅:%.1f%%", 'A' + index, data.first, 'A' + index, data.second);
     m_sGateDataShow[index] = str;
 }
 
 void MeshAscan::SetGateData(int index) {
     CString str;
-    str.Format(L"%c-pos:Nan, %c-max:Nan", 'A' + index, 'A' + index);
+    str.Format(L"%深度:无, %c波幅:无", 'A' + index, 'A' + index);
     m_sGateDataShow[index] = str;
 }
 
@@ -382,7 +382,7 @@ void MeshAscan::ShowTickness() {
     glScissor(m_rcItem.vleft, m_rcItem.vtop, m_rcItem.vWidth(), m_rcItem.vHeight());
     glPushMatrix();
     CString str;
-    str.Format(L"T: %.1fmm", m_Tickness);
+    str.Format(L"测厚: %.1fmm", m_Tickness);
     m_pOpenGL->m_Font.Text((float)(m_rcItem.vleft + 240), (float)(m_rcItem.vtop + m_rcItem.vHeight() - 20), str,
                            glm::vec4(0.8f, 0.8f, 1.0f, 1.0f), 1.f);
     glPopMatrix();

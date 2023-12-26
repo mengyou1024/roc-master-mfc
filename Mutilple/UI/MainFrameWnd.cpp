@@ -492,7 +492,8 @@ void MainFrameWnd::UpdateAllGateResult(const HDBridge::NM_DATA &data, const HD_U
         auto [pos, max, res] = bridge->computeGateInfo(data.pAscan, info);
         if (res) {
             mAllGateResult[channel][i].result = true;
-            mAllGateResult[channel][i].pos    = pos * 100.f;
+            auto [bias, depth]                = bridge->getRangeOfAcousticPath(channel);
+            mAllGateResult[channel][i].pos    = pos * (float)depth;
             mAllGateResult[channel][i].max    = (float)max / 2.55f;
             auto gateData                     = std::make_pair(mAllGateResult[channel][i].pos, mAllGateResult[channel][i].max);
             mesh->SetGateData(gateData, i);
@@ -509,7 +510,8 @@ void MainFrameWnd::UpdateAllGateResult(const HDBridge::NM_DATA &data, const HD_U
         auto [pos, max, res] = bridge->computeGateInfo(data.pAscan, info);
         if (res) {
             mAllGateResult[channel][i].result = true;
-            mAllGateResult[channel][i].pos    = pos * 100.f;
+            auto [bias, depth]                = bridge->getRangeOfAcousticPath(channel);
+            mAllGateResult[channel][i].pos    = pos * (float)depth;
             mAllGateResult[channel][i].max    = (float)max / 2.55f;
             auto gateData                     = std::make_pair(mAllGateResult[channel][i].pos, mAllGateResult[channel][i].max);
             mesh->SetGateData(gateData, i);
@@ -530,7 +532,7 @@ void MainFrameWnd::UpdateAllGateResult(const HDBridge::NM_DATA &data, const HD_U
 
         auto gateLeft      = bridge->getScanGateInfo(data.iChannel + HDBridge::CHANNEL_NUMBER, 1);
         auto gateRigth     = bridge->getScanGateInfo(data.iChannel + HDBridge::CHANNEL_NUMBER, 2);
-        auto [bias, depth] = bridge->gateRangeOfAcousticPath(data.iChannel);
+        auto [bias, depth] = bridge->getRangeOfAcousticPath(data.iChannel);
         auto thickness     = HDBridge::compoteDistance(data.pAscan, depth, gateLeft, gateRigth);
         mUtils->mScanOrm.mThickness[(size_t)channel - HDBridge::CHANNEL_NUMBER] = (float)thickness;
         mesh->SetTickness((float)thickness);
@@ -961,7 +963,7 @@ void MainFrameWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
                              bridge.mScanOrm.mScanGateBInfo[i].height);
             mesh->UpdateGate(2, 1, bridge.mScanOrm.mScanGateInfo[i].pos, bridge.mScanOrm.mScanGateInfo[i].width,
                              bridge.mScanOrm.mScanGateInfo[i].height);
-
+            mesh->SetLimits(bridge.mScanOrm.mScanData[i]->aScanLimits[0], bridge.mScanOrm.mScanData[i]->aScanLimits[1]);
             std::array<HDBridge::HB_ScanGateInfo, 3> scanGate = {
                 bridge.mScanOrm.mScanGateAInfo[i],
                 bridge.mScanOrm.mScanGateBInfo[i],
@@ -970,8 +972,9 @@ void MainFrameWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
 
             for (int j = 0; j < 3; j++) {
                 auto [pos, max, res] = HDBridge::computeGateInfo(bridge.mScanOrm.mScanData[i]->pAscan, scanGate[j]);
+                auto depth           = bridge.mScanOrm.mScanData[i]->aScanLimits[1];
                 if (res) {
-                    mesh->SetGateData(std::make_pair(pos, max/2.55f), j);
+                    mesh->SetGateData(std::make_pair(pos * depth, max / 2.55f), j);
                 } else {
                     mesh->SetGateData(j);
                 }
@@ -993,6 +996,8 @@ void MainFrameWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
             mesh->UpdateGate(2, 1, bridge.mScanOrm.mScanGateInfo[i + HDBridge::CHANNEL_NUMBER].pos,
                              bridge.mScanOrm.mScanGateInfo[i + HDBridge::CHANNEL_NUMBER].width,
                              bridge.mScanOrm.mScanGateInfo[i + HDBridge::CHANNEL_NUMBER].height);
+            mesh->SetLimits(bridge.mScanOrm.mScanData[i + HDBridge::CHANNEL_NUMBER]->aScanLimits[0],
+                            bridge.mScanOrm.mScanData[i + HDBridge::CHANNEL_NUMBER]->aScanLimits[1]);
 
             std::array<HDBridge::HB_ScanGateInfo, 3> scanGate = {
                 bridge.mScanOrm.mScanGateAInfo[i],
@@ -1002,7 +1007,8 @@ void MainFrameWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
             for (int j = 0; j < 3; j++) {
                 auto [pos, max, res] = HDBridge::computeGateInfo(bridge.mScanOrm.mScanData[i]->pAscan, scanGate[j]);
                 if (res) {
-                    mesh->SetGateData(std::make_pair(pos, max/2.55f), j);
+                    auto depth = bridge.mScanOrm.mScanData[i]->aScanLimits[1];
+                    mesh->SetGateData(std::make_pair(pos * depth, max/2.55f), j);
                 } else {
                     mesh->SetGateData(j);
                 }

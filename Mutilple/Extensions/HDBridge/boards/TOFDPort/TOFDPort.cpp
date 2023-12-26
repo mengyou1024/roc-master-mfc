@@ -191,6 +191,10 @@ unique_ptr<HDBridge::NM_DATA> TOFDMultiPort::readDatas() {
     memcpy(ret->pGateAmp.data(), data->pGateAmp, sizeof(uint8_t) * 2);
     memcpy(ret->pAlarm.data(), data->pAlarm, sizeof(int32_t) * 2);
 
+    auto [bias, depth] = getRangeOfAcousticPath(ret->iChannel);
+    ret->aScanLimits[0] = (float)bias;
+    ret->aScanLimits[1] = (float)(depth + bias);
+
     freeRawDatas(data);
     return ret;
 }

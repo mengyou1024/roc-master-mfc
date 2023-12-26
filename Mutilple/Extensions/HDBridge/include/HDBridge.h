@@ -521,7 +521,7 @@ public:
      * @param channel 通道号
      * @return [bias, depth] (mm)
      */
-    std::pair<double, double> gateRangeOfAcousticPath(int channel) {
+    std::pair<double, double> getRangeOfAcousticPath(int channel) {
         return std::make_pair((double)time2distance(getDelay(channel), channel), (double)time2distance(getSampleDepth(channel), channel));
     }
 

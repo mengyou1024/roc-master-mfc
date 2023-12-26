@@ -44,9 +44,9 @@ private:
     void ShowTickness();
 
     std::array<CString, 3> m_sGateDataShow = {
-        L"A-pos:NaN, A-max:NaN",
-        L"B-pos:NaN, B-max:NaN",
-        L"C-pos:NaN, C-max:NaN",
+        L"A深度:无, A波幅:无",
+        L"B深度:无, B波幅:无",
+        L"C深度:无, C波幅:无",
     };
 
     FLOAT   m_fScanMin;
