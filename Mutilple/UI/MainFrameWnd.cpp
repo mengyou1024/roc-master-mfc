@@ -996,8 +996,8 @@ void MainFrameWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
             mesh->UpdateGate(2, 1, bridge.mScanOrm.mScanGateInfo[i + HDBridge::CHANNEL_NUMBER].pos,
                              bridge.mScanOrm.mScanGateInfo[i + HDBridge::CHANNEL_NUMBER].width,
                              bridge.mScanOrm.mScanGateInfo[i + HDBridge::CHANNEL_NUMBER].height);
-            mesh->SetLimits(bridge.mScanOrm.mScanData[i + HDBridge::CHANNEL_NUMBER]->aScanLimits[0],
-                            bridge.mScanOrm.mScanData[i + HDBridge::CHANNEL_NUMBER]->aScanLimits[1]);
+            mesh->SetLimits(bridge.mScanOrm.mScanData[i]->aScanLimits[0],
+                            bridge.mScanOrm.mScanData[i]->aScanLimits[1]);
 
             std::array<HDBridge::HB_ScanGateInfo, 3> scanGate = {
                 bridge.mScanOrm.mScanGateAInfo[i],
