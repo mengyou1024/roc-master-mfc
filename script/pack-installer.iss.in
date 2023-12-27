@@ -50,6 +50,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "@CMAKE_SOURCE_DIR@/x64/Release/{#MyAppExeName}"; DestDir: "{app}"; Flags: comparetimestamp
+Source: "@CMAKE_SOURCE_DIR@/x64/Release/template/*"; DestDir: "{app}/template"
 @PACK_DLL_LIST@
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
