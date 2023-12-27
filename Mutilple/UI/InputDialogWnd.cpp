@@ -16,7 +16,7 @@ void InputDialogWnd::InitWindow() {
 void InputDialogWnd::Notify(TNotifyUI &msg) {
     if (msg.sType == DUI_MSGTYPE_RETURN || (msg.sType == DUI_MSGTYPE_CLICK && msg.pSender->GetName() == L"IDOK")) {
         mResult.first  = true;
-        auto edit      = static_cast<CEditUI *>(m_PaintManager.FindControl(L"Edit"));
+        auto edit      = m_PaintManager.FindControl<CEditUI *>(L"Edit");
         mResult.second = edit->GetText();
         Close();
     }

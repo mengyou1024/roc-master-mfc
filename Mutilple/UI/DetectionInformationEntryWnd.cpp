@@ -27,10 +27,10 @@ CDuiString DetectionInformationEntryWnd::GetSkinFile() {
 
 void DetectionInformationEntryWnd::InitWindow() {
     CDuiWindowBase::InitWindow();
-    auto list     = static_cast<CListUI*>(m_PaintManager.FindControl(L"ListUserList"));
-    auto userList = ORM_Model::User::storage().get_all<ORM_Model::User>();
+    auto     list     = m_PaintManager.FindControl<CListUI*>(L"ListUserList");
+    auto     userList = ORM_Model::User::storage().get_all<ORM_Model::User>();
     CEditUI* text     = nullptr;
-    for (auto &[id, valitor] : mInputValitor) {
+    for (auto& [id, valitor] : mInputValitor) {
         text = m_PaintManager.FindControl<CEditUI*>(id.data());
         text->SetTextValitor(valitor, true);
     }
@@ -40,7 +40,7 @@ void DetectionInformationEntryWnd::Notify(TNotifyUI& msg) {
     if (msg.sType == DUI_MSGTYPE_CLICK) {
         if (msg.pSender->GetName() == L"BtnUserAdd") {
             try {
-                auto Edit = static_cast<CEditUI*>(m_PaintManager.FindControl(L"EditUserAdd"));
+                auto Edit = m_PaintManager.FindControl<CEditUI*>(L"EditUserAdd");
                 if (!Edit->GetText().IsEmpty()) {
                     ORM_Model::User user = {};
                     user.name            = Edit->GetText();
@@ -50,7 +50,7 @@ void DetectionInformationEntryWnd::Notify(TNotifyUI& msg) {
             } catch (std::exception& e) { spdlog::warn(GB2312ToUtf8(e.what())); }
         } else if (msg.pSender->GetName() == L"BtnUserDel") {
             try {
-                auto list = static_cast<CListUI*>(m_PaintManager.FindControl(L"ListUserList"));
+                auto list = m_PaintManager.FindControl<CListUI*>(L"ListUserList");
                 if (list->GetCurSel() >= 0) {
                     auto item = static_cast<CListTextElementUI*>(list->GetItemAt(list->GetCurSel()));
                     User::storage().remove_all<User>(where(c(&::User::name) == std::wstring(item->GetText(0))));
@@ -59,7 +59,7 @@ void DetectionInformationEntryWnd::Notify(TNotifyUI& msg) {
             } catch (std::exception& e) { spdlog::warn(GB2312ToUtf8(e.what())); }
         } else if (msg.pSender->GetName() == L"BtnJobGroupAdd") {
             try {
-                auto Edit = static_cast<CEditUI*>(m_PaintManager.FindControl(L"EditJobGroupAdd"));
+                auto Edit = m_PaintManager.FindControl<CEditUI*>(L"EditJobGroupAdd");
                 if (!Edit->GetText().IsEmpty()) {
                     JobGroup jobgroup  = {};
                     jobgroup.groupName = Edit->GetText();
@@ -69,7 +69,7 @@ void DetectionInformationEntryWnd::Notify(TNotifyUI& msg) {
             } catch (std::exception& e) { spdlog::warn(GB2312ToUtf8(e.what())); }
         } else if (msg.pSender->GetName() == L"BtnJobGroupDel") {
             try {
-                auto         list = static_cast<CListUI*>(m_PaintManager.FindControl(L"ListJobGroupList"));
+                auto         list = m_PaintManager.FindControl<CListUI*>(L"ListJobGroupList");
                 std::wstring groupDirName;
                 if (list->GetCurSel() >= 0) {
                     auto item    = static_cast<CListTextElementUI*>(list->GetItemAt(list->GetCurSel()));
@@ -80,7 +80,7 @@ void DetectionInformationEntryWnd::Notify(TNotifyUI& msg) {
                 fs::remove_all(std::wstring(L"./") + _T(SCAN_DATA_DIR_NAME) + std::wstring(groupDirName));
             } catch (std::exception& e) { spdlog::warn(GB2312ToUtf8(e.what())); }
         } else if (msg.pSender->GetName() == L"BtnOK") {
-            auto list = static_cast<CListUI*>(m_PaintManager.FindControl(L"ListJobGroupList"));
+            auto list = m_PaintManager.FindControl<CListUI*>(L"ListJobGroupList");
             if (list->GetCurSel() >= 0) {
                 auto item           = static_cast<CListTextElementUI*>(list->GetItemAt(list->GetCurSel()));
                 mJobGroup.groupName = item->GetText(0);
@@ -95,7 +95,7 @@ void DetectionInformationEntryWnd::Notify(TNotifyUI& msg) {
                     ORM_Model::JobGroup::storage().insert(jobGroup);
                 } catch (std::exception& e) { spdlog::error(GB2312ToUtf8(e.what())); }
             }
-            list = static_cast<CListUI*>(m_PaintManager.FindControl(L"ListUserList"));
+            list = m_PaintManager.FindControl<CListUI*>(L"ListUserList");
             if (list->GetCurSel() >= 0) {
                 auto item  = static_cast<CListTextElementUI*>(list->GetItemAt(list->GetCurSel()));
                 mUser.name = item->GetText(0);
@@ -150,7 +150,7 @@ void DetectionInformationEntryWnd::LoadDetectInfo(const ORM_Model::DetectInfo& i
             edit->SetText(prot.get_value(mDetectinfo).convert<std::wstring>().data());
         }
     }
-    auto list = static_cast<CListUI*>(m_PaintManager.FindControl(L"ListUserList"));
+    auto list = m_PaintManager.FindControl<CListUI*>(L"ListUserList");
     list->RemoveAll();
     auto userList = ORM_Model::User::storage().get_all<ORM_Model::User>();
     int  cursel   = 0;
@@ -164,7 +164,7 @@ void DetectionInformationEntryWnd::LoadDetectInfo(const ORM_Model::DetectInfo& i
         }
         cursel++;
     }
-    list           = static_cast<CListUI*>(m_PaintManager.FindControl(L"ListJobGroupList"));
+    list           = m_PaintManager.FindControl<CListUI*>(L"ListJobGroupList");
     auto jobGroups = ORM_Model::JobGroup::storage().get_all<ORM_Model::JobGroup>();
     list->RemoveAll();
     cursel = 0;

@@ -47,15 +47,15 @@ void CDMessageBox::Notify(TNotifyUI &msg) {
 void CDMessageBox::InitWindow() {
     CDuiWindowBase::InitWindow();
 
-    m_pTabBtn = static_cast<CTabLayoutUI *>(m_PaintManager.FindControl(_T("TabBtn")));
+    m_pTabBtn = m_PaintManager.FindControl<CTabLayoutUI *>(_T("TabBtn"));
 
     if (m_iType == MB_YESNO)
         m_pTabBtn->SelectItem(1);
     else
         m_pTabBtn->SelectItem(0);
 
-    m_pTextTitle  = static_cast<CTextUI *>(m_PaintManager.FindControl(_T("LabelTitle")));
-    m_pTextString = static_cast<CTextUI *>(m_PaintManager.FindControl(_T("LabelString")));
+    m_pTextTitle  = m_PaintManager.FindControl<CTextUI *>(_T("LabelTitle"));
+    m_pTextString = m_PaintManager.FindControl<CTextUI *>(_T("LabelString"));
     m_pTextTitle->SetText(m_pTitle);
     m_pTextString->SetText(m_pString);
 }

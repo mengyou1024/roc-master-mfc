@@ -30,7 +30,7 @@ void DefectsListWnd::InitWindow() {
 void DefectsListWnd::Notify(TNotifyUI& msg) {
     if (msg.sType == DUI_MSGTYPE_CLICK) {
         if (msg.pSender->GetName() == _T("BtnOK")) {
-            auto pList = static_cast<CListUI*>(m_PaintManager.FindControl(L"ListDefects"));
+            auto pList = m_PaintManager.FindControl<CListUI*>(L"ListDefects");
             if (pList->GetCurSel() < 0) {
                 Close();
                 CDuiWindowBase::Notify(msg);
@@ -56,7 +56,7 @@ void DefectsListWnd::LoadDefectsList(std::string time) {
         std::replace(path.begin(), path.end(), '/', '\\');
         path += "\\" + tm + APP_SCAN_DATA_SUFFIX;
         auto list  = ORM_Model::ScanRecord::storage(path).get_all<ORM_Model::ScanRecord>();
-        auto pList = static_cast<CListUI*>(m_PaintManager.FindControl(L"ListDefects"));
+        auto pList = m_PaintManager.FindControl<CListUI*>(L"ListDefects");
         pList->RemoveAll();
         for (auto& it : list) {
             auto pLine = new CListTextElementUI;

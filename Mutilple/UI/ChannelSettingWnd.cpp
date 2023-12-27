@@ -22,7 +22,7 @@ CDuiString ChannelSettingWnd::GetSkinFile() {
 
 void ChannelSettingWnd::InitWindow() {
     CDuiWindowBase::InitWindow();
-    m_pWndOpenGL = static_cast<CWindowUI*>(m_PaintManager.FindControl(_T("WndOpenGL")));
+    m_pWndOpenGL = m_PaintManager.FindControl<CWindowUI*>(_T("WndOpenGL"));
     m_OpenGL     = new OpenGL;
     m_OpenGL->Create(m_hWnd);
     m_OpenGL->Attach(m_pWndOpenGL);
@@ -53,10 +53,10 @@ void ChannelSettingWnd::Notify(TNotifyUI& msg) {
         } else if (msg.pSender->GetName() == _T("EditSampleDepth")) {
             mUtils->getBridge()->setSampleDepth(
                 mChannel, (float)mUtils->getBridge()->distance2time(_wtof(msg.pSender->GetText().GetData()), mChannel));
-            auto depth       = mUtils->getBridge()->getSampleDepth(mChannel);
+            auto depth        = mUtils->getBridge()->getSampleDepth(mChannel);
             auto sampleFactor = static_cast<int>(std::round(depth * 100.0 / 1024.0));
             mUtils->getBridge()->setSampleFactor(mChannel, sampleFactor);
-            auto edit = static_cast<CEditUI*>(m_PaintManager.FindControl(L"EditSampleFactor"));
+            auto    edit = m_PaintManager.FindControl<CEditUI*>(L"EditSampleFactor");
             CString str;
             str.Format(L"%d", sampleFactor);
             edit->SetText(str);
@@ -109,61 +109,61 @@ std::unique_ptr<HD_Utils>&& ChannelSettingWnd::returnHDUtils() {
 }
 
 void ChannelSettingWnd::ReadValue2UI() {
-    auto edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditSoundVelocity")));
+    auto edit = m_PaintManager.FindControl<CEditUI*>(_T("EditSoundVelocity"));
     if (edit) {
         CString str;
         str.Format(_T("%.2f"), mUtils->getBridge()->getSoundVelocity(mChannel));
         edit->SetText(str);
     }
-    edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditFrequency")));
+    edit = m_PaintManager.FindControl<CEditUI*>(_T("EditFrequency"));
     if (edit) {
         CString str;
         str.Format(_T("%d"), mUtils->getBridge()->getFrequency());
         edit->SetText(str);
     }
-    edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditChannelFlag")));
+    edit = m_PaintManager.FindControl<CEditUI*>(_T("EditChannelFlag"));
     if (edit) {
         CString str;
         str.Format(_T("%08X"), mUtils->getBridge()->getChannelFlag());
         edit->SetText(str);
     }
-    edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditScanIncrement")));
+    edit = m_PaintManager.FindControl<CEditUI*>(_T("EditScanIncrement"));
     if (edit) {
         CString str;
         str.Format(_T("%d"), mUtils->getBridge()->getScanIncrement());
         edit->SetText(str);
     }
-    edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditZeroBias")));
+    edit = m_PaintManager.FindControl<CEditUI*>(_T("EditZeroBias"));
     if (edit) {
         CString str;
         str.Format(_T("%.2f"), mUtils->getBridge()->time2distance(mUtils->getBridge()->getZeroBias(mChannel), mChannel));
         edit->SetText(str);
     }
-    edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditPulseWidth")));
+    edit = m_PaintManager.FindControl<CEditUI*>(_T("EditPulseWidth"));
     if (edit) {
         CString str;
         str.Format(_T("%.2f"), mUtils->getBridge()->getPulseWidth(mChannel));
         edit->SetText(str);
     }
-    edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditDelay")));
+    edit = m_PaintManager.FindControl<CEditUI*>(_T("EditDelay"));
     if (edit) {
         CString str;
         str.Format(_T("%.2f"), mUtils->getBridge()->time2distance(mUtils->getBridge()->getDelay(mChannel), mChannel));
         edit->SetText(str);
     }
-    edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditSampleDepth")));
+    edit = m_PaintManager.FindControl<CEditUI*>(_T("EditSampleDepth"));
     if (edit) {
         CString str;
         str.Format(_T("%.2f"), mUtils->getBridge()->time2distance(mUtils->getBridge()->getSampleDepth(mChannel), mChannel));
         edit->SetText(str);
     }
-    edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditSampleFactor")));
+    edit = m_PaintManager.FindControl<CEditUI*>(_T("EditSampleFactor"));
     if (edit) {
         CString str;
         str.Format(_T("%d"), mUtils->getBridge()->getSampleFactor(mChannel));
         edit->SetText(str);
     }
-    edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditGain")));
+    edit = m_PaintManager.FindControl<CEditUI*>(_T("EditGain"));
     if (edit) {
         CString str;
         str.Format(_T("%.2f"), mUtils->getBridge()->getGain(mChannel));
@@ -181,7 +181,7 @@ void ChannelSettingWnd::UpdateAScanCallback(const HDBridge::NM_DATA& data, const
             return;
         }
         mesh->hookAScanData(hdata);
-        float delay  = bridge->getDelay(data.iChannel);
+        float delay = bridge->getDelay(data.iChannel);
         float depth = bridge->getSampleDepth(data.iChannel) + delay;
         mesh->SetLimits((float)(bridge->time2distance(delay, data.iChannel)), (float)(bridge->time2distance(depth, data.iChannel)));
         for (int i = 0; i < 2; i++) {

@@ -39,7 +39,7 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
                     port          = *mBridge;
                     port.setName(str);
                     auto id    = HDBridge::storage().insert(port);
-                    auto pList = static_cast<DuiLib::CListUI*>(m_PaintManager.FindControl(_T("ListParamName")));
+                    auto pList = m_PaintManager.FindControl<DuiLib::CListUI*>(_T("ListParamName"));
                     auto pLine = new CListTextElementUI;
                     pLine->SetTag(id);
                     pList->Add(pLine);
@@ -51,7 +51,7 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
                 }
             }
         } else if (msg.pSender->GetName() == L"BtnDelete") {
-            auto pList  = static_cast<DuiLib::CListUI*>(m_PaintManager.FindControl(_T("ListParamName")));
+            auto pList  = m_PaintManager.FindControl<DuiLib::CListUI*>(_T("ListParamName"));
             auto cursel = pList->GetCurSel();
             if (cursel >= 0) {
                 auto         it   = static_cast<CListTextElementUI*>(pList->GetItemAt(cursel));
@@ -65,7 +65,7 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
                 pList->RemoveAt(cursel);
             }
         } else if (msg.pSender->GetName() == L"BtnRead") {
-            auto         pList  = static_cast<DuiLib::CListUI*>(m_PaintManager.FindControl(_T("ListParamName")));
+            auto         pList  = m_PaintManager.FindControl<DuiLib::CListUI*>(_T("ListParamName"));
             auto         cursel = pList->GetCurSel();
             auto         it     = static_cast<CListTextElementUI*>(pList->GetItemAt(cursel));
             std::wstring name   = it->GetText(1);
@@ -82,7 +82,7 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
                 spdlog::error(GB2312ToUtf8(e.what()));
             }
         } else if (msg.pSender->GetName() == L"BtnWrite") {
-            auto pList  = static_cast<DuiLib::CListUI*>(m_PaintManager.FindControl(_T("ListParamName")));
+            auto pList  = m_PaintManager.FindControl<DuiLib::CListUI*>(_T("ListParamName"));
             auto cursel = pList->GetCurSel();
             auto it     = static_cast<CListTextElementUI*>(pList->GetItemAt(cursel));
             long id     = _wtol(it->GetText(0));
@@ -99,7 +99,7 @@ void ParamManagementWnd::Notify(TNotifyUI& msg) {
 
 void ParamManagementWnd::LoadParam() {
     auto list  = HDBridge::storage().get_all<HDBridge>();
-    auto pList = static_cast<DuiLib::CListUI*>(m_PaintManager.FindControl(_T("ListParamName")));
+    auto pList = m_PaintManager.FindControl<DuiLib::CListUI*>(_T("ListParamName"));
     pList->RemoveAll();
     for (auto& it : list) {
         auto pLine = new CListTextElementUI;

@@ -225,8 +225,8 @@ MainFrameWnd::~MainFrameWnd() {
 }
 
 void MainFrameWnd::OnBtnModelClicked(std::wstring name) {
-    auto btnScanMode   = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnScanMode")));
-    auto btnReviewMode = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnReviewMode")));
+    auto btnScanMode   = m_PaintManager.FindControl<CButtonUI *>(_T("BtnScanMode"));
+    auto btnReviewMode = m_PaintManager.FindControl<CButtonUI *>(_T("BtnReviewMode"));
     if (name == _T("BtnScanMode")) {
         if (btnScanMode->GetBkColor() != 0xFF339933) {
             btnScanMode->SetBkColor(0xFF339933);
@@ -265,18 +265,6 @@ void MainFrameWnd::OnBtnModelClicked(std::wstring name) {
     }
 }
 
-void MainFrameWnd::InitOpenGL() {
-    // 初始化OpenGL窗口
-    // A扫窗口
-    m_pWndOpenGL_ASCAN = static_cast<CWindowUI *>(m_PaintManager.FindControl(_T("WndOpenGL_ASCAN")));
-    m_OpenGL_ASCAN.Create(m_hWnd);
-    m_OpenGL_ASCAN.Attach(m_pWndOpenGL_ASCAN);
-    // C扫窗口
-    m_pWndOpenGL_CSCAN = static_cast<CWindowUI *>(m_PaintManager.FindControl(_T("WndOpenGL_CSCAN")));
-    m_OpenGL_CSCAN.Create(m_hWnd);
-    m_OpenGL_CSCAN.Attach(m_pWndOpenGL_CSCAN);
-}
-
 LPCTSTR MainFrameWnd::GetWindowClassName() const {
     return _T("MainFrameWnd");
 }
@@ -288,36 +276,39 @@ CDuiString MainFrameWnd::GetSkinFile() noexcept {
 void MainFrameWnd::InitWindow() {
     CDuiWindowBase::InitWindow();
 
-    InitOpenGL();
+    // A扫窗口
+    m_pWndOpenGL_ASCAN = m_PaintManager.FindControl<CWindowUI *>(_T("WndOpenGL_ASCAN"));
+    m_OpenGL_ASCAN.Create(m_hWnd);
+    m_OpenGL_ASCAN.Attach(m_pWndOpenGL_ASCAN);
+    // C扫窗口
+    m_pWndOpenGL_CSCAN = m_PaintManager.FindControl<CWindowUI *>(_T("WndOpenGL_CSCAN"));
+    m_OpenGL_CSCAN.Create(m_hWnd);
+    m_OpenGL_CSCAN.Attach(m_pWndOpenGL_CSCAN);
     // 初始化
-    AddTaskToQueue(std::bind(&MainFrameWnd::InitOnThread, this));
-    UpdateSliderAndEditValue(mCurrentGroup, mConfigType, mGateType, mChannelSel, true);
-}
+    AddTaskToQueue([this]() {
+        // 延迟最大化窗口
+        SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE, 0);
 
-void MainFrameWnd::InitOnThread() {
-    // 延迟最大化窗口
-    SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+        Sleep(100);
 
-    Sleep(100);
+        m_OpenGL_ASCAN.AddGroupAScanModel();
+        m_OpenGL_CSCAN.AddGroupCScanModel();
+        // 设置板卡参数
+        Sleep(100);
+        mUtils->start();
+        mUtils->addReadCallback(HD_Utils::WrapReadCallback(&MainFrameWnd::UpdateAllGateResult, this));
+        mUtils->addReadCallback(HD_Utils::WrapReadCallback(&MainFrameWnd::UpdateAScanCallback, this));
+        SelectMeasureThickness(GetSystemConfig().enableMeasureThickness);
 
-    m_OpenGL_ASCAN.AddGroupAScanModel();
-    m_OpenGL_CSCAN.AddGroupCScanModel();
-    // 设置板卡参数
-    Sleep(100);
-    mUtils->start();
-    auto model = m_OpenGL_ASCAN.getModel<ModelGroupAScan *>();
-    // mUtils->addReadCallback(std::bind(&MainFrameWnd::UpdateAScanCallback, this, std::placeholders::_1, std::placeholders::_2));
-    mUtils->addReadCallback(std::bind(&MainFrameWnd::UpdateAllGateResult, this, std::placeholders::_1, std::placeholders::_2));
-    mUtils->addReadCallback(HD_Utils::WrapReadCallback(&MainFrameWnd::UpdateAScanCallback, this));
-    SelectMeasureThickness(GetSystemConfig().enableMeasureThickness);
-
-    // 进入回放界面、检查更新
-    if (!mReviewPathEntry.empty()) {
-        if (!EnterReviewMode(mReviewPathEntry)) {
-            spdlog::warn("载入文件: {} 出错!", mReviewPathEntry);
+        // 进入回放界面、检查更新
+        if (!mReviewPathEntry.empty()) {
+            if (!EnterReviewMode(mReviewPathEntry)) {
+                spdlog::warn("载入文件: {} 出错!", mReviewPathEntry);
+            }
         }
-    }
-    CheckAndUpdate();
+        CheckAndUpdate();
+    });
+    UpdateSliderAndEditValue(mCurrentGroup, mConfigType, mGateType, mChannelSel, true);
 }
 
 void MainFrameWnd::DrawReviewCScan() {
@@ -354,24 +345,24 @@ void MainFrameWnd::DrawReviewCScan() {
             auto baseTickness = _wtof(mDetectInfo.thickness.c_str());
             if (baseTickness != 0.0 && baseTickness != -HUGE_VAL && baseTickness != HUGE_VAL) {
                 auto relative_error = (thickness - baseTickness) / baseTickness;
-                if (relative_error > max_relative_error) {
-                    relative_error = max_relative_error;
-                } else if (relative_error < -max_relative_error) {
-                    relative_error = -max_relative_error;
+                if (relative_error > RELATIVE_ERROR_MAX) {
+                    relative_error = RELATIVE_ERROR_MAX;
+                } else if (relative_error < -RELATIVE_ERROR_MAX) {
+                    relative_error = -RELATIVE_ERROR_MAX;
                 }
                 glm::vec4 color = {};
-                if (relative_error > threshold_relative_error) {
+                if (relative_error > RELATIVE_ERROR_THRESHOLD) {
                     color = {.0f, 0.f, 1.f, 1.0f};
-                } else if (relative_error < -threshold_relative_error) {
+                } else if (relative_error < -RELATIVE_ERROR_THRESHOLD) {
                     color = {1.0f, 0.f, 0.f, 1.0f};
                 } else {
                     color = {.0f, 1.f, 0.f, 1.0f};
                 }
-                uint8_t value = (((uint8_t)std::round((double)base * std::abs(relative_error / max_relative_error))) & base);
+                uint8_t value = (((uint8_t)std::round((double)RELATIVE_ERROR_BASE * std::abs(relative_error / RELATIVE_ERROR_MAX))) & RELATIVE_ERROR_BASE);
                 if (relative_error >= 0) {
-                    value += base;
+                    value += RELATIVE_ERROR_BASE;
                 } else {
-                    value = base - value;
+                    value = RELATIVE_ERROR_BASE - value;
                 }
                 mesh->AppendDot(value, color, MAXSIZE_T);
             } else {
@@ -403,14 +394,14 @@ void MainFrameWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig,
     mChannelSel = newChannelSel;
 
     // 设置Edit单位
-    auto edit = static_cast<CEditUI *>(m_PaintManager.FindControl(_T("EditConfig")));
+    auto edit = m_PaintManager.FindControl<CEditUI *>(_T("EditConfig"));
     edit->SetTextValitor(mConfigRegex.at(mConfigType));
     if (edit) {
         edit->SetEnabled(true);
         edit->SetTextExt(mConfigTextext.at(mConfigType));
     }
     // 设置Slider的min、max
-    auto slider = static_cast<CSliderUI *>(m_PaintManager.FindControl(_T("SliderConfig")));
+    auto slider = m_PaintManager.FindControl<CSliderUI *>(_T("SliderConfig"));
     if (slider) {
         slider->SetEnabled(true);
         slider->SetCanSendMove(true);
@@ -805,7 +796,7 @@ void MainFrameWnd::OnBtnUIClicked(std::wstring &name) {
             BusyWnd wnd([this]() { StopScan(); });
             wnd.Create(m_hWnd, wnd.GetWindowClassName(), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG);
             wnd.ShowModal();
-            auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnUIAutoScan")));
+            auto btn = m_PaintManager.FindControl<CButtonUI *>(_T("BtnUIAutoScan"));
             btn->SetBkColor(0xFFEEEEEE);
         } else {
             if (!mUtils->getBridge()->isOpen()) {
@@ -813,7 +804,7 @@ void MainFrameWnd::OnBtnUIClicked(std::wstring &name) {
                 return;
             }
             StartScan();
-            auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnUIAutoScan")));
+            auto btn = m_PaintManager.FindControl<CButtonUI *>(_T("BtnUIAutoScan"));
             btn->SetBkColor(0xFF339933);
         }
     } else if (name == _T("ParamManagement")) {
@@ -825,7 +816,7 @@ void MainFrameWnd::OnBtnUIClicked(std::wstring &name) {
     } else if (name == _T("About")) {
         DMessageBox(_T(APP_VERSION), L"软件版本");
     } else if (name == _T("Freeze")) {
-        auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnUIFreeze")));
+        auto btn = m_PaintManager.FindControl<CButtonUI *>(_T("BtnUIFreeze"));
         if (btn->GetBkColor() == 0xFFEEEEEE) {
             mUtils->pushCallback();
             StopScan(false);
@@ -836,7 +827,7 @@ void MainFrameWnd::OnBtnUIClicked(std::wstring &name) {
             btn->SetBkColor(0xFFEEEEEE);
         }
     } else if (name == _T("AmpMemory")) {
-        auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnUIAmpMemory")));
+        auto btn = m_PaintManager.FindControl<CButtonUI *>(_T("BtnUIAmpMemory"));
         if (btn->GetBkColor() == 0xFFEEEEEE) {
             mUtils->addReadCallback(std::bind(&MainFrameWnd::AmpMemeryCallback, this, std::placeholders::_1, std::placeholders::_2),
                                     "AmpMemory");
@@ -852,7 +843,7 @@ void MainFrameWnd::OnBtnUIClicked(std::wstring &name) {
             btn->SetBkColor(0xFFEEEEEE);
         }
     } else if (name == _T("AmpTrace")) {
-        auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(_T("BtnUIAmpTrace")));
+        auto btn = m_PaintManager.FindControl<CButtonUI *>(_T("BtnUIAmpTrace"));
         if (btn->GetBkColor() == 0xFFEEEEEE) {
             auto wrap = HD_Utils::WrapReadCallback(&MainFrameWnd::AmpTraceCallback, this);
             mUtils->addReadCallback(wrap, "AmpTrace");
@@ -1027,7 +1018,7 @@ void MainFrameWnd::Notify(TNotifyUI &msg) {
     } else if (msg.sType == DUI_MSGTYPE_VALUECHANGED) {
         if (msg.pSender->GetName() == _T("SliderConfig")) {
             auto slider = static_cast<CSliderUI *>(msg.pSender);
-            auto edit   = static_cast<CEditUI *>(m_PaintManager.FindControl(_T("EditConfig")));
+            auto edit   = m_PaintManager.FindControl<CEditUI *>(_T("EditConfig"));
             if (edit) {
                 int     sliderValue = slider->GetValue();
                 CString val;
@@ -1036,7 +1027,7 @@ void MainFrameWnd::Notify(TNotifyUI &msg) {
                 spdlog::debug(_T("setValue: {}"), val);
 
                 // 设置Edit数值
-                auto edit = static_cast<CEditUI *>(m_PaintManager.FindControl(_T("EditConfig")));
+                auto edit = m_PaintManager.FindControl<CEditUI *>(_T("EditConfig"));
                 if (edit) {
                     edit->SetText(std::to_wstring(sliderValue).data());
                 }
@@ -1049,7 +1040,7 @@ void MainFrameWnd::Notify(TNotifyUI &msg) {
     } else if (msg.sType == DUI_MSGTYPE_VALUECHANGED_MOVE) {
         if (msg.pSender->GetName() == _T("SliderConfig")) {
             auto slider = static_cast<CSliderUI *>(msg.pSender);
-            auto edit   = static_cast<CEditUI *>(m_PaintManager.FindControl(_T("EditConfig")));
+            auto edit   = m_PaintManager.FindControl<CEditUI *>(_T("EditConfig"));
             if (edit) {
                 int sliderValue = slider->GetValue();
                 edit->SetText(std::to_wstring(sliderValue).data());
@@ -1077,7 +1068,7 @@ void MainFrameWnd::Notify(TNotifyUI &msg) {
             spdlog::debug("EditConfigSetValue: {}", currentValue);
 
             // 设置slider 值
-            auto slider = static_cast<CSliderUI *>(m_PaintManager.FindControl(_T("SliderConfig")));
+            auto slider = m_PaintManager.FindControl<CSliderUI *>(_T("SliderConfig"));
             if (slider) {
                 slider->SetValue(static_cast<int>(std::round(currentValue)));
             }
@@ -1103,7 +1094,7 @@ void MainFrameWnd::Notify(TNotifyUI &msg) {
             text = std::to_wstring(currentValue);
             edit->SetText(text.c_str());
             // 设置slider 值
-            auto slider = static_cast<CSliderUI *>(m_PaintManager.FindControl(_T("SliderConfig")));
+            auto slider = m_PaintManager.FindControl<CSliderUI *>(_T("SliderConfig"));
             if (slider) {
                 slider->SetValue(static_cast<int>(std::round(currentValue)));
             }
@@ -1357,24 +1348,24 @@ void MainFrameWnd::ThreadCScan(void) {
                 double baseTickness = _wtof(mDetectInfo.thickness.c_str());
                 if (baseTickness != 0.0f && baseTickness != -HUGE_VAL && baseTickness != HUGE_VAL) {
                     auto relative_error = (mUtils->mScanOrm.mThickness[i] - baseTickness) / baseTickness;
-                    if (relative_error > max_relative_error) {
-                        relative_error = max_relative_error;
-                    } else if (relative_error < -max_relative_error) {
-                        relative_error = -max_relative_error;
+                    if (relative_error > RELATIVE_ERROR_MAX) {
+                        relative_error = RELATIVE_ERROR_MAX;
+                    } else if (relative_error < -RELATIVE_ERROR_MAX) {
+                        relative_error = -RELATIVE_ERROR_MAX;
                     }
                     glm::vec4 color = {};
-                    if (relative_error > threshold_relative_error) {
+                    if (relative_error > RELATIVE_ERROR_THRESHOLD) {
                         color = {.0f, 0.f, 1.f, 1.0f};
-                    } else if (relative_error < -threshold_relative_error) {
+                    } else if (relative_error < -RELATIVE_ERROR_THRESHOLD) {
                         color = {1.0f, 0.f, 0.f, 1.0f};
                     } else {
                         color = {.0f, 1.f, 0.f, 1.0f};
                     }
-                    uint8_t value = (((uint8_t)std::round((double)base * std::abs(relative_error / max_relative_error))) & base);
+                    uint8_t value = (((uint8_t)std::round((double)RELATIVE_ERROR_BASE * std::abs(relative_error / RELATIVE_ERROR_MAX))) & RELATIVE_ERROR_BASE);
                     if (relative_error >= 0) {
-                        value += base;
+                        value += RELATIVE_ERROR_BASE;
                     } else {
-                        value = base - value;
+                        value = RELATIVE_ERROR_BASE - value;
                     }
                     mesh->AppendDot(value, color);
                 }
@@ -1403,11 +1394,11 @@ void MainFrameWnd::OnBtnSelectGroupClicked(long index) {
     }
     // 设置波门类型
     if (index == 3) {
-        auto layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(L"LayoutGateType"));
+        auto layout = m_PaintManager.FindControl<CHorizontalLayoutUI *>(L"LayoutGateType");
         auto opt    = static_cast<COptionUI *>(layout->FindSubControl(L"OptGateType"));
         opt->SetText(L"测厚波门");
     } else {
-        auto layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(L"LayoutGateType"));
+        auto layout = m_PaintManager.FindControl<CHorizontalLayoutUI *>(L"LayoutGateType");
         auto opt    = static_cast<COptionUI *>(layout->FindSubControl(L"OptGateType"));
         opt->SetText(L"扫查波门");
     }
@@ -1545,6 +1536,13 @@ void MainFrameWnd::SaveScanData() {
     }
 }
 
+static constexpr std::array<std::pair<std::wstring_view, bool>, 4> LayoutStatusChange = {
+    std::make_pair(L"LayoutParamSetting", false),
+    std::make_pair(L"LayoutFunctionButton", false),
+    std::make_pair(L"LayoutReviewExt", true),
+    std::make_pair(L"LayoutCScanSelect", true),
+};
+
 bool MainFrameWnd::EnterReviewMode(std::string name) {
     try {
         auto tick = GetTickCount64();
@@ -1565,26 +1563,18 @@ bool MainFrameWnd::EnterReviewMode(std::string name) {
         } catch (std::exception &) { spdlog::warn("文件中没有探伤信息"); }
         SelectMeasureThickness(mDetectInfo.enableMeasureThickness);
         UpdateSystemConfig(systemConfig);
-        spdlog::info("load:{}, frame:{}", name, mReviewData.size());
         mFragmentReview = std::make_unique<FragmentReview>(mReviewData);
         DrawReviewCScan();
-        // 切换界面布局
-        auto layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutParamSetting")));
-        layout->SetVisible(false);
-        layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutFunctionButton")));
-        layout->SetVisible(false);
-        layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutReviewExt")));
-        layout->SetVisible(true);
-        layout = m_PaintManager.FindControl<CHorizontalLayoutUI *>(L"LayoutCScanSelect");
-        layout->SetVisible(true);
-        auto    edit = m_PaintManager.FindControl<CEditUI *>(L"EditCScanSelect");
-        CString str;
-        str.Format(L"第 %d 帧 / 共 %.0f 帧", 1, std::ceil((double)mReviewData.size() / (double)FragmentReview::SIZE_PER_FRAGMENT));
-        edit->SetText(str);
-        edit = m_PaintManager.FindControl<CEditUI *>(L"EditCScanIndexSelect");
-        str.Format(L"第 %d 个点 / 共 %d 个点", 1, mFragmentReview->size());
-        edit->SetText(str);
+        OnLButtonDown(1, GetCScainIndexPt(0));
+
+        // 界面布局切换为回放模式
+        for (auto &UI_N : LayoutStatusChange) {
+            auto &[ui, val] = UI_N;
+            auto layout     = m_PaintManager.FindControl<CHorizontalLayoutUI *>(ui.data());
+            layout->SetVisible(val);
+        }
         mWidgetMode = WidgetMode::MODE_REVIEW;
+        spdlog::info("load:{}, frame:{}", name, mReviewData.size());
         spdlog::info("takes time: {} ms", GetTickCount64() - tick);
         return true;
     } catch (std::exception &e) {
@@ -1598,32 +1588,28 @@ void MainFrameWnd::ExitReviewMode() {
     if (mWidgetMode == WidgetMode::MODE_REVIEW) {
         mUtils->popCallback();
     }
+    // 清除回放数据
     mReviewData.clear();
     mFragmentReview = nullptr;
-    auto layout     = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutParamSetting")));
-    layout->SetVisible(true);
-    layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutFunctionButton")));
-    layout->SetVisible(true);
-    layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutReviewExt")));
-    layout->SetVisible(false);
-    layout = m_PaintManager.FindControl<CHorizontalLayoutUI *>(L"LayoutCScanSelect");
-    layout->SetVisible(false);
-    for (int i = 0; i < HDBridge::CHANNEL_NUMBER; i++) {
+
+    // 界面布局切换为扫查模式
+    for (auto &UI_N : LayoutStatusChange) {
+        auto &[ui, val] = UI_N;
+        auto layout     = m_PaintManager.FindControl<CHorizontalLayoutUI *>(ui.data());
+        layout->SetVisible(!val);
+    }
+
+    // 清除C扫图像, 重新设置扫查波门的位置
+    for (int i = 0; i < HDBridge::CHANNEL_NUMBER + 4; i++) {
         auto mesh  = m_OpenGL_ASCAN.getMesh<MeshAscan *>(i);
         auto cMesh = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>(i);
         cMesh->RemoveLine();
         cMesh->RemoveDot();
-        const auto &[pos, width, height] = mUtils->getCache().scanGateInfo[i];
+        const auto &[pos, width, height] = mUtils->getBridge()->getScanGateInfo(i);
         mesh->UpdateGate(2, 1, pos, width, height);
     }
-    for (int i = 0; i < 4; i++) {
-        auto mesh  = m_OpenGL_ASCAN.getMesh<MeshAscan *>((size_t)HDBridge::CHANNEL_NUMBER + i);
-        auto cMesh = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>((size_t)HDBridge::CHANNEL_NUMBER + i);
-        cMesh->RemoveLine();
-        cMesh->RemoveDot();
-        const auto &[pos, width, height] = mUtils->getCache().scanGateInfo[(size_t)HDBridge::CHANNEL_NUMBER + i];
-        mesh->UpdateGate(2, 1, pos, width, height);
-    }
+
+    // 恢复备份的配置
     mDetectInfo            = mDetectInfoBak;
     auto systemConfig      = GetSystemConfig();
     systemConfig.groupName = mJobGroupNameBak;
@@ -1634,17 +1620,17 @@ void MainFrameWnd::ExitReviewMode() {
 
 void MainFrameWnd::SelectMeasureThickness(bool enableMeasure) {
     if (enableMeasure) {
-        auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(L"BtnSelectGroup0"));
+        auto btn = m_PaintManager.FindControl<CButtonUI *>(L"BtnSelectGroup0");
         btn->SetVisible(false);
-        btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(L"BtnSelectGroup3"));
+        btn = m_PaintManager.FindControl<CButtonUI *>(L"BtnSelectGroup3");
         btn->SetVisible(true);
         if (mCurrentGroup == 0) {
             UpdateSliderAndEditValue(3, mConfigType, mGateType, mChannelSel, true);
         }
     } else {
-        auto btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(L"BtnSelectGroup0"));
+        auto btn = m_PaintManager.FindControl<CButtonUI *>(L"BtnSelectGroup0");
         btn->SetVisible(true);
-        btn = static_cast<CButtonUI *>(m_PaintManager.FindControl(L"BtnSelectGroup3"));
+        btn = m_PaintManager.FindControl<CButtonUI *>(L"BtnSelectGroup3");
         btn->SetVisible(false);
         if (mCurrentGroup == 3) {
             UpdateSliderAndEditValue(0, mConfigType, mGateType, mChannelSel, true);

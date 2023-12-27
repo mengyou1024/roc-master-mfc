@@ -5,37 +5,36 @@
 #pragma once
 
 #ifndef __AFXWIN_H__
-	#error "include 'pch.h' before including this file for PCH"
+    #error "include 'pch.h' before including this file for PCH"
 #endif
 
-#include "resource.h"		// main symbols
-#include "MainProcess.h"
 #include "MainFrameWnd.h"
+#include "MainProcess.h"
+#include "resource.h" // main symbols
 
 // CMutilpleApp:
 // See Mutilple.cpp for the implementation of this class
 //
 
-class CMutilpleApp : public CWinApp
-{
+class CMutilpleApp : public CWinApp {
 public:
-	CMutilpleApp();
+    CMutilpleApp();
 
-// Overrides
+    // Overrides
 public:
-	virtual BOOL InitInstance();
+    virtual BOOL InitInstance();
 
-// Implementation
+    // Implementation
 
-	DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 
 public:
-    MainFrameWnd*  m_pMainFrame;
-    TCHAR m_pExePath[_MAX_FNAME];
-    CShellManager* m_pShellManager;
+    std::unique_ptr<MainFrameWnd>  m_pMainFrame           = nullptr;
+    TCHAR                          m_pExePath[_MAX_FNAME] = {};
+    std::unique_ptr<CShellManager> m_pShellManager        = nullptr;
 };
 
 extern CMutilpleApp theApp;
-extern MainProcess g_MainProcess;
-extern CString TITLE;
-extern CString VERSION;
+extern MainProcess  g_MainProcess;
+extern CString      TITLE;
+extern CString      VERSION;

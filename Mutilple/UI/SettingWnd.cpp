@@ -18,25 +18,25 @@ void SettingWnd::InitWindow() {
     if (opt) {
         opt->Selected(systemConfig.checkUpdate);
     }
-    opt = static_cast<COptionUI*>(m_PaintManager.FindControl(L"OptSystemProxy"));
+    opt = m_PaintManager.FindControl<COptionUI*>(L"OptSystemProxy");
     if (opt) {
         opt->Selected(systemConfig.enableProxy);
     }
-    opt = static_cast<COptionUI*>(m_PaintManager.FindControl(L"OptMeasureThickness"));
+    opt = m_PaintManager.FindControl<COptionUI*>(L"OptMeasureThickness");
     if (opt) {
         opt->Selected(systemConfig.enableMeasureThickness);
     }
-    auto edit = static_cast<CEditUI*>(m_PaintManager.FindControl(L"EditSystemProxy"));
+    auto edit = m_PaintManager.FindControl<CEditUI*>(L"EditSystemProxy");
     if (edit) {
         edit->SetText(systemConfig.httpProxy.c_str());
     }
 
-    opt = static_cast<COptionUI*>(m_PaintManager.FindControl(L"OptUseNetwork"));
+    opt = m_PaintManager.FindControl<COptionUI*>(L"OptUseNetwork");
     if (opt) {
         opt->Selected(systemConfig.enableNetworkTOFD);
     }
 
-    edit = static_cast<CEditUI*>(m_PaintManager.FindControl(L"EditUseNetwork"));
+    edit = m_PaintManager.FindControl<CEditUI*>(L"EditUseNetwork");
     if (edit) {
         edit->SetText(WStringFromString(systemConfig.ipFPGA).c_str());
     }

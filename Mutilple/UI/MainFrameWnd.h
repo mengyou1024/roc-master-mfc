@@ -36,8 +36,6 @@ public:
 
     void EnterReview(std::string path = {});
 
-    ::CPoint GetCScainIndexPt(int index) const;
-
 private:
     constexpr static int SCAN_RECORD_CACHE_MAX_ITEMS = 1000; ///< 扫查数据最大缓存数量
 
@@ -125,50 +123,65 @@ private:
         float max = 0.0f;
     };
 
-    using ASCanGateResult    = std::array<GateResult, 3>;
-    using AllGateResult      = std::array<ASCanGateResult, HDBridge::CHANNEL_NUMBER + 4>;
+    using ARR_GateRes    = std::array<GateResult, 3>;
+    using ARR_GateResCh      = std::array<ARR_GateRes, HDBridge::CHANNEL_NUMBER + 4>;
     using GateResultTimeNote = std::array<uint64_t, HDBridge::CHANNEL_NUMBER>;
+    using UPTR_Utils         = std::unique_ptr<HD_Utils>;
+    using VEC_Utils          = std::vector<HD_Utils>;
+    using UPTR_FragReview    = std::unique_ptr<FragmentReview>;
+    using ARRAY_CHNUMB       = std::array<int, HDBridge::CHANNEL_NUMBER>;
+    using VEC_ScanRecord     = std::vector<ORM_Model::ScanRecord>;
+    using VEC_DefectInfo     = std::vector<ORM_Model::DefectInfo>;
 
-    constexpr static auto    BTN_SELECT_GROUP_MAX     = 4;
-    constexpr static uint8_t base                     = 0xFF >> 1;
-    constexpr static double  max_relative_error       = 0.08;
-    constexpr static double  threshold_relative_error = 0.02;
+    constexpr static auto BTN_SELECT_GROUP_MAX = 4; ///< 按钮选择分组的最大值(分层、横向、纵向、测厚)
+
+    // 测厚相对误差配置
+    constexpr static uint8_t RELATIVE_ERROR_BASE      = 0xFF >> 1; ///< 相对误差在C扫图中的基线
+    constexpr static double  RELATIVE_ERROR_MAX       = 0.08;      ///< 最大相对误差
+    constexpr static double  RELATIVE_ERROR_THRESHOLD = 0.02;      ///< 相对误差的颜色阈值
 
     /**
      * @brief 当前选中的通道
      * @note 并不是表示实际的通道值, 而是表示第几个选项，例如`CHANNEL_1`表示第一个通道选项
      * 实际的通道号可能是 1,5,9 中的一个
      */
-    ChannelSel                                mChannelSel         = ChannelSel::CHANNEL_1;
-    CWindowUI*                                m_pWndOpenGL_ASCAN  = nullptr;                 ///< A扫Duilib的窗口指针
-    CWindowUI*                                m_pWndOpenGL_CSCAN  = nullptr;                 ///< C扫Duilib的窗口指针
-    OpenGL                                    m_OpenGL_ASCAN      = {};                      ///< A扫OpenGL窗口
-    OpenGL                                    m_OpenGL_CSCAN      = {};                      ///< C扫OpenGL窗口
-    long                                      mCurrentGroup       = 0;                       ///< 当前分组
-    ConfigType                                mConfigType         = ConfigType::DetectRange; ///< 当前选中设置类型
-    GateType                                  mGateType           = GateType::GATE_A;        ///< 当前选中的波门类型
-    std::unique_ptr<HD_Utils>                 mUtils              = nullptr;                 ///< 硬件接口
-    WidgetMode                                mWidgetMode         = {WidgetMode::MODE_SCAN}; ///< 当前窗口的模式
-    std::vector<HD_Utils>                     mReviewData         = {};                      ///< 扫查缺陷数据
-    std::unique_ptr<FragmentReview>           mFragmentReview     = {};                      ///< 分片加载回放
-    int                                       mSamplesPerSecond   = 33;                      ///< C扫图每秒钟采点个数
-    std::array<int, HDBridge::CHANNEL_NUMBER> mIDDefectRecord     = {};                      ///< 缺陷记录的索引ID
-    ORM_Model::DetectInfo                     mDetectInfo         = {};                      ///< 探伤信息
-    int                                       mRecordCount        = {};                      ///< 扫查数据计数
-    std::vector<ORM_Model::ScanRecord>        mScanRecordCache    = {};                      ///< 扫查记录缓存(缺陷)
-    DetectionStateMachine                     mDetectionSM        = {};                      ///< 探伤的状态机
-    std::vector<ORM_Model::DefectInfo>        mDefectInfo         = {};                      ///< 探伤缺陷
-    bool                                      mScanningFlag       = false;                   ///< 判断当前是否正在扫查
-    std::string                               mReviewPathEntry    = {};                      ///< 回放路径入口
-    std::thread                               mCScanThread        = {};                      ///< C扫线程
-    std::condition_variable                   mCScanNotify        = {};                      ///< C扫线程更新数据通知
-    std::mutex                                mCScanMutex         = {};                      ///< C扫线程互斥量
-    bool                                      mCScanThreadRunning = {};                      ///< C扫线程运行
-    AllGateResult                             mAllGateResult      = {};                      ///< 所有波门的计算结果
-    GateResultTimeNote                        mLastGateResUpdate  = {};                      ///< 上一次波门结果更新的时间
+    ChannelSel              mChannelSel         = ChannelSel::CHANNEL_1;
+    CWindowUI*              m_pWndOpenGL_ASCAN  = nullptr;                 ///< A扫Duilib的窗口指针
+    CWindowUI*              m_pWndOpenGL_CSCAN  = nullptr;                 ///< C扫Duilib的窗口指针
+    OpenGL                  m_OpenGL_ASCAN      = {};                      ///< A扫OpenGL窗口
+    OpenGL                  m_OpenGL_CSCAN      = {};                      ///< C扫OpenGL窗口
+    long                    mCurrentGroup       = 0;                       ///< 当前分组
+    ConfigType              mConfigType         = ConfigType::DetectRange; ///< 当前选中设置类型
+    GateType                mGateType           = GateType::GATE_A;        ///< 当前选中的波门类型
+    UPTR_Utils              mUtils              = nullptr;                 ///< 硬件接口
+    WidgetMode              mWidgetMode         = {WidgetMode::MODE_SCAN}; ///< 当前窗口的模式
+    VEC_Utils               mReviewData         = {};                      ///< 扫查缺陷数据
+    UPTR_FragReview         mFragmentReview     = {};                      ///< 分片加载回放
+    int                     mSamplesPerSecond   = 33;                      ///< C扫图每秒钟采点个数
+    ARRAY_CHNUMB            mIDDefectRecord     = {};                      ///< 缺陷记录的索引ID
+    ORM_Model::DetectInfo   mDetectInfo         = {};                      ///< 探伤信息
+    int                     mRecordCount        = {};                      ///< 扫查数据计数
+    VEC_ScanRecord          mScanRecordCache    = {};                      ///< 扫查记录缓存(缺陷)
+    DetectionStateMachine   mDetectionSM        = {};                      ///< 探伤的状态机
+    VEC_DefectInfo          mDefectInfo         = {};                      ///< 探伤缺陷
+    bool                    mScanningFlag       = false;                   ///< 判断当前是否正在扫查
+    std::string             mReviewPathEntry    = {};                      ///< 回放路径入口
+    std::thread             mCScanThread        = {};                      ///< C扫线程
+    std::condition_variable mCScanNotify        = {};                      ///< C扫线程更新数据通知
+    std::mutex              mCScanMutex         = {};                      ///< C扫线程互斥量
+    bool                    mCScanThreadRunning = {};                      ///< C扫线程运行
+    ARR_GateResCh           mAllGateResult      = {};                      ///< 所有波门的计算结果
+    GateResultTimeNote      mLastGateResUpdate  = {};                      ///< 上一次波门结果更新的时间
     // 参数备份
     ORM_Model::DetectInfo mDetectInfoBak   = {};
     std::wstring          mJobGroupNameBak = {};
+
+    /**
+     * @brief 获取C扫图像索引点在界面上的位置
+     * @param index 数据点索引
+     * @return 界面上的位置点
+    */
+    ::CPoint GetCScainIndexPt(int index) const;
 
     /**
      * @brief 绘制回放C扫图
@@ -221,16 +234,6 @@ private:
      * @param name 按钮ID
      */
     void OnBtnModelClicked(std::wstring name);
-
-    /**
-     * @brief 初始化OpenGL窗口
-     */
-    void InitOpenGL();
-
-    /**
-     * @brief 线程中初始化
-     */
-    void InitOnThread();
 
     /**
      * @brief 更新Slider和Edit控件的值

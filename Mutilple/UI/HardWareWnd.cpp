@@ -23,33 +23,33 @@ void HardWareWnd::InitWindow() {
 void HardWareWnd::Notify(TNotifyUI& msg) {
     if (msg.sType == DUI_MSGTYPE_CLICK) {
         if (msg.pSender->GetName() == _T("BtnConnectToPLC")) {
-            auto edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditIpAddr")));
-            auto opt  = static_cast<COptionUI*>(m_PaintManager.FindControl(_T("OptIsConnected")));
+            auto edit = m_PaintManager.FindControl<CEditUI*>(_T("EditIpAddr"));
+            auto opt  = m_PaintManager.FindControl<COptionUI*>(_T("OptIsConnected"));
             auto ret  = connectTo(StringFromWString(std::wstring(edit->GetText())).c_str());
             opt->Selected(ret);
         } else if (msg.pSender->GetName() == _T("BtnBitRead")) {
-            auto edit  = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditBit")));
-            auto  [res,ret]   = getVariable<bool>(StringFromWString(std::wstring(edit->GetText())).c_str());
+            auto edit       = m_PaintManager.FindControl<CEditUI*>(_T("EditBit"));
+            auto [res, ret] = getVariable<bool>(StringFromWString(std::wstring(edit->GetText())).c_str());
             if (res) {
-                auto value = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditBitValue")));
+                auto value = m_PaintManager.FindControl<CEditUI*>(_T("EditBitValue"));
                 value->SetText(std::to_wstring(ret ? 1 : 0).c_str());
             }
         } else if (msg.pSender->GetName() == _T("BtnFloatRead")) {
-            auto edit = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditFloat")));
-            auto    [res, ret] = getVariable<float>(StringFromWString(std::wstring(edit->GetText())).c_str());
+            auto edit       = m_PaintManager.FindControl<CEditUI*>(_T("EditFloat"));
+            auto [res, ret] = getVariable<float>(StringFromWString(std::wstring(edit->GetText())).c_str());
             if (res) {
-                auto    value = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditFloatValue")));
+                auto    value = m_PaintManager.FindControl<CEditUI*>(_T("EditFloatValue"));
                 CString str;
                 str.Format(L"%.2f", ret);
                 value->SetText(str);
             }
         } else if (msg.pSender->GetName() == _T("BtnBitWrite")) {
-            auto edit  = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditBit")));
-            auto value = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditBitValue")));
+            auto edit  = m_PaintManager.FindControl<CEditUI*>(_T("EditBit"));
+            auto value = m_PaintManager.FindControl<CEditUI*>(_T("EditBitValue"));
             setVariable(StringFromWString(std::wstring(edit->GetText())).c_str(), _wtol(value->GetText()) ? true : false);
         } else if (msg.pSender->GetName() == _T("BtnFloatWrite")) {
-            auto edit  = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditFloat")));
-            auto value = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("EditFloatValue")));
+            auto edit  = m_PaintManager.FindControl<CEditUI*>(_T("EditFloat"));
+            auto value = m_PaintManager.FindControl<CEditUI*>(_T("EditFloatValue"));
             setVariable(StringFromWString(std::wstring(edit->GetText())).c_str(), (float)_wtof(value->GetText()));
         }
     }

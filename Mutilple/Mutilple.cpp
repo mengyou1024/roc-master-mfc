@@ -5,9 +5,9 @@
 
 #include "Mutilple.h"
 #include "framework.h"
+#include <Thread.h>
 #include <filesystem>
 #include <regex>
-#include <Thread.h>
 namespace fs = std::filesystem;
 
 #ifdef _DEBUG
@@ -57,7 +57,7 @@ BOOL CMutilpleApp::InitInstance() {
     // manifest specifies use of ComCtl32.dll version 6 or later to enable
     // visual styles.  Otherwise, any window creation will fail.
     INITCOMMONCONTROLSEX InitCtrls = {};
-    InitCtrls.dwSize = sizeof(InitCtrls);
+    InitCtrls.dwSize               = sizeof(InitCtrls);
     // Set this to include all the common control classes you want to use
     // in your application.
     InitCtrls.dwICC = ICC_WIN95_CLASSES;
@@ -69,7 +69,7 @@ BOOL CMutilpleApp::InitInstance() {
 
     // Create the shell manager, in case the dialog contains
     // any shell tree view or shell list view controls.
-    m_pShellManager = new CShellManager;
+    m_pShellManager = std::make_unique<CShellManager>();
 
     // Activate "Windows Native" visual manager for enabling themes in MFC controls
     CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows));
@@ -93,7 +93,7 @@ BOOL CMutilpleApp::InitInstance() {
     CPaintManagerUI::SetInstance(AfxGetInstanceHandle()); // 设置渲染实例
 
     // 主窗口
-    m_pMainFrame = new MainFrameWnd;
+    m_pMainFrame = std::make_unique<MainFrameWnd>();
     m_pMainFrame->Create(NULL, m_pMainFrame->GetWindowClassName(), UI_WNDSTYLE_FRAME, UI_WNDSTYLE_EX_FRAME);
     m_pMainFrame->CenterWindow();
     string filePath = {};
@@ -109,17 +109,14 @@ BOOL CMutilpleApp::InitInstance() {
     }
     m_pMainFrame->EnterReview(filePath);
     m_pMainFrame->ShowModal();
-    delete m_pMainFrame;
 
-    m_pMainFrame = NULL;
+    m_pMainFrame = nullptr;
 
     WindowImplBase::Term();  // 释放Duilib中的静态资源
     CPaintManagerUI::Term(); // 释放Duilib中的静态资源
 
     // 删除上面创建的 shell 管理器。
-    if (m_pShellManager != nullptr) {
-        delete m_pShellManager;
-    }
+    m_pShellManager = nullptr;
 
 #if !defined(_AFXDLL) && !defined(_AFX_NO_MFC_CONTROLS_IN_DIALOGS)
     ControlBarCleanUp();
