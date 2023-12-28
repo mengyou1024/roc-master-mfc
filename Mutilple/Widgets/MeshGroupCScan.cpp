@@ -82,7 +82,7 @@ void MeshGroupCScan::Render() {
     glBindVertexArray(0);
 
     for (const auto& it : mLineX) {
-        DrawLineY(((float)(it + m_rcItem.left) / (float)m_rcItem.Width()), 0, 1, {1.f, 1.f, 1.f, 1.f}, 1);
+        DrawLineY(((float)(it + m_rcItem.left) / (float)m_rcItem.Width()), 0, 1, {1.f, .8f, .8f, 1.f}, 1);
     }
 }
 

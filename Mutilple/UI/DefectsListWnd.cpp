@@ -33,6 +33,8 @@ void DefectsListWnd::Notify(TNotifyUI& msg) {
             auto pList = static_cast<CListUI*>(m_PaintManager.FindControl(L"ListDefects"));
             if (pList->GetCurSel() < 0) {
                 Close();
+                CDuiWindowBase::Notify(msg);
+                return;
             }
             auto pLine = static_cast<CListTextElementUI*>(pList->GetItemAt(pList->GetCurSel()));
             mResult    = std::make_tuple<bool, int, int>(true, _wtol(pLine->GetText(2)), _wtol(pLine->GetText(1)));

@@ -40,10 +40,19 @@ public:
         Demodu_Negative,  ///< 负半波
     };
 
+    struct HB_GateInfo;
+
     struct HB_ScanGateInfo {
         float pos    = {};
         float width  = {};
         float height = {};
+
+        HB_ScanGateInfo &operator=(const HB_GateInfo &val) {
+            pos    = val.pos;
+            width  = val.width;
+            height = val.height;
+            return *this;
+        }
     };
 
     struct HB_GateInfo {
@@ -494,6 +503,18 @@ public:
     }
 
     /**
+     * @brief 获取波门最高回波的波幅
+     * @param data 扫查数据
+     * @param channel 通道号
+     * @param gateIndex 波门索引
+     * @return [Amp, is_ok] Amp is 0-100.f
+    */
+    std::pair<double, bool> getGateAmp(const std::vector<uint8_t> &data, int channel, int gateIndex) const {
+        auto [_, max, res] = computeGateInfo(data, getScanGateInfo(channel, gateIndex));
+        return std::make_pair((double)max / 2.55, res);
+    }
+
+    /**
      * @brief 计算两个最高波间的距离
      * @param data 波形数组
      * @param range 声程范围
@@ -502,7 +523,7 @@ public:
      * @param abs 计算结果取绝对值
      * @return 距离
      */
-    static double compoteDistance(const std::vector<uint8_t> &data, double range,
+    static double computeDistance(const std::vector<uint8_t> &data, double range,
                                   const HB_ScanGateInfo &gateA, const HB_ScanGateInfo &gateB,
                                   bool abs = false) {
         auto [posA, maxA, resA] = computeGateInfo(data, gateA);

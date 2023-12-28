@@ -123,6 +123,21 @@
 					</HorizontalLayout>
 				</HorizontalLayout>
 			</HorizontalLayout>
+			<HorizontalLayout name="LayoutCScanSelect" height="38" inset="20,3,20,3" visible="false">
+				<HorizontalLayout />
+				<Button align="center" name="BtnCScanSelect" userdata="-1" width="32" height="32" bkimage="Theme\Button\plc_left_normal.jpg" hotimage="Theme\Button\plc_left_hot.jpg" />
+				<HorizontalLayout width="20" />
+				<Edit width="240" name="EditCScanSelect" align="center" height="32"  />
+				<HorizontalLayout width="20" />
+				<Button align="center" name="BtnCScanSelect" userdata="1" width="32" height="32" bkimage="Theme\Button\plc_right_normal.jpg" hotimage="Theme\Button\plc_right_hot.jpg" />
+				<HorizontalLayout width="200" />
+				<Button align="center" name="BtnCScanIndexSelect" userdata="-1" width="32" height="32" bkimage="Theme\Button\plc_left_normal.jpg" hotimage="Theme\Button\plc_left_hot.jpg" />
+				<HorizontalLayout width="20" />
+				<Edit width="240" name="EditCScanIndexSelect" align="center" height="32"  />
+				<HorizontalLayout width="20" />
+				<Button align="center" name="BtnCScanIndexSelect" userdata="1" width="32" height="32" bkimage="Theme\Button\plc_right_normal.jpg" hotimage="Theme\Button\plc_right_hot.jpg" />
+				<HorizontalLayout />
+			</HorizontalLayout>
 			<HorizontalLayout inset="10,10,10,10">
 				<WindowUI name="WndOpenGL_CSCAN" bkcolor="0xFF000000" />
 			</HorizontalLayout>

@@ -293,7 +293,7 @@ bool CreateMultipleDirectory(LPCTSTR szPath) {
 }
 
 bool PointInRect(RECT rc, ::CPoint pt) {
-    if (pt.x > rc.left && pt.x < rc.right && pt.y > rc.top && pt.y < rc.bottom) {
+    if (pt.x >= rc.left && pt.x <= rc.right && pt.y >= rc.top && pt.y <= rc.bottom) {
         return true;
     }
     return false;

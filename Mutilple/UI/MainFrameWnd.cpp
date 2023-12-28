@@ -55,6 +55,97 @@ static constexpr int swapAScanIndex(int x) {
     return result * 4 + remain;
 }
 
+class FragmentReview {
+public:
+    friend MainFrameWnd;
+    constexpr static auto SIZE_PER_FRAGMENT = 512;
+    FragmentReview(std::vector<HD_Utils> &rvData, int minFrag = SIZE_PER_FRAGMENT) :
+    mRV(rvData),
+    mFragmentSize(SIZE_PER_FRAGMENT),
+    mFragments((int)std::ceil((double)rvData.size() / (double)SIZE_PER_FRAGMENT)) {}
+
+    int size() const {
+        return mFragmentSize;
+    }
+
+    int fragments() const {
+        return mFragments;
+    }
+
+    void setCurFragment(int cursor) {
+        mCurFragment = cursor;
+        if (mCurFragment >= mFragments) {
+            mCurFragment = mFragments - 1;
+        } else if (mCurFragment < 0) {
+            mCurFragment = 0;
+        }
+        if (mCurFragment == mFragments - 1) {
+            mFragmentSize = (int)mRV.size() % SIZE_PER_FRAGMENT;
+        } else {
+            mFragmentSize = SIZE_PER_FRAGMENT;
+        }
+        mFragmentStart = mCurFragment * SIZE_PER_FRAGMENT;
+    }
+
+    FragmentReview &operator++(int) {
+        mCurFragment++;
+        if (mCurFragment >= mFragments) {
+            mCurFragment = mFragments - 1;
+        }
+        if (mCurFragment == mFragments - 1) {
+            mFragmentSize = (int)mRV.size() % SIZE_PER_FRAGMENT;
+        } else {
+            mFragmentSize = SIZE_PER_FRAGMENT;
+        }
+        mFragmentStart = mCurFragment * SIZE_PER_FRAGMENT;
+        return *this;
+    }
+
+    FragmentReview &operator--(int) {
+        mCurFragment--;
+        if (mCurFragment < 0) {
+            mCurFragment = 0;
+        }
+        mFragmentStart = mCurFragment * SIZE_PER_FRAGMENT;
+        return *this;
+    }
+
+    const HD_Utils &operator[](int sz) const {
+        if (sz > mFragmentSize) {
+            throw std::out_of_range("sz out of range");
+        }
+        return mRV[(size_t)(mFragmentStart + sz)];
+    }
+
+    auto begin() const {
+        return mRV.begin() + mFragmentStart;
+    }
+
+    auto end() const {
+        return mRV.begin() + mFragmentSize + mFragmentStart;
+    }
+
+    int getCurFragment() const {
+        return mCurFragment + 1;
+    }
+
+    void setCursor(int cur) {
+        mCursor = cur;
+    }
+
+    int &getCursor() {
+        return mCursor;
+    }
+
+private:
+    int                    mCursor        = 0;
+    const int              mFragments     = 0;
+    int                    mCurFragment   = 0;
+    int                    mFragmentStart = 0;
+    int                    mFragmentSize  = {};
+    std::vector<HD_Utils> &mRV;
+};
+
 MainFrameWnd::MainFrameWnd() {
     try {
         mCScanThreadRunning = true;
@@ -227,6 +318,74 @@ void MainFrameWnd::InitOnThread() {
         }
     }
     CheckAndUpdate();
+}
+
+void MainFrameWnd::DrawReviewCScan() {
+    // 删除所有通道的C扫数据
+    for (int index = 0; index < HDBridge::CHANNEL_NUMBER + 4; index++) {
+        auto mesh = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>(index);
+        mesh->RemoveDot();
+        mesh->RemoveLine();
+    }
+    for (const auto &data : *mFragmentReview) {
+        for (int index = 0; index < HDBridge::CHANNEL_NUMBER; index++) {
+            auto mesh = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>(index);
+            if (data.mScanOrm.mScanGateInfo[index].width != 0.0f) {
+                auto &[pos, width, _] = data.mScanOrm.mScanGateInfo[index];
+                auto      size        = data.mScanOrm.mScanData[index]->pAscan.size();
+                auto      begin       = std::begin(data.mScanOrm.mScanData[index]->pAscan);
+                auto      left        = begin + (size_t)((double)pos * (double)size);
+                auto      right       = begin + (size_t)((double)(pos + width) * (double)size);
+                auto      max         = std::max_element(left, right);
+                glm::vec4 color       = {};
+                if (*max > data.mScanOrm.mScanData[index]->pGateAmp[1]) {
+                    color = {1.0f, 0.f, 0.f, 1.0f};
+                } else {
+                    color = {1.0f, 1.0f, 1.0f, 1.0f};
+                }
+                mesh->AppendDot(*max, color, MAXSIZE_T);
+            } else {
+                mesh->AppendDot(0, {0.0f, 1.0f, 0.0f, 1.0f}, MAXSIZE_T);
+            }
+        }
+        for (size_t index = 0; index < 4ull; index++) {
+            auto mesh         = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>(HDBridge::CHANNEL_NUMBER + index);
+            auto thickness    = data.mScanOrm.mThickness[index];
+            auto baseTickness = _wtof(mDetectInfo.thickness.c_str());
+            if (baseTickness != 0.0 && baseTickness != -HUGE_VAL && baseTickness != HUGE_VAL) {
+                auto relative_error = (thickness - baseTickness) / baseTickness;
+                if (relative_error > max_relative_error) {
+                    relative_error = max_relative_error;
+                } else if (relative_error < -max_relative_error) {
+                    relative_error = -max_relative_error;
+                }
+                glm::vec4 color = {};
+                if (relative_error > threshold_relative_error) {
+                    color = {.0f, 0.f, 1.f, 1.0f};
+                } else if (relative_error < -threshold_relative_error) {
+                    color = {1.0f, 0.f, 0.f, 1.0f};
+                } else {
+                    color = {.0f, 1.f, 0.f, 1.0f};
+                }
+                uint8_t value = (((uint8_t)std::round((double)base * std::abs(relative_error / max_relative_error))) & base);
+                if (relative_error >= 0) {
+                    value += base;
+                } else {
+                    value = base - value;
+                }
+                mesh->AppendDot(value, color, MAXSIZE_T);
+            } else {
+                mesh->AppendDot(0, {1.0f, 1.0f, 1.0f, 1.0f}, MAXSIZE_T);
+            }
+        }
+    }
+
+    // 回放的C扫范围为第一幅图的最小值到最后一幅图的最大值
+    if (mFragmentReview->size() > 0) {
+        float cScanMinLimits = ((*mFragmentReview)[0]).mScanOrm.mCScanLimits[0];
+        float cScanMaxLimits = ((*mFragmentReview)[mFragmentReview->size() - 1]).mScanOrm.mCScanLimits[1];
+        m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->SetAxisRange(cScanMinLimits, cScanMaxLimits);
+    }
 }
 
 void MainFrameWnd::UpdateSliderAndEditValue(long newGroup, ConfigType newConfig, GateType newGate, ChannelSel newChannelSel,
@@ -533,7 +692,7 @@ void MainFrameWnd::UpdateAllGateResult(const HDBridge::NM_DATA &data, const HD_U
         auto gateLeft      = bridge->getScanGateInfo(data.iChannel + HDBridge::CHANNEL_NUMBER, 1);
         auto gateRigth     = bridge->getScanGateInfo(data.iChannel + HDBridge::CHANNEL_NUMBER, 2);
         auto [bias, depth] = bridge->getRangeOfAcousticPath(data.iChannel);
-        auto thickness     = HDBridge::compoteDistance(data.pAscan, depth, gateLeft, gateRigth);
+        auto thickness     = HDBridge::computeDistance(data.pAscan, depth, gateLeft, gateRigth);
         mUtils->mScanOrm.mThickness[(size_t)channel - HDBridge::CHANNEL_NUMBER] = (float)thickness;
         mesh->SetTickness((float)thickness);
     }
@@ -790,6 +949,38 @@ void MainFrameWnd::Notify(TNotifyUI &msg) {
             OnBtnModelClicked(match[1].str());
         }
 
+        if (msg.pSender->GetName() == L"BtnCScanSelect") {
+            if (msg.pSender->GetUserData() == L"1") {
+                (*mFragmentReview)++;
+            } else if (msg.pSender->GetUserData() == L"-1") {
+                (*mFragmentReview)--;
+            }
+            auto    edit = m_PaintManager.FindControl<CEditUI *>(L"EditCScanSelect");
+            CString str;
+            str.Format(L"第 %d 帧 / 共 %d 帧", mFragmentReview->getCurFragment(), mFragmentReview->fragments());
+            edit->SetText(str);
+            DrawReviewCScan();
+            auto pt = GetCScainIndexPt(mFragmentReview->getCursor());
+            OnLButtonDown(1, pt);
+        }
+
+        if (msg.pSender->GetName() == L"BtnCScanIndexSelect") {
+            auto &cursor = (*mFragmentReview).getCursor();
+            if (msg.pSender->GetUserData() == L"1") {
+                cursor++;
+                if (cursor >= mFragmentReview->size()) {
+                    cursor = mFragmentReview->size() - 1;
+                }
+            } else if (msg.pSender->GetUserData() == L"-1") {
+                cursor--;
+                if (cursor < 0) {
+                    cursor = 0;
+                }
+            }
+            auto pt = GetCScainIndexPt(mFragmentReview->getCursor());
+            OnLButtonDown(1, pt);
+        }
+
         if (msg.pSender->GetName() == _T("BtnExportReport")) {
             std::map<string, string> valueMap = {};
             valueMap["jobGroup"]              = GetJobGroup();
@@ -938,15 +1129,26 @@ void MainFrameWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
         }
     }
 
-    if (mWidgetMode == WidgetMode::MODE_REVIEW && mReviewData.size() > 0 && PointInRect(m_pWndOpenGL_CSCAN->GetPos(), pt)) {
+    if (mWidgetMode == WidgetMode::MODE_REVIEW && mFragmentReview->size() > 0 && PointInRect(m_pWndOpenGL_CSCAN->GetPos(), pt)) {
         auto temp = pt;
         temp.x -= m_pWndOpenGL_CSCAN->GetX();
         temp.y -= m_pWndOpenGL_CSCAN->GetY();
-        size_t index = (size_t)((float)mReviewData.size() * (float)temp.x / (float)m_pWndOpenGL_CSCAN->GetWidth());
-        if (index >= mReviewData.size()) {
-            index = mReviewData.size() - 1;
+        int index = (int)(std::round((double)mFragmentReview->size() * (double)temp.x / (double)m_pWndOpenGL_CSCAN->GetWidth()));
+        if (index >= mFragmentReview->size()) {
+            index = mFragmentReview->size() - 1;
+        } else if (index < 0) {
+            index = 0;
         }
-        auto &bridge = mReviewData[index];
+        auto    edit = m_PaintManager.FindControl<CEditUI *>(L"EditCScanSelect");
+        CString str;
+        str.Format(L"第 %d 帧 / 共 %d 帧", mFragmentReview->getCurFragment(), mFragmentReview->fragments());
+        edit->SetText(str);
+        edit = m_PaintManager.FindControl<CEditUI *>(L"EditCScanIndexSelect");
+        str.Format(L"第 %d 个点 / 共 %d 个点", index + 1, mFragmentReview->size());
+        mFragmentReview->setCursor(index);
+        edit->SetText(str);
+
+        auto &bridge = (*mFragmentReview)[index];
 
         // 扫查通道
         for (int i = 0; i < HDBridge::CHANNEL_NUMBER; i++) {
@@ -996,8 +1198,7 @@ void MainFrameWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
             mesh->UpdateGate(2, 1, bridge.mScanOrm.mScanGateInfo[i + HDBridge::CHANNEL_NUMBER].pos,
                              bridge.mScanOrm.mScanGateInfo[i + HDBridge::CHANNEL_NUMBER].width,
                              bridge.mScanOrm.mScanGateInfo[i + HDBridge::CHANNEL_NUMBER].height);
-            mesh->SetLimits(bridge.mScanOrm.mScanData[i]->aScanLimits[0],
-                            bridge.mScanOrm.mScanData[i]->aScanLimits[1]);
+            mesh->SetLimits(bridge.mScanOrm.mScanData[i]->aScanLimits[0], bridge.mScanOrm.mScanData[i]->aScanLimits[1]);
 
             std::array<HDBridge::HB_ScanGateInfo, 3> scanGate = {
                 bridge.mScanOrm.mScanGateAInfo[i],
@@ -1008,7 +1209,7 @@ void MainFrameWnd::OnLButtonDown(UINT nFlags, ::CPoint pt) {
                 auto [pos, max, res] = HDBridge::computeGateInfo(bridge.mScanOrm.mScanData[i]->pAscan, scanGate[j]);
                 if (res) {
                     auto depth = bridge.mScanOrm.mScanData[i]->aScanLimits[1];
-                    mesh->SetGateData(std::make_pair(pos * depth, max/2.55f), j);
+                    mesh->SetGateData(std::make_pair(pos * depth, max / 2.55f), j);
                 } else {
                     mesh->SetGateData(j);
                 }
@@ -1059,11 +1260,11 @@ void MainFrameWnd::OnLButtonDClick(UINT nFlags, ::CPoint pt) {
             auto &[res, index, channel] = wnd.getResult();
             if (res) {
                 OnBtnSelectGroupClicked(channel / 4);
-                auto     width  = m_pWndOpenGL_CSCAN->GetWidth();
-                auto     height = m_pWndOpenGL_CSCAN->GetHeight();
-                ::CPoint pt;
-                pt.x = (long)(m_pWndOpenGL_CSCAN->GetX() + (float)width * ((float)index / (float)mReviewData.size()));
-                pt.y = (long)(m_pWndOpenGL_CSCAN->GetY() + height / 2);
+                mFragmentReview->setCurFragment(index / FragmentReview::SIZE_PER_FRAGMENT);
+                if (mFragmentReview->begin() != mReviewData.begin() || mFragmentReview->end() != mReviewData.end()) {
+                    DrawReviewCScan();
+                }
+                auto pt = GetCScainIndexPt(index - 1);
                 OnLButtonDown(1, pt);
             }
         }
@@ -1082,6 +1283,16 @@ void MainFrameWnd::OnTimer(int iIdEvent) {
 
 void MainFrameWnd::EnterReview(std::string path) {
     mReviewPathEntry = path;
+}
+
+::CPoint MainFrameWnd::GetCScainIndexPt(int index) const {
+    auto     width  = m_pWndOpenGL_CSCAN->GetWidth();
+    auto     height = m_pWndOpenGL_CSCAN->GetHeight();
+    ::CPoint pt;
+    pt.x = (long)(m_pWndOpenGL_CSCAN->GetX() +
+                  (float)width * ((float)(index % FragmentReview::SIZE_PER_FRAGMENT) / (float)mFragmentReview->size()));
+    pt.y = (long)(m_pWndOpenGL_CSCAN->GetY() + height / 2);
+    return pt;
 }
 
 void MainFrameWnd::ReconnectBoard(int type) {
@@ -1306,12 +1517,8 @@ void MainFrameWnd::SaveScanData() {
     // 保存当前波门的位置信息
     mUtils->mScanOrm.mScanGateInfo = mUtils->getCache().scanGateInfo;
     for (size_t i = 0; i < HDBridge::CHANNEL_NUMBER; i++) {
-        mUtils->mScanOrm.mScanGateAInfo[i].pos    = mUtils->getCache().gateInfo[i].pos;
-        mUtils->mScanOrm.mScanGateAInfo[i].width  = mUtils->getCache().gateInfo[i].width;
-        mUtils->mScanOrm.mScanGateAInfo[i].height = mUtils->getCache().gateInfo[i].height;
-        mUtils->mScanOrm.mScanGateBInfo[i].pos    = mUtils->getCache().gate2Info[i].pos;
-        mUtils->mScanOrm.mScanGateBInfo[i].width  = mUtils->getCache().gate2Info[i].width;
-        mUtils->mScanOrm.mScanGateBInfo[i].height = mUtils->getCache().gate2Info[i].height;
+        mUtils->mScanOrm.mScanGateAInfo[i] = mUtils->getCache().gateInfo[i];
+        mUtils->mScanOrm.mScanGateBInfo[i] = mUtils->getCache().gate2Info[i];
     }
     // 保存C扫的坐标信息
     auto [minLimit, maxLimit]        = m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->GetAxisRange();
@@ -1359,72 +1566,8 @@ bool MainFrameWnd::EnterReviewMode(std::string name) {
         SelectMeasureThickness(mDetectInfo.enableMeasureThickness);
         UpdateSystemConfig(systemConfig);
         spdlog::info("load:{}, frame:{}", name, mReviewData.size());
-        // 删除所有通道的C扫数据
-        for (int index = 0; index < HDBridge::CHANNEL_NUMBER + 4; index++) {
-            auto mesh = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>(index);
-            mesh->RemoveDot();
-            mesh->RemoveLine();
-        }
-        for (const auto &data : mReviewData) {
-            for (int index = 0; index < HDBridge::CHANNEL_NUMBER; index++) {
-                auto mesh = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>(index);
-                if (data.mScanOrm.mScanGateInfo[index].width != 0.0f) {
-                    auto &[pos, width, _] = data.mScanOrm.mScanGateInfo[index];
-                    auto      size        = data.mScanOrm.mScanData[index]->pAscan.size();
-                    auto      begin       = std::begin(data.mScanOrm.mScanData[index]->pAscan);
-                    auto      left        = begin + (size_t)((double)pos * (double)size);
-                    auto      right       = begin + (size_t)((double)(pos + width) * (double)size);
-                    auto      max         = std::max_element(left, right);
-                    glm::vec4 color       = {};
-                    if (*max > data.mScanOrm.mScanData[index]->pGateAmp[1]) {
-                        color = {1.0f, 0.f, 0.f, 1.0f};
-                    } else {
-                        color = {1.0f, 1.0f, 1.0f, 1.0f};
-                    }
-                    mesh->AppendDot(*max, color, MAXSIZE_T);
-                } else {
-                    mesh->AppendDot(0, {0.0f, 1.0f, 0.0f, 1.0f}, MAXSIZE_T);
-                }
-            }
-            for (size_t index = 0; index < 4ull; index++) {
-                auto mesh         = m_OpenGL_CSCAN.getMesh<MeshGroupCScan *>(HDBridge::CHANNEL_NUMBER + index);
-                auto thickness    = data.mScanOrm.mThickness[index];
-                auto baseTickness = _wtof(mDetectInfo.thickness.c_str());
-                if (baseTickness != 0.0 && baseTickness != -HUGE_VAL && baseTickness != HUGE_VAL) {
-                    auto relative_error = (thickness - baseTickness) / baseTickness;
-                    if (relative_error > max_relative_error) {
-                        relative_error = max_relative_error;
-                    } else if (relative_error < -max_relative_error) {
-                        relative_error = -max_relative_error;
-                    }
-                    glm::vec4 color = {};
-                    if (relative_error > threshold_relative_error) {
-                        color = {.0f, 0.f, 1.f, 1.0f};
-                    } else if (relative_error < -threshold_relative_error) {
-                        color = {1.0f, 0.f, 0.f, 1.0f};
-                    } else {
-                        color = {.0f, 1.f, 0.f, 1.0f};
-                    }
-                    uint8_t value = (((uint8_t)std::round((double)base * std::abs(relative_error / max_relative_error))) & base);
-                    if (relative_error >= 0) {
-                        value += base;
-                    } else {
-                        value = base - value;
-                    }
-                    mesh->AppendDot(value, color, MAXSIZE_T);
-                } else {
-                    mesh->AppendDot(0, {1.0f, 1.0f, 1.0f, 1.0f}, MAXSIZE_T);
-                }
-            }
-        }
-
-        // 回放的C扫范围为第一幅图的最小值到最后一幅图的最大值
-        if (mReviewData.size() > 0) {
-            float cScanMinLimits = (*std::begin(mReviewData)).mScanOrm.mCScanLimits[0];
-            float cScanMaxLimits = (*std::rbegin(mReviewData)).mScanOrm.mCScanLimits[1];
-            m_OpenGL_CSCAN.getModel<ModelGroupCScan *>()->SetAxisRange(cScanMinLimits, cScanMaxLimits);
-        }
-
+        mFragmentReview = std::make_unique<FragmentReview>(mReviewData);
+        DrawReviewCScan();
         // 切换界面布局
         auto layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutParamSetting")));
         layout->SetVisible(false);
@@ -1432,6 +1575,15 @@ bool MainFrameWnd::EnterReviewMode(std::string name) {
         layout->SetVisible(false);
         layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutReviewExt")));
         layout->SetVisible(true);
+        layout = m_PaintManager.FindControl<CHorizontalLayoutUI *>(L"LayoutCScanSelect");
+        layout->SetVisible(true);
+        auto    edit = m_PaintManager.FindControl<CEditUI *>(L"EditCScanSelect");
+        CString str;
+        str.Format(L"第 %d 帧 / 共 %.0f 帧", 1, std::ceil((double)mReviewData.size() / (double)FragmentReview::SIZE_PER_FRAGMENT));
+        edit->SetText(str);
+        edit = m_PaintManager.FindControl<CEditUI *>(L"EditCScanIndexSelect");
+        str.Format(L"第 %d 个点 / 共 %d 个点", 1, mFragmentReview->size());
+        edit->SetText(str);
         mWidgetMode = WidgetMode::MODE_REVIEW;
         spdlog::info("takes time: {} ms", GetTickCount64() - tick);
         return true;
@@ -1447,11 +1599,14 @@ void MainFrameWnd::ExitReviewMode() {
         mUtils->popCallback();
     }
     mReviewData.clear();
-    auto layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutParamSetting")));
+    mFragmentReview = nullptr;
+    auto layout     = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutParamSetting")));
     layout->SetVisible(true);
     layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutFunctionButton")));
     layout->SetVisible(true);
     layout = static_cast<CHorizontalLayoutUI *>(m_PaintManager.FindControl(_T("LayoutReviewExt")));
+    layout->SetVisible(false);
+    layout = m_PaintManager.FindControl<CHorizontalLayoutUI *>(L"LayoutCScanSelect");
     layout->SetVisible(false);
     for (int i = 0; i < HDBridge::CHANNEL_NUMBER; i++) {
         auto mesh  = m_OpenGL_ASCAN.getMesh<MeshAscan *>(i);

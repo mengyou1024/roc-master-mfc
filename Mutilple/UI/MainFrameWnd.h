@@ -20,6 +20,8 @@
 #undef GATE_A
 #undef GATE_B
 
+class FragmentReview;
+
 class MainFrameWnd : public CDuiWindowBase {
 public:
     MainFrameWnd();
@@ -33,6 +35,8 @@ public:
     virtual void       OnTimer(int iIdEvent) override;
 
     void EnterReview(std::string path = {});
+
+    ::CPoint GetCScainIndexPt(int index) const;
 
 private:
     constexpr static int SCAN_RECORD_CACHE_MAX_ITEMS = 1000; ///< 扫查数据最大缓存数量
@@ -146,6 +150,7 @@ private:
     std::unique_ptr<HD_Utils>                 mUtils              = nullptr;                 ///< 硬件接口
     WidgetMode                                mWidgetMode         = {WidgetMode::MODE_SCAN}; ///< 当前窗口的模式
     std::vector<HD_Utils>                     mReviewData         = {};                      ///< 扫查缺陷数据
+    std::unique_ptr<FragmentReview>           mFragmentReview     = {};                      ///< 分片加载回放
     int                                       mSamplesPerSecond   = 33;                      ///< C扫图每秒钟采点个数
     std::array<int, HDBridge::CHANNEL_NUMBER> mIDDefectRecord     = {};                      ///< 缺陷记录的索引ID
     ORM_Model::DetectInfo                     mDetectInfo         = {};                      ///< 探伤信息
@@ -164,6 +169,11 @@ private:
     // 参数备份
     ORM_Model::DetectInfo mDetectInfoBak   = {};
     std::wstring          mJobGroupNameBak = {};
+
+    /**
+     * @brief 绘制回放C扫图
+     */
+    void DrawReviewCScan();
 
     /**
      * @brief 通过重新连接TOFD超声板

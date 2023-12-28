@@ -187,8 +187,16 @@ unique_ptr<HDBridge::NM_DATA> TOFDMultiPort::readDatas() {
     ret->pAscan.resize(data->iAScanSize);
     memcpy(ret->pAscan.data(), data->pAscan, ret->iAScanSize);
     memcpy(ret->pCoder.data(), data->pCoder, sizeof(int32_t) * 2);
-    memcpy(ret->pGatePos.data(), data->pGatePos, sizeof(int32_t) * 2);
-    memcpy(ret->pGateAmp.data(), data->pGateAmp, sizeof(uint8_t) * 2);
+    std::array<int, 2>   pGatePos = {};
+    std::array<uint8_t, 2> pGateAmp = {};
+    for (int i = 0; i < 2; i++) {
+        auto gateInfo = getScanGateInfo(ret->iChannel, i);
+        auto [pos, max, res] = computeGateInfo(ret->pAscan, gateInfo);
+        pGatePos[i]          = (int32_t)(pos * ret->pAscan.size());
+        pGateAmp[i]          = max;
+    }
+    ret->pGatePos = pGatePos;
+    ret->pGateAmp = pGateAmp;
     memcpy(ret->pAlarm.data(), data->pAlarm, sizeof(int32_t) * 2);
 
     auto [bias, depth] = getRangeOfAcousticPath(ret->iChannel);
