@@ -8,10 +8,10 @@ public:
     FragmentLoader(T &rvData, int minFrag = SIZE_PER_FRAGMENT) :
     mRV(rvData),
     mFragments((int)std::ceil((double)rvData.size() / (double)SIZE_PER_FRAGMENT)) {
-        if (mRV.size() >= SIZE_PER_FRAGMENT) {
+        if ((int)mRV.size() >= SIZE_PER_FRAGMENT) {
             mFragmentSize = SIZE_PER_FRAGMENT;
         } else {
-            mFragmentSize = mRV.size();
+            mFragmentSize = (int)mRV.size();
         }
     }
 
