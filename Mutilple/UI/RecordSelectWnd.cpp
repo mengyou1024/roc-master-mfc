@@ -17,7 +17,18 @@ using sqlite_orm::column;
 using sqlite_orm::columns;
 using sqlite_orm::where;
 
-RecordSelectWnd::~RecordSelectWnd() {}
+RecordSelectWnd::~RecordSelectWnd() {
+    try {
+        auto pListYearMonth      = m_PaintManager.FindControl<CComboUI*>(L"ComboYearMonth");
+        auto pListDay            = m_PaintManager.FindControl<CComboUI*>(L"ComboDay");
+        auto pListTime           = m_PaintManager.FindControl<CComboUI*>(L"ComboTime");
+        auto systemConfig        = GetSystemConfig();
+        systemConfig.IDYearMonth = pListYearMonth->GetCurSel();
+        systemConfig.IDDay       = pListDay->GetCurSel();
+        systemConfig.IDTime      = pListTime->GetCurSel();
+        UpdateSystemConfig(systemConfig);
+    } catch (std::exception& e) { spdlog::error(GB2312ToUtf8(e.what())); }
+}
 
 LPCTSTR RecordSelectWnd::GetWindowClassName() const {
     return _T("RecordSelectWnd");
@@ -44,11 +55,41 @@ void RecordSelectWnd::OnNotifyUnique(TNotifyUI& msg) {
             auto pListDay = m_PaintManager.FindControl<CComboUI*>(L"ComboDay");
             pListDay->RemoveAll();
             ListDay();
+            try {
+                auto pListYearMonth      = m_PaintManager.FindControl<CComboUI*>(L"ComboYearMonth");
+                auto pListDay            = m_PaintManager.FindControl<CComboUI*>(L"ComboDay");
+                auto pListTime           = m_PaintManager.FindControl<CComboUI*>(L"ComboTime");
+                auto systemConfig        = GetSystemConfig();
+                systemConfig.IDYearMonth = pListYearMonth->GetCurSel();
+                systemConfig.IDDay       = 0;
+                systemConfig.IDTime      = 0;
+                UpdateSystemConfig(systemConfig);
+            } catch (std::exception& e) { spdlog::error(GB2312ToUtf8(e.what())); }
         } else if (msg.pSender->GetName() == L"ComboDay") {
             auto pListTime = m_PaintManager.FindControl<CComboUI*>(L"ComboTime");
             pListTime->RemoveAll();
             ListTime();
+            try {
+                auto pListYearMonth      = m_PaintManager.FindControl<CComboUI*>(L"ComboYearMonth");
+                auto pListDay            = m_PaintManager.FindControl<CComboUI*>(L"ComboDay");
+                auto pListTime           = m_PaintManager.FindControl<CComboUI*>(L"ComboTime");
+                auto systemConfig        = GetSystemConfig();
+                systemConfig.IDYearMonth = pListYearMonth->GetCurSel();
+                systemConfig.IDDay       = pListDay->GetCurSel();
+                systemConfig.IDTime      = 0;
+                UpdateSystemConfig(systemConfig);
+            } catch (std::exception& e) { spdlog::error(GB2312ToUtf8(e.what())); }
         } else if (msg.pSender->GetName() == L"ComboTime") {
+            try {
+                auto pListYearMonth      = m_PaintManager.FindControl<CComboUI*>(L"ComboYearMonth");
+                auto pListDay            = m_PaintManager.FindControl<CComboUI*>(L"ComboDay");
+                auto pListTime           = m_PaintManager.FindControl<CComboUI*>(L"ComboTime");
+                auto systemConfig        = GetSystemConfig();
+                systemConfig.IDYearMonth = pListYearMonth->GetCurSel();
+                systemConfig.IDDay       = pListDay->GetCurSel();
+                systemConfig.IDTime      = pListTime->GetCurSel();
+                UpdateSystemConfig(systemConfig);
+            } catch (std::exception& e) { spdlog::error(GB2312ToUtf8(e.what())); }
         }
     } else if (msg.sType == DUI_MSGTYPE_CLICK) {
         if (msg.pSender->GetName() == _T("closebtn")) {
@@ -125,7 +166,10 @@ void RecordSelectWnd::ListYearMonth() const {
                 pListYearMonth->Add(list);
             }
         }
-        if (pListYearMonth->GetCount() > 0) {
+        if (pListYearMonth->GetCount() > GetSystemConfig().IDYearMonth) {
+            auto it = static_cast<CListLabelElementUI*>(pListYearMonth->GetItemAt(GetSystemConfig().IDYearMonth));
+            it->Select();
+        } else if (pListYearMonth->GetCount() > 0) {
             auto it = static_cast<CListLabelElementUI*>(pListYearMonth->GetItemAt(0));
             it->Select();
         }
@@ -154,7 +198,10 @@ void RecordSelectWnd::ListDay() const {
                 pListDay->Add(list);
             }
         }
-        if (pListDay->GetCount() > 0) {
+        if (pListDay->GetCount() > GetSystemConfig().IDDay) {
+            auto it = static_cast<CListLabelElementUI*>(pListDay->GetItemAt(GetSystemConfig().IDDay));
+            it->Select();
+        } else if (pListDay->GetCount() > 0) {
             auto it = static_cast<CListLabelElementUI*>(pListDay->GetItemAt(0));
             it->Select();
         }
@@ -184,7 +231,10 @@ void RecordSelectWnd::ListTime() const {
                 pListTime->Add(list);
             }
         }
-        if (pListTime->GetCount() > 0) {
+        if (pListTime->GetCount() > GetSystemConfig().IDTime) {
+            auto it = static_cast<CListLabelElementUI*>(pListTime->GetItemAt(GetSystemConfig().IDTime));
+            it->Select();
+        } else if (pListTime->GetCount() > 0) {
             auto it = static_cast<CListLabelElementUI*>(pListTime->GetItemAt(0));
             it->Select();
         }
