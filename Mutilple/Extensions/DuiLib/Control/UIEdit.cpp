@@ -149,7 +149,7 @@ namespace DuiLib
 			return (LRESULT)m_hBkBrush;
         } else if (uMsg == WM_CHAR) {
             auto [start, end] = m_pOwner->GetSel();
-			if (start == 0 && end == m_pOwner->GetText().GetLength()) {
+            if (start == 0 && end != start && end == m_pOwner->GetText().GetLength()) {
                 bHandled = FALSE;
             } else {
                 auto& [enable, valitor] = m_pOwner->m_textValitor;
