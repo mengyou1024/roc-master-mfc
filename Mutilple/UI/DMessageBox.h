@@ -17,9 +17,6 @@ public:
     virtual void    InitWindow();
 
 public:
-    CTabLayoutUI *m_pTabBtn;
-    CTextUI      *m_pTextTitle;
-    CTextUI      *m_pTextString;
     UINT          m_iType;
     LPCTSTR       m_pString, m_pTitle;
 };
