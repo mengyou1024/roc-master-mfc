@@ -2,10 +2,12 @@
 
 [https://github.com/mengyou1024/roc-master-mfc/releases/latest](https://github.com/mengyou1024/roc-master-mfc/releases/latest)
 
+# 本地构建
+
 ### 0. 克隆仓库
 
 ``` powershell
-git clone <git-repository>
+git clone <git-repository> roc-master
 ```
 
 ### 1. 安装Chocolatey
@@ -36,6 +38,23 @@ msbuild Mutilple.sln -t:Mutilple -p:Configuration=Release
 #### ②. 打包安装程序
 
 ``` powershell
+iscc .\pack-installer.iss
+```
+
+# Docker构建
+
+```powershell
+# 1. 克隆仓库
+git clone <git-repository> roc-master
+# 2. 进入目录
+cd roc-master
+# 3. 构建镜像 (耗时较长)
+docker build -t buildtools:latest -m 2GB .
+# 4. 进入容器
+docker run -it --rm  -v "$(pwd):C:\workdir" buildtools:latest 
+# 5. 构建
+msbuild Mutilple.sln -t:Mutilple -p:Configuration=Release
+# 6. 打包
 iscc .\pack-installer.iss
 ```
 
