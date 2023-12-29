@@ -2,6 +2,7 @@
 
 #include "DuiWindowBase.h"
 #include "OpenGL.h"
+#include <FragmentLoader.hpp>
 #include <HDBridge.h>
 #include <HDBridge/NetworkMulti.h>
 #include <HDBridge/TOFDPort.h>
@@ -20,36 +21,8 @@
 #undef GATE_A
 #undef GATE_B
 
-class FragmentReview;
-
 class MainFrameWnd : public CDuiWindowBase {
-public:
-    MainFrameWnd();
-    virtual ~MainFrameWnd();
-    virtual LPCTSTR    GetWindowClassName() const override;
-    virtual CDuiString GetSkinFile() noexcept override;
-    virtual void       InitWindow() override;
-    virtual void       Notify(TNotifyUI& msg) override;
-    virtual void       OnLButtonDown(UINT nFlags, ::CPoint pt) override;
-    virtual void       OnLButtonDClick(UINT nFlags, ::CPoint pt) override;
-    virtual void       OnTimer(int iIdEvent) override;
-
-    void EnterReview(std::string path = {});
-
-private:
-    constexpr static int SCAN_RECORD_CACHE_MAX_ITEMS = 1000; ///< 扫查数据最大缓存数量
-
-    struct {
-        string yearMonth = {};
-        string day       = {};
-        string time      = {};
-    } mScanTime; ///< 扫查时间
-
-    string mSavePath = {}; ///< 保存路径
-
-    /// 缺陷判决值
-    std::array<uint8_t, HDBridge::CHANNEL_NUMBER> mDefectJudgmentValue = {};
-
+private: /* 类型 */
     enum class WidgetMode {
         MODE_SCAN = 0,
         MODE_REVIEW,
@@ -78,6 +51,44 @@ private:
         CHANNEL_3,
         CHANNEL_4,
     };
+
+    struct GateResult {
+        bool result = false;
+        operator bool() {
+            return result;
+        }
+        float pos = 0.0f;
+        float max = 0.0f;
+    };
+
+    struct {
+        string yearMonth = {};
+        string day       = {};
+        string time      = {};
+    } mScanTime; ///< 扫查时间
+
+    using FragmentReview     = FragmentLoader<std::vector<HD_Utils>>;
+    using ARR_GateRes        = std::array<GateResult, 3>;
+    using ARR_GateResCh      = std::array<ARR_GateRes, HDBridge::CHANNEL_NUMBER + 4>;
+    using GateResultTimeNote = std::array<uint64_t, HDBridge::CHANNEL_NUMBER>;
+    using UPTR_Utils         = std::unique_ptr<HD_Utils>;
+    using VEC_Utils          = std::vector<HD_Utils>;
+    using UPTR_FragReview    = std::unique_ptr<FragmentReview>;
+    using ARRAY_CHNUMB       = std::array<int, HDBridge::CHANNEL_NUMBER>;
+    using VEC_ScanRecord     = std::vector<ORM_Model::ScanRecord>;
+    using VEC_DefectInfo     = std::vector<ORM_Model::DefectInfo>;
+
+private: /* 常量 */
+
+    // 扫查数据记录缓冲最大数量
+    constexpr static int  SCAN_RECORD_CACHE_MAX_ITEMS = 1000;
+    constexpr static auto BTN_SELECT_GROUP_MAX = 4; ///< 按钮选择分组的最大值(分层、横向、纵向、测厚)
+
+    // 测厚相对误差配置
+    constexpr static uint8_t RELATIVE_ERROR_BASE      = 0xFF >> 1; ///< 相对误差在C扫图中的基线
+    constexpr static double  RELATIVE_ERROR_MAX       = 0.08;      ///< 最大相对误差
+    constexpr static double  RELATIVE_ERROR_THRESHOLD = 0.02;      ///< 相对误差的颜色阈值
+
 
     /// Edit控件显示的单位文本
     const static inline std::map<ConfigType, CString> mConfigTextext = {
@@ -114,31 +125,13 @@ private:
         {ConfigType::GateHeight,  0.1},
     };
 
-    struct GateResult {
-        bool result = false;
-        operator bool() {
-            return result;
-        }
-        float pos = 0.0f;
-        float max = 0.0f;
-    };
+private: /* 私有变量参数 */
+    /// 扫查数据最大缓存数量
 
-    using ARR_GateRes    = std::array<GateResult, 3>;
-    using ARR_GateResCh      = std::array<ARR_GateRes, HDBridge::CHANNEL_NUMBER + 4>;
-    using GateResultTimeNote = std::array<uint64_t, HDBridge::CHANNEL_NUMBER>;
-    using UPTR_Utils         = std::unique_ptr<HD_Utils>;
-    using VEC_Utils          = std::vector<HD_Utils>;
-    using UPTR_FragReview    = std::unique_ptr<FragmentReview>;
-    using ARRAY_CHNUMB       = std::array<int, HDBridge::CHANNEL_NUMBER>;
-    using VEC_ScanRecord     = std::vector<ORM_Model::ScanRecord>;
-    using VEC_DefectInfo     = std::vector<ORM_Model::DefectInfo>;
+    string mSavePath = {}; ///< 保存路径
 
-    constexpr static auto BTN_SELECT_GROUP_MAX = 4; ///< 按钮选择分组的最大值(分层、横向、纵向、测厚)
-
-    // 测厚相对误差配置
-    constexpr static uint8_t RELATIVE_ERROR_BASE      = 0xFF >> 1; ///< 相对误差在C扫图中的基线
-    constexpr static double  RELATIVE_ERROR_MAX       = 0.08;      ///< 最大相对误差
-    constexpr static double  RELATIVE_ERROR_THRESHOLD = 0.02;      ///< 相对误差的颜色阈值
+    /// 缺陷判决值
+    std::array<uint8_t, HDBridge::CHANNEL_NUMBER> mDefectJudgmentValue = {};
 
     /**
      * @brief 当前选中的通道
@@ -176,11 +169,25 @@ private:
     ORM_Model::DetectInfo mDetectInfoBak   = {};
     std::wstring          mJobGroupNameBak = {};
 
+public:
+    MainFrameWnd();
+    virtual ~MainFrameWnd();
+    virtual LPCTSTR    GetWindowClassName() const override;
+    virtual CDuiString GetSkinFile() noexcept override;
+    virtual void       InitWindow() override;
+    virtual void       Notify(TNotifyUI& msg) override;
+    virtual void       OnLButtonDown(UINT nFlags, ::CPoint pt) override;
+    virtual void       OnLButtonDClick(UINT nFlags, ::CPoint pt) override;
+    virtual void       OnTimer(int iIdEvent) override;
+
+    void EnterReview(std::string path = {});
+
+private:
     /**
      * @brief 获取C扫图像索引点在界面上的位置
      * @param index 数据点索引
      * @return 界面上的位置点
-    */
+     */
     ::CPoint GetCScainIndexPt(int index) const;
 
     /**

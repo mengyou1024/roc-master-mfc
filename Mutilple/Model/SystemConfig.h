@@ -27,6 +27,9 @@ namespace ORM_Model {
         std::string  ipPC                   = {};    ///< PC的IP地址
         uint16_t     portFPGA               = {};    ///< FPGA的端口
         uint16_t     portPC                 = {};    ///< PC的端口
+        int          IDYearMonth            = {};
+        int          IDDay                  = {};
+        int          IDTime                 = {};
         static auto  storage(void) {
             return make_storage(
                 ORM_DB_NAME,
@@ -38,7 +41,10 @@ namespace ORM_Model {
                             make_column("ENABLE_NETWORK_MULTI", &SystemConfig::enableNetworkMulti),
                             make_column("ENABLE_NETWORK_TOFD", &SystemConfig::enableNetworkTOFD),
                             make_column("IP_FPGA", &SystemConfig::ipFPGA), make_column("IP_PC", &SystemConfig::ipPC),
-                            make_column("PORT_FPGA", &SystemConfig::portFPGA), make_column("PORT_PC", &SystemConfig::portPC)));
+                            make_column("PORT_FPGA", &SystemConfig::portFPGA), make_column("PORT_PC", &SystemConfig::portPC),
+                            make_column("ID_YEAR_MONTH", &SystemConfig::IDYearMonth), make_column("ID_DAY", &SystemConfig::IDDay),
+                            make_column("ID_TIME", &SystemConfig::IDTime)
+                            ));
         }
     };
 } // namespace ORM_Model

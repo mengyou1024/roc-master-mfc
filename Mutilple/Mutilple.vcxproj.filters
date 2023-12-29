@@ -79,6 +79,12 @@
     <Filter Include="Header Files\配置">
       <UniqueIdentifier>{d1b3947d-4efd-463f-8ff5-375f0e3f3fa7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\杂项">
+      <UniqueIdentifier>{0bc96b42-edce-43a5-b4c7-7942fbafef4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\杂项">
+      <UniqueIdentifier>{f9496d37-f1b8-46d9-af13-49f9b44ff7e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Define.h">
@@ -239,6 +245,9 @@
     </ClInclude>
     <ClInclude Include="ProjectConfig.h">
       <Filter>Header Files\配置</Filter>
+    </ClInclude>
+    <ClInclude Include="FragmentLoader.hpp">
+      <Filter>Header Files\杂项</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

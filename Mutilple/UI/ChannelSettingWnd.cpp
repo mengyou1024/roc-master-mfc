@@ -173,10 +173,10 @@ void ChannelSettingWnd::ReadValue2UI() {
 
 void ChannelSettingWnd::UpdateAScanCallback(const HDBridge::NM_DATA& data, const HD_Utils& caller) {
     if (data.iChannel == mChannel) {
-        auto                                  model  = static_cast<ModelAScan*>(m_OpenGL->m_pModel[0]);
-        auto                                  bridge = caller.getBridge();
-        auto                                  mesh   = static_cast<MeshAscan*>(model->m_pMesh[0]);
-        std::shared_ptr<std::vector<uint8_t>> hdata  = std::make_shared<std::vector<uint8_t>>(data.pAscan);
+        auto model  = static_cast<ModelAScan*>(m_OpenGL->m_pModel[0]);
+        auto bridge = caller.getBridge();
+        auto mesh   = static_cast<MeshAscan*>(model->m_pMesh[0]);
+        auto hdata  = std::make_shared<std::vector<uint8_t>>(data.pAscan);
         if (model == nullptr || bridge == nullptr || mesh == nullptr || hdata == nullptr) {
             return;
         }

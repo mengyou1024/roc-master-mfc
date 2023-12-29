@@ -55,97 +55,6 @@ static constexpr int swapAScanIndex(int x) {
     return result * 4 + remain;
 }
 
-class FragmentReview {
-public:
-    friend MainFrameWnd;
-    constexpr static auto SIZE_PER_FRAGMENT = 512;
-    FragmentReview(std::vector<HD_Utils> &rvData, int minFrag = SIZE_PER_FRAGMENT) :
-    mRV(rvData),
-    mFragmentSize(SIZE_PER_FRAGMENT),
-    mFragments((int)std::ceil((double)rvData.size() / (double)SIZE_PER_FRAGMENT)) {}
-
-    int size() const {
-        return mFragmentSize;
-    }
-
-    int fragments() const {
-        return mFragments;
-    }
-
-    void setCurFragment(int cursor) {
-        mCurFragment = cursor;
-        if (mCurFragment >= mFragments) {
-            mCurFragment = mFragments - 1;
-        } else if (mCurFragment < 0) {
-            mCurFragment = 0;
-        }
-        if (mCurFragment == mFragments - 1) {
-            mFragmentSize = (int)mRV.size() % SIZE_PER_FRAGMENT;
-        } else {
-            mFragmentSize = SIZE_PER_FRAGMENT;
-        }
-        mFragmentStart = mCurFragment * SIZE_PER_FRAGMENT;
-    }
-
-    FragmentReview &operator++(int) {
-        mCurFragment++;
-        if (mCurFragment >= mFragments) {
-            mCurFragment = mFragments - 1;
-        }
-        if (mCurFragment == mFragments - 1) {
-            mFragmentSize = (int)mRV.size() % SIZE_PER_FRAGMENT;
-        } else {
-            mFragmentSize = SIZE_PER_FRAGMENT;
-        }
-        mFragmentStart = mCurFragment * SIZE_PER_FRAGMENT;
-        return *this;
-    }
-
-    FragmentReview &operator--(int) {
-        mCurFragment--;
-        if (mCurFragment < 0) {
-            mCurFragment = 0;
-        }
-        mFragmentStart = mCurFragment * SIZE_PER_FRAGMENT;
-        return *this;
-    }
-
-    const HD_Utils &operator[](int sz) const {
-        if (sz > mFragmentSize) {
-            throw std::out_of_range("sz out of range");
-        }
-        return mRV[(size_t)(mFragmentStart + sz)];
-    }
-
-    auto begin() const {
-        return mRV.begin() + mFragmentStart;
-    }
-
-    auto end() const {
-        return mRV.begin() + mFragmentSize + mFragmentStart;
-    }
-
-    int getCurFragment() const {
-        return mCurFragment + 1;
-    }
-
-    void setCursor(int cur) {
-        mCursor = cur;
-    }
-
-    int &getCursor() {
-        return mCursor;
-    }
-
-private:
-    int                    mCursor        = 0;
-    const int              mFragments     = 0;
-    int                    mCurFragment   = 0;
-    int                    mFragmentStart = 0;
-    int                    mFragmentSize  = {};
-    std::vector<HD_Utils> &mRV;
-};
-
 MainFrameWnd::MainFrameWnd() {
     try {
         mCScanThreadRunning = true;
@@ -358,7 +267,8 @@ void MainFrameWnd::DrawReviewCScan() {
                 } else {
                     color = {.0f, 1.f, 0.f, 1.0f};
                 }
-                uint8_t value = (((uint8_t)std::round((double)RELATIVE_ERROR_BASE * std::abs(relative_error / RELATIVE_ERROR_MAX))) & RELATIVE_ERROR_BASE);
+                uint8_t value = (((uint8_t)std::round((double)RELATIVE_ERROR_BASE * std::abs(relative_error / RELATIVE_ERROR_MAX))) &
+                                 RELATIVE_ERROR_BASE);
                 if (relative_error >= 0) {
                     value += RELATIVE_ERROR_BASE;
                 } else {
@@ -800,7 +710,7 @@ void MainFrameWnd::OnBtnUIClicked(std::wstring &name) {
             btn->SetBkColor(0xFFEEEEEE);
         } else {
             if (!mUtils->getBridge()->isOpen()) {
-                DMessageBox(L"超声板未打开，请确认是否连接！");
+                DMessageBox(L"超声板未打开，请确认是否连接！", L"自动检测");
                 return;
             }
             StartScan();
@@ -1361,7 +1271,8 @@ void MainFrameWnd::ThreadCScan(void) {
                     } else {
                         color = {.0f, 1.f, 0.f, 1.0f};
                     }
-                    uint8_t value = (((uint8_t)std::round((double)RELATIVE_ERROR_BASE * std::abs(relative_error / RELATIVE_ERROR_MAX))) & RELATIVE_ERROR_BASE);
+                    uint8_t value = (((uint8_t)std::round((double)RELATIVE_ERROR_BASE * std::abs(relative_error / RELATIVE_ERROR_MAX))) &
+                                     RELATIVE_ERROR_BASE);
                     if (relative_error >= 0) {
                         value += RELATIVE_ERROR_BASE;
                     } else {

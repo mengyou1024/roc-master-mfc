@@ -356,6 +356,7 @@ del $(SolutionDir)Mutilple\res\Theme.zip
     <ClInclude Include="Extensions\HDBridge\include\HDBridge.h" />
     <ClInclude Include="Extensions\HDBridge\include\HDBridge\Utils.h" />
     <ClInclude Include="Extensions\sqlite_orm\include\sqlite_orm\sqlite_orm.h" />
+    <ClInclude Include="FragmentLoader.hpp" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainProcess.h" />
     <ClInclude Include="Model\DefectInfo.h" />
