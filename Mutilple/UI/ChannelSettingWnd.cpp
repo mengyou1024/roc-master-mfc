@@ -6,10 +6,8 @@
 ChannelSettingWnd::ChannelSettingWnd(std::unique_ptr<HD_Utils> utils, int channel) : mUtils(std::move(utils)), mChannel(channel) {}
 
 ChannelSettingWnd::~ChannelSettingWnd() {
-    if (m_OpenGL) {
-        delete m_OpenGL;
-        m_OpenGL = nullptr;
-    }
+    HCURSOR cursor = LoadCursorW(NULL, IDC_ARROW);
+    ::SetCursor(cursor);
 }
 
 LPCTSTR ChannelSettingWnd::GetWindowClassName() const {
@@ -23,7 +21,7 @@ CDuiString ChannelSettingWnd::GetSkinFile() {
 void ChannelSettingWnd::InitWindow() {
     CDuiWindowBase::InitWindow();
     m_pWndOpenGL = m_PaintManager.FindControl<CWindowUI*>(_T("WndOpenGL"));
-    m_OpenGL     = new OpenGL;
+    m_OpenGL     = std::make_unique<OpenGL>();
     m_OpenGL->Create(m_hWnd);
     m_OpenGL->Attach(m_pWndOpenGL);
     m_OpenGL->AddModel<ModelAScan>();

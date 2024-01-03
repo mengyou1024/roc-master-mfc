@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window size="1700,960" caption="5,5,5,52" sizebox="10,10,10,10" mininfo="1700, 960" >
+<Window size="1700,960" caption="5,5,5,34" sizebox="10,10,10,10" mininfo="1700, 960" >
 	<Font name="楷体" size="14" default="true" />
 	<Font name="楷体" size="18" />
 	<Font name="楷体" size="24" />

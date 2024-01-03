@@ -23,7 +23,7 @@ private:
         {_T("EditSoundVelocity"), _T(R"()")},
     };
     CWindowUI*                m_pWndOpenGL = nullptr;
-    OpenGL*                   m_OpenGL     = nullptr;
+    std::unique_ptr<OpenGL>   m_OpenGL     = nullptr;
     std::unique_ptr<HD_Utils> mUtils;
     int                       mChannel = 0;
     void                      ReadValue2UI();

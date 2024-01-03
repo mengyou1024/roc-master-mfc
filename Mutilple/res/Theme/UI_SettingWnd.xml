@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window size="240,240" caption="5,5,5,52" sizebox="10,10,10,10">
+<Window size="240,240" caption="5,5,5,34">
 	<Font name="楷体" size="14" default="true" />
 	<Font name="楷体" size="18" />
 	<Font name="楷体" size="24" />
@@ -18,9 +18,6 @@
 		<HorizontalLayout height="34">
 			<Label text="设置" font="0" bkimage="file='Theme\Button\union.png' dest='2,2,34,34'" textpadding="34,0,0,0" align="left" valign="center" />
 			<HorizontalLayout visible="true" width="95">
-				<Button float="true" pos="0,0,0,0" name="minbtn" tooltip="最小化" width="28" height="19" bkcolor="" normalimage="Theme\Button\btn_mini_normal.png" hotimage="Theme\Button\btn_mini_highlight.png" pushedimage="Theme\Button\btn_mini_down.png" />
-				<Button float="true" pos="29,0,0,0" name="maxbtn" tooltip="最大化" width="28" height="19" bkcolor="" normalimage="Theme\Button\btn_max_normal.png" hotimage="Theme\Button\btn_max_highlight.png" pushedimage="Theme\Button\btn_max_down.png" />
-				<Button float="true" pos="29,0,0,0" name="restorebtn" tooltip="还原" visible="false" width="28" bkcolor="" height="19" normalimage="Theme\Button\btn_restore_normal.png" hotimage="Theme\Button\btn_restore_highlight.png" pushedimage="Theme\Button\btn_restore_down.png" />
 				<Button float="true" pos="57,0,0,0" name="closebtn" tooltip="关闭" width="39" height="19" bkcolor="" normalimage="Theme\Button\btn_close_normal.png" hotimage="Theme\Button\btn_close_highlight.png" pushedimage="Theme\Button\btn_close_down.png" />
 			</HorizontalLayout>
 		</HorizontalLayout>
