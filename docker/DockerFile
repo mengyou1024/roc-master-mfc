@@ -5,9 +5,13 @@ FROM mcr.microsoft.com/windows/servercore:ltsc2022
 SHELL ["powershell"]
 
 RUN Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'));`
-    choco install 7zip cmake git InnoSetup ninja -y
+    choco install 7zip git InnoSetup ninja -y;`
+    choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' -y
+
+RUN git config --global --add safe.directory 'C:\\workdir'
 
 SHELL ["cmd", "/S", "/C"]
+
 RUN ` 
     # Download the Build Tools bootstrapper.
     curl -SL --output vs_buildtools.exe https://aka.ms/vs/17/release/vs_buildtools.exe `
@@ -26,8 +30,6 @@ RUN `
     `
     # Cleanup
     && del /q vs_buildtools.exe
-
-RUN setx "PATH" "C:\Program Files\CMake\bin;%PATH%" /m
 
 WORKDIR C:\workdir
 

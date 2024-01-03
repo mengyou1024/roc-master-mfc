@@ -21,7 +21,9 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 ### 2. 安装依赖包
 
 ``` powershell
-choco install packages.config
+choco install packages.config -y
+# 安装cmake并添加环境变量
+choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' -y
 ```
 
 ### 3. 编译和打包
