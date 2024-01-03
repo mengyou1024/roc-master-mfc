@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window size="1280,900" caption="5,5,5,52" sizebox="10,10,10,10">
+<Window size="1700,960" caption="5,5,5,52" sizebox="10,10,10,10" mininfo="1700, 960" >
 	<Font name="楷体" size="14" default="true" />
 	<Font name="楷体" size="18" />
 	<Font name="楷体" size="24" />
@@ -17,13 +17,7 @@
 	<VerticalLayout bkcolor="0xFFFEFEFE" bordersize="1" bordercolor="0xFFDDDDDD">
 		<HorizontalLayout height="34">
 			<Label text="" font="0" bkimage="file='Theme\Button\union.png' dest='2,2,34,34'" textpadding="34,0,0,0" align="left" valign="center" />
-			<HorizontalLayout visible="true" width="95">
-				<Button float="true" pos="0,0,0,0" name="minbtn" tooltip="最小化" width="28" height="19" bkcolor="" normalimage="Theme\Button\btn_mini_normal.png" hotimage="Theme\Button\btn_mini_highlight.png" pushedimage="Theme\Button\btn_mini_down.png" />
-				<Button float="true" pos="29,0,0,0" name="maxbtn" tooltip="最大化" width="28" height="19" bkcolor="" normalimage="Theme\Button\btn_max_normal.png" hotimage="Theme\Button\btn_max_highlight.png" pushedimage="Theme\Button\btn_max_down.png" />
-				<Button float="true" pos="29,0,0,0" name="restorebtn" tooltip="还原" visible="false" width="28" bkcolor="" height="19" normalimage="Theme\Button\btn_restore_normal.png" hotimage="Theme\Button\btn_restore_highlight.png" pushedimage="Theme\Button\btn_restore_down.png" />
-				<Button float="true" pos="57,0,0,0" name="closebtn" tooltip="关闭" width="39" height="19" bkcolor="" normalimage="Theme\Button\btn_close_normal.png" hotimage="Theme\Button\btn_close_highlight.png" pushedimage="Theme\Button\btn_close_down.png" />
-			</HorizontalLayout>
-			<HorizontalLayout height="34" float="true" pos="120,1,1600,34" align="center">
+			<HorizontalLayout height="34" float="true" pos="34,1,1060,34" align="center">
 				<HorizontalLayout>
 					<Button name="BtnSelectGroup0" width="120" height="33" text="分层" bkcolor="0xFF339933" />
 					<Button name="BtnSelectGroup3" width="120" height="33" text="测厚" bkcolor="0xFF339933" />
@@ -38,6 +32,12 @@
 						<Button name="BtnExportReport" width="120" height="33" text="报表导出" />
 					</HorizontalLayout>
 				</HorizontalLayout>
+			</HorizontalLayout>
+			<HorizontalLayout visible="true" width="95">
+				<Button float="true" pos="0,0,0,0" name="minbtn" tooltip="最小化" width="28" height="19" bkcolor="" normalimage="Theme\Button\btn_mini_normal.png" hotimage="Theme\Button\btn_mini_highlight.png" pushedimage="Theme\Button\btn_mini_down.png" />
+				<Button float="true" pos="29,0,0,0" name="maxbtn" tooltip="最大化" width="28" height="19" bkcolor="" normalimage="Theme\Button\btn_max_normal.png" hotimage="Theme\Button\btn_max_highlight.png" pushedimage="Theme\Button\btn_max_down.png" />
+				<Button float="true" pos="29,0,0,0" name="restorebtn" tooltip="还原" visible="false" width="28" bkcolor="" height="19" normalimage="Theme\Button\btn_restore_normal.png" hotimage="Theme\Button\btn_restore_highlight.png" pushedimage="Theme\Button\btn_restore_down.png" />
+				<Button float="true" pos="57,0,0,0" name="closebtn" tooltip="关闭" width="39" height="19" bkcolor="" normalimage="Theme\Button\btn_close_normal.png" hotimage="Theme\Button\btn_close_highlight.png" pushedimage="Theme\Button\btn_close_down.png" />
 			</HorizontalLayout>
 		</HorizontalLayout>
 		<VerticalLayout bkimage="Theme\Line\v_line.png" height="1" />
