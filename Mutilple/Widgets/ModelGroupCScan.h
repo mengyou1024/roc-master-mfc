@@ -7,7 +7,8 @@
 
 class ModelGroupCScan : public Model {
 private:
-    size_t mGroupIndex;
+    size_t mGroupIndex = 0;
+
     enum class VIEW_TYPE : size_t {
         VIEW_CSCAN_0 = 0x00,
         VIEW_CSCAN_1,
