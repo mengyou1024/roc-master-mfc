@@ -166,7 +166,7 @@ void RecordSelectWnd::ListYearMonth() const {
                 pListYearMonth->Add(list);
             }
         }
-        if (pListYearMonth->GetCount() > GetSystemConfig().IDYearMonth) {
+        if (GetSystemConfig().IDYearMonth >= 0 && pListYearMonth->GetCount() > GetSystemConfig().IDYearMonth) {
             auto it = static_cast<CListLabelElementUI*>(pListYearMonth->GetItemAt(GetSystemConfig().IDYearMonth));
             it->Select();
         } else if (pListYearMonth->GetCount() > 0) {
@@ -198,7 +198,7 @@ void RecordSelectWnd::ListDay() const {
                 pListDay->Add(list);
             }
         }
-        if (pListDay->GetCount() > GetSystemConfig().IDDay) {
+        if (GetSystemConfig().IDDay >= 0 && pListDay->GetCount() > GetSystemConfig().IDDay) {
             auto it = static_cast<CListLabelElementUI*>(pListDay->GetItemAt(GetSystemConfig().IDDay));
             it->Select();
         } else if (pListDay->GetCount() > 0) {
@@ -231,7 +231,7 @@ void RecordSelectWnd::ListTime() const {
                 pListTime->Add(list);
             }
         }
-        if (pListTime->GetCount() > GetSystemConfig().IDTime) {
+        if (GetSystemConfig().IDTime >= 0 && pListTime->GetCount() > GetSystemConfig().IDTime) {
             auto it = static_cast<CListLabelElementUI*>(pListTime->GetItemAt(GetSystemConfig().IDTime));
             it->Select();
         } else if (pListTime->GetCount() > 0) {
